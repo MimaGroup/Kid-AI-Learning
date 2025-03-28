@@ -476,6 +476,7 @@ with st.sidebar:
         st.page_link("pages/1_Learn_AI_Basics.py", label="🧠 Learn AI Basics", icon="book")
         st.page_link("pages/2_Fun_Coding_Games.py", label="🎮 Coding Games", icon="joystick")
         st.page_link("pages/3_AI_Adventures.py", label="🚀 AI Adventures", icon="rocket")
+        st.page_link("pages/5_AI_Playground.py", label="🎯 AI Playground", icon="lightbulb")
         
         # For parents and teachers
         st.markdown("---")
