@@ -435,6 +435,12 @@ def display_robot_maze():
     
     if "robot_program" not in st.session_state:
         st.session_state.robot_program = []
+        
+    if "simulation_results" not in st.session_state:
+        st.session_state.simulation_results = None
+        
+    if "simulation_status" not in st.session_state:
+        st.session_state.simulation_status = None
     
     # Display current maze
     maze = st.session_state.current_maze["grid"]
@@ -447,26 +453,159 @@ def display_robot_maze():
     with col1:
         st.markdown(f"### Level: {st.session_state.maze_level} | Score: {st.session_state.maze_score}")
         
-        # Display the maze grid
-        maze_display = ""
+        # Display the maze grid with better visualization
+        st.markdown("""
+        <style>
+        .maze-grid {
+            font-family: monospace;
+            line-height: 1.2;
+            font-size: 24px;
+            letter-spacing: 0.2em;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        maze_display = "<div class='maze-grid'>"
+        
+        # If we have simulation results, show the robot path
+        robot_path = []
+        if st.session_state.simulation_results:
+            robot_path = st.session_state.simulation_results["path"]
         
         for i, row in enumerate(maze):
             for j, cell in enumerate(row):
-                if (i, j) == start_pos:
-                    maze_display += "🤖 "  # Robot at start
+                if (i, j) == start_pos and not robot_path:
+                    maze_display += "🤖"  # Robot at start
                 elif (i, j) == goal_pos:
-                    maze_display += "🏆 "  # Goal
+                    maze_display += "🏆"  # Goal
+                elif robot_path and (i, j) in robot_path:
+                    # Show the robot at its latest position in the path
+                    if (i, j) == robot_path[-1]:
+                        maze_display += "🤖"  # Current robot position
+                    elif (i, j) == start_pos:
+                        maze_display += "🟢"  # Start position
+                    else:
+                        maze_display += "👣"  # Robot path
                 elif cell == 1:
-                    maze_display += "⬛ "  # Wall
+                    maze_display += "🟦"  # Wall (blue square for better visibility)
                 else:
-                    maze_display += "⬜ "  # Open path
-            maze_display += "\n"
+                    maze_display += "⬜"  # Open path
+            maze_display += "<br>"
         
-        st.markdown(f"```\n{maze_display}\n```")
+        maze_display += "</div>"
+        st.markdown(maze_display, unsafe_allow_html=True)
+        
+        # Display simulation status if available
+        if st.session_state.simulation_status:
+            if st.session_state.simulation_status == "success":
+                st.success("🎉 Goal reached! Well done!")
+            elif st.session_state.simulation_status == "failure":
+                st.error("❌ The robot couldn't reach the goal. Try a different program!")
+            elif st.session_state.simulation_status == "wall":
+                st.warning("💥 The robot crashed into a wall! Adjust your program.")
+            elif st.session_state.simulation_status == "out_of_bounds":
+                st.warning("⚠️ The robot went out of bounds! Check your program.")
     
     with col2:
         st.markdown("### Program Your Robot")
         st.markdown("Create a sequence of moves to reach the goal:")
+        
+        # Add interactive programming interface
+        command_options = {
+            "MOVE_UP": "⬆️ Move Up",
+            "MOVE_DOWN": "⬇️ Move Down",
+            "MOVE_LEFT": "⬅️ Move Left",
+            "MOVE_RIGHT": "➡️ Move Right",
+            "REPEAT_2": "🔄 Repeat next command 2x",
+            "REPEAT_3": "🔄 Repeat next command 3x"
+        }
+        
+        # Display current program
+        st.markdown("#### Your Program:")
+        program_display = ""
+        for cmd in st.session_state.robot_program:
+            program_display += f"- {command_options.get(cmd, cmd)}\n"
+        
+        if program_display:
+            st.markdown(program_display)
+        else:
+            st.info("Your program is empty. Add commands below.")
+        
+        # Add commands to the program
+        selected_command = st.selectbox(
+            "Select command:",
+            options=list(command_options.keys()),
+            format_func=lambda x: command_options[x]
+        )
+        
+        cmd_col1, cmd_col2 = st.columns([1, 1])
+        
+        with cmd_col1:
+            if st.button("Add Command"):
+                st.session_state.robot_program.append(selected_command)
+                st.session_state.simulation_results = None
+                st.session_state.simulation_status = None
+                st.rerun()
+                
+        with cmd_col2:
+            if st.button("Clear Program"):
+                st.session_state.robot_program = []
+                st.session_state.simulation_results = None
+                st.session_state.simulation_status = None
+                st.rerun()
+        
+        # Run simulation
+        if st.button("Run Program", type="primary"):
+            if st.session_state.robot_program:
+                # Simulate robot movement
+                results = simulate_robot_movement(
+                    maze, 
+                    start_pos,
+                    goal_pos,
+                    st.session_state.robot_program
+                )
+                
+                st.session_state.simulation_results = results
+                
+                # Determine simulation status
+                if results["reached_goal"]:
+                    st.session_state.simulation_status = "success"
+                    
+                    # Award points based on efficiency
+                    optimal_length = st.session_state.current_maze["optimal_length"]
+                    program_length = len(st.session_state.robot_program)
+                    
+                    if program_length <= optimal_length:
+                        points = st.session_state.maze_level * 10
+                    else:
+                        points = st.session_state.maze_level * 5
+                    
+                    st.session_state.maze_score += points
+                    
+                    # Level up and generate new maze
+                    if st.session_state.maze_level < 5:
+                        st.session_state.maze_level += 1
+                        generate_maze(st.session_state.maze_level)
+                        st.session_state.robot_program = []
+                        
+                        # Award badge at level 3
+                        if st.session_state.maze_level == 3 and "Coding Wizard" not in st.session_state.get("badges", []):
+                            if "badges" not in st.session_state:
+                                st.session_state.badges = []
+                            st.session_state.badges.append("Coding Wizard")
+                            st.balloons()
+                            st.success("🏆 You earned the Coding Wizard badge!")
+                else:
+                    if results["hit_wall"]:
+                        st.session_state.simulation_status = "wall"
+                    elif results["out_of_bounds"]:
+                        st.session_state.simulation_status = "out_of_bounds"
+                    else:
+                        st.session_state.simulation_status = "failure"
+                
+                st.rerun()
+            else:
+                st.warning("Add some commands to your program first!")
         
         # Instructions for programming the robot
         st.markdown("""
@@ -682,51 +821,100 @@ def generate_maze(level):
         "start": start_pos,
         "goal": goal_pos,
         "level": level,
-        "optimal_steps": optimal_steps
+        "optimal_steps": optimal_steps,
+        "optimal_length": optimal_steps + 2  # Estimated optimal program length (including possible repeats)
     }
 
 def simulate_robot_movement(maze, start_pos, goal_pos, program):
-    """Simulate the robot's movement through the maze based on the program"""
+    """Simulate the robot's movement through the maze based on the program
     
-    # Initialize robot position
-    robot_pos = start_pos
-    path = [robot_pos]  # Track path for animation
+    Args:
+        maze (list): 2D grid representing the maze (0 for path, 1 for wall)
+        start_pos (tuple): Starting position (row, col)
+        goal_pos (tuple): Goal position (row, col)
+        program (list): List of commands to execute
+        
+    Returns:
+        dict: Results of the simulation including whether goal was reached,
+              path taken, and any errors encountered
+    """
+    # Initialize robot position and path
+    current_pos = start_pos
+    path = [current_pos]
     
-    # Execute each command
-    for cmd in program:
-        # Calculate next position based on command
-        next_pos = list(robot_pos)
-        
-        if cmd == "up":
-            next_pos[0] -= 1
-        elif cmd == "down":
-            next_pos[0] += 1
-        elif cmd == "left":
-            next_pos[1] -= 1
-        elif cmd == "right":
-            next_pos[1] += 1
-        
-        # Convert back to tuple
-        next_pos = tuple(next_pos)
-        
-        # Check if next position is valid
-        if next_pos[0] < 0 or next_pos[0] >= len(maze) or next_pos[1] < 0 or next_pos[1] >= len(maze[0]):
-            # Out of bounds
-            path.append(next_pos)  # Add for animation even though invalid
-            return "out_of_bounds", path
-        
-        if maze[next_pos[0]][next_pos[1]] == 1:
-            # Hit a wall
-            path.append(next_pos)  # Add for animation even though invalid
-            return "wall", path
-        
-        # Move robot
-        robot_pos = next_pos
-        path.append(robot_pos)
-        
-        # Check if reached goal
-        if robot_pos == goal_pos:
-            return "goal", path
+    # Track program execution
+    reached_goal = False
+    hit_wall = False
+    out_of_bounds = False
     
-    # If we get here, the program ran but didn't reach the goal
-    return "incomplete", path
+    # Process each command
+    i = 0
+    while i < len(program):
+        cmd = program[i]
+        repeat = 1
+        
+        # Check for repeat commands
+        if cmd.startswith("REPEAT_"):
+            try:
+                repeat = int(cmd.split("_")[1])
+                i += 1
+                if i >= len(program):
+                    break
+                cmd = program[i]
+            except (IndexError, ValueError):
+                repeat = 1
+        
+        # Execute command (potentially multiple times)
+        for _ in range(repeat):
+            row, col = current_pos
+            
+            # Determine new position based on command
+            if cmd == "MOVE_UP":
+                new_pos = (row - 1, col)
+            elif cmd == "MOVE_DOWN":
+                new_pos = (row + 1, col)
+            elif cmd == "MOVE_LEFT":
+                new_pos = (row, col - 1)
+            elif cmd == "MOVE_RIGHT":
+                new_pos = (row, col + 1)
+            else:
+                # Unknown command, skip
+                i += 1
+                continue
+            
+            # Check if the new position is valid
+            new_row, new_col = new_pos
+            
+            # Check boundaries
+            if new_row < 0 or new_row >= len(maze) or new_col < 0 or new_col >= len(maze[0]):
+                out_of_bounds = True
+                break
+            
+            # Check for walls
+            if maze[new_row][new_col] == 1:
+                hit_wall = True
+                break
+            
+            # Move robot
+            current_pos = new_pos
+            path.append(current_pos)
+            
+            # Check if goal reached
+            if current_pos == goal_pos:
+                reached_goal = True
+                break
+        
+        # Stop if there was an error or goal reached
+        if hit_wall or out_of_bounds or reached_goal:
+            break
+        
+        i += 1
+    
+    # Return simulation results
+    return {
+        "reached_goal": reached_goal,
+        "hit_wall": hit_wall,
+        "out_of_bounds": out_of_bounds,
+        "path": path,
+        "final_position": current_pos
+    }
