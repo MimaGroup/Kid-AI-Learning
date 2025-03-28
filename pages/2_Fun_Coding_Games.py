@@ -101,13 +101,55 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Play button with primary styling for better visibility
+                # Add a colored play button with primary styling for better visibility
+                # Use a different styling for each game
+                button_color = ""
+                if game["id"] == "robot_maze":
+                    button_color = "background-color: #4169E1;" # Royal Blue
+                elif game["id"] == "neural_network":
+                    button_color = "background-color: #6A5ACD;" # Slate Blue
+                elif game["id"] == "image_detective":
+                    button_color = "background-color: #20B2AA;" # Light Sea Green
+                elif game["id"] == "sorting_game":
+                    button_color = "background-color: #3CB371;" # Medium Sea Green
+                elif game["id"] == "pattern_game":
+                    button_color = "background-color: #FF7F50;" # Coral
+                
+                # Create a custom play button for better visibility
+                st.markdown(f"""
+                <button 
+                    onclick="parent.postMessage({{key: 'play_{game['id']}'}}, '*')"
+                    style="width: 100%; padding: 10px; {button_color} color: white; border: none; 
+                           border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px;
+                           display: flex; align-items: center; justify-content: center;">
+                    <span style="margin-right: 8px;">▶️</span> Play {game['title']}
+                </button>
+                """, unsafe_allow_html=True)
+                
+                # Also use the standard button as a fallback (will be hidden with CSS)
                 play_button = st.button(
-                    f"▶️ Play {game['title']}", 
+                    f"Play {game['title']}", 
                     key=f"play_{game['id']}",
                     type="primary",
-                    use_container_width=True  # Make button take full width
+                    use_container_width=True
                 )
+                
+                # Add CSS to hide the standard button
+                st.markdown("""
+                <style>
+                div[data-testid="stButton"] {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border-width: 0;
+                }
+                </style>
+                """, unsafe_allow_html=True)
                 
                 # Handle button click
                 if play_button:
@@ -377,6 +419,38 @@ def display_neural_network_game():
         # Show hints
         with st.expander("Need a hint?"):
             st.markdown(problem["hint"])
+            
+        # Add evaluation button
+        if st.button("Evaluate My Network", type="primary"):
+            results = evaluate_network(st.session_state.current_network, problem)
+            if results["success"]:
+                st.success(f"Great job! {results['message']}")
+                # Award points
+                st.session_state.nn_score += 10 * st.session_state.nn_level
+                # Level up
+                st.session_state.nn_level += 1
+                # Reset network
+                st.session_state.current_network = {
+                    "input_nodes": [],
+                    "hidden_nodes": [],
+                    "output_nodes": [],
+                    "connections": []
+                }
+                # Get new problem
+                st.session_state.current_nn_problem = get_nn_problem(st.session_state.nn_level)
+                # Award badge if level is high enough
+                if st.session_state.nn_level >= 3 and "Neural Master" not in st.session_state.get("badges", []):
+                    award_badge("Neural Master")
+                    st.balloons()
+                    st.success("🏆 You earned the Neural Master badge!")
+                    
+                # Complete this game
+                complete_game("neural_network")
+                st.rerun()
+            else:
+                st.error(f"Not quite right: {results['message']}")
+                with st.expander("Suggestions"):
+                    st.markdown(results["suggestions"])
     
     with col2:
         st.markdown("### Build Your Neural Network")
@@ -685,10 +759,13 @@ def evaluate_network(network, problem):
     # Generate feedback
     if actual_connections < ideal_connections:
         feedback = "Your network might need more connections to learn effectively."
+        suggestions = "Try adding more connections from inputs to hidden nodes and from hidden nodes to outputs."
     elif actual_connections > ideal_connections + 3:
         feedback = "Your network has more connections than needed. Simpler networks are often better!"
+        suggestions = "Try removing some less important connections to make your network more efficient."
     else:
         feedback = "Your network has a good number of connections!"
+        suggestions = "Your network structure looks good!"
     
     # Additional task-specific feedback
     if problem["task"] == "Identify if an animal is a bird":
@@ -701,6 +778,7 @@ def evaluate_network(network, problem):
             score += 1
         else:
             feedback += "\n\n⚠️ Birds are identified primarily by feathers and wings. Make sure these are well-connected!"
+            suggestions += " Focus on connecting 'Has Feathers' and 'Has Wings' to your network."
     
     elif problem["task"] == "Predict if it will rain":
         # Check if key weather factors are connected
@@ -712,6 +790,7 @@ def evaluate_network(network, problem):
             score += 1
         else:
             feedback += "\n\n⚠️ Clouds and humidity are the strongest indicators of rain. Make sure they're well-connected!"
+            suggestions += " Make sure to connect 'Cloudy Sky' and 'Humidity' to your network."
     
     elif problem["task"] == "Classify fruits by characteristics":
         # Check if outputs are connected to appropriate inputs
@@ -726,7 +805,13 @@ def evaluate_network(network, problem):
             feedback += "\n\n✅ Using color to help identify multiple fruits is smart!"
             score += 1
     
-    return min(10, score), feedback
+    # Return results in expected format
+    success = score >= 8
+    return {
+        "success": success,
+        "message": feedback,
+        "suggestions": suggestions
+    }
 
 # Run the main function
 if __name__ == "__main__":
