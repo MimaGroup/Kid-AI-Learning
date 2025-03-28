@@ -269,35 +269,6 @@ def main():
     # Featured books
     st.markdown("## AI Books for Kids")
     
-    # Book card styles
-    book_style = """
-    <style>
-    .book-card {
-        border-radius: 10px;
-        border: 1px solid #e0e0e0;
-        padding: 15px;
-        transition: transform 0.3s, box-shadow 0.3s;
-        background-color: white;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .book-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    .book-cover {
-        width: 70%;
-        border-radius: 5px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-        margin-bottom: 15px;
-    }
-    </style>
-    """
-    st.markdown(book_style, unsafe_allow_html=True)
-    
     # Book data
     books = [
         {
