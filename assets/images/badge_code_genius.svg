@@ -1,0 +1,19 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Badge Background -->
+  <circle cx="60" cy="60" r="55" fill="#33cc33" stroke="#1a991a" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" fill="#66dd66" stroke="none"/>
+  
+  <!-- Hexagon Pattern -->
+  <polygon points="60,25 75,33 75,48 60,55 45,48 45,33" fill="white" stroke="#1a991a" stroke-width="1"/>
+  
+  <!-- Code Symbol -->
+  <text x="60" y="48" font-family="Courier, monospace" font-size="16" font-weight="bold" text-anchor="middle" fill="#1a991a">&lt;/&gt;</text>
+  
+  <!-- Badge Text -->
+  <text x="60" y="75" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">CODE</text>
+  <text x="60" y="90" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">GENIUS</text>
+  
+  <!-- Binary Decoration -->
+  <text x="40" y="108" font-family="Courier, monospace" font-size="6" text-anchor="middle" fill="white">101010</text>
+  <text x="80" y="108" font-family="Courier, monospace" font-size="6" text-anchor="middle" fill="white">010101</text>
+</svg>

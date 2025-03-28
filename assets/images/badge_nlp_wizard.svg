@@ -1,0 +1,16 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Badge Background -->
+  <circle cx="60" cy="60" r="55" fill="#3399ff" stroke="#0066cc" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" fill="#66b3ff" stroke="none"/>
+  
+  <!-- Speech Bubble Icon -->
+  <path d="M40,40 L80,40 Q90,40 90,50 L90,70 Q90,80 80,80 L65,80 L60,90 L55,80 L40,80 Q30,80 30,70 L30,50 Q30,40 40,40 Z" fill="white" stroke="#0066cc" stroke-width="2"/>
+  
+  <!-- Text Elements in Bubble -->
+  <text x="48" y="57" font-family="Courier, monospace" font-size="10" fill="#0066cc">ABC</text>
+  <text x="73" y="57" font-family="Courier, monospace" font-size="10" fill="#0066cc">XYZ</text>
+  <line x1="45" y1="65" x2="75" y2="65" stroke="#0066cc" stroke-width="1.5" stroke-dasharray="2,2"/>
+  
+  <!-- Badge Text -->
+  <text x="60" y="105" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">NLP WIZARD</text>
+</svg>

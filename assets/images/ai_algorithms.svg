@@ -1,0 +1,26 @@
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="200" fill="#f0f8ff" rx="10" ry="10"/>
+  
+  <!-- Flowchart elements -->
+  <rect x="50" y="30" width="80" height="40" rx="5" ry="5" fill="#4287f5" stroke="#2a5db0" stroke-width="2"/>
+  <text x="90" y="55" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Input</text>
+  
+  <rect x="160" y="80" width="80" height="40" rx="5" ry="5" fill="#4287f5" stroke="#2a5db0" stroke-width="2"/>
+  <text x="200" y="105" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Process</text>
+  
+  <rect x="270" y="130" width="80" height="40" rx="5" ry="5" fill="#4287f5" stroke="#2a5db0" stroke-width="2"/>
+  <text x="310" y="155" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Output</text>
+  
+  <!-- Connection arrows -->
+  <line x1="130" y1="50" x2="160" y2="80" stroke="#2a5db0" stroke-width="2"/>
+  <polygon points="160,80 150,70 158,68" fill="#2a5db0"/>
+  
+  <line x1="240" y1="100" x2="270" y2="130" stroke="#2a5db0" stroke-width="2"/>
+  <polygon points="270,130 260,120 268,118" fill="#2a5db0"/>
+  
+  <!-- Binary elements -->
+  <text x="80" y="95" font-family="Courier, monospace" font-size="14" text-anchor="middle" fill="#333">01001</text>
+  <text x="240" y="65" font-family="Courier, monospace" font-size="14" text-anchor="middle" fill="#333">10110</text>
+  <text x="320" y="95" font-family="Courier, monospace" font-size="14" text-anchor="middle" fill="#333">00101</text>
+</svg>

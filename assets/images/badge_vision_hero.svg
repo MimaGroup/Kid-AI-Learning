@@ -1,0 +1,16 @@
+<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Badge Background -->
+  <circle cx="60" cy="60" r="55" fill="#ff6633" stroke="#cc3300" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" fill="#ff8866" stroke="none"/>
+  
+  <!-- Camera Icon -->
+  <rect x="35" y="40" width="50" height="35" rx="5" ry="5" fill="white" stroke="#cc3300" stroke-width="1.5"/>
+  <circle cx="60" cy="57.5" r="15" fill="#cc3300" stroke="white" stroke-width="1.5"/>
+  <circle cx="60" cy="57.5" r="8" fill="white" stroke="#cc3300" stroke-width="1"/>
+  <circle cx="60" cy="57.5" r="3" fill="#cc3300"/>
+  <rect x="40" y="35" width="8" height="5" fill="white" stroke="#cc3300" stroke-width="1"/>
+  <rect x="72" y="35" width="8" height="5" fill="white" stroke="#cc3300" stroke-width="1"/>
+  
+  <!-- Badge Text -->
+  <text x="60" y="95" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">VISION HERO</text>
+</svg>
