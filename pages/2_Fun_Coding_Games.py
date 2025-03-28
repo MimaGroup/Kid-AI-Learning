@@ -101,55 +101,13 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Add a colored play button with primary styling for better visibility
-                # Use a different styling for each game
-                button_color = ""
-                if game["id"] == "robot_maze":
-                    button_color = "background-color: #4169E1;" # Royal Blue
-                elif game["id"] == "neural_network":
-                    button_color = "background-color: #6A5ACD;" # Slate Blue
-                elif game["id"] == "image_detective":
-                    button_color = "background-color: #20B2AA;" # Light Sea Green
-                elif game["id"] == "sorting_game":
-                    button_color = "background-color: #3CB371;" # Medium Sea Green
-                elif game["id"] == "pattern_game":
-                    button_color = "background-color: #FF7F50;" # Coral
-                
-                # Create a custom play button for better visibility
-                st.markdown(f"""
-                <button 
-                    onclick="parent.postMessage({{key: 'play_{game['id']}'}}, '*')"
-                    style="width: 100%; padding: 10px; {button_color} color: white; border: none; 
-                           border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px;
-                           display: flex; align-items: center; justify-content: center;">
-                    <span style="margin-right: 8px;">▶️</span> Play {game['title']}
-                </button>
-                """, unsafe_allow_html=True)
-                
-                # Also use the standard button as a fallback (will be hidden with CSS)
+                # Use standard Streamlit button with play icon and primary styling
                 play_button = st.button(
-                    f"Play {game['title']}", 
+                    f"▶️ Play {game['title']}", 
                     key=f"play_{game['id']}",
                     type="primary",
                     use_container_width=True
                 )
-                
-                # Add CSS to hide the standard button
-                st.markdown("""
-                <style>
-                div[data-testid="stButton"] {
-                    position: absolute;
-                    width: 1px;
-                    height: 1px;
-                    padding: 0;
-                    margin: -1px;
-                    overflow: hidden;
-                    clip: rect(0, 0, 0, 0);
-                    white-space: nowrap;
-                    border-width: 0;
-                }
-                </style>
-                """, unsafe_allow_html=True)
                 
                 # Handle button click
                 if play_button:
