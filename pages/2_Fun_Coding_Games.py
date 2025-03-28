@@ -73,6 +73,56 @@ def main():
     # Game selection - display as cards in a grid
     st.markdown("## Choose a Game")
     
+    # Add custom CSS for game buttons
+    button_colors = {
+        "sorting_game": "#3CB371",  # Medium Sea Green
+        "pattern_game": "#FF7F50",  # Coral
+        "robot_maze": "#4169E1",    # Royal Blue
+        "image_detective": "#20B2AA", # Light Sea Green
+        "neural_network": "#6A5ACD"  # Slate Blue
+    }
+    
+    # Apply button styling
+    st.markdown("""
+    <style>
+    /* Base style for all game buttons */
+    div[data-testid="stButton"] button[kind="primary"] {
+        font-weight: bold !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    /* Hover effect for buttons */
+    div[data-testid="stButton"] button[kind="primary"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Individual button colors */
+    [data-testid="stButton"] button[aria-describedby*="play_sorting_game"] {
+        background-color: #3CB371 !important;
+    }
+    
+    [data-testid="stButton"] button[aria-describedby*="play_pattern_game"] {
+        background-color: #FF7F50 !important;
+    }
+    
+    [data-testid="stButton"] button[aria-describedby*="play_robot_maze"] {
+        background-color: #4169E1 !important;
+    }
+    
+    [data-testid="stButton"] button[aria-describedby*="play_image_detective"] {
+        background-color: #20B2AA !important;
+    }
+    
+    [data-testid="stButton"] button[aria-describedby*="play_neural_network"] {
+        background-color: #6A5ACD !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Create two columns for the game cards
     cols = st.columns(2)
     
