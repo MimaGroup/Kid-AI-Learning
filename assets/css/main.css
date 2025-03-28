@@ -527,6 +527,52 @@
     font-size: 14px;
 }
 
+/* Game Button Styles */
+button[data-testid="baseButton-primary"][aria-describedby*="play_sorting_game"] {
+    background-color: #3CB371 !important; /* Medium Sea Green */
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 6px rgba(60, 179, 113, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+button[data-testid="baseButton-primary"][aria-describedby*="play_pattern_game"] {
+    background-color: #FF7F50 !important; /* Coral */
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 6px rgba(255, 127, 80, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+button[data-testid="baseButton-primary"][aria-describedby*="play_robot_maze"] {
+    background-color: #4169E1 !important; /* Royal Blue */
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 6px rgba(65, 105, 225, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+button[data-testid="baseButton-primary"][aria-describedby*="play_image_detective"] {
+    background-color: #20B2AA !important; /* Light Sea Green */
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 6px rgba(32, 178, 170, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+button[data-testid="baseButton-primary"][aria-describedby*="play_neural_network"] {
+    background-color: #6A5ACD !important; /* Slate Blue */
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 6px rgba(106, 90, 205, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+button[data-testid="baseButton-primary"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
 /* Animation classes */
 .animated-fade-in {
     animation: fadeIn 0.5s ease-in;
