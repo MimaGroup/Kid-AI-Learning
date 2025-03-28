@@ -82,27 +82,37 @@ def main():
             # Check if game is completed
             completed = game["id"] in st.session_state.get("completed_games", [])
             
-            # Card container
-            st.markdown(f"""
-            <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px; 
-                       background-color: {'#f0f8ff' if not completed else '#e6ffec'};">
-                <h3 style="margin-top: 0;">{game["title"]} {' ✅' if completed else ''}</h3>
-                <p>{game["description"]}</p>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="background-color: #e1e1e1; padding: 3px 8px; border-radius: 10px; font-size: 12px;">
-                        {game["difficulty"]}
-                    </span>
-                    <span style="background-color: #e1e1e1; padding: 3px 8px; border-radius: 10px; font-size: 12px;">
-                        Skill: {game["skill"]}
-                    </span>
+            # Create a container for the entire game card
+            with st.container():
+                # Card container with styling
+                st.markdown(f"""
+                <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 10px; 
+                           background-color: {'#f0f8ff' if not completed else '#e6ffec'};">
+                    <h3 style="margin-top: 0;">{game["title"]} {' ✅' if completed else ''}</h3>
+                    <p>{game["description"]}</p>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="background-color: #e1e1e1; padding: 3px 8px; border-radius: 10px; font-size: 12px;">
+                            {game["difficulty"]}
+                        </span>
+                        <span style="background-color: #e1e1e1; padding: 3px 8px; border-radius: 10px; font-size: 12px;">
+                            Skill: {game["skill"]}
+                        </span>
+                    </div>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Button to start the game
-            if st.button("Play Game", key=f"game_{game['id']}"):
-                st.session_state["current_game"] = game["id"]
-                st.rerun()
+                """, unsafe_allow_html=True)
+                
+                # Play button with primary styling for better visibility
+                play_button = st.button(
+                    f"▶️ Play {game['title']}", 
+                    key=f"play_{game['id']}",
+                    type="primary",
+                    use_container_width=True  # Make button take full width
+                )
+                
+                # Handle button click
+                if play_button:
+                    st.session_state["current_game"] = game["id"]
+                    st.rerun()
 
 def show_game(game_id):
     """Show a specific game based on ID"""
