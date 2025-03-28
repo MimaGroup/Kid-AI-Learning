@@ -150,6 +150,55 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         st.button("Start Adventure", key="ai_adventures", on_click=lambda: st.switch_page("pages/3_AI_Adventures.py"))
+        
+    # Second row of feature boxes with new enhanced features
+    st.markdown("## Enhanced Features")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="feature-card" style="border: 2px solid #4287f5;">
+            <h3 style="color: #9542f5;">🌟 New Enhanced Features</h3>
+            <p>Try our newest advanced AI learning tools!</p>
+            <ul>
+                <li>Code Snippet Playground with Real-time Preview</li>
+                <li>Difficulty Level Selector with Adaptive Learning</li>
+                <li>Interactive AI Personality Creator for Kids</li>
+                <li>Personalized Learning Paths & Parent Insights</li>
+                <li>Advanced AI Simulation Games</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Explore New Features", key="enhanced_features", on_click=lambda: st.switch_page("pages/6_Enhanced_Features.py"))
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #f542a7;">👨‍👩‍👧‍👦 Parent Dashboard</h3>
+            <p>Monitor your child's progress and get detailed insights.</p>
+            <ul>
+                <li>Learning Progress Insights</li>
+                <li>Activity Details</li>
+                <li>Personalized Recommendations</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Open Dashboard", key="parent_dashboard", on_click=lambda: st.switch_page("pages/4_Parent_Dashboard.py"))
+    
+    with col3:
+        st.markdown("""
+        <div class="feature-card">
+            <h3 style="color: #42f5b3;">🔬 AI Playground</h3>
+            <p>Experiment with AI in a sandbox environment.</p>
+            <ul>
+                <li>AI Experiment Lab</li>
+                <li>Text Generation</li>
+                <li>Voice & Sound Recognition</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Start Experimenting", key="ai_playground", on_click=lambda: st.switch_page("pages/5_AI_Playground.py"))
     
     # Featured content
     st.markdown("## What You'll Learn")
@@ -477,6 +526,7 @@ with st.sidebar:
         st.page_link("pages/2_Fun_Coding_Games.py", label="🎮 Coding Games", icon="joystick")
         st.page_link("pages/3_AI_Adventures.py", label="🚀 AI Adventures", icon="rocket")
         st.page_link("pages/5_AI_Playground.py", label="🎯 AI Playground", icon="lightbulb")
+        st.page_link("pages/6_Enhanced_Features.py", label="🌟 Enhanced Features", icon="stars")
         
         # For parents and teachers
         st.markdown("---")

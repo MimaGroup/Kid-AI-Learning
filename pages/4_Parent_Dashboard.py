@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from components.robot_guide import display_robot_guide
 from components.badges import display_all_badges, display_badge_gallery
+from components.feature_cards.learning_insights import display_learning_insights
 from utils.helpers import initialize_session_state
 from data.user_progress import get_user_progress, get_progress_summary, generate_progress_chart_data
 
