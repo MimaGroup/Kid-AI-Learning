@@ -7,1222 +7,1236 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 def display_advanced_simulation_games():
-    """
-    Display advanced AI simulation games for different age groups
-    with customizable difficulty levels and interactive learning
-    """
-    st.markdown("""
-    <div style="text-align: center; padding: 10px; background-color: #f9e6ff; border-radius: 10px; margin-bottom: 20px;">
-        <h2>Advanced AI Simulation Games</h2>
-        <p>Explore complex AI concepts through interactive simulations!</p>
-    </div>
-    """, unsafe_allow_html=True)
+    """Display advanced AI simulation games for different age groups"""
+    st.markdown("## Advanced AI Simulation Games")
     
-    # Game selection
-    game_options = [
-        "AI City Planner", 
-        "Evolution Simulator", 
-        "Neural Network Playground", 
-        "Smart Car Racing"
-    ]
-    
-    selected_game = st.selectbox(
-        "Choose a simulation game:",
-        game_options
+    # Age group selection
+    age_group = st.radio(
+        "Select age group:",
+        ["7-9 years", "10-13 years"],
+        horizontal=True
     )
     
-    # Age group selector
-    age_groups = ["7-8 years", "9-10 years", "11-13 years"]
-    age_group = st.radio("Select age group:", age_groups, horizontal=True)
+    # Display appropriate games based on age group
+    st.markdown("### Available Simulation Games")
     
-    # Adjust difficulty based on age group
-    difficulty_mapping = {
-        "7-8 years": "Easy",
-        "9-10 years": "Medium",
-        "11-13 years": "Advanced"
-    }
-    
-    difficulty = difficulty_mapping[age_group]
-    
-    # Display selected game
-    st.markdown(f"### {selected_game}")
-    st.markdown(f"**Difficulty:** {difficulty}")
-    
-    # Game container
-    game_container = st.container()
-    
-    with game_container:
-        if selected_game == "AI City Planner":
-            display_city_planner_game(difficulty)
-        elif selected_game == "Evolution Simulator":
-            display_evolution_simulator(difficulty)
-        elif selected_game == "Neural Network Playground":
-            display_neural_network_playground(difficulty)
-        elif selected_game == "Smart Car Racing":
-            display_smart_car_racing(difficulty)
+    if age_group == "7-9 years":
+        display_younger_games()
+    else:
+        display_older_games()
 
-def display_city_planner_game(difficulty):
-    """
-    Display a game where children place elements in a city and an AI simulates
-    the effects on traffic, pollution, and happiness
+def display_younger_games():
+    """Display simulation games for 7-9 year olds"""
+    # Create a 2-column layout for game cards
+    col1, col2 = st.columns(2)
     
-    Args:
-        difficulty (str): The difficulty level (Easy, Medium, Advanced)
-    """
-    st.markdown("""
-    Build a smart city that uses AI to improve the lives of its citizens! 
-    Place different buildings and let the AI predict how they will affect the city.
-    """)
-    
-    # Initialize city data if not present
-    if "city_grid" not in st.session_state:
-        # Create a 5x5 grid for Easy, 7x7 for Medium, 10x10 for Advanced
-        grid_size = 5 if difficulty == "Easy" else (7 if difficulty == "Medium" else 10)
-        st.session_state.city_grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
-        st.session_state.city_stats = {
-            "happiness": 50,
-            "traffic": 50,
-            "pollution": 50,
-            "energy": 50,
-            "population": 1000
-        }
-    
-    # Building options
-    building_types = {
-        "🏠 House": {"happiness": 5, "traffic": 2, "pollution": 1, "energy": -2, "population": 50},
-        "🏢 Office": {"happiness": -2, "traffic": 8, "pollution": 3, "energy": -5, "population": 20},
-        "🏭 Factory": {"happiness": -5, "traffic": 5, "pollution": 10, "energy": -10, "population": 30},
-        "🌳 Park": {"happiness": 10, "traffic": -2, "pollution": -5, "energy": 0, "population": 0},
-        "🔋 Power Plant": {"happiness": -3, "traffic": 1, "pollution": 8, "energy": 25, "population": 5},
-        "🏥 Hospital": {"happiness": 8, "traffic": 4, "pollution": 1, "energy": -8, "population": 10},
-        "🏪 Store": {"happiness": 3, "traffic": 6, "pollution": 2, "energy": -3, "population": 5}
-    }
-    
-    # Display city stats
-    col1, col2 = st.columns([3, 2])
-    
+    # First game card
     with col1:
-        # Display city grid
-        grid_size = len(st.session_state.city_grid)
-        
-        # Create HTML for the grid
-        grid_html = f"""
-        <div style="display: grid; grid-template-columns: repeat({grid_size}, 1fr); gap: 2px; margin: 20px 0;">
-        """
-        
-        # Add cells
-        for i in range(grid_size):
-            for j in range(grid_size):
-                cell_content = st.session_state.city_grid[i][j] if st.session_state.city_grid[i][j] else "➕"
-                cell_color = "#f0f0f0" if not st.session_state.city_grid[i][j] else "#e6f7ff"
-                
-                grid_html += f"""
-                <div style="
-                    width: 100%;
-                    aspect-ratio: 1;
-                    background-color: {cell_color};
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 20px;
-                    border: 1px solid #ddd;
-                    cursor: pointer;
-                " onclick="alert('Click the + button below to place a building')">
-                    {cell_content}
-                </div>
-                """
-        
-        grid_html += "</div>"
-        
-        st.markdown(grid_html, unsafe_allow_html=True)
-        
-        # Building placement controls
-        st.markdown("### Place a Building")
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            building = st.selectbox("Building type:", list(building_types.keys()))
-        
-        with col2:
-            row = st.number_input("Row:", min_value=1, max_value=grid_size, step=1)
-        
-        with col3:
-            col = st.number_input("Column:", min_value=1, max_value=grid_size, step=1)
-        
-        if st.button("Place Building"):
-            # Adjust to 0-based indexing
-            row_idx = row - 1
-            col_idx = col - 1
-            
-            # Check if cell is empty
-            if st.session_state.city_grid[row_idx][col_idx] is None:
-                # Place building
-                st.session_state.city_grid[row_idx][col_idx] = building
-                
-                # Update city stats
-                for stat, change in building_types[building].items():
-                    st.session_state.city_stats[stat] += change
-                
-                # Ensure stats stay in range 0-100 (except population)
-                for stat in ["happiness", "traffic", "pollution", "energy"]:
-                    st.session_state.city_stats[stat] = max(0, min(100, st.session_state.city_stats[stat]))
-                
-                st.success(f"{building} placed at row {row}, column {col}!")
-                st.rerun()
-            else:
-                st.error("That cell is already occupied!")
-    
-    with col2:
-        st.markdown("### City Statistics")
-        
-        # Create gauges for each stat
-        stats = st.session_state.city_stats
-        
-        # Happiness gauge
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=stats["happiness"],
-            title={"text": "Happiness"},
-            gauge={
-                "axis": {"range": [0, 100]},
-                "bar": {"color": "#91e3a4" if stats["happiness"] > 50 else "#f2a477"},
-                "steps": [
-                    {"range": [0, 33], "color": "#ffcccb"},
-                    {"range": [33, 66], "color": "#ffffcc"},
-                    {"range": [66, 100], "color": "#ccffcc"}
-                ]
-            }
-        ))
-        fig.update_layout(height=150, margin=dict(l=20, r=20, t=50, b=20))
-        st.plotly_chart(fig, use_container_width=True)
-        
-        # Traffic gauge
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=stats["traffic"],
-            title={"text": "Traffic"},
-            gauge={
-                "axis": {"range": [0, 100]},
-                "bar": {"color": "#f2a477" if stats["traffic"] > 50 else "#91e3a4"},
-                "steps": [
-                    {"range": [0, 33], "color": "#ccffcc"},
-                    {"range": [33, 66], "color": "#ffffcc"},
-                    {"range": [66, 100], "color": "#ffcccb"}
-                ]
-            }
-        ))
-        fig.update_layout(height=150, margin=dict(l=20, r=20, t=50, b=20))
-        st.plotly_chart(fig, use_container_width=True)
-        
-        # Pollution gauge
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=stats["pollution"],
-            title={"text": "Pollution"},
-            gauge={
-                "axis": {"range": [0, 100]},
-                "bar": {"color": "#f2a477" if stats["pollution"] > 50 else "#91e3a4"},
-                "steps": [
-                    {"range": [0, 33], "color": "#ccffcc"},
-                    {"range": [33, 66], "color": "#ffffcc"},
-                    {"range": [66, 100], "color": "#ffcccb"}
-                ]
-            }
-        ))
-        fig.update_layout(height=150, margin=dict(l=20, r=20, t=50, b=20))
-        st.plotly_chart(fig, use_container_width=True)
-        
-        # Population and energy
-        st.metric("Population", f"{stats['population']} people")
-        st.metric("Energy Balance", f"{stats['energy']}%", f"{'+' if stats['energy'] - 50 > 0 else ''}{stats['energy'] - 50}%")
-        
-        # AI Advisor
-        st.markdown("### 🤖 AI City Advisor")
-        
-        # Generate advice based on city stats
-        advice = generate_city_advice(stats)
-        
-        st.markdown(f"""
-        <div style="background-color: #f0f7ff; padding: 10px; border-radius: 10px; margin-top: 10px;">
-            <p style="margin: 0;"><i>"{advice}"</i></p>
+        st.markdown("""
+        <div style="border: 2px solid #4287f5; border-radius: 10px; padding: 15px;">
+            <h3 style="color: #4287f5; margin-top: 0;">Evolving Creatures</h3>
+            <p>Create simple creatures that learn to walk by themselves using a genetic algorithm.</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 40px;">🦎</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span style="background-color: #4287f5; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Easy to Learn
+                </span>
+                <span style="background-color: #f58c42; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Evolution AI
+                </span>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Clear city button
-        if st.button("🔄 Reset City"):
-            # Reset the grid and stats
-            grid_size = len(st.session_state.city_grid)
-            st.session_state.city_grid = [[None for _ in range(grid_size)] for _ in range(grid_size)]
-            st.session_state.city_stats = {
-                "happiness": 50,
-                "traffic": 50,
-                "pollution": 50,
-                "energy": 50,
-                "population": 1000
-            }
-            st.rerun()
-
-def display_evolution_simulator(difficulty):
-    """
-    Display a simplified evolution simulator where children can set environmental
-    conditions and watch how a population adapts over time
+        if st.button("Play Evolving Creatures"):
+            st.session_state.selected_game = "evolving_creatures"
     
-    Args:
-        difficulty (str): The difficulty level (Easy, Medium, Advanced)
-    """
-    st.markdown("""
-    Watch virtual creatures evolve in different environments! 
-    This simulator shows how AI can model natural selection and adaptation.
-    """)
-    
-    # Initialize evolution data if not present
-    if "evolution_step" not in st.session_state:
-        st.session_state.evolution_step = 0
-    
-    if "creature_population" not in st.session_state:
-        # Start with 20 creatures with random traits
-        st.session_state.creature_population = initialize_creature_population(20)
-    
-    if "environment" not in st.session_state:
-        # Default environment
-        st.session_state.environment = {
-            "temperature": 50,  # 0-100, 0=cold, 100=hot
-            "food_supply": 50,  # 0-100, 0=scarce, 100=abundant
-            "predators": 50,    # 0-100, 0=none, 100=many
-            "terrain": "plains"  # plains, forest, desert, water
-        }
-    
-    # Layout
-    col1, col2 = st.columns([3, 2])
-    
-    with col1:
-        st.markdown("### Evolution Simulation")
-        
-        # Display current generation info
-        generation = st.session_state.evolution_step
-        population_size = len(st.session_state.creature_population)
-        
-        st.markdown(f"""
-        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-            <span style="font-weight: bold;">Generation:</span> {generation} | 
-            <span style="font-weight: bold;">Population:</span> {population_size} creatures
+    # Second game card
+    with col2:
+        st.markdown("""
+        <div style="border: 2px solid #42f5b3; border-radius: 10px; padding: 15px;">
+            <h3 style="color: #42f5b3; margin-top: 0;">Smart City Builder</h3>
+            <p>Build a small city and watch AI cars learn to navigate through your streets.</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 40px;">🏙️</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span style="background-color: #42f5b3; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Creative
+                </span>
+                <span style="background-color: #f542a7; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Reinforcement Learning
+                </span>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Display creatures (simplified visualization)
-        display_creature_population(st.session_state.creature_population)
-        
-        # Population statistics
-        if st.session_state.creature_population:
-            st.markdown("### Population Statistics")
-            display_population_stats(st.session_state.creature_population)
+        if st.button("Play Smart City Builder"):
+            st.session_state.selected_game = "smart_city"
     
-    with col2:
-        st.markdown("### Environment Controls")
-        
-        # Environment settings
-        env = st.session_state.environment
-        
-        # Temperature slider
-        temperature = st.slider(
-            "Temperature:",
-            min_value=0,
-            max_value=100,
-            value=env["temperature"],
-            help="0 = very cold, 100 = very hot"
-        )
-        
-        # Food supply slider
-        food_supply = st.slider(
-            "Food Supply:",
-            min_value=0,
-            max_value=100,
-            value=env["food_supply"],
-            help="0 = very scarce, 100 = very abundant"
-        )
-        
-        # Predator density slider
-        predators = st.slider(
-            "Predator Density:",
-            min_value=0,
-            max_value=100,
-            value=env["predators"],
-            help="0 = no predators, 100 = many predators"
-        )
-        
-        # Terrain selection
-        terrain_options = ["plains", "forest", "desert", "water"]
-        terrain = st.selectbox(
-            "Terrain Type:",
-            terrain_options,
-            index=terrain_options.index(env["terrain"])
-        )
-        
-        # Update environment
-        if (temperature != env["temperature"] or 
-            food_supply != env["food_supply"] or 
-            predators != env["predators"] or 
-            terrain != env["terrain"]):
-            
-            st.session_state.environment = {
-                "temperature": temperature,
-                "food_supply": food_supply,
-                "predators": predators,
-                "terrain": terrain
-            }
-            
-            st.success("Environment updated! Run the simulation to see what happens.")
-        
-        # Controls
-        st.markdown("### Simulation Controls")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("🔄 Next Generation"):
-                # Evolve the population
-                st.session_state.creature_population = evolve_population(
-                    st.session_state.creature_population,
-                    st.session_state.environment
-                )
-                st.session_state.evolution_step += 1
-                st.rerun()
-        
-        with col2:
-            if st.button("🔄 Simulate 5 Generations"):
-                for _ in range(5):
-                    st.session_state.creature_population = evolve_population(
-                        st.session_state.creature_population,
-                        st.session_state.environment
-                    )
-                    st.session_state.evolution_step += 1
-                st.rerun()
-        
-        # Reset simulation
-        if st.button("🔄 Reset Simulation"):
-            st.session_state.evolution_step = 0
-            st.session_state.creature_population = initialize_creature_population(20)
-            st.rerun()
-        
-        # Explanations based on difficulty
-        if difficulty == "Easy":
-            st.markdown("""
-            ### How It Works
-            
-            This is like a simple video game where creatures change over time!
-            
-            - Creatures with helpful traits survive better
-            - Survivors have babies that look like them
-            - Over time, the whole group changes
-            
-            This is similar to how AI learns to improve over time!
-            """)
-        elif difficulty == "Medium":
-            st.markdown("""
-            ### How It Works
-            
-            This simulation shows natural selection and genetic algorithms:
-            
-            - Each creature has different traits (genes)
-            - The environment determines which traits are helpful
-            - Creatures with better traits have more offspring
-            - Mutations introduce new variations
-            
-            AI uses similar algorithms to find the best solutions!
-            """)
-        else:  # Advanced
-            st.markdown("""
-            ### How It Works
-            
-            This models evolutionary algorithms and reinforcement learning:
-            
-            - The population represents possible solutions
-            - Fitness is calculated based on the environment
-            - Selection pressure favors more adapted individuals
-            - Crossover and mutation operators create diversity
-            
-            Modern AI combines evolution-inspired algorithms with other techniques like neural networks!
-            """)
+    # Display the selected game
+    if "selected_game" in st.session_state:
+        st.markdown("---")
+        if st.session_state.selected_game == "evolving_creatures":
+            display_evolving_creatures_game(age_group="younger")
+        elif st.session_state.selected_game == "smart_city":
+            display_smart_city_game(age_group="younger")
 
-def display_neural_network_playground(difficulty):
-    """
-    Display an interactive neural network playground where kids can
-    build and train simple neural networks
+def display_older_games():
+    """Display simulation games for 10-13 year olds"""
+    # Create a 2-column layout for game cards
+    col1, col2 = st.columns(2)
     
-    Args:
-        difficulty (str): The difficulty level (Easy, Medium, Advanced)
-    """
-    st.markdown("""
-    Build your own neural network brain and teach it to recognize patterns!
-    See how computers learn to make decisions through training.
-    """)
-    
-    # Set complexity based on difficulty
-    if difficulty == "Easy":
-        max_layers = 2
-        max_neurons = 4
-        problems = ["Shape Recognition", "Color Sorting"]
-    elif difficulty == "Medium":
-        max_layers = 3
-        max_neurons = 6
-        problems = ["Shape Recognition", "Color Sorting", "Number Prediction", "Animal Classifier"]
-    else:  # Advanced
-        max_layers = 4
-        max_neurons = 8
-        problems = ["Shape Recognition", "Color Sorting", "Number Prediction", "Animal Classifier", "Pattern Completion"]
-    
-    # Layout
-    col1, col2 = st.columns([3, 2])
-    
+    # First game card
     with col1:
-        st.markdown("### Neural Network Designer")
+        st.markdown("""
+        <div style="border: 2px solid #9542f5; border-radius: 10px; padding: 15px;">
+            <h3 style="color: #9542f5; margin-top: 0;">Neural Network Playground</h3>
+            <p>Build and train your own neural network to solve image classification problems.</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 40px;">🧠</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span style="background-color: #9542f5; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Advanced
+                </span>
+                <span style="background-color: #42adf5; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Deep Learning
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Problem selection
-        problem = st.selectbox("Choose a problem to solve:", problems)
-        
-        # Network structure
-        st.markdown("#### Network Architecture")
-        
-        # Initialize network architecture if not present
-        if "nn_architecture" not in st.session_state:
-            st.session_state.nn_architecture = [2, 3, 1]  # Default: input, hidden, output
-            st.session_state.nn_trained = False
-            st.session_state.nn_accuracy = 0
-        
-        # Layer controls
-        layers = []
-        
-        # Input layer (fixed by problem)
-        input_size = 2 if problem == "Color Sorting" else (1 if problem == "Number Prediction" else 4)
-        layers.append(input_size)
-        
-        # Hidden layers
-        num_hidden_layers = st.slider("Number of hidden layers:", 1, max_layers-1, 1)
-        
-        for i in range(num_hidden_layers):
-            neurons = st.slider(f"Neurons in hidden layer {i+1}:", 1, max_neurons, min(3, max_neurons))
-            layers.append(neurons)
-        
-        # Output layer (fixed by problem)
-        output_size = 1 if problem in ["Number Prediction", "Color Sorting"] else (4 if problem == "Animal Classifier" else 3)
-        layers.append(output_size)
-        
-        # Update architecture if changed
-        if layers != st.session_state.nn_architecture:
-            st.session_state.nn_architecture = layers
-            st.session_state.nn_trained = False
-            st.session_state.nn_accuracy = 0
-        
-        # Visualize the network
-        st.markdown("#### Network Visualization")
-        visualize_neural_network(layers)
+        if st.button("Play Neural Network Playground"):
+            st.session_state.selected_game = "neural_network"
     
+    # Second game card
     with col2:
-        st.markdown("### Training Controls")
+        st.markdown("""
+        <div style="border: 2px solid #f54263; border-radius: 10px; padding: 15px;">
+            <h3 style="color: #f54263; margin-top: 0;">Genetic Algorithm Lab</h3>
+            <p>Design experiments where AI solves problems through evolution and natural selection.</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 40px;">🧬</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span style="background-color: #f54263; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Challenging
+                </span>
+                <span style="background-color: #42f5e6; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                    Evolutionary AI
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Learning parameters based on difficulty
-        if difficulty == "Easy":
-            st.markdown("Training Settings: Basic")
-            learning_rate = 0.1
-            epochs = 10
-        elif difficulty == "Medium":
-            learning_rate = st.slider("Learning Rate:", 0.01, 0.2, 0.1, 0.01)
-            epochs = st.slider("Training Epochs:", 5, 20, 10)
-        else:  # Advanced
-            learning_rate = st.slider("Learning Rate:", 0.01, 0.2, 0.1, 0.01)
-            epochs = st.slider("Training Epochs:", 5, 50, 10)
-            st.checkbox("Use Momentum", value=True)
-            st.slider("Dropout Rate:", 0.0, 0.5, 0.2, 0.1)
-        
-        # Training data
-        st.markdown("#### Training Data")
-        st.markdown(f"Sample Size: {100 if difficulty == 'Easy' else (250 if difficulty == 'Medium' else 500)} examples")
-        
-        # Train button
-        if st.button("🧠 Train Network"):
-            # Simulate training with progress bar
-            progress_bar = st.progress(0)
-            for i in range(epochs):
-                # Simulate epoch training
-                time.sleep(0.1)
-                progress_bar.progress((i + 1) / epochs)
-            
-            # Calculate "accuracy" based on network complexity and learning parameters
-            base_accuracy = random.uniform(0.5, 0.7)  # Base accuracy
-            
-            # Factors that affect accuracy
-            complexity_bonus = 0.05 * (sum(layers[1:-1]) / (max_neurons * (max_layers-1)))  # More neurons/layers help
-            learning_bonus = 0.1 * (epochs / (20 if difficulty == "Advanced" else 10))  # More epochs help
-            problem_penalty = -0.1 if problem in ["Animal Classifier", "Pattern Completion"] else 0  # Harder problems
-            random_factor = random.uniform(-0.05, 0.05)  # Random variation
-            
-            accuracy = min(0.98, max(0.4, base_accuracy + complexity_bonus + learning_bonus + problem_penalty + random_factor))
-            
-            st.session_state.nn_trained = True
-            st.session_state.nn_accuracy = accuracy
-            
-            st.success(f"Training complete! Accuracy: {accuracy:.1%}")
-        
-        # Test data
-        if st.session_state.nn_trained:
-            st.markdown("#### Test Your Network")
-            
-            if problem == "Shape Recognition":
-                test_options = ["Circle", "Square", "Triangle"]
-                test_input = st.selectbox("Select a shape to classify:", test_options)
-                
-                if st.button("Test"):
-                    result = simulate_nn_prediction(test_input, problem, st.session_state.nn_accuracy)
-                    show_prediction_result(test_input, result, problem)
-            
-            elif problem == "Number Prediction":
-                test_input = st.number_input("Enter a number:", value=5, step=1)
-                
-                if st.button("Predict Next Number"):
-                    result = simulate_nn_prediction(test_input, problem, st.session_state.nn_accuracy)
-                    show_prediction_result(test_input, result, problem)
-            
-            elif problem == "Color Sorting":
-                test_options = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"]
-                test_input = st.selectbox("Select a color to classify:", test_options)
-                
-                if st.button("Classify"):
-                    result = simulate_nn_prediction(test_input, problem, st.session_state.nn_accuracy)
-                    show_prediction_result(test_input, result, problem)
-        
-        # Explanation
-        st.markdown("### How Neural Networks Work")
-        
-        if difficulty == "Easy":
-            st.markdown("""
-            A neural network is like a robot brain that learns patterns:
-            
-            1. It has layers of connected dots (neurons)
-            2. When you train it, it learns which connections are important
-            3. After training, it can recognize new examples
-            
-            Just like you learn to recognize shapes, neural networks learn to recognize patterns!
-            """)
-        else:
-            st.markdown("""
-            Neural networks process information through layers:
-            
-            1. Input layer receives the data
-            2. Hidden layers extract features and patterns
-            3. Output layer makes the final prediction
-            4. Training adjusts the weights between neurons
-            
-            This is how computers learn to recognize images, understand language, and make decisions!
-            """)
-
-def display_smart_car_racing(difficulty):
-    """
-    Display a simulation of AI-controlled cars learning to race through a track
+        if st.button("Play Genetic Algorithm Lab"):
+            st.session_state.selected_game = "genetic_algorithm"
     
-    Args:
-        difficulty (str): The difficulty level (Easy, Medium, Advanced)
-    """
+    # Display the selected game
+    if "selected_game" in st.session_state:
+        st.markdown("---")
+        if st.session_state.selected_game == "neural_network":
+            display_neural_network_game(age_group="older")
+        elif st.session_state.selected_game == "genetic_algorithm":
+            display_genetic_algorithm_game(age_group="older")
+
+def display_evolving_creatures_game(age_group):
+    """Display the Evolving Creatures game"""
+    st.markdown("## Evolving Creatures Simulation")
+    
     st.markdown("""
-    Watch AI-controlled cars learn to navigate a racetrack through reinforcement learning!
+    In this game, you'll create simple creatures that learn to walk all by themselves!
+    
+    This uses a type of AI called a **Genetic Algorithm**, which works like this:
+    
+    1. We start with a group of random creatures
+    2. We test how well each creature can walk
+    3. We keep the best walkers and let them have "baby" creatures
+    4. The babies have similar but slightly different bodies
+    5. We test the babies and keep the best ones
+    6. After many generations, our creatures get really good at walking!
+    
+    This is similar to how animals evolved in nature over millions of years!
     """)
     
-    # Initialize simulation data if not present
-    if "race_generation" not in st.session_state:
-        st.session_state.race_generation = 0
-        st.session_state.best_lap_time = None
-        st.session_state.top_cars = []
+    # Game controls
+    st.markdown("### Create Your First Generation")
     
-    # Track selection
-    track_options = ["Oval", "Figure 8", "Mountain Pass"]
-    available_tracks = track_options if difficulty == "Advanced" else track_options[:2]
-    
-    track = st.selectbox("Select a track:", available_tracks)
-    
-    # Car count based on difficulty
-    car_count = 5 if difficulty == "Easy" else (10 if difficulty == "Medium" else 20)
-    
-    # Display track
-    st.markdown(f"### {track} Track")
-    
-    # Simplified track visualization
-    track_html = """
-    <div style="background-color: #f0f0f0; border-radius: 10px; padding: 20px; height: 300px; position: relative; overflow: hidden;">
-    """
-    
-    if track == "Oval":
-        track_html += """
-        <div style="position: absolute; top: 50px; left: 50px; right: 50px; bottom: 50px; border: 10px solid #333; border-radius: 100px;"></div>
-        <div style="position: absolute; top: 100px; left: 100px; right: 100px; bottom: 100px; border: 2px dashed white;"></div>
-        """
-    elif track == "Figure 8":
-        track_html += """
-        <div style="position: absolute; top: 50px; left: 50px; width: 100px; height: 100px; border: 10px solid #333; border-radius: 50%;"></div>
-        <div style="position: absolute; top: 150px; left: 150px; width: 100px; height: 100px; border: 10px solid #333; border-radius: 50%;"></div>
-        <div style="position: absolute; top: 100px; left: 100px; width: 100px; height: 100px; border: 10px solid #333;"></div>
-        """
-    else:  # Mountain Pass
-        track_html += """
-        <div style="position: absolute; top: 50px; left: 50px; right: 50px; height: 20px; background-color: #333;"></div>
-        <div style="position: absolute; top: 50px; right: 50px; width: 20px; height: 100px; background-color: #333;"></div>
-        <div style="position: absolute; top: 150px; left: 150px; right: 50px; height: 20px; background-color: #333;"></div>
-        <div style="position: absolute; top: 150px; left: 150px; width: 20px; height: 100px; background-color: #333;"></div>
-        <div style="position: absolute; top: 250px; left: 50px; right: 50px; height: 20px; background-color: #333;"></div>
-        <div style="position: absolute; top: 150px; left: 50px; width: 20px; height: 100px; background-color: #333;"></div>
-        <div style="position: absolute; top: 50px; left: 50px; width: 20px; height: 100px; background-color: #333;"></div>
-        """
-    
-    # Add some "cars" based on generation
-    if st.session_state.race_generation > 0:
-        car_positions = []
-        for i in range(min(car_count, st.session_state.race_generation)):
-            # Generate random positions along the track for demonstration
-            if track == "Oval":
-                angle = random.uniform(0, 360)
-                radius = random.uniform(50, 100)
-                x = 150 + radius * np.cos(np.radians(angle))
-                y = 150 + radius * np.sin(np.radians(angle))
-            elif track == "Figure 8":
-                if random.random() > 0.5:
-                    angle = random.uniform(0, 360)
-                    x = 100 + 50 * np.cos(np.radians(angle))
-                    y = 100 + 50 * np.sin(np.radians(angle))
-                else:
-                    angle = random.uniform(0, 360)
-                    x = 200 + 50 * np.cos(np.radians(angle))
-                    y = 200 + 50 * np.sin(np.radians(angle))
-            else:  # Mountain Pass
-                segments = [(100, 50), (300, 50), (300, 150), (170, 150), (170, 250), (300, 250)]
-                segment = random.choice(segments)
-                if segment[0] == segment[2]:  # Vertical segment
-                    x = segment[0]
-                    y = random.uniform(min(segment[1], segment[3]), max(segment[1], segment[3]))
-                else:  # Horizontal segment
-                    y = segment[1]
-                    x = random.uniform(min(segment[0], segment[2]), max(segment[0], segment[2]))
-            
-            car_positions.append((x, y))
-            
-            # Add car to the visualization
-            car_color = "#ff0000" if i == 0 else ("#ff9900" if i < 3 else "#3366ff")
-            track_html += f"""
-            <div style="position: absolute; top: {y-5}px; left: {x-5}px; width: 10px; height: 10px; background-color: {car_color}; border-radius: 50%;"></div>
-            """
-    
-    track_html += """
-    <div style="position: absolute; bottom: 10px; right: 10px; background-color: rgba(255,255,255,0.7); padding: 5px; border-radius: 5px; font-size: 12px;">
-        <span style="display: inline-block; width: 10px; height: 10px; background-color: #ff0000; border-radius: 50%; margin-right: 5px;"></span> Best car
-        <span style="display: inline-block; width: 10px; height: 10px; background-color: #ff9900; border-radius: 50%; margin-right: 5px; margin-left: 10px;"></span> Top performers
-        <span style="display: inline-block; width: 10px; height: 10px; background-color: #3366ff; border-radius: 50%; margin-right: 5px; margin-left: 10px;"></span> Learning cars
-    </div>
-    """
-    
-    track_html += "</div>"
-    
-    st.markdown(track_html, unsafe_allow_html=True)
-    
-    # Simulation controls
     col1, col2 = st.columns(2)
     
     with col1:
-        # Learning settings
-        st.markdown("### Learning Settings")
-        
-        if difficulty != "Easy":
-            learning_rate = st.slider("Learning Rate:", 0.01, 0.2, 0.1, 0.01)
-            exploration = st.slider("Exploration Rate:", 0.0, 1.0, 0.3, 0.1,
-                               help="Higher values encourage more random exploration of new paths")
-        
-        # Neural network settings for cars
-        if difficulty == "Advanced":
-            st.markdown("#### Car Brain Structure")
-            st.radio("Sensor Arrangement:", ["Basic (5 sensors)", "Advanced (9 sensors)"])
-            st.slider("Memory Length:", 1, 10, 3, help="How many past states the car remembers")
+        creature_count = st.slider("Number of creatures:", min_value=5, max_value=20, value=10)
+        mutation_rate = st.slider("Mutation rate:", min_value=1, max_value=10, value=5, 
+                                  help="Higher values mean more random changes in each generation")
     
     with col2:
-        # Simulation buttons
-        st.markdown("### Simulation Controls")
+        creature_parts = st.multiselect(
+            "Creature body parts:",
+            ["Legs", "Arms", "Tail", "Head", "Body"],
+            default=["Legs", "Body", "Head"]
+        )
         
-        if st.button("🏎️ Simulate Next Generation"):
-            # Simulate a generation of learning
-            with st.spinner("Training cars..."):
-                time.sleep(1)  # Simulate processing time
-                
-                # Update generation counter
-                st.session_state.race_generation += 1
-                
-                # Calculate "best lap time" - improves with each generation
-                if st.session_state.best_lap_time is None:
-                    st.session_state.best_lap_time = random.uniform(60, 90)  # Initial lap time in seconds
-                else:
-                    # Improvement gets smaller in later generations
-                    improvement = 5 / (st.session_state.race_generation**0.5)
-                    st.session_state.best_lap_time -= min(improvement, st.session_state.best_lap_time * 0.1)
-                
-                # Update top cars
-                st.session_state.top_cars = [
-                    {"id": f"Car {i+1}", "lap_time": st.session_state.best_lap_time + random.uniform(0, 5), "crashes": random.randint(0, 2)}
-                    for i in range(3)
-                ]
-                
-                st.success(f"Generation {st.session_state.race_generation} trained!")
-        
-        if st.button("🔄 Reset Simulation"):
-            st.session_state.race_generation = 0
-            st.session_state.best_lap_time = None
-            st.session_state.top_cars = []
-            st.success("Simulation reset!")
+        environment = st.selectbox(
+            "Environment:",
+            ["Flat Ground", "Hills", "Water", "Obstacles"]
+        )
     
-    # Results
-    if st.session_state.race_generation > 0:
-        st.markdown("### Learning Results")
+    # Start simulation button
+    if st.button("Start Evolution Simulation"):
+        # Show a progress bar for "generating creatures"
+        progress_bar = st.progress(0)
+        status_text = st.empty()
         
-        col1, col2 = st.columns(2)
+        status_text.text("Generating first generation of creatures...")
+        for i in range(100):
+            # Update progress bar
+            progress_bar.progress(i + 1)
+            time.sleep(0.01)
         
-        with col1:
-            st.markdown(f"**Generation:** {st.session_state.race_generation}")
-            st.markdown(f"**Best Lap Time:** {st.session_state.best_lap_time:.2f} seconds")
-            
-            # Progress chart (simulated)
-            progress_data = []
-            for gen in range(1, st.session_state.race_generation + 1):
-                # Calculate a simulated time based on generation
-                gen_time = 90 - (30 * (1 - np.exp(-(gen-1) / 5)))
-                progress_data.append({"Generation": gen, "Best Lap Time": gen_time})
-            
-            df = pd.DataFrame(progress_data)
-            
-            fig = px.line(
-                df, 
-                x="Generation", 
-                y="Best Lap Time",
-                markers=True,
-                title="Learning Progress"
-            )
-            
-            fig.update_layout(height=300)
-            st.plotly_chart(fig, use_container_width=True)
+        status_text.text("First generation created!")
         
-        with col2:
-            st.markdown("**Top Performing Cars:**")
+        # Show generation results
+        display_generation_results(1, creature_count, mutation_rate, creature_parts, environment)
+        
+        # Continue evolution button
+        if st.button("Evolve Next Generation"):
+            status_text.text("Evolving creatures...")
+            for i in range(100):
+                # Update progress bar
+                progress_bar.progress(i + 1)
+                time.sleep(0.01)
             
-            for car in st.session_state.top_cars:
-                st.markdown(f"""
-                <div style="background-color: white; border-radius: 5px; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
-                    <div style="font-weight: bold;">{car['id']}</div>
-                    <div>Lap Time: {car['lap_time']:.2f}s</div>
-                    <div>Crashes: {car['crashes']}</div>
-                </div>
-                """, unsafe_allow_html=True)
+            status_text.text("Evolution complete!")
+            
+            # Show improved generation results
+            display_generation_results(2, creature_count, mutation_rate, creature_parts, environment, improved=True)
     
-    # Learning explanation
-    if difficulty == "Easy":
+    # Explanation box
+    with st.expander("How Genetic Algorithms Work"):
         st.markdown("""
-        ### How Cars Learn
+        Genetic algorithms are inspired by how living things evolve in nature:
         
-        The cars are using **Reinforcement Learning**, which is like training a pet:
+        1. **Initial Population**: Start with a variety of random solutions
+        2. **Fitness Testing**: Test how good each solution is at solving the problem
+        3. **Selection**: Choose the best solutions to become "parents"
+        4. **Crossover**: Combine parts of two good solutions to make new ones
+        5. **Mutation**: Make small random changes to keep variety
+        6. **Repeat**: Test the new generation and continue the process
         
-        1. Cars try different actions (turn left, right, accelerate, brake)
-        2. Good actions (staying on track, going fast) get rewards
-        3. Bad actions (crashing, going slow) get penalties
-        4. Over time, cars learn what works best
+        After many generations, the solutions get better and better!
         
-        This is the same way robots and game AIs learn!
-        """)
-    else:
-        st.markdown("""
-        ### How Cars Learn
-        
-        The simulation uses **Deep Reinforcement Learning**:
-        
-        1. Each car has a neural network "brain" that processes sensor inputs
-        2. The neural network decides what actions to take (steering, acceleration)
-        3. A reward function evaluates performance (track position, speed, crashes)
-        4. The best performing cars pass their "knowledge" to the next generation
-        5. Some random mutations help discover new strategies
-        
-        This technology is used in real self-driving cars and robotics!
+        This is used in real AI to:
+        - Design efficient shapes for cars and airplanes
+        - Create robots that can walk well
+        - Find the best strategy for games
+        - Optimize schedules and routes
         """)
 
-# Helper functions for the City Planner game
-def generate_city_advice(stats):
-    """Generate AI advice based on city stats"""
-    advice = "Your city is developing well! "
+def display_generation_results(generation, creature_count, mutation_rate, creature_parts, environment, improved=False):
+    """Display the results of a generation of creatures"""
+    st.markdown(f"### Generation {generation} Results")
     
-    # Check for issues
-    if stats["happiness"] < 40:
-        advice += "Your citizens aren't very happy. Try adding more parks and houses. "
+    # Create a box showing stats
+    col1, col2, col3 = st.columns(3)
     
-    if stats["traffic"] > 70:
-        advice += "Traffic is becoming a problem. Consider adding parks to reduce congestion. "
-    
-    if stats["pollution"] > 70:
-        advice += "Pollution levels are high. Add more parks to clean the air. "
-    
-    if stats["energy"] < 30:
-        advice += "Your city needs more power! Add a power plant. "
-    
-    if stats["population"] < 1500:
-        advice += "To grow your city, add more houses for people to live in. "
-    
-    if all(40 <= stats[key] <= 60 for key in ["happiness", "traffic", "pollution", "energy"]):
-        advice += "Your city has good balance! Keep developing carefully."
-    
-    return advice
-
-# Helper functions for the Evolution Simulator
-def initialize_creature_population(size):
-    """Initialize a population of creatures with random traits"""
-    creatures = []
-    
-    for i in range(size):
-        creature = {
-            "id": i,
-            "size": random.uniform(0.5, 1.5),  # 0.5 = small, 1.5 = large
-            "speed": random.uniform(0.5, 1.5),  # 0.5 = slow, 1.5 = fast
-            "fur": random.uniform(0.2, 1.0),    # 0.2 = thin fur, 1.0 = thick fur
-            "color": random.uniform(0, 1),      # 0 = light, 1 = dark
-            "fitness": 0.0                      # Will be calculated based on environment
-        }
-        creatures.append(creature)
-    
-    return creatures
-
-def evolve_population(population, environment):
-    """Evolve the population based on the environment"""
-    # Calculate fitness for each creature
-    for creature in population:
-        creature["fitness"] = calculate_fitness(creature, environment)
-    
-    # Sort by fitness
-    population.sort(key=lambda x: x["fitness"], reverse=True)
-    
-    # Keep the top half
-    survivors = population[:len(population)//2]
-    
-    # Create offspring
-    new_population = []
-    
-    # Add survivors to new population
-    new_population.extend(survivors)
-    
-    # Create offspring from survivors
-    while len(new_population) < len(population):
-        # Select two random parents from survivors
-        parent1 = random.choice(survivors)
-        parent2 = random.choice(survivors)
+    with col1:
+        # Better stats for the second generation
+        if improved:
+            average_distance = random.uniform(15.0, 25.0)
+            max_distance = random.uniform(30.0, 45.0)
+        else:
+            average_distance = random.uniform(5.0, 15.0)
+            max_distance = random.uniform(10.0, 30.0)
         
-        # Create child with traits from both parents
-        child = {
-            "id": len(new_population),
-            "size": (parent1["size"] + parent2["size"]) / 2 + random.uniform(-0.1, 0.1),
-            "speed": (parent1["speed"] + parent2["speed"]) / 2 + random.uniform(-0.1, 0.1),
-            "fur": (parent1["fur"] + parent2["fur"]) / 2 + random.uniform(-0.1, 0.1),
-            "color": (parent1["color"] + parent2["color"]) / 2 + random.uniform(-0.1, 0.1),
-            "fitness": 0.0
-        }
+        st.metric(
+            "Average Distance", 
+            f"{average_distance:.1f} meters",
+            f"{'+' if improved else ''}{(average_distance*0.3 if improved else 0):.1f} m"
+        )
+    
+    with col2:
+        st.metric(
+            "Best Creature", 
+            f"{max_distance:.1f} meters",
+            f"{'+' if improved else ''}{(max_distance*0.2 if improved else 0):.1f} m"
+        )
+    
+    with col3:
+        survivors = int(creature_count * 0.4)
+        st.metric(
+            "Survivors", 
+            f"{survivors}/{creature_count}",
+            None
+        )
+    
+    # Create a chart showing the distribution of walking distances
+    distances = []
+    for i in range(creature_count):
+        # Better performance in later generations
+        if improved:
+            base = random.uniform(10.0, 20.0)
+            # A few really good performers
+            if i < creature_count * 0.2:
+                base += random.uniform(15.0, 25.0)
+        else:
+            base = random.uniform(0.0, 10.0)
+            # A few decent performers
+            if i < creature_count * 0.2:
+                base += random.uniform(5.0, 20.0)
         
-        # Ensure traits are within bounds
-        child["size"] = max(0.2, min(2.0, child["size"]))
-        child["speed"] = max(0.2, min(2.0, child["speed"]))
-        child["fur"] = max(0.1, min(1.0, child["fur"]))
-        child["color"] = max(0, min(1, child["color"]))
-        
-        new_population.append(child)
+        distances.append(base)
     
-    return new_population
-
-def calculate_fitness(creature, environment):
-    """Calculate fitness of a creature in the given environment"""
-    fitness = 1.0  # Base fitness
+    # Sort distances for the chart
+    distances.sort(reverse=True)
     
-    # Temperature adaptation
-    if environment["temperature"] < 30:  # Cold environment
-        fitness += (creature["fur"] - 0.5) * 0.5  # Thick fur is good in cold
-    elif environment["temperature"] > 70:  # Hot environment
-        fitness += (0.5 - creature["fur"]) * 0.5  # Thin fur is good in heat
+    # Create a DataFrame
+    df = pd.DataFrame({
+        'Creature': [f"Creature {i+1}" for i in range(creature_count)],
+        'Distance (meters)': distances
+    })
     
-    # Food supply adaptation
-    if environment["food_supply"] < 30:  # Scarce food
-        fitness += (creature["size"] - 1.0) * -0.5  # Smaller is better when food is scarce
-    else:
-        fitness += (creature["size"] - 1.0) * 0.3  # Larger is better when food is plentiful
-    
-    # Predator adaptation
-    if environment["predators"] > 70:  # Many predators
-        fitness += (creature["speed"] - 1.0) * 0.7  # Fast is good with predators
-    else:
-        fitness += (creature["speed"] - 1.0) * 0.2  # Speed less important with fewer predators
-    
-    # Terrain adaptation
-    if environment["terrain"] == "desert":
-        fitness += (0.3 - creature["fur"]) * 0.4  # Less fur in desert
-        fitness += (0.7 - creature["color"]) * 0.4  # Lighter color in desert
-    elif environment["terrain"] == "forest":
-        fitness += (creature["color"] - 0.5) * 0.4  # Darker color in forest
-    elif environment["terrain"] == "water":
-        fitness += (creature["size"] - 1.0) * -0.5  # Smaller in water
-        fitness += (creature["fur"] - 0.5) * -0.6  # Less fur in water
-    
-    # Add some randomness
-    fitness += random.uniform(-0.1, 0.1)
-    
-    return max(0.1, fitness)  # Ensure minimum fitness
-
-def display_creature_population(population):
-    """Display a visual representation of the creature population"""
-    if not population:
-        return
-    
-    # Create a grid layout for creatures
-    rows = 4
-    cols = 5
-    
-    # Create HTML grid
-    grid_html = f"""
-    <div style="display: grid; grid-template-columns: repeat({cols}, 1fr); gap: 10px; margin: 20px 0;">
-    """
-    
-    # Add creatures to grid
-    for i, creature in enumerate(population[:rows*cols]):  # Show at most rows*cols creatures
-        # Calculate color based on creature traits
-        r = int(255 * (1 - creature["color"]))
-        g = int(155 + 100 * creature["fur"])
-        b = int(255 * (1 - creature["color"] * 0.5))
-        color = f"rgb({r}, {g}, {b})"
-        
-        # Calculate size based on creature size trait
-        size_px = int(30 + creature["size"] * 20)
-        
-        # Create creature element
-        grid_html += f"""
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="
-                width: {size_px}px;
-                height: {size_px}px;
-                background-color: {color};
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: {10 + creature['size'] * 4}px;
-            ">
-                👁️
-            </div>
-            <div style="font-size: 10px; margin-top: 5px;">Fitness: {creature['fitness']:.2f}</div>
-        </div>
-        """
-    
-    grid_html += "</div>"
-    
-    st.markdown(grid_html, unsafe_allow_html=True)
-
-def display_population_stats(population):
-    """Display statistics about the population"""
-    # Calculate averages
-    avg_size = sum(c["size"] for c in population) / len(population)
-    avg_speed = sum(c["speed"] for c in population) / len(population)
-    avg_fur = sum(c["fur"] for c in population) / len(population)
-    avg_color = sum(c["color"] for c in population) / len(population)
-    avg_fitness = sum(c["fitness"] for c in population) / len(population)
-    
-    # Create a radar chart of traits
-    categories = ["Size", "Speed", "Fur Thickness", "Color Darkness", "Fitness"]
-    values = [avg_size/2, avg_speed/2, avg_fur, avg_color, avg_fitness/3]
-    
-    # Add the first value at the end to close the loop
-    categories.append(categories[0])
-    values.append(values[0])
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatterpolar(
-        r=values,
-        theta=categories,
-        fill='toself',
-        fillcolor='rgba(64, 224, 208, 0.5)',
-        line=dict(color='rgb(64, 224, 208)', width=2),
-        name='Population Traits'
-    ))
-    
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 1]
-            )
-        ),
-        showlegend=False,
-        height=300,
-        margin=dict(l=10, r=10, t=30, b=10)
+    # Create a bar chart
+    fig = px.bar(
+        df, 
+        x='Creature', 
+        y='Distance (meters)',
+        color='Distance (meters)',
+        color_continuous_scale=px.colors.sequential.Viridis,
+        title=f"Generation {generation} Performance"
     )
     
     st.plotly_chart(fig, use_container_width=True)
     
-    # Show trait distribution
+    # Show the top performers
+    st.markdown("### Top Performers")
+    
+    top_n = min(3, creature_count)
+    top_performers_cols = st.columns(top_n)
+    
+    for i in range(top_n):
+        with top_performers_cols[i]:
+            # Create a colorful box for each top performer
+            color = "#42f5b3" if i == 0 else "#4287f5" if i == 1 else "#f542a7"
+            
+            st.markdown(f"""
+            <div style="border: 2px solid {color}; border-radius: 10px; padding: 15px; text-align: center;">
+                <div style="font-size: 24px; margin-bottom: 10px;">🦎</div>
+                <div style="font-weight: bold; margin-bottom: 5px;">Creature {i+1}</div>
+                <div style="font-size: 20px; font-weight: bold; color: {color};">{distances[i]:.1f} m</div>
+                <div style="font-size: 12px; margin-top: 10px;">
+                    Legs: {random.randint(2, 6)}<br>
+                    Body Length: {random.randint(1, 5)}<br>
+                    {"Tail: Yes" if "Tail" in creature_parts else ""}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Explanation of results
+    if improved:
+        st.markdown("""
+        #### Evolution is Working!
+        
+        Notice how the second generation performs better than the first. This is because:
+        
+        1. We kept the best creatures from the first generation
+        2. These creatures had "babies" with similar traits
+        3. Small mutations (random changes) allowed for new improvements
+        
+        In real genetic algorithms, we would continue this process for many generations until the creatures become expert walkers!
+        """)
+    else:
+        st.markdown("""
+        #### First Generation Results
+        
+        The first generation doesn't walk very well because their body shapes were created randomly.
+        
+        Some creatures got lucky and had better body shapes than others. We'll use these top performers
+        to create the next generation!
+        """)
+
+def display_smart_city_game(age_group):
+    """Display the Smart City Builder game"""
+    st.markdown("## Smart City Builder with AI Cars")
+    
+    st.markdown("""
+    In this simulation, you'll build a small city with roads, and watch AI-powered cars learn to drive through it!
+    
+    This uses **Reinforcement Learning**, which works like this:
+    
+    1. The AI cars start by driving randomly
+    2. They get rewards for good driving (staying on roads, reaching destinations)
+    3. They get penalties for bad driving (crashes, going off-road)
+    4. Over time, they learn which actions lead to more rewards
+    5. Eventually, they become expert drivers in your city!
+    
+    This is similar to how you might train a dog with treats for good behavior!
+    """)
+    
+    # City design options
+    st.markdown("### Design Your City")
+    
     col1, col2 = st.columns(2)
     
     with col1:
-        trait = st.selectbox("Select trait to view distribution:", ["Size", "Speed", "Fur", "Color"])
-        
-        trait_mapping = {"Size": "size", "Speed": "speed", "Fur": "fur", "Color": "color"}
-        trait_key = trait_mapping[trait]
-        
-        # Extract trait values
-        trait_values = [c[trait_key] for c in population]
-        
-        # Create histogram
-        fig = px.histogram(
-            trait_values,
-            nbins=10,
-            title=f"{trait} Distribution",
-            labels={"value": trait, "count": "Number of Creatures"}
+        city_size = st.select_slider(
+            "City size:",
+            options=["Small", "Medium", "Large"],
+            value="Medium"
         )
         
-        fig.update_layout(height=200, margin=dict(l=10, r=10, t=30, b=10))
-        st.plotly_chart(fig, use_container_width=True)
-
-# Helper functions for the Neural Network Playground
-def visualize_neural_network(layers):
-    """Create a visual representation of a neural network"""
-    max_neurons = max(layers)
-    layer_count = len(layers)
+        traffic_lights = st.checkbox("Add traffic lights", value=True)
+        roundabouts = st.checkbox("Add roundabouts", value=False)
     
-    # Create HTML for visualization
-    nn_html = f"""
-    <div style="display: flex; justify-content: space-between; height: 200px; margin: 20px 0; background-color: white; padding: 20px; border-radius: 10px;">
-    """
+    with col2:
+        num_cars = st.slider("Number of AI cars:", min_value=2, max_value=20, value=5)
+        
+        car_speed = st.select_slider(
+            "Car learning speed:",
+            options=["Slow", "Medium", "Fast"],
+            value="Medium",
+            help="How quickly the cars learn from their mistakes"
+        )
     
-    # Add layers
-    for layer_idx, neuron_count in enumerate(layers):
-        nn_html += f"""
-        <div style="display: flex; flex-direction: column; justify-content: center; flex: 1;">
-        """
+    # City map display (simplified version)
+    st.markdown("### Your City Map")
+    
+    # Use a placeholder image for now
+    st.image("https://via.placeholder.com/800x400.png?text=City+Map+(Placeholder)")
+    
+    # Navigation buttons
+    build_col, train_col = st.columns(2)
+    
+    with build_col:
+        if st.button("Edit City Layout"):
+            st.session_state.city_mode = "edit"
+    
+    with train_col:
+        if st.button("Train AI Cars"):
+            st.session_state.city_mode = "train"
+    
+    # City editing mode
+    if st.session_state.get("city_mode") == "edit":
+        st.markdown("### Edit City Layout")
         
-        # Layer label
-        if layer_idx == 0:
-            layer_name = "Input Layer"
-        elif layer_idx == len(layers) - 1:
-            layer_name = "Output Layer"
-        else:
-            layer_name = f"Hidden Layer {layer_idx}"
+        st.markdown("""
+        Use the tools below to design your city:
         
-        nn_html += f"""
-        <div style="text-align: center; font-size: 12px; margin-bottom: 10px;">{layer_name}</div>
-        """
+        - **Roads**: Click and drag to create roads
+        - **Buildings**: Click to place different types of buildings
+        - **Traffic Controls**: Add traffic lights, stop signs, etc.
+        """)
         
-        # Add neurons
-        for i in range(neuron_count):
-            # Position neurons evenly
-            top_margin = (100 - (neuron_count * 30)) / 2 + (i * 30)
+        # Placeholder for city editor
+        st.info("In a complete game, you would have interactive tools to design your city here.")
+        
+        # Example editor interface
+        edit_col1, edit_col2, edit_col3 = st.columns(3)
+        
+        with edit_col1:
+            st.selectbox("Road Type:", ["Straight Road", "Curved Road", "Intersection", "Highway"])
+        
+        with edit_col2:
+            st.selectbox("Building Type:", ["House", "Store", "Office", "Park"])
+        
+        with edit_col3:
+            st.selectbox("Traffic Controls:", ["Traffic Light", "Stop Sign", "Yield Sign", "Crosswalk"])
+    
+    # Training mode
+    elif st.session_state.get("city_mode") == "train":
+        st.markdown("### AI Car Training")
+        
+        st.markdown("""
+        Watch as the AI cars learn to navigate your city! The cars use reinforcement learning to improve over time.
+        """)
+        
+        # Learning progress
+        st.markdown("#### Learning Progress")
+        
+        # Simulate training progress
+        training_progress = st.progress(0)
+        training_status = st.empty()
+        
+        if st.button("Start Training"):
+            for i in range(100):
+                # Update progress bar
+                training_progress.progress(i + 1)
+                
+                # Update status text
+                if i < 20:
+                    training_status.text("Cars are exploring randomly...")
+                elif i < 50:
+                    training_status.text("Cars are learning basic navigation...")
+                elif i < 80:
+                    training_status.text("Cars are optimizing routes...")
+                else:
+                    training_status.text("Cars are mastering advanced driving...")
+                
+                time.sleep(0.05)
             
-            nn_html += f"""
-            <div style="
-                width: 25px;
-                height: 25px;
-                background-color: #4287f5;
-                border-radius: 50%;
-                margin: 5px auto;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 10px;
-                font-weight: bold;
-            ">
-                {i+1}
+            training_status.text("Training complete! Cars have learned to navigate your city.")
+        
+        # Training statistics (would be real in a complete implementation)
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Success Rate", "78%", "+23%")
+        
+        with col2:
+            st.metric("Avg. Trip Time", "45 sec", "-12 sec")
+        
+        with col3:
+            st.metric("Collisions", "2", "-15")
+        
+        # Explanation of what's happening
+        with st.expander("How the AI Cars Learn"):
+            st.markdown("""
+            The AI cars in this simulation learn using Q-learning, a type of reinforcement learning:
+            
+            1. Each car has a "Q-table" that stores values for each action in each situation
+            2. At first, the Q-table values are random, so cars drive randomly
+            3. As cars drive, they update their Q-table based on rewards and penalties
+            4. Over time, the Q-table guides cars to take better actions
+            
+            For example, if a car gets a penalty for going through a red light, it updates its Q-table to avoid that action in the future.
+            
+            This is similar to how autonomous vehicles learn in the real world, but real self-driving cars use more complex neural networks instead of Q-tables.
+            """)
+
+def display_neural_network_game(age_group):
+    """Display the Neural Network Playground game"""
+    st.markdown("## Neural Network Playground")
+    
+    st.markdown("""
+    In this advanced simulation, you'll build and train your own neural network to recognize images!
+    
+    A **Neural Network** is a type of AI that's inspired by how the human brain works:
+    
+    1. It has "neurons" organized in layers
+    2. Each neuron connects to neurons in other layers
+    3. When you train it with examples, it learns which connections are important
+    4. After training, it can recognize patterns it has never seen before
+    
+    This is the technology behind many AI systems like image recognition, language translation, and more!
+    """)
+    
+    # Neural network design
+    st.markdown("### Design Your Neural Network")
+    
+    # Description of the task
+    st.markdown("""
+    You'll create a neural network to recognize handwritten digits (0-9).
+    This is a classic AI task called MNIST digit recognition.
+    """)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        # Network architecture
+        st.markdown("#### Network Architecture")
+        
+        hidden_layers = st.slider("Hidden Layers:", min_value=1, max_value=5, value=2)
+        
+        neurons_per_layer = []
+        for i in range(hidden_layers):
+            neurons_per_layer.append(
+                st.slider(f"Neurons in Layer {i+1}:", min_value=4, max_value=128, value=32, step=4)
+            )
+        
+        activation_function = st.selectbox(
+            "Activation Function:",
+            ["ReLU", "Sigmoid", "Tanh"],
+            index=0
+        )
+    
+    with col2:
+        # Training parameters
+        st.markdown("#### Training Parameters")
+        
+        learning_rate = st.slider(
+            "Learning Rate:",
+            min_value=0.001, 
+            max_value=0.1,
+            value=0.01,
+            format="%.3f"
+        )
+        
+        batch_size = st.selectbox(
+            "Batch Size:",
+            [16, 32, 64, 128],
+            index=1
+        )
+        
+        epochs = st.slider("Training Epochs:", min_value=1, max_value=20, value=5)
+        
+        # Add data augmentation option
+        data_augmentation = st.checkbox("Use Data Augmentation", value=True,
+                                        help="Generate more training examples by rotating and scaling existing ones")
+    
+    # Visualize network architecture
+    st.markdown("### Neural Network Visualization")
+    
+    # Create a visualization of the network architecture
+    fig = go.Figure()
+    
+    # Constants for visualization
+    layers = [784] + neurons_per_layer + [10]  # Input layer (28x28=784) + hidden layers + output layer (10 digits)
+    layer_names = ["Input"] + [f"Hidden {i+1}" for i in range(hidden_layers)] + ["Output"]
+    layer_colors = ["#4287f5", "#42f5b3", "#f542a7", "#f5d742", "#f54242", "#9542f5", "#42d7f5"]
+    
+    # Position nodes in each layer
+    x_positions = []
+    y_positions = []
+    node_colors = []
+    node_sizes = []
+    node_texts = []
+    layer_indices = []
+    
+    # Maximum number of nodes to display per layer
+    max_display_nodes = 10
+    
+    for layer_idx, num_nodes in enumerate(layers):
+        # Handle large layers by showing fewer nodes
+        if num_nodes > max_display_nodes:
+            # Show max_display_nodes
+            display_nodes = max_display_nodes
+            # Add text to indicate there are more nodes
+            extra_text = f"+ {num_nodes - max_display_nodes} more"
+        else:
+            display_nodes = num_nodes
+            extra_text = None
+        
+        # Calculate vertical spacing for this layer
+        spacing = 0.9 / (display_nodes + 1)
+        
+        for i in range(display_nodes):
+            # Place nodes evenly along the y-axis
+            y_pos = 0.05 + (i + 1) * spacing
+            
+            # Add node
+            x_positions.append(layer_idx / (len(layers) - 1))
+            y_positions.append(y_pos)
+            node_colors.append(layer_colors[layer_idx % len(layer_colors)])
+            
+            # Adjust node size based on layer type
+            if layer_idx == 0:  # Input layer
+                node_sizes.append(8)  # Smaller nodes for input layer
+                node_texts.append("Input")
+            elif layer_idx == len(layers) - 1:  # Output layer
+                node_sizes.append(12)
+                node_texts.append(str(i))  # Digit for output layer
+            else:  # Hidden layers
+                node_sizes.append(10)
+                node_texts.append("")
+            
+            layer_indices.append(layer_idx)
+        
+        # Add text for additional nodes if needed
+        if extra_text:
+            x_positions.append(layer_idx / (len(layers) - 1))
+            y_positions.append(0.05 + (display_nodes + 1) * spacing)
+            node_colors.append("rgba(200, 200, 200, 0.5)")
+            node_sizes.append(5)
+            node_texts.append(extra_text)
+            layer_indices.append(layer_idx)
+    
+    # Add nodes to the figure
+    fig.add_trace(go.Scatter(
+        x=x_positions,
+        y=y_positions,
+        mode='markers+text',
+        marker=dict(
+            size=node_sizes,
+            color=node_colors,
+            line=dict(width=1, color='#333')
+        ),
+        text=node_texts,
+        textposition="bottom center",
+        textfont=dict(size=8),
+        hoverinfo='none'
+    ))
+    
+    # Add layer labels
+    for i, name in enumerate(layer_names):
+        fig.add_annotation(
+            x=i / (len(layers) - 1),
+            y=0.02,
+            text=name,
+            showarrow=False,
+            font=dict(size=12)
+        )
+    
+    # Update layout
+    fig.update_layout(
+        showlegend=False,
+        height=300,
+        plot_bgcolor='rgba(248, 249, 250, 1)',
+        margin=dict(l=20, r=20, t=20, b=40),
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            range=[-0.05, 1.05]
+        ),
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            range=[-0.05, 1.05]
+        )
+    )
+    
+    # Display the network visualization
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Training button
+    if st.button("Train Neural Network"):
+        # Training progress
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        # Simulate the training process
+        current_accuracy = 0.0
+        for i in range(epochs):
+            status_text.text(f"Training Epoch {i+1}/{epochs}...")
+            
+            # Simulate epoch progress
+            for j in range(100):
+                progress_bar.progress(j + 1)
+                time.sleep(0.01)
+            
+            # Simulate increased accuracy with each epoch
+            base_accuracy = 0.7 + (0.2 * i / epochs)  # Start at ~70%, approach ~90%
+            
+            # Modify based on network design choices
+            if hidden_layers >= 3:
+                base_accuracy += 0.02  # Deeper networks may perform better
+            
+            if activation_function == "ReLU":
+                base_accuracy += 0.01  # ReLU often performs well
+            
+            if data_augmentation:
+                base_accuracy += 0.02  # Data augmentation helps
+            
+            # Add some randomness
+            current_accuracy = min(0.99, base_accuracy + random.uniform(-0.03, 0.03))
+            
+            # Show epoch results
+            status_text.text(f"Epoch {i+1}/{epochs} complete - Accuracy: {current_accuracy:.2%}")
+            time.sleep(1)
+        
+        status_text.text(f"Training complete! Final accuracy: {current_accuracy:.2%}")
+        
+        # Display test results section
+        display_neural_network_results(current_accuracy, activation_function, data_augmentation)
+
+def display_neural_network_results(accuracy, activation_function, data_augmentation):
+    """Display the results of neural network training"""
+    st.markdown("### Testing Your Neural Network")
+    
+    # Display some test images
+    st.markdown("#### Test Images")
+    
+    # Create a grid of digits
+    test_cols = st.columns(5)
+    
+    # For each test case
+    for i, col in enumerate(test_cols):
+        digit = i * 2  # 0, 2, 4, 6, 8
+        with col:
+            # Simplified - would use real digit images in a full implementation
+            st.markdown(f"""
+            <div style="text-align: center; border: 1px solid #e0e0e0; padding: 10px; border-radius: 5px;">
+                <div style="font-size: 36px;">{digit}</div>
+                <div style="margin-top: 10px;">
+                    <span style="font-weight: bold;">Prediction:</span> {digit}
+                </div>
+                <div style="font-size: 12px; color: green;">
+                    {random.uniform(max(0.7, accuracy-0.1), min(0.99, accuracy+0.05)):.1%} confident
+                </div>
             </div>
-            """
-        
-        nn_html += "</div>"
-        
-        # Add connections between layers
-        if layer_idx < layer_count - 1:
-            nn_html += """
-            <div style="display: flex; flex-direction: column; justify-content: center;">
-            """
-            
-            # Add connection lines (simplified)
-            nn_html += """
-            <div style="width: 20px; height: 2px; background-color: #ddd; margin: 5px 0;"></div>
-            <div style="width: 20px; height: 2px; background-color: #ddd; margin: 5px 0;"></div>
-            <div style="width: 20px; height: 2px; background-color: #ddd; margin: 5px 0;"></div>
-            """
-            
-            nn_html += "</div>"
+            """, unsafe_allow_html=True)
     
-    nn_html += "</div>"
+    # Performance metrics
+    st.markdown("#### Performance Metrics")
     
-    st.markdown(nn_html, unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("Accuracy", f"{accuracy:.2%}", None)
+    
+    with col2:
+        precision = min(0.99, accuracy + random.uniform(-0.03, 0.03))
+        st.metric("Precision", f"{precision:.2%}", None)
+    
+    with col3:
+        recall = min(0.99, accuracy + random.uniform(-0.05, 0.01))
+        st.metric("Recall", f"{recall:.2%}", None)
+    
+    # Confusion matrix
+    st.markdown("#### Confusion Matrix")
+    
+    # Generate a simplified confusion matrix
+    # In a real app, this would show actual model predictions
+    matrix_size = 10  # 0-9 digits
+    confusion_matrix = np.zeros((matrix_size, matrix_size))
+    
+    # Fill diagonal with high values (correct predictions)
+    for i in range(matrix_size):
+        confusion_matrix[i, i] = int(accuracy * 100) + random.randint(-5, 5)
+    
+    # Add some errors
+    error_count = int((1 - accuracy) * 100)
+    for _ in range(error_count):
+        i = random.randint(0, matrix_size-1)
+        j = random.randint(0, matrix_size-1)
+        while j == i:  # Ensure it's an error (not on diagonal)
+            j = random.randint(0, matrix_size-1)
+        confusion_matrix[i, j] += 1
+    
+    # Normalize to have 100 samples per class
+    for i in range(matrix_size):
+        total = confusion_matrix[i].sum()
+        if total > 0:
+            confusion_matrix[i] = confusion_matrix[i] * (100 / total)
+    
+    # Create confusion matrix visualization
+    fig = px.imshow(
+        confusion_matrix,
+        labels=dict(x="Predicted Digit", y="True Digit", color="Count"),
+        x=[str(i) for i in range(10)],
+        y=[str(i) for i in range(10)],
+        color_continuous_scale="Blues"
+    )
+    
+    # Update layout
+    fig.update_layout(
+        height=400,
+        margin=dict(l=40, r=40, t=30, b=40),
+        coloraxis_colorbar=dict(
+            title="Count",
+            tickvals=[0, 50, 100],
+            ticktext=["0", "50", "100"]
+        )
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Insights about the model
+    st.markdown("### Insights")
+    
+    insights = []
+    
+    # Generate insights based on model performance and architecture
+    if accuracy > 0.9:
+        insights.append("Your model achieved excellent accuracy! The network architecture you chose works well for this task.")
+    elif accuracy > 0.8:
+        insights.append("Your model achieved good accuracy. You might try adding more layers or neurons to improve further.")
+    else:
+        insights.append("Your model's accuracy could be improved. Try adjusting the network architecture or training parameters.")
+    
+    # Insights about specific choices
+    if activation_function == "ReLU":
+        insights.append("ReLU activation is a good choice for this task as it helps with faster training.")
+    elif activation_function == "Sigmoid":
+        insights.append("Sigmoid activation works well for this task, but might cause vanishing gradient issues in deeper networks.")
+    
+    if data_augmentation:
+        insights.append("Data augmentation helped improve model generalization by creating more diverse training examples.")
+    else:
+        insights.append("Adding data augmentation might help improve model performance, especially with limited training data.")
+    
+    # Display insights
+    for insight in insights:
+        st.info(insight)
+    
+    # Learning resources
+    with st.expander("Learn More About Neural Networks"):
+        st.markdown("""
+        ### How Neural Networks Work
+        
+        Neural networks are inspired by the structure of the human brain. They consist of:
+        
+        1. **Input Layer**: Receives the raw data (in this case, pixel values from digit images)
+        2. **Hidden Layers**: Process the information through weighted connections
+        3. **Output Layer**: Produces the final result (probabilities for each digit)
+        
+        During training, the network:
+        1. Makes predictions based on current weights
+        2. Compares predictions to correct answers
+        3. Adjusts weights to reduce errors
+        4. Repeats this process many times
+        
+        This is called **backpropagation** and is the key to how neural networks learn.
+        
+        ### Real-World Applications
+        
+        Neural networks similar to what you built are used in:
+        
+        - Facial recognition in phones and security systems
+        - Self-driving cars to recognize road signs and obstacles
+        - Medical imaging to detect diseases
+        - Voice assistants to understand speech
+        - Language translation services
+        """)
 
-def simulate_nn_prediction(test_input, problem, accuracy):
-    """Simulate a neural network prediction"""
-    # Generate simulated prediction based on input and accuracy
-    if problem == "Shape Recognition":
-        # Map input to expected output
-        expected_output = "Circle" if test_input == "Circle" else ("Square" if test_input == "Square" else "Triangle")
-        
-        # With probability based on accuracy, return correct answer
-        if random.random() < accuracy:
-            return expected_output
-        else:
-            options = ["Circle", "Square", "Triangle"]
-            options.remove(expected_output)
-            return random.choice(options)
+def display_genetic_algorithm_game(age_group):
+    """Display the Genetic Algorithm Lab game"""
+    st.markdown("## Genetic Algorithm Lab")
     
-    elif problem == "Number Prediction":
-        # Based on input number, predict the next number in a sequence
-        # Simplified: input + 2 for even numbers, input + 3 for odd numbers
-        expected_output = test_input + 2 if test_input % 2 == 0 else test_input + 3
-        
-        # Add random error based on accuracy
-        if random.random() < accuracy:
-            return expected_output
-        else:
-            # Random error within ±3
-            error = random.choice([-3, -2, -1, 1, 2, 3])
-            return expected_output + error
+    st.markdown("""
+    In this advanced simulation, you'll design experiments where AI solves problems through evolution and natural selection!
     
-    elif problem == "Color Sorting":
-        # Simplified: sort colors into "warm" or "cool"
-        warm_colors = ["Red", "Orange", "Yellow"]
-        cool_colors = ["Green", "Blue", "Purple"]
-        
-        expected_output = "Warm" if test_input in warm_colors else "Cool"
-        
-        # With probability based on accuracy, return correct answer
-        if random.random() < accuracy:
-            return expected_output
-        else:
-            return "Cool" if expected_output == "Warm" else "Warm"
+    A **Genetic Algorithm** mimics how evolution works in nature:
     
-    # Default fallback
-    return "Unknown"
+    1. Create a population of random solutions
+    2. Test how well each solution solves the problem
+    3. Select the best solutions to become "parents"
+    4. Create "children" by mixing parts of the parents
+    5. Introduce small random mutations
+    6. Repeat for many generations until solutions become excellent
+    
+    This is used to solve complex problems where traditional algorithms struggle!
+    """)
+    
+    # Experiment selection
+    st.markdown("### Choose Your Experiment")
+    
+    experiment_type = st.selectbox(
+        "Experiment type:",
+        ["Find the Optimal Path", "Create a Game Strategy", "Design an Efficient Shape"]
+    )
+    
+    # Common genetic algorithm parameters
+    st.markdown("### Configure Algorithm Parameters")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        population_size = st.slider("Population Size:", min_value=10, max_value=200, value=50)
+        
+        generations = st.slider("Number of Generations:", min_value=10, max_value=500, value=100)
+        
+        selection_type = st.selectbox(
+            "Selection Method:",
+            ["Tournament", "Roulette Wheel", "Rank"],
+            index=0
+        )
+    
+    with col2:
+        crossover_rate = st.slider("Crossover Rate:", min_value=0.1, max_value=1.0, value=0.8, step=0.1)
+        
+        mutation_rate = st.slider("Mutation Rate:", min_value=0.01, max_value=0.5, value=0.05, step=0.01)
+        
+        elitism = st.slider("Elitism (best solutions to keep):", min_value=0, max_value=10, value=2)
+    
+    # Experiment-specific settings
+    if experiment_type == "Find the Optimal Path":
+        st.markdown("### Path Finding Experiment")
+        
+        map_type = st.selectbox(
+            "Map Type:",
+            ["City Grid", "Terrain Map", "Maze"],
+            index=0
+        )
+        
+        obstacles = st.slider("Obstacle Density:", min_value=0, max_value=100, value=30)
+        
+        st.markdown("#### Preview")
+        # Placeholder for a map visualization
+        st.image("https://via.placeholder.com/800x400.png?text=Path+Map+(Placeholder)")
+    
+    elif experiment_type == "Create a Game Strategy":
+        st.markdown("### Game Strategy Experiment")
+        
+        game_type = st.selectbox(
+            "Game Type:",
+            ["Tic-Tac-Toe", "Connect Four", "Simple Chess"],
+            index=0
+        )
+        
+        opponent_strength = st.select_slider(
+            "Opponent Strength:",
+            options=["Easy", "Medium", "Hard", "Expert"],
+            value="Medium"
+        )
+        
+        st.markdown("#### Preview")
+        # Placeholder for a game board visualization
+        st.image("https://via.placeholder.com/400x400.png?text=Game+Board+(Placeholder)")
+    
+    elif experiment_type == "Design an Efficient Shape":
+        st.markdown("### Shape Design Experiment")
+        
+        design_goal = st.selectbox(
+            "Design Goal:",
+            ["Aerodynamic Shape", "Bridge Design", "Heat Sink"],
+            index=0
+        )
+        
+        constraints = st.multiselect(
+            "Design Constraints:",
+            ["Maximum Size", "Minimum Strength", "Weight Limit", "Material Restrictions"],
+            default=["Maximum Size", "Weight Limit"]
+        )
+        
+        st.markdown("#### Preview")
+        # Placeholder for a shape visualization
+        st.image("https://via.placeholder.com/600x300.png?text=Shape+Design+(Placeholder)")
+    
+    # Run experiment button
+    if st.button("Run Genetic Algorithm"):
+        # Show progress
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        # Track the best fitness over generations
+        fitness_data = []
+        avg_fitness_data = []
+        
+        # Simulate the genetic algorithm running
+        for i in range(generations):
+            # Only show periodic updates to avoid UI slowdown
+            if i % max(1, generations // 100) == 0:
+                # Update progress
+                progress_percent = (i + 1) / generations
+                progress_bar.progress(progress_percent)
+                
+                # Calculate a simulated fitness (improves over time with some noise)
+                gen_progress = i / generations
+                best_fitness = 0.4 + (0.55 * gen_progress) + random.uniform(-0.02, 0.02)
+                avg_fitness = 0.2 + (0.4 * gen_progress) + random.uniform(-0.05, 0.05)
+                
+                # Store fitness data
+                fitness_data.append((i, best_fitness))
+                avg_fitness_data.append((i, avg_fitness))
+                
+                # Update status
+                if gen_progress < 0.2:
+                    status = "Early exploration phase..."
+                elif gen_progress < 0.5:
+                    status = "Refining promising solutions..."
+                elif gen_progress < 0.8:
+                    status = "Fine-tuning top performers..."
+                else:
+                    status = "Converging on optimal solution..."
+                
+                status_text.text(f"Generation {i+1}/{generations}: {status}")
+                
+                # Pretend this is computationally intensive
+                time.sleep(0.01)
+        
+        # Complete the progress bar
+        progress_bar.progress(1.0)
+        status_text.text(f"Experiment complete! Ran for {generations} generations.")
+        
+        # Display results
+        display_genetic_algorithm_results(experiment_type, fitness_data, avg_fitness_data)
 
-def show_prediction_result(test_input, result, problem):
-    """Display the prediction result"""
-    # Format result display based on problem type
-    if problem == "Shape Recognition":
-        st.markdown(f"""
-        <div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px; margin-top: 10px;">
-            <p style="margin: 0; font-weight: bold;">Input: {test_input}</p>
-            <p style="margin: 5px 0 0 0;">Network predicts this is a: <span style="font-weight: bold; color: #4287f5;">{result}</span></p>
-        </div>
-        """, unsafe_allow_html=True)
+def display_genetic_algorithm_results(experiment_type, fitness_data, avg_fitness_data):
+    """Display the results of the genetic algorithm experiment"""
+    st.markdown("### Experiment Results")
     
-    elif problem == "Number Prediction":
-        st.markdown(f"""
-        <div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px; margin-top: 10px;">
-            <p style="margin: 0; font-weight: bold;">Input: {test_input}</p>
-            <p style="margin: 5px 0 0 0;">Network predicts the next number is: <span style="font-weight: bold; color: #4287f5;">{result}</span></p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Display fitness over generations chart
+    st.markdown("#### Fitness Improvement Over Generations")
     
-    elif problem == "Color Sorting":
-        color_display = f"<span style='color: {test_input.lower()};'>■</span> {test_input}"
-        st.markdown(f"""
-        <div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px; margin-top: 10px;">
-            <p style="margin: 0; font-weight: bold;">Input: {color_display}</p>
-            <p style="margin: 5px 0 0 0;">Network classifies this as a: <span style="font-weight: bold; color: #4287f5;">{result} color</span></p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Extract data for plotting
+    generations = [data[0] for data in fitness_data]
+    best_fitness = [data[1] for data in fitness_data]
+    avg_fitness = [data[1] for data in avg_fitness_data]
+    
+    # Create DataFrame
+    df = pd.DataFrame({
+        'Generation': generations,
+        'Best Fitness': best_fitness,
+        'Average Fitness': avg_fitness
+    })
+    
+    # Create line chart
+    fig = px.line(
+        df, 
+        x='Generation', 
+        y=['Best Fitness', 'Average Fitness'],
+        labels={'value': 'Fitness', 'variable': 'Metric'},
+        color_discrete_map={
+            'Best Fitness': '#4287f5',
+            'Average Fitness': '#f542a7'
+        },
+        title='Fitness Evolution'
+    )
+    
+    # Update layout
+    fig.update_layout(
+        xaxis_title='Generation',
+        yaxis_title='Fitness',
+        hovermode='x unified',
+        legend_title='',
+        height=350,
+        margin=dict(l=40, r=40, t=40, b=40)
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Show best solution visualization
+    st.markdown("#### Best Solution Found")
+    
+    # Different visualization based on experiment type
+    if experiment_type == "Find the Optimal Path":
+        st.markdown("""
+        Your genetic algorithm found an efficient path through the obstacles!
+        
+        - **Path Length**: 342 units
+        - **Obstacles Avoided**: 28
+        - **Efficiency**: 94% of optimal
+        """)
+        
+        # Placeholder for path visualization
+        st.image("https://via.placeholder.com/800x400.png?text=Optimal+Path+Result")
+        
+    elif experiment_type == "Create a Game Strategy":
+        st.markdown("""
+        Your genetic algorithm created a game strategy that wins or ties in most games!
+        
+        - **Win Rate**: 87%
+        - **Draw Rate**: 12% 
+        - **Loss Rate**: 1%
+        - **Strategy Complexity**: High
+        """)
+        
+        # Show win/loss statistics
+        results = pd.DataFrame({
+            'Outcome': ['Win', 'Draw', 'Loss'],
+            'Percentage': [87, 12, 1]
+        })
+        
+        fig = px.pie(
+            results, 
+            values='Percentage', 
+            names='Outcome',
+            color='Outcome',
+            color_discrete_map={
+                'Win': '#4CAF50',
+                'Draw': '#FFC107',
+                'Loss': '#F44336'
+            },
+            hole=0.4
+        )
+        
+        fig.update_layout(
+            height=300,
+            margin=dict(l=20, r=20, t=20, b=20)
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+    elif experiment_type == "Design an Efficient Shape":
+        st.markdown("""
+        Your genetic algorithm designed a highly efficient shape!
+        
+        - **Aerodynamic Efficiency**: 93%
+        - **Structural Integrity**: 89%
+        - **Material Usage**: 76% of maximum
+        - **Weight**: 1.2kg
+        """)
+        
+        # Placeholder for shape visualization
+        st.image("https://via.placeholder.com/600x300.png?text=Optimized+Shape+Design")
+        
+        # Show radar chart of performance metrics
+        categories = ['Aerodynamic Efficiency', 'Structural Integrity', 
+                     'Material Efficiency', 'Weight Optimization', 'Cost Efficiency']
+        
+        values = [0.93, 0.89, 0.76, 0.84, 0.78]
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatterpolar(
+            r=values,
+            theta=categories,
+            fill='toself',
+            name='Optimized Design'
+        ))
+        
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 1]
+                )
+            ),
+            showlegend=False,
+            height=300,
+            margin=dict(l=50, r=50, t=20, b=20)
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Explanation of the algorithm's learning process
+    with st.expander("How the Algorithm Evolved"):
+        st.markdown("""
+        ### Evolution Process Highlights
+        
+        1. **Initial Population (Generations 1-10)**
+           - Started with random solutions
+           - Most performed poorly
+           - A few showed slight promise
+        
+        2. **Early Evolution (Generations 11-40)**
+           - Good traits from early winners spread through population
+           - Average fitness began to rise
+           - Some interesting solution patterns emerged
+        
+        3. **Mid Evolution (Generations 41-80)**
+           - Top solutions refined their approach
+           - Mutation introduced novel improvements
+           - Weaker solutions disappeared
+        
+        4. **Final Convergence (Generations 81-100)**
+           - Population converged on optimal strategy
+           - Small refinements continued
+           - Elitism preserved the best solutions
+        
+        This mimics how natural evolution works, but at an accelerated pace!
+        """)
+    
+    # Real-world applications
+    st.markdown("### Real-World Applications")
+    
+    # Different applications based on experiment type
+    if experiment_type == "Find the Optimal Path":
+        st.markdown("""
+        Genetic algorithms for path finding are used in:
+        
+        - **Logistics**: Finding optimal delivery routes for packages
+        - **Robotics**: Planning movement paths for robots in complex environments
+        - **Networks**: Designing efficient network routing
+        - **Games**: Creating NPC movement paths in video games
+        """)
+        
+    elif experiment_type == "Create a Game Strategy":
+        st.markdown("""
+        Genetic algorithms for strategy optimization are used in:
+        
+        - **Gaming AI**: Creating challenging opponents in strategy games
+        - **Finance**: Optimizing trading strategies in stock markets
+        - **Military**: Simulating and planning tactical operations
+        - **Sports**: Analyzing and developing team strategies
+        """)
+        
+    elif experiment_type == "Design an Efficient Shape":
+        st.markdown("""
+        Genetic algorithms for design optimization are used in:
+        
+        - **Aerospace**: Designing efficient airplane wings and spacecraft
+        - **Architecture**: Optimizing building structures for strength and material use
+        - **Engineering**: Creating efficient heat sinks for electronics
+        - **Automotive**: Designing aerodynamic vehicle shapes
+        """)
+    
+    # Option to export results
+    st.button("Export Results (CSV)")
+    
+    # Try again button
+    st.button("Try Different Parameters", on_click=lambda: None)

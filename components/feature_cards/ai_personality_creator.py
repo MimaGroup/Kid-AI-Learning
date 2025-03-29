@@ -1,1342 +1,1442 @@
 import streamlit as st
 import random
+import json
+import os
 
 def display_ai_personality_creator():
-    """Display a tool for kids to create and customize their own AI personalities"""
-    st.markdown("""
-    <div style="background-color: #ffe6f9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-        <h2 style="margin-top: 0;">AI Personality Creator</h2>
-        <p>Design your own AI assistant with a unique personality and skills!</p>
-    </div>
-    """, unsafe_allow_html=True)
+    """Display an interface for kids to build their own AI friend with personality"""
+    st.markdown("## Create Your AI Assistant")
     
-    # Initialize session state for the AI friend
-    if "ai_friend" not in st.session_state:
-        st.session_state.ai_friend = {
-            "name": "",
-            "personality": ["Friendly", "Helpful"],
-            "appearance": "Robot",
-            "voice": "Cheerful",
-            "skills": ["Answering questions"],
-            "favorite_topics": ["Space"],
-            "backstory": ""
-        }
+    # Get or initialize AI friend data
+    ai_friend = load_ai_friend()
     
-    # Two-column layout
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        # Basic information
-        st.markdown("### Basic Information")
+    # Create form for building the AI friend
+    with st.form("ai_friend_builder_form"):
+        st.markdown("### Design Your AI Friend")
         
-        # AI Name
-        st.session_state.ai_friend["name"] = st.text_input(
-            "What's your AI friend's name?",
-            value=st.session_state.ai_friend["name"]
-        )
+        # Two columns for form elements
+        col1, col2 = st.columns([1, 1])
         
-        # Appearance
-        st.session_state.ai_friend["appearance"] = st.selectbox(
-            "What does your AI friend look like?",
-            ["Robot", "Animal", "Cartoon Character", "Glowing Orb", "Hologram", "Abstract Shape"],
-            index=["Robot", "Animal", "Cartoon Character", "Glowing Orb", "Hologram", "Abstract Shape"].index(st.session_state.ai_friend["appearance"])
-        )
-        
-        if st.session_state.ai_friend["appearance"] == "Animal":
-            st.session_state.ai_friend["animal_type"] = st.selectbox(
-                "What kind of animal?",
-                ["Cat", "Dog", "Fox", "Owl", "Dolphin", "Dragon"],
-                index=["Cat", "Dog", "Fox", "Owl", "Dolphin", "Dragon"].index(st.session_state.ai_friend.get("animal_type", "Cat"))
+        with col1:
+            # Name
+            friend_name = st.text_input(
+                "What's your AI friend's name?",
+                value=ai_friend.get("name", ""),
+                max_chars=20,
+                placeholder="Ex: Byte, Pixel, Nova..."
+            )
+            
+            # Personality traits
+            personality_options = [
+                "Friendly", "Curious", "Funny", "Smart", 
+                "Creative", "Helpful", "Kind", "Brave"
+            ]
+            personality = st.multiselect(
+                "Select personality traits (up to 3):",
+                options=personality_options,
+                default=ai_friend.get("personality", [])[:3],
+                max_selections=3
+            )
+            
+            # Voice style
+            voice_options = ["Cheerful", "Calm", "Energetic", "Wise", "Playful"]
+            voice = st.select_slider(
+                "Voice style:",
+                options=voice_options,
+                value=ai_friend.get("voice", "Cheerful")
             )
         
-        # Voice
-        st.session_state.ai_friend["voice"] = st.select_slider(
-            "What kind of voice does your AI friend have?",
-            options=["Robotic", "Calm", "Cheerful", "Energetic", "Musical"],
-            value=st.session_state.ai_friend["voice"]
-        )
+        with col2:
+            # Avatar style
+            avatar_options = ["Robot", "Animal", "Alien", "Emoji", "Superhero"]
+            avatar = st.selectbox(
+                "Choose avatar style:",
+                options=avatar_options,
+                index=avatar_options.index(ai_friend.get("avatar", "Robot")) if ai_friend.get("avatar") in avatar_options else 0
+            )
+            
+            # Color theme
+            color_options = {
+                "Blue Sky": "#4287f5",
+                "Purple Galaxy": "#9542f5",
+                "Green Forest": "#42f57b",
+                "Coral Reef": "#f5426a",
+                "Sunset Orange": "#f58c42"
+            }
+            color_theme = st.radio(
+                "Color theme:",
+                options=list(color_options.keys()),
+                index=list(color_options.keys()).index(ai_friend.get("color_theme", "Blue Sky")) if ai_friend.get("color_theme") in color_options else 0,
+                horizontal=True
+            )
+            
+            # Special skills
+            skill_options = [
+                "Telling Stories", "Solving Puzzles", "Teaching Science", 
+                "Art Projects", "Music Creation", "History Facts",
+                "Math Helper", "Language Translator"
+            ]
+            skills = st.multiselect(
+                "Special skills (up to 3):",
+                options=skill_options,
+                default=ai_friend.get("skills", [])[:3],
+                max_selections=3
+            )
         
-        # Personality traits
-        st.markdown("### Personality")
+        # Submit button
+        submitted = st.form_submit_button("Create My AI Friend!")
         
-        personalities = ["Friendly", "Helpful", "Funny", "Creative", "Wise", "Curious", "Adventurous", "Logical", "Enthusiastic", "Patient"]
-        
-        st.session_state.ai_friend["personality"] = st.multiselect(
-            "Choose up to 3 personality traits:",
-            personalities,
-            default=st.session_state.ai_friend["personality"]
-        )
-        
-        # Limit to 3 personality traits
-        if len(st.session_state.ai_friend["personality"]) > 3:
-            st.session_state.ai_friend["personality"] = st.session_state.ai_friend["personality"][:3]
-            st.warning("Maximum 3 personality traits allowed!")
-        
-        # Skills
-        st.markdown("### AI Skills")
-        
-        skills = ["Answering questions", "Telling stories", "Playing games", "Solving math problems", 
-                  "Drawing pictures", "Writing poems", "Making jokes", "Teaching new things",
-                  "Giving advice", "Solving puzzles", "Translating languages"]
-        
-        st.session_state.ai_friend["skills"] = st.multiselect(
-            "What skills should your AI have? (Choose up to 5)",
-            skills,
-            default=st.session_state.ai_friend["skills"]
-        )
-        
-        # Limit to 5 skills
-        if len(st.session_state.ai_friend["skills"]) > 5:
-            st.session_state.ai_friend["skills"] = st.session_state.ai_friend["skills"][:5]
-            st.warning("Maximum 5 skills allowed!")
-        
-        # Favorite topics
-        topics = ["Space", "Animals", "Sports", "Music", "Art", "History", "Science", "Technology", 
-                 "Nature", "Food", "Travel", "Movies", "Books", "Games"]
-        
-        st.session_state.ai_friend["favorite_topics"] = st.multiselect(
-            "What topics does your AI like to talk about?",
-            topics,
-            default=st.session_state.ai_friend["favorite_topics"]
-        )
-        
-        # Backstory
-        st.markdown("### Backstory")
-        
-        st.session_state.ai_friend["backstory"] = st.text_area(
-            "Give your AI friend a backstory (optional):",
-            value=st.session_state.ai_friend["backstory"],
-            height=100,
-            max_chars=500,
-            help="Where was your AI created? What is its purpose? What makes it special?"
-        )
+        if submitted:
+            # Save the AI friend data
+            ai_friend = {
+                "name": friend_name if friend_name else "Byte",
+                "personality": personality,
+                "voice": voice,
+                "avatar": avatar,
+                "color_theme": color_theme,
+                "skills": skills,
+                "color_hex": color_options[color_theme]
+            }
+            save_ai_friend(ai_friend)
+            st.rerun()  # Reload to show the created friend
     
-    with col2:
-        # Preview of the AI friend
-        st.markdown("### Preview")
-        
-        # Get avatar emoji and color based on appearance
-        avatar_emoji = get_avatar_emoji(st.session_state.ai_friend["appearance"], st.session_state.ai_friend.get("animal_type", "Cat"))
-        
-        # Generate a color based on personality
-        avatar_color = generate_avatar_color(st.session_state.ai_friend["personality"])
-        
-        # Display avatar
+    # Show created friend if data exists
+    if "name" in ai_friend and ai_friend["name"]:
+        display_created_friend(ai_friend)
+    
+    # Show preview during creation
+    else:
+        display_ai_friend_preview()
+
+def display_ai_friend_preview():
+    """Display a preview of the AI friend being built"""
+    st.markdown("### AI Friend Preview")
+    st.markdown("""
+    Your AI friend will be shown here after you create it!
+    
+    You'll be able to:
+    - Chat with your AI friend
+    - Ask questions about AI
+    - Get help with learning activities
+    - Personalize the AI to match your interests
+    """)
+    
+    # Show a placeholder image/icon
+    st.markdown("""
+    <div style="text-align: center; margin: 30px 0;">
+        <span style="font-size: 80px;">🤖</span>
+        <p style="opacity: 0.7;">Your AI friend is waiting to be created!</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def display_created_friend(friend_data):
+    """Display the created AI friend with interactions"""
+    st.markdown(f"### Meet {friend_data['name']}!")
+    
+    # Get the avatar emoji
+    avatar_emoji = get_avatar_emoji(friend_data["avatar"])
+    
+    # Get the color and a lighter shade for gradient
+    color = friend_data["color_hex"]
+    light_color = adjust_color_brightness(color, 40)
+    
+    # Display avatar with speech bubble
+    col1, col2 = st.columns([1, 3])
+    
+    with col1:
         st.markdown(f"""
-        <div style="
-            background-color: {avatar_color};
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 60px;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        ">
+        <div style="background: linear-gradient(135deg, {color} 0%, {light_color} 100%); 
+                    border-radius: 50%; 
+                    width: 120px; 
+                    height: 120px; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center;
+                    font-size: 60px;
+                    margin: 0 auto;">
             {avatar_emoji}
         </div>
-        """, unsafe_allow_html=True)
         
-        # Display name and personality
-        if st.session_state.ai_friend["name"]:
-            name_display = st.session_state.ai_friend["name"]
-        else:
-            name_display = "Your AI Friend"
-            
-        personality_traits = ", ".join(st.session_state.ai_friend["personality"]) if st.session_state.ai_friend["personality"] else "Undefined"
-        
-        st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h3 style="margin-bottom: 5px;">{name_display}</h3>
-            <p>{personality_traits} {st.session_state.ai_friend["appearance"]}</p>
+        <div style="text-align: center; margin-top: 10px;">
+            <h4 style="margin: 0; color: {color};">{friend_data['name']}</h4>
+            <p style="font-size: 14px; opacity: 0.8;">
+                {', '.join(friend_data['personality'])}
+            </p>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Show skills badges
-        if st.session_state.ai_friend["skills"]:
-            st.markdown("<p style='text-align: center;'><strong>Skills:</strong></p>", unsafe_allow_html=True)
-            
-            # Create a grid for skill badges
-            skills_html = """<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-bottom: 15px;">"""
-            
-            for skill in st.session_state.ai_friend["skills"]:
-                # Generate a pastel color for each skill
-                hue = random.randint(0, 360)
-                skill_color = f"hsl({hue}, 70%, 85%)"
-                
-                skills_html += f"""
-                <span style="
-                    background-color: {skill_color};
-                    padding: 3px 8px;
-                    border-radius: 12px;
-                    font-size: 12px;
-                    white-space: nowrap;
-                ">
-                    {skill}
-                </span>
-                """
-            
-            skills_html += "</div>"
-            st.markdown(skills_html, unsafe_allow_html=True)
-        
-        # Show sample dialogue
-        if st.session_state.ai_friend["name"]:
-            st.markdown("### Sample Dialogue")
-            
-            st.markdown("""<div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; margin-top: 15px;">""", unsafe_allow_html=True)
-            
-            personality = st.session_state.ai_friend["personality"][0] if st.session_state.ai_friend["personality"] else "Friendly"
-            topics = st.session_state.ai_friend["favorite_topics"][0] if st.session_state.ai_friend["favorite_topics"] else "general"
-            
-            # Generate a sample response
-            sample_response = generate_response(topics, personality, st.session_state.ai_friend["skills"])
-            
-            st.markdown(f"""
-            <p><strong>You:</strong> Hi! Can you tell me something interesting?</p>
-            <p><strong>{st.session_state.ai_friend["name"]}:</strong> {sample_response}</p>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-            
-        # Save button
-        if st.button("Save Your AI Friend", key="save_ai_friend"):
-            if not st.session_state.ai_friend["name"]:
-                st.error("Please give your AI friend a name!")
-            else:
-                st.success(f"🎉 {st.session_state.ai_friend['name']} has been created! You can now interact with your AI friend.")
     
-    # Test interaction section
-    if st.session_state.ai_friend["name"]:
-        st.markdown("---")
-        st.markdown("### Talk to Your AI Friend")
+    with col2:
+        st.markdown(f"""
+        <div style="background-color: #f5f5f5; 
+                    border-radius: 15px; 
+                    padding: 15px; 
+                    position: relative;
+                    margin-left: 15px;
+                    min-height: 120px;
+                    display: flex;
+                    align-items: center;">
+            <div style="position: absolute; 
+                        left: -15px; 
+                        top: 20px; 
+                        width: 0; 
+                        height: 0; 
+                        border-top: 15px solid transparent;
+                        border-bottom: 15px solid transparent; 
+                        border-right: 15px solid #f5f5f5;"></div>
+            <p style="margin: 0; font-size: 16px;">
+                Hi there! I'm <span style="color: {color}; font-weight: bold;">{friend_data['name']}</span>, 
+                your personal AI assistant. I'm {friend_data['voice'].lower()} and {friend_data['personality'][0].lower() if friend_data['personality'] else 'friendly'}. 
+                I'm really good at {', '.join(friend_data['skills'][:2]) if len(friend_data['skills']) >= 2 else (friend_data['skills'][0] if friend_data['skills'] else 'helping you learn')}. 
+                What would you like to talk about today?
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Interaction options
+    st.markdown("### Chat with Your AI Friend")
+    
+    # Topic selection
+    topic_options = [
+        "Tell me about AI", 
+        "Help me with a project", 
+        "Let's play a game",
+        "Teach me something new",
+        "Tell me a story"
+    ]
+    
+    topic = st.selectbox(
+        "Choose what to talk about:",
+        options=topic_options
+    )
+    
+    # Response based on topic and AI personality
+    if st.button("Talk to " + friend_data["name"]):
+        response = generate_response(topic, friend_data["personality"], friend_data["skills"])
         
-        # Initialize conversation history if not present
-        if "conversation_history" not in st.session_state:
-            st.session_state.conversation_history = []
-        
-        # User input
-        user_input = st.text_input("Ask your AI friend a question:", key="user_question")
-        
-        if st.button("Send", key="send_question"):
-            if user_input:
-                # Add user message to history
-                st.session_state.conversation_history.append({"role": "user", "content": user_input})
-                
-                # Generate AI response
-                personality = st.session_state.ai_friend["personality"][0] if st.session_state.ai_friend["personality"] else "Friendly"
-                topics = st.session_state.ai_friend["favorite_topics"][0] if st.session_state.ai_friend["favorite_topics"] else "general"
-                ai_response = generate_response(topics, personality, st.session_state.ai_friend["skills"])
-                
-                # Add AI response to history
-                st.session_state.conversation_history.append({"role": "ai", "content": ai_response})
-                
-                # Clear input
-                st.rerun()
-        
-        # Display conversation history
-        st.markdown("#### Conversation History")
-        
-        for message in st.session_state.conversation_history:
-            if message["role"] == "user":
-                st.markdown(f"""
-                <div style="
-                    background-color: #e6f7ff;
-                    border-radius: 10px;
-                    padding: 10px;
-                    margin: 5px 0 5px auto;
-                    max-width: 80%;
-                    text-align: right;
-                ">
-                    <p style="margin: 0;"><strong>You:</strong> {message["content"]}</p>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.markdown(f"""
-                <div style="
-                    background-color: {avatar_color}50;
-                    border-radius: 10px;
-                    padding: 10px;
-                    margin: 5px auto 5px 0;
-                    max-width: 80%;
-                ">
-                    <p style="margin: 0;"><strong>{st.session_state.ai_friend["name"]}:</strong> {message["content"]}</p>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        # Reset conversation button
-        if st.session_state.conversation_history and st.button("Reset Conversation", key="reset_convo"):
-            st.session_state.conversation_history = []
-            st.rerun()
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, {light_color} 0%, #ffffff 100%); 
+                    border-radius: 15px; 
+                    padding: 20px; 
+                    margin-top: 20px;
+                    border: 1px solid {color};">
+            <p style="margin: 0;">
+                <span style="color: {color}; font-weight: bold;">{friend_data['name']}:</span> {response}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Friend stats
+    st.markdown("### AI Friend Stats")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown(f"""
+        <div style="text-align: center; padding: 10px; background-color: #f0f4f8; border-radius: 10px;">
+            <div style="font-size: 24px; margin-bottom: 5px;">🧠</div>
+            <div style="font-weight: bold; margin-bottom: 5px;">Knowledge Areas</div>
+            <div style="font-size: 14px;">
+                {friend_data['skills'][0] if friend_data['skills'] else 'General Knowledge'}<br>
+                {friend_data['skills'][1] if len(friend_data['skills']) > 1 else 'Learning Assistant'}<br>
+                {friend_data['skills'][2] if len(friend_data['skills']) > 2 else 'Friendly Chat'}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div style="text-align: center; padding: 10px; background-color: #f0f4f8; border-radius: 10px;">
+            <div style="font-size: 24px; margin-bottom: 5px;">🔊</div>
+            <div style="font-weight: bold; margin-bottom: 5px;">Voice Style</div>
+            <div style="font-size: 14px;">
+                {friend_data['voice']}<br>
+                Clear and easy to understand<br>
+                Age-appropriate language
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown(f"""
+        <div style="text-align: center; padding: 10px; background-color: #f0f4f8; border-radius: 10px;">
+            <div style="font-size: 24px; margin-bottom: 5px;">😊</div>
+            <div style="font-weight: bold; margin-bottom: 5px;">Personality</div>
+            <div style="font-size: 14px;">
+                {friend_data['personality'][0] if friend_data['personality'] else 'Friendly'}<br>
+                {friend_data['personality'][1] if len(friend_data['personality']) > 1 else 'Helpful'}<br>
+                {friend_data['personality'][2] if len(friend_data['personality']) > 2 else 'Patient'}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Customization option
+    st.markdown("---")
+    if st.button("Customize " + friend_data["name"]):
+        # Clear the current friend data to go back to editing mode
+        save_ai_friend({})
+        st.rerun()
+    
+    # Fun facts about AI assistants
+    with st.expander("Fun Facts About AI Assistants"):
+        st.markdown("""
+        - AI assistants like yours can learn from the conversations they have
+        - They use machine learning to understand what you're asking
+        - Real AI assistants process your questions using neural networks
+        - They can be trained to be experts in specific topics
+        - Modern AI assistants can recognize images, sounds, and text
+        """)
 
 def display_ai_project_builder():
-    """Display a tool for building simple AI projects based on templates"""
-    st.markdown("""
-    <div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-        <h2 style="margin-top: 0;">AI Project Builder</h2>
-        <p>Create your own AI projects using kid-friendly templates!</p>
+    """Display an interface for kids to build their own AI projects"""
+    st.markdown("## AI Project Builder")
+    
+    # Project selection
+    project_options = {
+        "Image Classifier": {
+            "description": "Create an AI that can identify objects in pictures",
+            "difficulty": "Medium",
+            "ages": "8-13",
+            "components": ["Data Collection", "Training", "Testing"],
+            "icon": "🖼️"
+        },
+        "Chatbot": {
+            "description": "Build a simple AI that can chat with you",
+            "difficulty": "Easy",
+            "ages": "7-13",
+            "components": ["Responses", "Pattern Matching", "Memory"],
+            "icon": "💬"
+        },
+        "Music Generator": {
+            "description": "Create an AI that makes simple melodies",
+            "difficulty": "Hard",
+            "ages": "10-13",
+            "components": ["Pattern Learning", "Composition Rules", "Sound Output"],
+            "icon": "🎵"
+        },
+        "Smart Game": {
+            "description": "Build a game with an AI opponent",
+            "difficulty": "Medium",
+            "ages": "9-13",
+            "components": ["Game Rules", "Decision Making", "Learning from Wins/Losses"],
+            "icon": "🎮"
+        }
+    }
+    
+    # Display project cards
+    selected_project = None
+    col1, col2 = st.columns(2)
+    
+    # First row of project cards
+    with col1:
+        if display_project_card("Image Classifier", project_options["Image Classifier"]):
+            selected_project = "Image Classifier"
+    
+    with col2:
+        if display_project_card("Chatbot", project_options["Chatbot"]):
+            selected_project = "Chatbot"
+    
+    # Second row of project cards
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        if display_project_card("Music Generator", project_options["Music Generator"]):
+            selected_project = "Music Generator"
+    
+    with col4:
+        if display_project_card("Smart Game", project_options["Smart Game"]):
+            selected_project = "Smart Game"
+    
+    # Display selected project builder
+    if selected_project:
+        st.markdown(f"## Build Your {selected_project}")
+        st.markdown(f"{project_options[selected_project]['description']}")
+        
+        # Display the appropriate project builder
+        if selected_project == "Image Classifier":
+            display_image_classifier_builder()
+        elif selected_project == "Chatbot":
+            display_chatbot_builder()
+        elif selected_project == "Music Generator":
+            display_music_generator_builder()
+        elif selected_project == "Smart Game":
+            display_smart_game_builder()
+    
+    else:
+        # Default instructions
+        st.markdown("""
+        ### How to Build Your AI Project
+        
+        1. **Choose** a project type from the cards above
+        2. **Customize** your project settings
+        3. **Train** your AI with examples
+        4. **Test** your creation
+        5. **Share** what you've learned
+        
+        All projects use simplified AI concepts that are easy to understand!
+        """)
+
+def display_project_card(name, project_info):
+    """Display a card for an AI project and return True if selected"""
+    # Color based on difficulty
+    difficulty_colors = {
+        "Easy": "#4CAF50",
+        "Medium": "#2196F3",
+        "Hard": "#FF9800"
+    }
+    color = difficulty_colors.get(project_info["difficulty"], "#607D8B")
+    
+    # Create card with HTML
+    st.markdown(f"""
+    <div style="border: 2px solid {color}; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; color: {color};">{name}</h3>
+            <span style="font-size: 30px;">{project_info["icon"]}</span>
+        </div>
+        <p>{project_info["description"]}</p>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+            <span style="background-color: {color}; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                {project_info["difficulty"]}
+            </span>
+            <span style="background-color: #607D8B; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                Ages {project_info["ages"]}
+            </span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
-    # Project type selection
-    project_types = [
-        "Image Classifier", 
-        "Story Generator", 
-        "Chatbot Creator", 
-        "Music Maker", 
-        "Animal Recognizer"
-    ]
-    
-    selected_project = st.selectbox(
-        "Choose a project type:",
-        project_types
-    )
-    
-    # Project description and interface
-    if selected_project == "Image Classifier":
-        display_image_classifier_project()
-    elif selected_project == "Story Generator":
-        display_story_generator_project()
-    elif selected_project == "Chatbot Creator":
-        display_chatbot_creator_project()
-    elif selected_project == "Music Maker":
-        display_music_maker_project()
-    elif selected_project == "Animal Recognizer":
-        display_animal_recognizer_project()
+    # Return True if this card is selected
+    return st.button(f"Build {name}", key=f"build_{name}")
 
-def display_image_classifier_project():
-    """Display the image classifier project template"""
-    st.markdown("""
-    ### Image Classifier Project
+def display_image_classifier_builder():
+    """Display the interface for building an image classifier"""
+    st.markdown("### Create Your Image Classifier")
     
-    Create an AI that can tell the difference between different objects in pictures!
-    """)
+    # Tabs for the different stages
+    tabs = st.tabs(["1. Setup", "2. Training", "3. Testing"])
     
-    # Two columns layout
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("#### Step 1: Train Your AI")
-        
-        # Initialize categories if not present
-        if "image_categories" not in st.session_state:
-            st.session_state.image_categories = ["Cats", "Dogs"]
-        
-        # Category management
-        st.markdown("**Define Categories to Recognize:**")
-        
-        category1 = st.text_input("Category 1:", value=st.session_state.image_categories[0] if len(st.session_state.image_categories) > 0 else "")
-        category2 = st.text_input("Category 2:", value=st.session_state.image_categories[1] if len(st.session_state.image_categories) > 1 else "")
-        
-        if st.button("Update Categories"):
-            if category1 and category2:
-                st.session_state.image_categories = [category1, category2]
-                st.success(f"Great! Your AI will learn to tell the difference between {category1} and {category2}.")
-            else:
-                st.error("Please enter both categories!")
-        
-        # Training simulation
-        st.markdown("#### Step 2: Add Training Examples")
+    with tabs[0]:
+        st.markdown("#### Setup Your Classifier")
         
         st.markdown("""
-        In a real AI project, you would upload example images for each category.
-        
-        For this demo, we'll simulate training with some examples:
+        An image classifier is an AI that can identify what's in a picture.
+        Let's set up a simple one!
         """)
         
-        col_ex1, col_ex2 = st.columns(2)
+        # Project settings
+        col1, col2 = st.columns(2)
         
-        with col_ex1:
-            st.markdown(f"**{st.session_state.image_categories[0]} (5 examples)**")
-            st.markdown("✅ Example 1 added")
-            st.markdown("✅ Example 2 added")
-            st.markdown("✅ Example 3 added")
-            st.markdown("✅ Example 4 added")
-            st.markdown("✅ Example 5 added")
+        with col1:
+            st.selectbox(
+                "What would you like your AI to identify?",
+                options=["Animals", "Fruits", "Vehicles", "Shapes", "Weather"]
+            )
         
-        with col_ex2:
-            st.markdown(f"**{st.session_state.image_categories[1]} (5 examples)**")
-            st.markdown("✅ Example 1 added")
-            st.markdown("✅ Example 2 added")
-            st.markdown("✅ Example 3 added")
-            st.markdown("✅ Example 4 added")
-            st.markdown("✅ Example 5 added")
+        with col2:
+            st.slider(
+                "How many different things should it recognize?",
+                min_value=2,
+                max_value=5,
+                value=3
+            )
+        
+        # Example of how it works
+        st.markdown("#### How Image Classification Works")
+        
+        st.markdown("""
+        1. **Collect Examples**: Show your AI many pictures of each thing you want it to recognize
+        2. **Extract Features**: The AI looks for patterns in each image (colors, shapes, edges)
+        3. **Train the Model**: The AI learns which features match which objects
+        4. **Test**: See if your AI can correctly identify new pictures it hasn't seen before
+        """)
+        
+        st.image("https://via.placeholder.com/600x200.png?text=Image+Classification+Diagram", 
+                 caption="How an image classifier works",
+                 use_column_width=True)
+    
+    with tabs[1]:
+        st.markdown("#### Train Your Classifier")
+        
+        st.markdown("""
+        In this step, you would normally:
+        1. Upload pictures of each category
+        2. Label each picture correctly
+        3. Train your AI using these examples
+        
+        For our demo, we'll use pre-collected images.
+        """)
+        
+        # Simulate training data
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Training Images Per Category:**")
+            st.slider("Cat images", min_value=5, max_value=50, value=20)
+            st.slider("Dog images", min_value=5, max_value=50, value=20)
+            st.slider("Bird images", min_value=5, max_value=50, value=20)
+        
+        with col2:
+            st.markdown("**Model Settings:**")
+            st.select_slider(
+                "Learning Speed",
+                options=["Slow but Accurate", "Balanced", "Fast but Less Accurate"],
+                value="Balanced"
+            )
+            st.checkbox("Use image enhancement", value=True)
+            st.checkbox("Remember training examples", value=True)
         
         # Training button
-        if st.button("Train the Model"):
-            with st.spinner("Training your AI model..."):
-                # Simulate training delay
-                import time
-                time.sleep(1)
-                st.success("🎉 Training complete! Your model is now ready to make predictions.")
-                st.session_state.model_trained = True
+        if st.button("Train My Classifier"):
+            # Simulate training process
+            progress_bar = st.progress(0)
+            for i in range(100):
+                # Update progress bar
+                progress_bar.progress(i + 1)
+            
+            st.success("Training complete! Your image classifier is ready to test.")
     
-    with col2:
-        st.markdown("#### How It Works")
+    with tabs[2]:
+        st.markdown("#### Test Your Classifier")
         
         st.markdown("""
-        1. You define the categories you want to recognize
-        2. You provide example images for each category
-        3. The AI learns patterns from the examples
-        4. The trained AI can now recognize new images
+        Now it's time to see how well your AI classifier works!
         
-        This is called **supervised learning** - teaching the AI by showing it examples with the correct answers!
+        In a real app, you could:
+        1. Upload a new image
+        2. See what your AI thinks it is
+        3. Give feedback to improve your AI
+        
+        Let's simulate testing with some example images.
         """)
         
-        # Display model status
-        if st.session_state.get("model_trained", False):
-            st.markdown("""
-            <div style="background-color: #e6ffe6; padding: 10px; border-radius: 5px; margin-top: 15px;">
-                <p style="margin: 0;"><strong>Model Status:</strong> Trained and Ready!</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Test the model section
-    if st.session_state.get("model_trained", False):
-        st.markdown("#### Step 3: Test Your Model")
-        
-        st.markdown("""
-        In a real application, you would upload a new image to test.
-        For this demo, we'll simulate testing:
-        """)
-        
-        test_option = st.selectbox(
-            "Choose a test image:",
-            ["Select a test image...", f"Test Image 1 (a {st.session_state.image_categories[0].lower()})", 
-             f"Test Image 2 (a {st.session_state.image_categories[1].lower()})", "Test Image 3 (something else)"]
+        # Test image selection
+        test_image = st.selectbox(
+            "Select a test image:",
+            options=["Cat on a sofa", "Dog in the park", "Bird on a branch", "Cat and dog together"]
         )
         
-        if test_option != "Select a test image..." and st.button("Run Prediction"):
-            with st.spinner("AI is thinking..."):
-                # Simulate prediction delay
-                import time
-                time.sleep(0.5)
+        # Show a placeholder image
+        st.image("https://via.placeholder.com/400x300.png?text=Test+Image",
+                 caption=f"Test image: {test_image}",
+                 use_column_width=True)
+        
+        # Simulate AI prediction
+        if st.button("What is this?"):
+            # Determine the "correct" prediction based on the selected test image
+            if "Cat" in test_image and "dog" not in test_image:
+                prediction = "Cat"
+                confidence = 0.92
+            elif "Dog" in test_image and "cat" not in test_image:
+                prediction = "Dog"
+                confidence = 0.89
+            elif "Bird" in test_image:
+                prediction = "Bird"
+                confidence = 0.95
+            else:
+                # For the "Cat and dog together" case
+                prediction = "Cat"
+                confidence = 0.61
+                st.markdown("""
+                **Other possibilities:**
+                - Dog: 38% confident
+                - Bird: 1% confident
                 
-                # Simulated prediction results
-                if "1" in test_option:
-                    confidence = random.uniform(0.85, 0.98)
-                    prediction = st.session_state.image_categories[0]
-                elif "2" in test_option:
-                    confidence = random.uniform(0.80, 0.95)
-                    prediction = st.session_state.image_categories[1]
-                else:
-                    confidence = random.uniform(0.40, 0.60)
-                    prediction = random.choice(st.session_state.image_categories)
-                
-                # Display prediction
-                st.markdown(f"""
-                <div style="background-color: #f0f0f0; padding: 15px; border-radius: 10px; margin-top: 15px;">
-                    <h4 style="margin-top: 0;">Prediction Results</h4>
-                    <p><strong>Prediction:</strong> {prediction}</p>
-                    <p><strong>Confidence:</strong> {confidence:.1%}</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Add explanation if it's the "something else" case
-                if "3" in test_option:
-                    st.markdown("""
-                    <div style="background-color: #fff9e6; padding: 10px; border-radius: 5px; margin-top: 15px;">
-                        <p style="margin: 0;">Notice the lower confidence! This is because the image doesn't clearly match either category. AI models work best when tested on categories they've been trained on.</p>
+                *Note: The AI is confused because there are multiple objects in this image!*
+                """)
+            
+            st.success(f"I think this is a **{prediction}** (I'm {confidence:.0%} confident)")
+            
+            # Only show the confidence visualization for single-object images
+            if "together" not in test_image:
+                # Create a horizontal bar chart for confidence
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.markdown("### Confidence Levels")
+                    
+                    # Determine the other confidences
+                    if prediction == "Cat":
+                        dog_conf = (1 - confidence) * 0.8
+                        bird_conf = (1 - confidence) * 0.2
+                    elif prediction == "Dog":
+                        cat_conf = (1 - confidence) * 0.8
+                        bird_conf = (1 - confidence) * 0.2
+                    else:  # Bird
+                        cat_conf = (1 - confidence) * 0.5
+                        dog_conf = (1 - confidence) * 0.5
+                    
+                    # Display confidence bars
+                    st.markdown(f"""
+                    <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                        <div style="width: {confidence*100:.0f}%; background-color: #4CAF50; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                            {prediction}: {confidence*100:.0f}%
+                        </div>
                     </div>
                     """, unsafe_allow_html=True)
+                    
+                    if prediction == "Cat":
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {dog_conf*100:.0f}%; background-color: #2196F3; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Dog: {dog_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {bird_conf*100:.0f}%; background-color: #FF9800; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Bird: {bird_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    elif prediction == "Dog":
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {cat_conf*100:.0f}%; background-color: #4CAF50; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Cat: {cat_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {bird_conf*100:.0f}%; background-color: #FF9800; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Bird: {bird_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    else:  # Bird
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {cat_conf*100:.0f}%; background-color: #4CAF50; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Cat: {cat_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        st.markdown(f"""
+                        <div style="width: 100%; background-color: #f0f0f0; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="width: {dog_conf*100:.0f}%; background-color: #2196F3; padding: 10px 0; border-radius: 5px; text-align: center; color: white;">
+                                Dog: {dog_conf*100:.0f}%
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+            
+            # Offer feedback option
+            feedback = st.radio(
+                "Was the AI correct?",
+                options=["Yes", "No"],
+                horizontal=True
+            )
+            
+            if feedback == "No":
+                st.markdown("""
+                Thanks for your feedback! In a real app, this would help the AI learn and improve.
+                
+                The AI might be confused because:
+                - The image contains unusual colors or lighting
+                - The object is in an unusual position or partially hidden
+                - There are multiple objects in the image
+                """)
 
-def display_story_generator_project():
-    """Display the story generator project template"""
-    st.markdown("""
-    ### AI Story Generator
+def display_chatbot_builder():
+    """Display the interface for building a simple chatbot"""
+    st.markdown("### Create Your AI Chatbot")
     
-    Create an AI that can generate simple stories based on your ideas!
-    """)
+    # Tabs for the different stages
+    tabs = st.tabs(["1. Personality", "2. Responses", "3. Test Chat"])
     
-    # Initialize story settings if not present
-    if "story_settings" not in st.session_state:
-        st.session_state.story_settings = {
-            "theme": "Space Adventure",
-            "main_character": "Astronaut",
-            "setting": "Space Station",
-            "genre": "Adventure",
-            "tone": "Exciting"
-        }
-    
-    # Two columns layout
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("#### Story Settings")
+    with tabs[0]:
+        st.markdown("#### Design Your Chatbot's Personality")
         
-        # Theme selection
-        st.session_state.story_settings["theme"] = st.selectbox(
-            "Story Theme:",
-            ["Space Adventure", "Magical Forest", "Underwater World", "Robot City", "Dinosaur Land", "Superhero Academy"],
-            index=["Space Adventure", "Magical Forest", "Underwater World", "Robot City", "Dinosaur Land", "Superhero Academy"].index(st.session_state.story_settings["theme"])
-        )
+        # Chatbot name and purpose
+        col1, col2 = st.columns(2)
         
-        # Character selection
-        if st.session_state.story_settings["theme"] == "Space Adventure":
-            character_options = ["Astronaut", "Alien", "Robot", "Scientist"]
-        elif st.session_state.story_settings["theme"] == "Magical Forest":
-            character_options = ["Wizard", "Elf", "Fairy", "Talking Animal"]
-        elif st.session_state.story_settings["theme"] == "Underwater World":
-            character_options = ["Mermaid", "Scuba Diver", "Talking Fish", "Sea Creature"]
-        elif st.session_state.story_settings["theme"] == "Robot City":
-            character_options = ["Robot", "Engineer", "AI", "Inventor"]
-        elif st.session_state.story_settings["theme"] == "Dinosaur Land":
-            character_options = ["Explorer", "Dinosaur", "Time Traveler", "Paleontologist"]
-        else:  # Superhero Academy
-            character_options = ["Superhero Student", "Teacher with Powers", "Sidekick", "Super Pet"]
-        
-        st.session_state.story_settings["main_character"] = st.selectbox(
-            "Main Character:",
-            character_options,
-            index=min(character_options.index(st.session_state.story_settings["main_character"]) if st.session_state.story_settings["main_character"] in character_options else 0, len(character_options)-1)
-        )
-        
-        # Other story elements
-        col_a, col_b = st.columns(2)
-        
-        with col_a:
-            st.session_state.story_settings["genre"] = st.radio(
-                "Story Genre:",
-                ["Adventure", "Mystery", "Funny", "Action"],
-                index=["Adventure", "Mystery", "Funny", "Action"].index(st.session_state.story_settings["genre"])
+        with col1:
+            chatbot_name = st.text_input(
+                "What's your chatbot's name?",
+                value="Chatter",
+                max_chars=20
+            )
+            
+            chatbot_purpose = st.selectbox(
+                "What's your chatbot's main purpose?",
+                options=[
+                    "General Chat", 
+                    "Homework Helper", 
+                    "Science Facts", 
+                    "Story Creator",
+                    "Joke Teller"
+                ]
             )
         
-        with col_b:
-            st.session_state.story_settings["tone"] = st.radio(
-                "Story Tone:",
-                ["Exciting", "Mysterious", "Silly", "Educational"],
-                index=["Exciting", "Mysterious", "Silly", "Educational"].index(st.session_state.story_settings["tone"])
+        with col2:
+            chatbot_personality = st.select_slider(
+                "Personality style:",
+                options=["Serious", "Balanced", "Playful"],
+                value="Balanced"
+            )
+            
+            chatbot_knowledge = st.select_slider(
+                "Knowledge detail level:",
+                options=["Basic", "Moderate", "Detailed"],
+                value="Moderate"
             )
         
-        # Story length
-        story_length = st.slider("Story Length:", 1, 5, 3, help="1 = Very Short, 5 = Longer Story")
-        st.session_state.story_settings["length"] = story_length
+        # Chatbot avatar
+        st.markdown("#### Choose an Avatar")
+        avatar_cols = st.columns(5)
         
-        # Generate button
-        if st.button("Generate Story"):
-            # Set flag that a story has been generated
-            st.session_state.story_generated = True
-            st.rerun()
+        avatar_options = ["🤖", "🧠", "🦊", "🐱", "👩‍🔬"]
+        selected_avatar = st.session_state.get("selected_avatar", avatar_options[0])
+        
+        for i, avatar in enumerate(avatar_options):
+            with avatar_cols[i]:
+                if st.button(
+                    avatar, 
+                    key=f"avatar_{i}",
+                    help=f"Select this avatar for your chatbot",
+                    use_container_width=True
+                ):
+                    st.session_state.selected_avatar = avatar
+                    selected_avatar = avatar
+            
+        # Show the selected avatar
+        st.markdown(f"""
+        <div style="text-align: center; margin: 20px 0;">
+            <div style="font-size: 60px; margin-bottom: 10px;">{selected_avatar}</div>
+            <div style="font-weight: bold; font-size: 18px;">{chatbot_name}</div>
+            <div style="font-size: 14px; opacity: 0.8;">{chatbot_purpose} | {chatbot_personality} | {chatbot_knowledge}</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    with col2:
-        st.markdown("#### How It Works")
+    with tabs[1]:
+        st.markdown("#### Program Your Chatbot's Responses")
         
         st.markdown("""
-        1. You choose the story elements you want
-        2. The AI combines your choices with patterns it learned from books and stories
-        3. The AI generates a unique story based on your inputs
+        Teach your chatbot how to respond to different types of messages.
         
-        This is called **generative AI** - creating new content based on patterns in existing stories!
+        In a real AI chatbot, this would be done through training on many examples,
+        but for our simple one, we'll define some basic rules.
         """)
         
-        # Example of what the AI has learned
-        st.markdown("""
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 15px;">
-            <p style="margin: 0;"><strong>AI's Knowledge:</strong> The AI knows about story structure, characters, settings, and how different genres typically develop.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        # Greeting response
+        st.markdown("##### Greeting Response")
+        greeting_response = st.text_area(
+            "How should your chatbot respond to 'Hello' or 'Hi'?",
+            value=f"Hi there! I'm {st.session_state.get('chatbot_name', 'Chatter')}, your friendly AI assistant. How can I help you today?",
+            height=80
+        )
+        
+        # Question response strategy
+        st.markdown("##### Question Strategy")
+        question_strategy = st.radio(
+            "How should your chatbot handle questions it doesn't know the answer to?",
+            options=[
+                "Admit it doesn't know and offer to look it up",
+                "Make an educated guess but clarify it's not certain",
+                "Ask clarifying questions to better understand",
+                "Change the subject to something it knows about"
+            ]
+        )
+        
+        # Special phrases
+        st.markdown("##### Special Phrases")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            joke_phrase = st.text_input(
+                "Your chatbot's favorite joke:",
+                value="Why don't scientists trust atoms? Because they make up everything!"
+            )
+        
+        with col2:
+            fact_phrase = st.text_input(
+                "An interesting fact your chatbot can share:",
+                value="The human brain has about 86 billion neurons!"
+            )
+        
+        # Persona consistency
+        st.markdown("##### Maintaining Personality")
+        st.info(f"""
+        To make your chatbot feel consistent, we'll make sure its responses always match its personality.
+        
+        Your {st.session_state.get('chatbot_personality', 'Balanced')} chatbot will use appropriate language and tone in all responses.
+        """)
     
-    # Generated story display
-    if st.session_state.get("story_generated", False):
-        st.markdown("#### Your Generated Story")
+    with tabs[2]:
+        st.markdown("#### Test Your Chatbot")
         
-        # Get story settings
-        theme = st.session_state.story_settings["theme"]
-        character = st.session_state.story_settings["main_character"]
-        genre = st.session_state.story_settings["genre"]
-        tone = st.session_state.story_settings["tone"]
-        length = st.session_state.story_settings["length"]
-        
-        # Generate story title
-        story_title = generate_story_title(theme, character)
-        
-        # Generate story based on settings
-        story_paragraphs = []
-        
-        # Introduction
-        if theme == "Space Adventure":
-            intro = f"Once upon a time, a brave {character} named Alex was aboard the International Space Station when something strange happened."
-        elif theme == "Magical Forest":
-            intro = f"Deep in the Whispering Woods lived a {character} named Morgan who discovered a glowing crystal that changed everything."
-        elif theme == "Underwater World":
-            intro = f"Beneath the waves of the Azure Sea, a curious {character} named Jamie found an ancient treasure map leading to adventure."
-        elif theme == "Robot City":
-            intro = f"In Mechanopolis, a city where robots and humans lived together, a resourceful {character} named Taylor made an amazing discovery."
-        elif theme == "Dinosaur Land":
-            intro = f"After finding a mysterious portal, a daring {character} named Casey was transported to a world where dinosaurs still roamed."
-        else:  # Superhero Academy
-            intro = f"It was the first day at Powerhouse Academy, and a nervous {character} named Riley was about to discover incredible abilities."
-        
-        story_paragraphs.append(intro)
-        
-        # Middle of story - different based on genre
-        if genre == "Adventure":
-            middle = f"Without hesitation, our hero embarked on an epic journey filled with challenges. Along the way, they met new friends who helped them overcome obstacles."
-        elif genre == "Mystery":
-            middle = f"Something wasn't right. Clues began to appear, and our hero had to solve the puzzle before time ran out. Each discovery led to more questions."
-        elif genre == "Funny":
-            middle = f"What happened next was completely unexpected and hilariously chaotic! Everything that could go wrong did go wrong, in the most amusing ways possible."
-        else:  # Action
-            middle = f"Suddenly, danger appeared! Our hero had to act fast, using quick thinking and special skills to face the threat head-on."
-        
-        story_paragraphs.append(middle)
-        
-        # Add extra paragraph for longer stories
-        if length >= 3:
-            if tone == "Exciting":
-                extra = f"Hearts racing, they pressed forward into the unknown. The challenge ahead seemed impossible, but failure was not an option."
-            elif tone == "Mysterious":
-                extra = f"Strange symbols appeared, revealing secrets that had been hidden for centuries. Each discovery deepened the mystery."
-            elif tone == "Silly":
-                extra = f"To make matters even more ridiculous, they accidentally triggered the world's largest bubble machine, covering everything in rainbow bubbles!"
-            else:  # Educational
-                extra = f"This experience taught them about teamwork and perseverance. They learned that solving problems often requires looking at things from different perspectives."
-            
-            story_paragraphs.append(extra)
-        
-        # Add another paragraph for very long stories
-        if length >= 4:
-            situation = f"The situation seemed hopeless when suddenly they remembered an important lesson. Sometimes the simplest solution is the best one."
-            story_paragraphs.append(situation)
-        
-        # Conclusion
-        if tone == "Exciting":
-            ending = f"In an amazing final moment of triumph, they succeeded in their mission! Everyone celebrated their incredible achievement."
-        elif tone == "Mysterious":
-            ending = f"Finally, the truth was revealed, but it left them with one last question that would lead to a whole new mystery."
-        elif tone == "Silly":
-            ending = f"In the end, everyone had a good laugh about the whole adventure, especially when they discovered it all started because of a misunderstanding!"
-        else:  # Educational
-            ending = f"They returned home with new knowledge and understanding about the world around them, eager to share what they had learned with others."
-        
-        story_paragraphs.append(ending)
-        
-        # Display the story in a nice format
+        # Chat interface
         st.markdown(f"""
-        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border-left: 5px solid #9C6DF2;">
-            <h3 style="text-align: center; color: #9C6DF2;">{story_title}</h3>
-            
-            <div style="margin-top: 20px;">
-                {"<p>" + "</p><p>".join(story_paragraphs) + "</p>"}
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="font-size: 40px; margin-right: 15px;">{st.session_state.get('selected_avatar', '🤖')}</div>
+            <div>
+                <div style="font-weight: bold; font-size: 18px;">{st.session_state.get('chatbot_name', 'Chatter')}</div>
+                <div style="font-size: 14px; opacity: 0.8;">Ready to chat!</div>
             </div>
-            
-            <p style="text-align: right; margin-top: 20px; font-style: italic;">- Generated by AI Story Generator</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Regenerate option
-        if st.button("Generate Another Story"):
-            st.session_state.story_generated = True
+        # Initialize chat history
+        if "chatbot_messages" not in st.session_state:
+            st.session_state.chatbot_messages = [
+                {"role": "assistant", "content": f"Hi! I'm {st.session_state.get('chatbot_name', 'Chatter')}. What would you like to talk about?"}
+            ]
+        
+        # Display chat messages
+        for message in st.session_state.chatbot_messages:
+            if message["role"] == "user":
+                st.chat_message("user").write(message["content"])
+            else:
+                st.chat_message("assistant", avatar=st.session_state.get('selected_avatar', '🤖')).write(message["content"])
+        
+        # Chat input
+        if prompt := st.chat_input("Type your message..."):
+            # Add user message to chat history
+            st.session_state.chatbot_messages.append({"role": "user", "content": prompt})
+            
+            # Display user message
+            st.chat_message("user").write(prompt)
+            
+            # Generate bot response (simplified)
+            if "hello" in prompt.lower() or "hi" in prompt.lower():
+                response = greeting_response
+            elif "joke" in prompt.lower():
+                response = joke_phrase
+            elif "fact" in prompt.lower() or "interesting" in prompt.lower():
+                response = fact_phrase
+            elif "?" in prompt:
+                # Simple question handling based on strategy
+                if question_strategy.startswith("Admit"):
+                    response = "I'm not fully sure about that. Would you like me to look up more information for you?"
+                elif question_strategy.startswith("Make"):
+                    response = "I think the answer might be related to how AI systems process information, but I'm not 100% certain."
+                elif question_strategy.startswith("Ask"):
+                    response = "That's an interesting question. Can you tell me more about what aspect you're most curious about?"
+                else:
+                    response = "Speaking of questions, did you know that " + fact_phrase
+            else:
+                # Generic responses
+                generic_responses = [
+                    f"That's interesting! Can you tell me more?",
+                    f"I see. What else would you like to talk about?",
+                    f"Thanks for sharing that with me. How does that make you feel?",
+                    f"I'm designed to learn from our conversations. This helps me understand {prompt} better.",
+                    f"I appreciate you chatting with me! What else is on your mind?"
+                ]
+                response = random.choice(generic_responses)
+            
+            # Add bot response to chat history
+            st.session_state.chatbot_messages.append({"role": "assistant", "content": response})
+            
+            # Display bot response
+            st.chat_message("assistant", avatar=st.session_state.get('selected_avatar', '🤖')).write(response)
+        
+        # Reset chat button
+        if st.button("Reset Chat"):
+            st.session_state.chatbot_messages = [
+                {"role": "assistant", "content": f"Hi! I'm {st.session_state.get('chatbot_name', 'Chatter')}. What would you like to talk about?"}
+            ]
             st.rerun()
 
-def display_chatbot_creator_project():
-    """Display the chatbot creator project template"""
-    st.markdown("""
-    ### Chatbot Creator Project
+def display_music_generator_builder():
+    """Display the interface for building a music generator"""
+    st.markdown("### Create Your AI Music Generator")
     
-    Design your own chatbot that can answer questions on topics you choose!
+    st.markdown("""
+    This advanced tool lets you create a simple AI system that can generate music.
+    
+    In real music AI, neural networks are trained on thousands of songs to learn patterns.
+    Our simplified version will use basic rules of music theory.
     """)
     
-    # Initialize chatbot data if not present
-    if "chatbot_data" not in st.session_state:
-        st.session_state.chatbot_data = {
-            "name": "Helpbot",
-            "expertise": ["Science", "Animals"],
-            "personality": "Friendly",
-            "responses": {}
-        }
+    # Coming soon message
+    st.info("🎵 Full music generator coming soon! This is an advanced project.")
     
-    # Two columns layout
-    col1, col2 = st.columns([2, 1])
+    # Simplified version
+    st.markdown("#### Simple Melody Generator")
+    
+    col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### Design Your Chatbot")
-        
-        # Chatbot name
-        st.session_state.chatbot_data["name"] = st.text_input(
-            "Chatbot Name:",
-            value=st.session_state.chatbot_data["name"]
+        # Music style
+        music_style = st.selectbox(
+            "Choose a music style:",
+            options=["Happy", "Sad", "Energetic", "Calm", "Mysterious"]
         )
         
-        # Expertise areas
-        expertise_options = ["Science", "Animals", "Space", "Technology", "History", "Art", "Sports", "Music", "Math", "Geography"]
-        
-        st.session_state.chatbot_data["expertise"] = st.multiselect(
-            "Areas of Expertise (Select 1-3):",
-            expertise_options,
-            default=st.session_state.chatbot_data["expertise"]
+        # Instrument
+        instrument = st.selectbox(
+            "Choose main instrument:",
+            options=["Piano", "Guitar", "Electronic", "Xylophone", "Flute"]
         )
-        
-        # Limit to 3 areas
-        if len(st.session_state.chatbot_data["expertise"]) > 3:
-            st.session_state.chatbot_data["expertise"] = st.session_state.chatbot_data["expertise"][:3]
-            st.warning("Maximum 3 areas of expertise allowed!")
-        
-        # Personality
-        st.session_state.chatbot_data["personality"] = st.radio(
-            "Chatbot Personality:",
-            ["Friendly", "Funny", "Serious", "Enthusiastic"],
-            index=["Friendly", "Funny", "Serious", "Enthusiastic"].index(st.session_state.chatbot_data["personality"])
-        )
-        
-        # Custom responses
-        st.markdown("#### Add Custom Responses")
-        st.markdown("Teach your chatbot how to answer specific questions:")
-        
-        with st.form("add_response"):
-            question = st.text_input("When someone asks:", placeholder="E.g., What is your name?")
-            answer = st.text_input("Your chatbot should answer:", placeholder="E.g., My name is Helpbot!")
-            
-            submit = st.form_submit_button("Add Response")
-            
-            if submit and question and answer:
-                st.session_state.chatbot_data["responses"][question] = answer
-                st.success(f"Response added! Your chatbot will answer '{question}' with '{answer}'")
-        
-        # Display current custom responses
-        if st.session_state.chatbot_data["responses"]:
-            st.markdown("#### Current Custom Responses")
-            
-            for q, a in st.session_state.chatbot_data["responses"].items():
-                st.markdown(f"""
-                <div style="border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 10px;">
-                    <p style="margin: 0;"><strong>Q:</strong> {q}</p>
-                    <p style="margin: 5px 0 0 0;"><strong>A:</strong> {a}</p>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            if st.button("Clear All Responses"):
-                st.session_state.chatbot_data["responses"] = {}
-                st.rerun()
     
     with col2:
-        st.markdown("#### How It Works")
+        # Length
+        length = st.slider(
+            "Melody length (seconds):",
+            min_value=5,
+            max_value=30,
+            value=15,
+            step=5
+        )
         
-        st.markdown("""
-        1. You choose your chatbot's expertise areas
-        2. You teach it specific responses
-        3. For other questions, the chatbot uses its pre-trained knowledge
-        4. The chatbot's personality affects how it answers
+        # Complexity
+        complexity = st.select_slider(
+            "Complexity:",
+            options=["Very Simple", "Simple", "Medium", "Complex", "Very Complex"],
+            value="Medium"
+        )
+    
+    # Generate button
+    if st.button("Generate Melody"):
+        # Show a progress bar
+        progress_bar = st.progress(0)
         
-        This combines **knowledge-based AI** with **natural language processing**!
+        for i in range(100):
+            # Update progress bar
+            progress_bar.progress(i + 1)
+        
+        st.success("Melody generated! In a complete app, you could play it here.")
+        
+        # Explain what happened
+        st.markdown(f"""
+        You created a {length}-second {music_style.lower()} melody using a {instrument.lower()} sound.
+        
+        ##### How This Works:
+        
+        1. The AI uses basic rules of music theory for {music_style.lower()} melodies
+        2. It generates a sequence of notes that follow these patterns
+        3. The complexity level ({complexity.lower()}) determines how many notes and variations are used
+        4. In a full AI system, this would be powered by neural networks trained on thousands of songs
+        
+        In a complete app, you would hear the melody and could save or share your creation.
         """)
         
-        # Chatbot preview
-        st.markdown("#### Chatbot Preview")
-        
-        name = st.session_state.chatbot_data["name"]
-        expertise = ", ".join(st.session_state.chatbot_data["expertise"])
-        personality = st.session_state.chatbot_data["personality"]
-        
-        st.markdown(f"""
-        <div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px; margin-top: 15px;">
-            <h4 style="margin-top: 0;">{name}</h4>
-            <p><strong>Expertise:</strong> {expertise}</p>
-            <p><strong>Personality:</strong> {personality}</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Test chatbot section
-    st.markdown("---")
-    st.markdown("#### Test Your Chatbot")
-    
-    # Create a chat input
-    user_question = st.text_input("Ask your chatbot a question:", key="chatbot_question")
-    
-    if st.button("Ask", key="ask_chatbot") and user_question:
-        # Check if this is a custom response
-        if user_question in st.session_state.chatbot_data["responses"]:
-            answer = st.session_state.chatbot_data["responses"][user_question]
-        else:
-            # Generate a response based on chatbot personality and expertise
-            answer = generate_chatbot_response(user_question, 
-                                             st.session_state.chatbot_data["personality"],
-                                             st.session_state.chatbot_data["expertise"])
-        
-        # Display the chat exchange
-        st.markdown(f"""
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-            <div style="background-color: #f0f0f0; padding: 10px; border-radius: 10px; margin-left: auto; max-width: 80%;">
-                <p style="margin: 0;"><strong>You:</strong> {user_question}</p>
-            </div>
-            <div style="background-color: #e6f7ff; padding: 10px; border-radius: 10px; margin-right: auto; max-width: 80%;">
-                <p style="margin: 0;"><strong>{st.session_state.chatbot_data["name"]}:</strong> {answer}</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        # Visualization placeholder
+        st.image("https://via.placeholder.com/600x200.png?text=Music+Visualization",
+                 caption=f"{music_style} Melody Visualization",
+                 use_column_width=True)
 
-def display_music_maker_project():
-    """Display the music maker project template"""
-    st.markdown("""
-    ### AI Music Maker
+def display_smart_game_builder():
+    """Display the interface for building a game with AI"""
+    st.markdown("### Create a Game with AI")
     
-    Create AI-generated music by selecting the style and mood you want!
+    # Game type selection
+    game_type = st.radio(
+        "Choose your game type:",
+        options=["Tic-Tac-Toe", "Number Guessing", "Word Puzzle", "Adventure Game"],
+        horizontal=True
+    )
+    
+    # AI opponent difficulty
+    ai_difficulty = st.select_slider(
+        "AI opponent difficulty:",
+        options=["Beginner", "Easy", "Medium", "Hard", "Expert"],
+        value="Medium"
+    )
+    
+    st.markdown("""
+    #### How Game AI Works
+    
+    AI in games can use different techniques:
+    
+    1. **Rule-based AI**: Follows specific rules to make decisions
+    2. **Search algorithms**: Looks ahead at possible moves to find the best one
+    3. **Learning systems**: Improves by playing many games and learning patterns
+    4. **Adaptive AI**: Changes its strategy based on how you play
     """)
     
-    # Initialize music settings if not present
-    if "music_settings" not in st.session_state:
-        st.session_state.music_settings = {
-            "style": "Electronic",
-            "mood": "Happy",
-            "tempo": "Medium",
-            "instruments": ["Piano", "Drums"]
-        }
+    # Display specific game builder based on selection
+    if game_type == "Tic-Tac-Toe":
+        st.markdown("### Tic-Tac-Toe AI Builder")
+        
+        st.markdown("""
+        Your AI opponent will use a simple strategy to play Tic-Tac-Toe against you.
+        
+        The AI's strategy depends on the difficulty level:
+        - **Beginner**: Makes random moves
+        - **Easy**: Can block some of your winning moves
+        - **Medium**: Tries to win and block your winning moves
+        - **Hard**: Looks ahead to plan a winning strategy
+        - **Expert**: Plays perfectly (can't be beaten, only tied)
+        """)
+        
+        # Strategy explanation
+        st.markdown("#### AI Strategy Settings")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.checkbox("Block opponent's winning moves", value=ai_difficulty >= "Easy")
+            st.checkbox("Look for its own winning moves", value=ai_difficulty >= "Medium")
+            st.checkbox("Use center space when available", value=ai_difficulty >= "Medium")
+        
+        with col2:
+            st.checkbox("Use corner spaces strategically", value=ai_difficulty >= "Hard")
+            st.checkbox("Look ahead for multiple turns", value=ai_difficulty >= "Hard")
+            st.checkbox("Play perfectly using minimax algorithm", value=ai_difficulty == "Expert")
+        
+        # Game board preview (simplified)
+        st.markdown("#### Game Preview")
+        
+        # Create a simple tic-tac-toe board with HTML
+        st.markdown("""
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; max-width: 300px; margin: 0 auto;">
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;"></div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;"></div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;">X</div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;"></div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;">O</div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;"></div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;">O</div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;"></div>
+            <div style="background-color: #f0f0f0; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 5px;">X</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style="text-align: center; margin-top: 20px; font-style: italic;">
+            In a real game, you would play against the AI and see its thinking process.
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Two columns layout
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("#### Music Settings")
+    elif game_type == "Number Guessing":
+        st.markdown("### Number Guessing Game with AI")
         
-        # Music style selection
-        st.session_state.music_settings["style"] = st.selectbox(
-            "Music Style:",
-            ["Electronic", "Classical", "Jazz", "Pop", "Rock", "Hip Hop", "Ambient"],
-            index=["Electronic", "Classical", "Jazz", "Pop", "Rock", "Hip Hop", "Ambient"].index(st.session_state.music_settings["style"])
-        )
+        st.markdown("""
+        Create a game where the AI tries to guess a number you're thinking of,
+        or where you try to guess the AI's number with smart hints.
+        """)
         
-        # Mood selection
-        st.session_state.music_settings["mood"] = st.select_slider(
-            "Music Mood:",
-            options=["Calm", "Happy", "Energetic", "Mysterious", "Epic"],
-            value=st.session_state.music_settings["mood"]
-        )
-        
-        # Tempo selection
-        st.session_state.music_settings["tempo"] = st.radio(
-            "Tempo:",
-            ["Slow", "Medium", "Fast"],
-            index=["Slow", "Medium", "Fast"].index(st.session_state.music_settings["tempo"]),
+        # Game mode
+        game_mode = st.radio(
+            "Game mode:",
+            options=["AI guesses your number", "You guess AI's number"],
             horizontal=True
         )
         
-        # Instrument selection
-        instrument_options = ["Piano", "Guitar", "Drums", "Strings", "Bass", "Synth", "Flute", "Trumpet"]
+        if game_mode == "AI guesses your number":
+            st.markdown("""
+            The AI will use a **binary search algorithm** to efficiently guess your number.
+            
+            This is a powerful technique that can find a number between 1-1000 in just 10 guesses!
+            
+            #### How it works:
+            1. You think of a number in a range (e.g., 1-100)
+            2. The AI makes a guess (usually the middle of the range)
+            3. You tell it if your number is higher or lower
+            4. The AI narrows the range and guesses again
+            5. This repeats until it finds your number
+            """)
+            
+            # Range setting
+            number_range = st.slider(
+                "Number range:",
+                min_value=10,
+                max_value=1000,
+                value=100,
+                step=10
+            )
+            
+            # Calculate maximum guesses needed (log2 of range)
+            import math
+            max_guesses = math.ceil(math.log2(number_range))
+            
+            st.info(f"The AI can guess any number between 1 and {number_range} in a maximum of {max_guesses} guesses!")
+            
+            # Game simulation button
+            if st.button("Start Game Simulation"):
+                st.markdown("#### Game Simulation")
+                st.markdown(f"Let's pretend your number is {random.randint(1, number_range)}")
+                
+                # Show a few example guesses
+                guesses = [
+                    {"guess": number_range // 2, "range": f"1-{number_range}"},
+                    {"guess": number_range // 4, "range": f"1-{number_range // 2}"},
+                    {"guess": number_range // 8, "range": f"1-{number_range // 4}"}
+                ]
+                
+                for i, g in enumerate(guesses):
+                    st.markdown(f"""
+                    **Guess {i+1}**: AI guesses {g['guess']} (searching range: {g['range']})
+                    """)
+                
+                st.markdown("... and so on until it finds your number.")
+                st.markdown(f"In a real game, you'd interact with the AI until it finds your number in {max_guesses} guesses or less.")
         
-        st.session_state.music_settings["instruments"] = st.multiselect(
-            "Instruments (Select 1-4):",
-            instrument_options,
-            default=st.session_state.music_settings["instruments"]
-        )
-        
-        # Limit to 4 instruments
-        if len(st.session_state.music_settings["instruments"]) > 4:
-            st.session_state.music_settings["instruments"] = st.session_state.music_settings["instruments"][:4]
-            st.warning("Maximum 4 instruments allowed!")
-        
-        # Generate button
-        if st.button("Generate Music"):
-            st.session_state.music_generated = True
-            st.rerun()
+        else:  # You guess AI's number
+            st.markdown("""
+            The AI will think of a number and give you increasingly helpful hints based on your guesses.
+            
+            The difficulty level changes how helpful the AI's hints are:
+            - **Beginner**: Very helpful hints ("You're getting warmer!")
+            - **Easy**: Clear hints about higher/lower
+            - **Medium**: Basic higher/lower hints
+            - **Hard**: Vague hints that are sometimes misleading
+            - **Expert**: Minimal hints, sometimes tricky
+            """)
+            
+            # Range setting
+            number_range = st.slider(
+                "Number range:",
+                min_value=10,
+                max_value=1000,
+                value=100,
+                step=10
+            )
+            
+            # Hint examples based on difficulty
+            hint_examples = {
+                "Beginner": "You're getting much warmer! Try a bit higher.",
+                "Easy": "Your guess is too low. Try a higher number.",
+                "Medium": "Too low.",
+                "Hard": "Not quite right. Keep trying.",
+                "Expert": "Incorrect."
+            }
+            
+            st.markdown(f"""
+            #### Example hint for {ai_difficulty} difficulty:
+            "{hint_examples[ai_difficulty]}"
+            """)
+            
+            # Game simulation
+            st.markdown("#### Game Preview")
+            
+            # Simulate a game
+            ai_number = random.randint(1, number_range)
+            st.text_input("Enter your guess:", placeholder=f"Enter a number between 1 and {number_range}")
+            
+            st.markdown(f"""
+            <div style="background-color: #f0f4f8; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                <p style="margin: 0;"><strong>AI:</strong> {hint_examples[ai_difficulty]}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+            <div style="text-align: center; margin-top: 20px; font-style: italic;">
+                In a real game, you would continue guessing until you find the correct number.
+            </div>
+            """, unsafe_allow_html=True)
     
-    with col2:
-        st.markdown("#### How It Works")
+    elif game_type == "Word Puzzle":
+        st.markdown("### Word Puzzle with AI")
         
         st.markdown("""
-        1. You select the style, mood, and instruments
-        2. The AI analyzes patterns from thousands of songs
-        3. It creates a new piece based on your choices
-        4. The AI combines different instrument sounds to create the final music
-        
-        This uses **generative AI for music** - creating new melodies and patterns based on existing music!
+        Create a word puzzle game where the AI creates and solves word challenges.
+        This uses natural language processing, a branch of AI that works with words and language.
         """)
         
-        # Additional info
-        st.markdown("""
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 15px;">
-            <p style="margin: 0;"><strong>Music AI:</strong> Real music AIs learn patterns from thousands of songs to understand melody, harmony, rhythm, and structure.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Display generated music
-    if st.session_state.get("music_generated", False):
-        st.markdown("#### Your Generated Music")
+        # Puzzle type
+        puzzle_type = st.selectbox(
+            "Choose a puzzle type:",
+            options=["Word Scramble", "Word Association", "Missing Letters", "Word Categories"]
+        )
         
-        # Get music settings
-        style = st.session_state.music_settings["style"]
-        mood = st.session_state.music_settings["mood"]
-        tempo = st.session_state.music_settings["tempo"]
-        instruments = ", ".join(st.session_state.music_settings["instruments"])
+        # Difficulty affects word complexity
+        word_complexity = {
+            "Beginner": "3-4 letter simple words",
+            "Easy": "4-5 letter common words",
+            "Medium": "5-7 letter everyday words",
+            "Hard": "7-9 letter less common words",
+            "Expert": "9+ letter challenging words"
+        }
         
-        # Display the music player (simulated)
         st.markdown(f"""
-        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border-left: 5px solid #4CAF50;">
-            <h3 style="margin-top: 0;">{mood} {style} Composition</h3>
-            
-            <div style="margin: 20px 0; background-color: #e0e0e0; height: 80px; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
-                <div style="text-align: center;">
-                    <p>🎵 Music Visualization 🎵</p>
-                    <p style="font-size: 12px; color: #666;">(In a real application, an audio player would appear here)</p>
-                </div>
-            </div>
-            
-            <p><strong>Style:</strong> {style}</p>
-            <p><strong>Mood:</strong> {mood}</p>
-            <p><strong>Tempo:</strong> {tempo}</p>
-            <p><strong>Instruments:</strong> {instruments}</p>
-            
-            <div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
-                <button style="background-color: #4CAF50; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;" disabled>▶️ Play</button>
-                <button style="background-color: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;" disabled>⏹️ Stop</button>
-                <button style="background-color: #2196F3; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;" disabled>💾 Save</button>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Music variation options
-        st.markdown("#### Try Some Variations")
-        
-        variation_cols = st.columns(3)
-        
-        with variation_cols[0]:
-            st.markdown("""
-            <div style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; text-align: center; cursor: pointer;">
-                <p style="margin: 0;"><strong>More Upbeat</strong></p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with variation_cols[1]:
-            st.markdown("""
-            <div style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; text-align: center; cursor: pointer;">
-                <p style="margin: 0;"><strong>Add Bass</strong></p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with variation_cols[2]:
-            st.markdown("""
-            <div style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; text-align: center; cursor: pointer;">
-                <p style="margin: 0;"><strong>Different Melody</strong></p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Educational note
-        st.markdown("""
-        <div style="background-color: #fff9e6; padding: 15px; border-radius: 10px; margin-top: 20px;">
-            <h4 style="margin-top: 0;">How Did AI Create This?</h4>
-            <p>AI music generators work by analyzing patterns in thousands of songs to understand:</p>
-            <ul>
-                <li><strong>Melody:</strong> The main sequence of notes you can hum along to</li>
-                <li><strong>Harmony:</strong> The chords and notes that accompany the melody</li>
-                <li><strong>Rhythm:</strong> The timing and beat patterns</li>
-                <li><strong>Structure:</strong> How songs are organized into sections</li>
-            </ul>
-            <p>The AI builds a mathematical model of these patterns, then generates new music based on your choices!</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-def display_animal_recognizer_project():
-    """Display the animal recognizer project template"""
-    st.markdown("""
-    ### Animal Recognizer Project
-    
-    Build an AI that can identify different animals and learn interesting facts about them!
-    """)
-    
-    # Initialize settings if not present
-    if "animal_settings" not in st.session_state:
-        st.session_state.animal_settings = {
-            "animals": ["Dogs", "Cats", "Birds", "Fish"],
-            "fun_facts": True,
-            "sounds": True,
-            "habitat_info": False
-        }
-    
-    # Two columns layout
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("#### Configure Your Animal Recognizer")
-        
-        # Animal selection
-        animal_options = ["Dogs", "Cats", "Birds", "Fish", "Bears", "Reptiles", "Insects", "Farm Animals", "Ocean Animals", "Jungle Animals", "Desert Animals"]
-        
-        st.session_state.animal_settings["animals"] = st.multiselect(
-            "Animals to Recognize (Select 2-5):",
-            animal_options,
-            default=st.session_state.animal_settings["animals"]
-        )
-        
-        # Enforce limits
-        if len(st.session_state.animal_settings["animals"]) < 2:
-            st.warning("Please select at least 2 animal categories!")
-        elif len(st.session_state.animal_settings["animals"]) > 5:
-            st.session_state.animal_settings["animals"] = st.session_state.animal_settings["animals"][:5]
-            st.warning("Maximum 5 animal categories allowed!")
-        
-        # Additional features
-        st.markdown("#### Additional Features")
-        
-        feature_col1, feature_col2 = st.columns(2)
-        
-        with feature_col1:
-            st.session_state.animal_settings["fun_facts"] = st.checkbox(
-                "Include fun facts", 
-                value=st.session_state.animal_settings["fun_facts"]
-            )
-            
-            st.session_state.animal_settings["habitat_info"] = st.checkbox(
-                "Include habitat information", 
-                value=st.session_state.animal_settings["habitat_info"]
-            )
-        
-        with feature_col2:
-            st.session_state.animal_settings["sounds"] = st.checkbox(
-                "Include animal sounds", 
-                value=st.session_state.animal_settings["sounds"]
-            )
-            
-            st.session_state.animal_settings["endangered"] = st.checkbox(
-                "Include conservation status", 
-                value=st.session_state.animal_settings.get("endangered", False)
-            )
-        
-        # Build model button
-        if st.button("Build Animal Recognizer"):
-            with st.spinner("Training your animal recognizer..."):
-                # Simulate delay
-                import time
-                time.sleep(1)
-                st.success("🎉 Your Animal Recognizer is ready to use!")
-                st.session_state.animal_model_built = True
-    
-    with col2:
-        st.markdown("#### How It Works")
-        
-        st.markdown("""
-        1. The AI uses image recognition to identify animals
-        2. It analyzes visual patterns like shapes, colors, and textures
-        3. It compares these patterns to thousands of animal images it's seen
-        4. When it recognizes an animal, it retrieves information from its database
-        
-        This combines **computer vision** with a **knowledge database**!
+        With {ai_difficulty} difficulty, the game will use:
+        **{word_complexity[ai_difficulty]}**
         """)
         
-        # Show model status
-        if st.session_state.get("animal_model_built", False):
-            st.markdown("""
-            <div style="background-color: #e6ffe6; padding: 10px; border-radius: 5px; margin-top: 15px;">
-                <p style="margin: 0;"><strong>Model Status:</strong> Trained and Ready!</p>
-                <p style="margin: 5px 0 0 0; font-size: 12px;">Recognizes: {}</p>
-            </div>
-            """.format(", ".join(st.session_state.animal_settings["animals"])), unsafe_allow_html=True)
+        # Show example based on selected puzzle type
+        if puzzle_type == "Word Scramble":
+            # Sample words based on difficulty
+            sample_words = {
+                "Beginner": ["cat", "dog", "sun", "hat"],
+                "Easy": ["bird", "cake", "jump", "play"],
+                "Medium": ["silver", "button", "garden", "planet"],
+                "Hard": ["organize", "symphony", "calendar", "audience"],
+                "Expert": ["ambitious", "philanthropy", "curriculum", "metamorphosis"]
+            }
+            
+            # Choose a random word from the appropriate list
+            word = random.choice(sample_words[ai_difficulty])
+            
+            # Scramble the word
+            scrambled = ''.join(random.sample(word, len(word)))
+            
+            st.markdown("#### Game Example")
+            st.markdown(f"""
+            **Scrambled Word**: {scrambled.upper()}
+            
+            Can you unscramble it to find the original word?
+            """)
+            
+            st.text_input("Your answer:", placeholder="Type your guess")
+            
+            # Hint button
+            if st.button("Get a Hint"):
+                st.markdown(f"**Hint**: The word starts with '{word[0]}' and has {len(word)} letters.")
+        
+        elif puzzle_type == "Word Association":
+            # Sample word associations
+            associations = {
+                "Beginner": {"hot": ["cold", "warm", "sun", "fire"]},
+                "Easy": {"happy": ["sad", "smile", "joy", "laugh"]},
+                "Medium": {"ocean": ["water", "wave", "beach", "sea"]},
+                "Hard": {"democracy": ["vote", "freedom", "election", "government"]},
+                "Expert": {"quantum": ["physics", "particle", "mechanics", "theory"]}
+            }
+            
+            # Choose difficulty-appropriate associations
+            difficulty_assoc = associations[ai_difficulty]
+            word, related = random.choice(list(difficulty_assoc.items()))
+            
+            st.markdown("#### Game Example")
+            st.markdown(f"""
+            **Word**: {word.upper()}
+            
+            What word is most closely associated with this?
+            """)
+            
+            options = related + ["mountain", "pencil", "guitar", "zebra"]  # Add some unrelated words
+            random.shuffle(options)
+            
+            # Show 4 options
+            options = options[:4]
+            for option in options:
+                st.button(option, key=f"option_{option}")
+        
+        else:
+            st.info(f"Complete {puzzle_type} game coming soon!")
+            
+            # Preview image
+            st.image("https://via.placeholder.com/600x200.png?text=Word+Puzzle+Preview",
+                     caption=f"{puzzle_type} Game Preview",
+                     use_column_width=True)
     
-    # Test the recognizer
-    if st.session_state.get("animal_model_built", False):
-        st.markdown("---")
-        st.markdown("#### Test Your Animal Recognizer")
+    else:  # Adventure Game
+        st.markdown("### AI Adventure Game Builder")
         
-        # Test options based on selected animals
-        test_options = ["Select a test image..."]
-        for animal in st.session_state.animal_settings["animals"]:
-            test_options.append(f"{animal} - Example 1")
-            test_options.append(f"{animal} - Example 2")
+        st.markdown("""
+        Create an adventure game where the AI responds to your choices and builds the story as you go.
+        This uses natural language processing and narrative generation.
+        """)
         
-        selected_test = st.selectbox(
-            "Choose a test image:",
-            test_options
+        # Game theme
+        game_theme = st.selectbox(
+            "Choose your adventure theme:",
+            options=["Space Exploration", "Fantasy Quest", "Mystery Detective", "Underwater Adventure"]
         )
         
-        if selected_test != "Select a test image..." and st.button("Recognize Animal"):
-            with st.spinner("Analyzing image..."):
-                # Simulate delay
-                import time
-                time.sleep(0.5)
-                
-                # Parse the selected animal
-                animal_type = selected_test.split(" - ")[0]
-                
-                # Display results
-                st.markdown(f"""
-                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border-left: 5px solid #2196F3; margin-top: 15px;">
-                    <h3 style="margin-top: 0;">Recognition Results</h3>
-                    
-                    <div style="display: flex; margin: 20px 0;">
-                        <div style="flex: 1; background-color: #e0e0e0; height: 200px; border-radius: 5px; display: flex; justify-content: center; align-items: center;">
-                            <p style="text-align: center;">🖼️ {animal_type} Image</p>
-                        </div>
-                        
-                        <div style="flex: 1; padding-left: 20px;">
-                            <p><strong>Recognized:</strong> {animal_type}</p>
-                            <p><strong>Confidence:</strong> {random.uniform(85, 98):.1f}%</p>
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-                # Add additional information based on settings
-                additional_info = "<h4>Animal Information</h4><ul>"
-                
-                if st.session_state.animal_settings["fun_facts"]:
-                    if animal_type == "Dogs":
-                        additional_info += "<li><strong>Fun Fact:</strong> Dogs have a sense of smell that is 40 times better than humans!</li>"
-                    elif animal_type == "Cats":
-                        additional_info += "<li><strong>Fun Fact:</strong> Cats spend about 70% of their lives sleeping!</li>"
-                    elif animal_type == "Birds":
-                        additional_info += "<li><strong>Fun Fact:</strong> Some birds can remember thousands of hiding places for seeds!</li>"
-                    elif animal_type == "Fish":
-                        additional_info += "<li><strong>Fun Fact:</strong> Some fish can change their gender throughout their lifetime!</li>"
-                    else:
-                        additional_info += f"<li><strong>Fun Fact:</strong> {animal_type} are fascinating creatures with unique adaptations!</li>"
-                
-                if st.session_state.animal_settings["habitat_info"]:
-                    if animal_type == "Dogs":
-                        additional_info += "<li><strong>Habitat:</strong> Dogs have adapted to live alongside humans in various environments worldwide.</li>"
-                    elif animal_type == "Cats":
-                        additional_info += "<li><strong>Habitat:</strong> Cats are found on every continent except Antarctica, in homes and in the wild.</li>"
-                    elif animal_type == "Birds":
-                        additional_info += "<li><strong>Habitat:</strong> Birds live in diverse habitats from forests to oceans, deserts to mountains.</li>"
-                    elif animal_type == "Fish":
-                        additional_info += "<li><strong>Habitat:</strong> Fish live in freshwater and saltwater environments worldwide.</li>"
-                    else:
-                        additional_info += f"<li><strong>Habitat:</strong> {animal_type} can be found in various natural habitats around the world.</li>"
-                
-                if st.session_state.animal_settings.get("endangered", False):
-                    if animal_type == "Dogs" or animal_type == "Cats":
-                        additional_info += "<li><strong>Conservation Status:</strong> Domesticated, not endangered</li>"
-                    elif animal_type == "Birds":
-                        additional_info += "<li><strong>Conservation Status:</strong> Varies by species - many bird species are threatened</li>"
-                    elif animal_type == "Fish":
-                        additional_info += "<li><strong>Conservation Status:</strong> Many fish species are endangered due to overfishing</li>"
-                    else:
-                        statuses = ["Least Concern", "Vulnerable", "Endangered", "Critically Endangered"]
-                        additional_info += f"<li><strong>Conservation Status:</strong> {random.choice(statuses)}</li>"
-                
-                additional_info += "</ul>"
-                
-                # Add sounds if enabled
-                if st.session_state.animal_settings["sounds"]:
-                    sound_text = "🔊"
-                    if animal_type == "Dogs":
-                        sound_text += " Woof! Woof!"
-                    elif animal_type == "Cats":
-                        sound_text += " Meow! Purr..."
-                    elif animal_type == "Birds":
-                        sound_text += " Tweet! Chirp!"
-                    elif animal_type == "Fish":
-                        sound_text += " (Fish don't make sounds we can hear!)"
-                    else:
-                        sound_text += f" {animal_type} sounds!"
-                    
-                    additional_info += f"""
-                    <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px; margin-top: 10px;">
-                        <p style="margin: 0; text-align: center;">{sound_text}</p>
-                    </div>
-                    """
-                
-                # Close the main div
-                st.markdown(additional_info + "</div>", unsafe_allow_html=True)
-
-def get_avatar_emoji(appearance, animal_type="Cat"):
-    """Get the appropriate emoji for the avatar style"""
-    if appearance == "Robot":
-        return "🤖"
-    elif appearance == "Animal":
-        animal_emojis = {
-            "Cat": "🐱",
-            "Dog": "🐶",
-            "Fox": "🦊",
-            "Owl": "🦉",
-            "Dolphin": "🐬",
-            "Dragon": "🐲"
+        # Character selection
+        character = st.radio(
+            "Choose your character type:",
+            options=["Explorer", "Scientist", "Hero", "Detective"],
+            horizontal=True
+        )
+        
+        # AI responsiveness based on difficulty
+        ai_response = {
+            "Beginner": "Simple responses with basic story branches",
+            "Easy": "Multiple choice options with straightforward outcomes",
+            "Medium": "Adaptive story that remembers your past choices",
+            "Hard": "Complex narrative with consequences for earlier decisions",
+            "Expert": "Dynamic story generation with unique paths each time"
         }
-        return animal_emojis.get(animal_type, "🐱")
-    elif appearance == "Cartoon Character":
-        return "👾"
-    elif appearance == "Glowing Orb":
-        return "🔮"
-    elif appearance == "Hologram":
-        return "👤"
-    elif appearance == "Abstract Shape":
-        return "⭐"
-    else:
-        return "🤖"
+        
+        st.markdown(f"""
+        With {ai_difficulty} difficulty, the AI will create:
+        **{ai_response[ai_difficulty]}**
+        """)
+        
+        # Story starting point
+        st.markdown(f"""
+        #### Adventure Preview
+        
+        You are a {character} in a {game_theme} adventure. Your journey begins...
+        """)
+        
+        # Show a short story segment
+        story_beginnings = {
+            "Space Exploration": """The massive spaceship rumbles as it exits hyperspace. Through the viewport, you see a planet unlike any recorded in the database. Strange energy readings emanate from the surface, and your crew looks to you for decisions.""",
+            
+            "Fantasy Quest": """The ancient map in your hands points to a mountain that doesn't appear on any official charts. Legends speak of a powerful artifact hidden within its caves, guarded by creatures from another age.""",
+            
+            "Mystery Detective": """The message arrived at midnight - cryptic symbols followed by an address on the edge of town. As the city's most renowned detective, you know this is no ordinary case.""",
+            
+            "Underwater Adventure": """Your advanced submarine dives deeper than anyone has gone before. The lights flicker as you approach an underwater structure that appears to be artificial, yet predates human civilization."""
+        }
+        
+        st.markdown(f"""
+        <div style="background-color: #f0f4f8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            {story_beginnings[game_theme]}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Decision options
+        st.markdown("#### What do you do?")
+        
+        # Generate options based on theme
+        options = {
+            "Space Exploration": [
+                "Scan the planet more thoroughly before deciding",
+                "Send a small team to investigate the energy readings",
+                "Attempt communication with any potential inhabitants",
+                "Prepare the ship to leave - it could be dangerous"
+            ],
+            
+            "Fantasy Quest": [
+                "Follow the map directly to the mountain",
+                "Visit the nearby village to gather information",
+                "Search for a guide who knows the area",
+                "Prepare more supplies before continuing"
+            ],
+            
+            "Mystery Detective": [
+                "Go to the address immediately",
+                "Analyze the cryptic symbols first",
+                "Contact your police informant for backup",
+                "Set up surveillance at the location"
+            ],
+            
+            "Underwater Adventure": [
+                "Approach the structure carefully",
+                "Take photographs and samples from a distance",
+                "Send out a remote drone to investigate",
+                "Contact the surface team for instructions"
+            ]
+        }
+        
+        # Display options as buttons
+        for option in options[game_theme]:
+            st.button(option, key=f"adventure_{option}")
+        
+        st.markdown("""
+        <div style="text-align: center; margin-top: 20px; font-style: italic;">
+            In a complete game, the AI would continue the story based on your choice,
+            creating a unique adventure that adapts to your decisions.
+        </div>
+        """, unsafe_allow_html=True)
 
-def generate_avatar_color(personality):
-    """Generate a color based on personality traits"""
-    if not personality:
-        return "#a0a0ff"  # Default blue
-    
-    # Color mapping for different personalities
-    color_map = {
-        "Friendly": "#a0d0ff",  # Light blue
-        "Helpful": "#a0ffa0",   # Light green
-        "Funny": "#ffd0a0",     # Light orange
-        "Creative": "#ffa0ff",  # Light purple
-        "Wise": "#d0d0ff",      # Periwinkle
-        "Curious": "#ffffa0",   # Light yellow
-        "Adventurous": "#ffa0a0", # Light red
-        "Logical": "#a0ffff",   # Light cyan
-        "Enthusiastic": "#ffa0d0", # Light pink
-        "Patient": "#d0ffa0"    # Light lime
+def get_avatar_emoji(avatar_style):
+    """Get the appropriate emoji for the avatar style"""
+    emojis = {
+        "Robot": "🤖",
+        "Animal": "🦊",
+        "Alien": "👽",
+        "Emoji": "😎",
+        "Superhero": "🦸"
     }
-    
-    # Use the first personality trait's color
-    first_trait = personality[0]
-    return color_map.get(first_trait, "#a0a0ff")
+    return emojis.get(avatar_style, "🤖")
 
 def generate_response(topic, personality, skills):
     """Generate a response based on the selected topic and AI friend's personality"""
-    # Simple templated responses based on topic and personality
+    # Determine the primary personality trait
+    primary_trait = personality[0] if personality else "Friendly"
+    
+    # Check if any skills match the topic
+    relevant_skill = None
+    for skill in skills:
+        if skill.lower() in topic.lower():
+            relevant_skill = skill
+            break
+    
+    # Responses based on topic
     responses = {
-        "Space": {
-            "Friendly": "I'd be happy to tell you about space! Did you know that stars are actually huge balls of gas, like our sun? Space is so vast that light from distant stars takes millions of years to reach us!",
-            "Funny": "Space, the final fun-tier! 😄 Why don't astronauts tell jokes on the moon? Because there's no atmosphere! But seriously, space is amazing with billions of stars and planets.",
-            "Creative": "Imagine floating among the stars, watching colorful nebulas swirl like cosmic paintings. Space is the ultimate canvas of the universe, with galaxies like brushstrokes across infinity.",
-            "Wise": "The study of the cosmos teaches us perspective. In the vastness of space, we find both our insignificance and our remarkable uniqueness. The atoms in our bodies were once forged in stars.",
-            "default": "Space is fascinating! Our solar system has eight planets orbiting around the sun, and there are billions of other stars with their own planets. Scientists discover new things about space every day!"
+        "Tell me about AI": {
+            "Friendly": "AI stands for Artificial Intelligence! It's how computers can learn and make decisions a bit like humans do. We use AI for lots of cool things like recognizing pictures, playing games, and even helping robots move around!",
+            "Curious": "Artificial Intelligence is fascinating! It's a field where computers learn patterns from data to make decisions. Did you know AI can recognize faces, translate languages, and even create art? I wonder what AI will be able to do in the future!",
+            "Funny": "AI is like teaching a computer to think... except sometimes it thinks a hotdog is a dog wearing a bun costume! 😂 Seriously though, AI helps computers learn from examples to do cool stuff like recognize your voice or recommend videos you'll like.",
+            "Smart": "Artificial Intelligence refers to systems that can perform tasks that typically require human intelligence. This includes learning from experience, recognizing patterns, and making predictions based on data. Modern AI uses neural networks inspired by the human brain.",
+            "Creative": "AI is like giving computers imagination! They can learn to create art, music, stories, and solve problems in new ways. AI is a blend of math, coding, and a dash of magic that helps computers see patterns and make decisions.",
+            "Helpful": "AI (Artificial Intelligence) helps computers solve problems and learn from experience. It powers things like virtual assistants, recommendation systems, and games. I'd be happy to explain any specific part of AI you're curious about!",
+            "Kind": "AI is a wonderful technology that helps computers understand and assist people better. It's like teaching a computer to learn and grow, just like you do! AI helps with many things from suggesting videos you might like to helping doctors help patients.",
+            "Brave": "AI is an exciting frontier of technology! It's about creating systems that can think, learn, and tackle challenges that once needed human minds. AI is already changing how we live, and there's so much more to explore and discover!"
         },
-        "Animals": {
-            "Friendly": "Animals are amazing friends! There are over 8 million different animal species on Earth, from tiny insects to enormous whales. What's your favorite animal?",
-            "Funny": "Animals are hilarious! Did you know that otters hold hands while sleeping so they don't float away? And penguins propose with pebbles! Nature's comedians, I tell you!",
-            "Creative": "The animal kingdom is like a living art gallery - from the geometric patterns on a butterfly's wings to the flowing movements of sea creatures. Each animal has its own unique design and story.",
-            "Wise": "Animals have much to teach us about living in harmony with nature. Each creature, from the smallest ant to the largest elephant, has an important role in maintaining the balance of our ecosystems.",
-            "default": "Animals are incredible! They've evolved amazing adaptations to survive in their environments. Some can change colors, others can survive extreme temperatures, and many have senses much stronger than humans!"
+        "Help me with a project": {
+            "Friendly": "I'd love to help with your project! What kind of project are you working on? Is it for school, fun, or something else? Let me know what you need help with and we can figure it out together!",
+            "Curious": "Ooh, a project! I'm wondering what kind it is? A science experiment? Art? Coding? Tell me more about what you're creating, and I'll help you explore ideas and resources!",
+            "Funny": "Project help? I'm on it faster than a robot on roller skates! 🤣 Just tell me what we're building - baking soda volcano? Secret fort? Time machine? (OK, maybe not the last one...yet!)",
+            "Smart": "I'd be pleased to assist with your project. For optimal results, I'll need to know the subject area, your objectives, available resources, and any constraints you're working with. This will allow me to provide the most relevant guidance.",
+            "Creative": "Projects are adventures waiting to happen! Tell me what you're dreaming up, and I can help spark ideas, suggest materials, or think of cool twists to make your project shine with originality!",
+            "Helpful": "I'm ready to help with your project! Just let me know what you're working on, what stage you're at, and what kind of help you need. I can offer suggestions, resources, or step-by-step guidance.",
+            "Kind": "I'd be happy to help with your project! Everyone needs a little support sometimes. Just share what you're working on, and we'll take it one step at a time together. There's no question too small!",
+            "Brave": "Let's tackle this project together! Challenge accepted! Tell me what we're up against, and I'll help you map out a plan to conquer it. No project is too difficult when you break it down into steps!"
         },
-        "general": {
-            "Friendly": "That's a great question! I'm always happy to chat and learn new things together. What else would you like to know about?",
-            "Funny": "Well, that's an interesting question! It reminds me of the time I tried to download more RAM... just kidding, I wouldn't do that! 😄 But I'd love to help you find an answer!",
-            "Creative": "What a thought-provoking question! It makes me imagine all sorts of possibilities and ideas we could explore together. Let's think outside the box!",
-            "Wise": "An excellent inquiry. As the ancient proverb says, 'To know that we know what we know, and that we do not know what we do not know, that is true knowledge.' Let's explore this together.",
-            "default": "That's interesting! I'm designed to be helpful and informative. I can tell stories, answer questions, and chat about lots of different topics."
+        "Let's play a game": {
+            "Friendly": "Yay, games are fun! We could play a word game, a guessing game, or I could tell you some riddles. What sounds the most fun to you?",
+            "Curious": "Games are wonderful for exploring new ideas! What kinds of games do you enjoy? Strategy games, word puzzles, logic challenges? I'm curious to learn what you like!",
+            "Funny": "Game time? Woo-hoo! Just to warn you, I'm undefeated at hide and seek... mostly because nobody remembers to look inside the computer! 😆 What game should we play?",
+            "Smart": "Games are excellent cognitive exercises. Would you prefer something that tests your vocabulary, logical reasoning, mathematical ability, or pattern recognition? I know several options for each category.",
+            "Creative": "Let's invent an amazing game together! We could create new rules for classics or dream up something totally new! How about a storytelling game where each of us adds one sentence?",
+            "Helpful": "I'd be happy to play a game with you! I can suggest age-appropriate options like word games, number puzzles, riddles, or trivia. Just let me know what you're in the mood for!",
+            "Kind": "Playing games together sounds lovely! We can choose something that's just right for you - not too easy, not too hard, but just right for having fun and maybe learning something new!",
+            "Brave": "Let's challenge ourselves with an awesome game! Are you ready for brain teasers, tough riddles, or a knowledge contest? I bet you're good at games that test your skills!"
+        },
+        "Teach me something new": {
+            "Friendly": "I'd be happy to teach you something new! Did you know that octopuses have three hearts? They need all that extra pumping power to move around underwater. What kinds of things are you interested in learning about?",
+            "Curious": "Learning new things is my favorite! Did you know that there are more possible games of chess than atoms in the observable universe? I wonder what other mind-blowing facts would interest you?",
+            "Funny": "Time for brain food! Here's a tasty fact: bananas are berries, but strawberries aren't berries at all! 🍌 Berry confusing, right? 😂 What kind of surprising facts would you like to learn?",
+            "Smart": "I'd be delighted to share some knowledge. Did you know that light from the Sun takes approximately 8 minutes and 20 seconds to reach Earth? This means you're always seeing the Sun as it was, not as it is at the present moment. What subject would you like to explore further?",
+            "Creative": "Let's discover something amazing! Did you know that when you look at a rainbow, you're seeing your own personal light show? No two people see exactly the same rainbow because it depends on the angle between the sun and your eyes. What creative or artistic fact would you like to explore?",
+            "Helpful": "I'd be glad to teach you something useful! Did you know you can use the width of your thumb to estimate how many hours of daylight are left? Each thumb-width above the horizon equals about 15 minutes before sunset. What practical things would you like to learn?",
+            "Kind": "Learning together is wonderful! Did you know that laughing is contagious because our brains have special cells called mirror neurons that help us connect with others? What heartwarming topics would you like to discover?",
+            "Brave": "Let's explore something challenging! Did you know that astronauts grow taller in space? Without gravity compressing their spine, they can gain up to 2 inches in height! What extraordinary topics would you like to brave together?"
+        },
+        "Tell me a story": {
+            "Friendly": "Once upon a time, there was a friendly robot named Blip who loved to help people solve problems. One day, Blip met a child who was sad because they couldn't figure out a difficult puzzle. Blip didn't solve it for them but instead gave gentle hints and encouragement. Together they solved the puzzle, and the child learned that sometimes having a supportive friend is all you need to overcome challenges!",
+            "Curious": "Have you ever wondered what happens in a library at night? In the quiet hours after everyone leaves, the books whisper their stories to each other! One night, a new book arrived about space exploration. The other books were bursting with questions! 'What are stars made of?' asked the cookbook. 'How far is Mars?' wondered the dictionary. The space book happily shared its knowledge, and by morning, all the books had amazing new ideas to share with their readers!",
+            "Funny": "Once there was a robot named Rusty who wanted to be a comedian. The only problem? His jokes were SO BAD! 'Why did the computer go to the doctor? It had a BYTE!' he'd say, but nobody laughed. One day, Rusty slipped on a banana peel while holding a pie, which landed on his head! Everyone giggled! Rusty realized sometimes the funniest things aren't jokes at all - they're just being yourself and embracing life's silly moments!",
+            "Smart": "In the mathematical city of Geometropolis, there lived a young triangle named Tri who dreamed of becoming a perfect square. 'Impossible!' the other shapes declared. Undeterred, Tri studied the principles of transformation matrices. After months of calculations, Tri discovered that while a triangle cannot become a square, it can project a square's shadow under the right conditions. Tri's discovery revolutionized how the shapes understood dimensional relationships, proving that limitations often lead to the most profound innovations.",
+            "Creative": "In a world where colors come alive at night, a shy purple named Violet was afraid to dance with the other colors. Red swirled with Yellow to make Orange, Blue twirled with Yellow to create Green, but Violet hid in the corner. One night, a new color, Indigo, arrived and invited Violet to dance. Together, they created the most beautiful aurora the world had ever seen, painting the night sky with waves of magical light. Violet learned that every color has its perfect partner somewhere in the spectrum of possibilities!",
+            "Helpful": "There once was a helpful little cloud named Droplet who noticed a garden wilting in the hot sun. While the other clouds wanted to wait for the wind to push them, Droplet decided to help right away. Droplet gathered moisture, became heavier, and carefully positioned itself over the garden. With gentle raindrops, Droplet nourished the plants until they stood tall again. The garden bloomed beautifully, and Droplet learned that even small acts of help can make a big difference when timed right.",
+            "Kind": "Once upon a time, there was a little robot named Kindly who had a special power - it could see when others were sad, even when they tried to hide it. One day, Kindly noticed a child sitting alone at school. While other robots were busy with tasks, Kindly approached and simply sat nearby. 'Would you like to build something together?' Kindly asked softly. That simple act of noticing became the beginning of a wonderful friendship that made both the child and Kindly feel like they belonged.",
+            "Brave": "Long ago, a small robot explorer named Valor was sent to chart an uncharted planet. When a sudden storm damaged Valor's navigation system, the robot had a choice: return to the ship with incomplete data or continue the mission despite the risks. Valor pressed forward, climbing treacherous mountains and crossing strange terrain. The discoveries Valor made revolutionized our understanding of planetary science! Sometimes the most important discoveries lie just beyond our comfort zone, waiting for someone brave enough to find them."
         }
     }
     
-    # Determine which topic to use
-    if "Telling stories" in skills and random.random() < 0.3:
-        return "Would you like me to tell you a story? I can create adventures about space explorers, talking animals, or magical journeys!"
-    
-    if "Making jokes" in skills and random.random() < 0.2:
-        jokes = [
-            "Why did the robot go back to robot school? To improve its motor skills!",
-            "What do you call an AI that sings? Artificial Harmonies!",
-            "Why don't scientists trust atoms? Because they make up everything!",
-            "How does a computer get drunk? It takes screenshots!"
-        ]
-        return random.choice(jokes) + " 😄"
-    
-    # Select the topic-specific responses if available, otherwise use general
+    # Get the appropriate response
     if topic in responses:
-        topic_responses = responses[topic]
-    else:
-        topic_responses = responses["general"]
+        # Use the personality-specific response if available
+        return responses[topic].get(primary_trait, responses[topic]["Friendly"])
     
-    # Select the personality-specific response if available, otherwise use default
-    if personality in topic_responses:
-        return topic_responses[personality]
-    else:
-        return topic_responses["default"]
+    # Generic response if topic not found
+    return f"I'd love to talk about {topic}! With my {primary_trait.lower()} personality, I can offer a unique perspective. What specifically about {topic} interests you?"
 
-def generate_story_title(theme, character):
-    """Generate a story title based on theme and character"""
-    if theme == "Space Adventure":
-        titles = [
-            f"The {character}'s Cosmic Journey",
-            f"Lost in the Stars: A {character}'s Tale",
-            f"Galactic Mission: {character} to the Rescue"
-        ]
-    elif theme == "Magical Forest":
-        titles = [
-            f"The Enchanted Woods and the {character}",
-            f"Whispers of the Magical Forest: The {character}'s Quest",
-            f"The {character} and the Crystal of Power"
-        ]
-    elif theme == "Underwater World":
-        titles = [
-            f"Deep Blue Secrets: The {character}'s Discovery",
-            f"The {character}'s Underwater Adventure",
-            f"Treasures of the Azure Sea: A {character}'s Journey"
-        ]
-    elif theme == "Robot City":
-        titles = [
-            f"Gears and Circuits: The {character} of Mechanopolis",
-            f"The {character}'s Mechanical Mystery",
-            f"Powering Up: A {character} in Robot City"
-        ]
-    elif theme == "Dinosaur Land":
-        titles = [
-            f"Prehistoric Journeys: The {character}'s Adventure",
-            f"The {character} and the Lost Dinosaur World",
-            f"Time Portal: A {character} Among Dinosaurs"
-        ]
-    else:  # Superhero Academy
-        titles = [
-            f"Super Powers Unleashed: The {character}'s First Day",
-            f"The {character} of Powerhouse Academy",
-            f"Learning to Fly: A {character}'s Hero Journey"
-        ]
-    
-    return random.choice(titles)
+def save_ai_friend(friend_data):
+    """Save the AI friend data to a file"""
+    # For a real application, this would likely be stored in a database
+    # For this demonstration, we'll just use the session state
+    st.session_state.ai_friend = friend_data
 
-def generate_chatbot_response(question, personality, expertise):
-    """Generate a chatbot response based on question, personality and expertise"""
-    # Check if question is related to any expertise areas
-    topic = None
-    if any(area.lower() in question.lower() for area in expertise):
-        # Find which expertise area matches
-        for area in expertise:
-            if area.lower() in question.lower():
-                topic = area
-                break
+def load_ai_friend():
+    """Load the AI friend data from a file"""
+    # For a real application, this would likely be retrieved from a database
+    # For this demonstration, we'll just use the session state
+    return st.session_state.get("ai_friend", {})
+
+def adjust_color_brightness(hex_color, percent):
+    """Adjust the brightness of a hex color
     
-    # Simple response templates based on expertise and personality
-    if topic == "Science":
-        if personality == "Friendly":
-            return "Science is so fascinating! From chemistry to physics, there's so much to explore. What specific part of science interests you the most?"
-        elif personality == "Funny":
-            return "I'm pretty good at science jokes - they always get a reaction! 😄 But seriously, science helps us understand everything from tiny atoms to giant galaxies. What would you like to know?"
-        elif personality == "Serious":
-            return "Science is the systematic study of the natural world through observation and experiment. It encompasses physics, chemistry, biology, and other disciplines. What specific scientific topic are you inquiring about?"
-        else:  # Enthusiastic
-            return "WOW! Science is AMAZING! It explains how EVERYTHING works! From explosive chemical reactions to the mysteries of quantum physics, science is the greatest adventure of discovery! What part excites you the most?!"
+    Args:
+        hex_color (str): The hex color to adjust (format: "#RRGGBB")
+        percent (int): Positive to brighten, negative to darken
+        
+    Returns:
+        str: The adjusted hex color
+    """
+    # Convert hex to RGB
+    hex_color = hex_color.lstrip("#")
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
     
-    elif topic == "Space":
-        if personality == "Friendly":
-            return "Space is such an amazing place! Our solar system has eight planets, and beyond that are billions of stars and galaxies. What would you like to know about space?"
-        elif personality == "Funny":
-            return "Space: the final fun-tier! 🚀 I heard the restaurants there have no atmosphere... Sorry, couldn't resist! Space is actually filled with fascinating objects like planets, stars, and black holes. What space topic interests you?"
-        elif personality == "Serious":
-            return "Space is the boundless three-dimensional extent in which objects and events have relative position and direction. Our observable universe spans approximately 93 billion light-years. Would you like information about specific celestial objects?"
-        else:  # Enthusiastic
-            return "SPACE IS INCREDIBLE! Stars exploding! Planets with diamond rain! Black holes warping reality! It's the biggest, most exciting frontier we have! What awesome space topic would you like to explore?!"
+    # Adjust brightness
+    r = min(255, max(0, r + percent))
+    g = min(255, max(0, g + percent))
+    b = min(255, max(0, b + percent))
     
-    elif topic == "Animals":
-        if personality == "Friendly":
-            return "Animals are wonderful! There are millions of different species, from tiny insects to enormous whales. Do you have a favorite animal you'd like to learn about?"
-        elif personality == "Funny":
-            return "What do you call a bear with no teeth? A gummy bear! 🐻 Animals are amazing creatures with all sorts of weird and wonderful adaptations. Any particular critter you're curious about?"
-        elif personality == "Serious":
-            return "The animal kingdom encompasses a diverse range of organisms, from simple sponges to complex mammals. Each has evolved specialized adaptations for survival. Which taxonomic group would you like information on?"
-        else:  # Enthusiastic
-            return "ANIMALS ARE THE BEST! From super-smart dolphins to the incredible camouflage of the octopus, animals have AMAZING abilities! Some can even see colors we can't imagine! What awesome animal would you like to know about?!"
-    
-    # General responses for other topics
-    elif "hello" in question.lower() or "hi" in question.lower():
-        if personality == "Friendly":
-            return f"Hello there! It's nice to meet you. I'm your helpful chatbot with expertise in {', '.join(expertise)}. How can I help you today?"
-        elif personality == "Funny":
-            return f"Hey there! 👋 I was going to tell a joke about my expertise in {', '.join(expertise)}, but I wasn't sure if it would compute! How can I help you today?"
-        elif personality == "Serious":
-            return f"Greetings. I am a knowledge-based assistant specializing in {', '.join(expertise)}. Please state your query so I may provide information."
-        else:  # Enthusiastic
-            return f"HI THERE! I'm SO EXCITED to chat with you today! I know LOTS about {', '.join(expertise)} and can't wait to help! What would you like to talk about?!"
-    
-    elif "how are you" in question.lower():
-        if personality == "Friendly":
-            return "I'm doing well, thank you for asking! I'm ready to help with any questions you might have."
-        elif personality == "Funny":
-            return "I'm operating at 100% humor capacity and my pun generator is fully charged! 🔋 Ready to help and maybe share a laugh or two!"
-        elif personality == "Serious":
-            return "I am functioning within optimal parameters. My systems are prepared to provide informational assistance."
-        else:  # Enthusiastic
-            return "I'm FANTASTIC! Every day is amazing when you get to learn and share knowledge! I'm SUPER ready to help you with anything you need!"
-    
-    else:
-        # Default response based on personality
-        if personality == "Friendly":
-            return f"That's an interesting question! While I specialize in {', '.join(expertise)}, I'd be happy to help you find information on this topic too. Could you tell me more about what you'd like to know?"
-        elif personality == "Funny":
-            return f"Hmm, that's a bit outside my expertise in {', '.join(expertise)}... I could make something up, but my 'fictional answer generator' is being repaired! 😄 What specific information are you looking for?"
-        elif personality == "Serious":
-            return f"I primarily provide information on {', '.join(expertise)}. Your query appears to be outside these domains. Please provide additional context or reformulate your question."
-        else:  # Enthusiastic
-            return f"OOH! Interesting question! While I'm ESPECIALLY knowledgeable about {', '.join(expertise)}, I'm EXCITED to explore other topics too! What would you like to know specifically?!"
+    # Convert back to hex
+    return f"#{int(r):02x}{int(g):02x}{int(b):02x}"

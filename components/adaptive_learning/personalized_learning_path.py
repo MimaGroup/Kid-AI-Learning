@@ -1,291 +1,640 @@
 import streamlit as st
 import plotly.graph_objects as go
+import random
+from datetime import datetime, timedelta
 
 def display_personalized_learning_path():
     """
     Display personalized learning paths based on child's progress
     including customized recommendations and adaptive content difficulty
     """
-    st.markdown("""
-    <div style="background-color: #f5e6ff; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-        <p>Your personalized learning journey, tailored to your interests and learning style!</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Initialize learning path data if not already present
+    # Initialize data if not present
     initialize_learning_path_data()
     
-    # Display learning journey map
-    display_learning_journey_map()
+    st.markdown("## Your Personalized Learning Journey")
     
-    # Display next steps
-    display_next_steps()
-    
-    # Learning style and interests
-    st.markdown("### Your Learning Profile")
-    
-    col1, col2 = st.columns(2)
+    # Create columns for personal info and learning style
+    col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("#### Learning Style")
-        learning_style = st.session_state.learning_style
-        st.selectbox(
-            "How do you prefer to learn?",
-            ["Visual", "Hands-on", "Reading/Writing", "Social"],
-            index=["Visual", "Hands-on", "Reading/Writing", "Social"].index(learning_style),
-            key="learning_style_select",
+        st.markdown("### Learning Profile")
+        
+        if "learning_style" not in st.session_state:
+            st.session_state.learning_style = "Visual"
+        
+        learning_style = st.selectbox(
+            "Your learning style:",
+            ["Visual", "Auditory", "Reading/Writing", "Kinesthetic"],
+            index=["Visual", "Auditory", "Reading/Writing", "Kinesthetic"].index(st.session_state.learning_style),
+            key="learning_style_selector",
             on_change=update_learning_style
         )
         
-        st.markdown("#### Learning Speed")
-        learning_speed = st.session_state.learning_speed
-        st.select_slider(
-            "How quickly do you like to move through lessons?",
-            options=["Very Gradually", "Gradually", "Moderate", "Quickly", "Very Quickly"],
-            value=learning_speed,
-            key="learning_speed_select",
-            on_change=update_learning_speed
+        st.markdown(f"""
+        <div style="background-color: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+            <p style="margin: 0;">
+                <strong>{learning_style} learners</strong> learn best through 
+                {get_learning_style_description(learning_style)}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Learning focus areas
+        if "focus_areas" not in st.session_state:
+            st.session_state.focus_areas = ["AI Basics", "Robotics"]
+        
+        st.markdown("### Areas of Interest")
+        focus_areas = st.multiselect(
+            "Select your favorite topics:",
+            ["AI Basics", "Machine Learning", "Computer Vision", "Robotics", 
+             "Natural Language", "Game AI", "Creative AI", "AI Ethics"],
+            default=st.session_state.focus_areas,
+            key="focus_areas_selector",
+            on_change=update_interests
         )
     
     with col2:
-        st.markdown("#### Focus Areas")
-        interests = st.session_state.interests
+        st.markdown("### Learning Pace")
         
-        all_interests = ["Robotics", "Games", "Art", "Science", "Stories", "Nature", "Space", "Animals"]
-        selected_interests = st.multiselect(
-            "What topics interest you the most?",
-            all_interests,
-            default=interests,
-            key="interests_select",
-            on_change=update_interests
+        if "learning_speed" not in st.session_state:
+            st.session_state.learning_speed = "Medium"
+        
+        learning_speed = st.select_slider(
+            "How quickly do you like to learn?",
+            options=["Very Slow", "Slow", "Medium", "Fast", "Very Fast"],
+            value=st.session_state.learning_speed,
+            key="learning_speed_selector",
+            on_change=update_learning_speed
         )
         
-        st.markdown("#### Preferred Activities")
-        activity_preference = st.session_state.activity_preference
-        st.radio(
-            "What kind of activities do you prefer?",
-            ["Creative Building", "Puzzles & Challenges", "Games", "Stories & Reading", "Mixed"],
-            index=["Creative Building", "Puzzles & Challenges", "Games", "Stories & Reading", "Mixed"].index(activity_preference),
-            key="activity_preference_select", 
+        st.markdown(f"""
+        <div style="background-color: #e6f7ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+            <p style="margin: 0;">{get_learning_speed_description(learning_speed)}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Activity preference
+        if "activity_preference" not in st.session_state:
+            st.session_state.activity_preference = "Games"
+        
+        st.markdown("### Activity Preference")
+        activity_preference = st.radio(
+            "How do you prefer to learn?",
+            ["Games", "Reading", "Videos", "Projects", "Quizzes"],
+            index=["Games", "Reading", "Videos", "Projects", "Quizzes"].index(st.session_state.activity_preference),
+            key="activity_preference_selector",
             horizontal=True,
             on_change=update_activity_preference
         )
     
-    # Display learning stats
-    display_learning_stats()
+    # Display learning journey map
+    st.markdown("---")
+    st.markdown("## Your Learning Journey Map")
+    display_learning_journey_map()
+    
+    # Display next recommended steps
+    st.markdown("## Recommended Next Steps")
+    display_next_steps()
     
     # Display badge progress
-    display_badge_progress()
+    col1, col2 = st.columns([2, 1])
     
-    # Display custom recommendations
+    with col1:
+        st.markdown("## Your Learning Stats")
+        display_learning_stats()
+    
+    with col2:
+        st.markdown("## Badge Progress")
+        display_badge_progress()
+    
+    # Display recommendations based on learning style and interests
+    st.markdown("---")
+    st.markdown("## Personalized Recommendations")
     display_custom_recommendations()
 
 def initialize_learning_path_data():
     """Initialize sample learning path data if not present"""
-    if "learning_path_progress" not in st.session_state:
-        st.session_state.learning_path_progress = {
-            "AI Basics": 0.8,
-            "Machine Learning": 0.4,
-            "Computer Vision": 0.2,
-            "Natural Language": 0.1,
-            "Robotics": 0.3,
-            "Creative AI": 0.15
+    if "completed_modules" not in st.session_state:
+        st.session_state.completed_modules = [
+            "AI Basics: Introduction",
+            "Robotics: Simple Commands",
+            "Machine Learning: What is ML?"
+        ]
+    
+    if "progress_per_area" not in st.session_state:
+        st.session_state.progress_per_area = {
+            "AI Basics": 0.7,
+            "Machine Learning": 0.3,
+            "Computer Vision": 0.1,
+            "Robotics": 0.5,
+            "Natural Language": 0.0,
+            "Game AI": 0.2,
+            "Creative AI": 0.0,
+            "AI Ethics": 0.0
         }
     
-    if "learning_style" not in st.session_state:
-        st.session_state.learning_style = "Visual"
+    if "learning_path" not in st.session_state:
+        st.session_state.learning_path = [
+            {
+                "id": 1,
+                "name": "AI Basics: Introduction",
+                "completed": True,
+                "category": "AI Basics",
+                "difficulty": "Beginner"
+            },
+            {
+                "id": 2,
+                "name": "Robotics: Simple Commands",
+                "completed": True,
+                "category": "Robotics",
+                "difficulty": "Beginner"
+            },
+            {
+                "id": 3,
+                "name": "Machine Learning: What is ML?",
+                "completed": True,
+                "category": "Machine Learning",
+                "difficulty": "Beginner"
+            },
+            {
+                "id": 4,
+                "name": "AI Basics: How Computers Think",
+                "completed": False,
+                "category": "AI Basics",
+                "difficulty": "Beginner"
+            },
+            {
+                "id": 5,
+                "name": "Machine Learning: Training Data",
+                "completed": False,
+                "category": "Machine Learning",
+                "difficulty": "Intermediate"
+            },
+            {
+                "id": 6,
+                "name": "Robotics: Sensors & Feedback",
+                "completed": False,
+                "category": "Robotics",
+                "difficulty": "Intermediate"
+            },
+            {
+                "id": 7,
+                "name": "Computer Vision: Seeing Objects",
+                "completed": False,
+                "category": "Computer Vision",
+                "difficulty": "Intermediate"
+            },
+            {
+                "id": 8,
+                "name": "AI Ethics: Fairness in AI",
+                "completed": False,
+                "category": "AI Ethics",
+                "difficulty": "Advanced"
+            }
+        ]
     
-    if "learning_speed" not in st.session_state:
-        st.session_state.learning_speed = "Moderate"
-    
-    if "interests" not in st.session_state:
-        st.session_state.interests = ["Robotics", "Games", "Space"]
-    
-    if "activity_preference" not in st.session_state:
-        st.session_state.activity_preference = "Mixed"
-    
-    if "badge_progress" not in st.session_state:
-        st.session_state.badge_progress = {
-            "AI Explorer": 0.7,
-            "Code Genius": 0.4,
-            "ML Master": 0.3,
-            "Vision Hero": 0.2,
-            "NLP Wizard": 0.1
-        }
-    
-    if "learning_stats" not in st.session_state:
-        st.session_state.learning_stats = {
-            "lessons_completed": 8,
-            "lessons_total": 20,
-            "avg_time_per_lesson": 15,  # minutes
-            "favorite_topic": "Robotics",
-            "challenge_topic": "Natural Language"
-        }
+    if "recent_activities" not in st.session_state:
+        # Generate some sample activity data
+        recent_days = 14
+        activities = []
+        
+        for i in range(recent_days):
+            date = (datetime.now() - timedelta(days=recent_days-i)).strftime('%Y-%m-%d')
+            activities.append({
+                "date": date,
+                "minutes": random.randint(0, 45),
+                "completed_items": random.randint(0, 3)
+            })
+        
+        st.session_state.recent_activities = activities
 
 def display_learning_journey_map():
     """Display an interactive map of the learning journey"""
-    st.markdown("### Your Learning Journey Map")
+    # Get learning path data
+    learning_path = st.session_state.learning_path
     
-    # Create a progress gauge chart to show overall progress
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = 35,
-        title = {'text': "Overall Learning Progress"},
-        gauge = {
-            'axis': {'range': [0, 100], 'tickwidth': 1},
-            'bar': {'color': "#9C6DF2"},
-            'steps': [
-                {'range': [0, 33], 'color': "#e6e6ff"},
-                {'range': [33, 66], 'color': "#d9d9ff"},
-                {'range': [66, 100], 'color': "#ccccff"}
-            ]
-        }
-    ))
+    # Create nodes for the pathway visualization
+    nodes = []
     
-    fig.update_layout(height=250)
+    for i, module in enumerate(learning_path):
+        # Determine node color based on completion status
+        color = "#4CAF50" if module["completed"] else "#B0BEC5"
+        
+        # Determine node size based on difficulty
+        size = 30 if module["difficulty"] == "Beginner" else 40 if module["difficulty"] == "Intermediate" else 50
+        
+        # Create the node
+        nodes.append(
+            go.Scatter(
+                x=[i], 
+                y=[0],
+                mode="markers+text",
+                marker=dict(
+                    size=size,
+                    color=color,
+                    line=dict(width=2, color="white")
+                ),
+                text=[str(module["id"])],
+                textposition="middle center",
+                textfont=dict(color="white", size=12),
+                name=module["name"],
+                hoverinfo="text",
+                hovertext=f"{module['name']} ({module['category']} - {module['difficulty']})<br>{'Completed' if module['completed'] else 'Not completed yet'}"
+            )
+        )
+    
+    # Create path lines between nodes
+    path_x = list(range(len(learning_path)))
+    path_y = [0] * len(learning_path)
+    
+    path = go.Scatter(
+        x=path_x,
+        y=path_y,
+        mode="lines",
+        line=dict(width=3, color="#90CAF9"),
+        hoverinfo="skip"
+    )
+    
+    # Add path as the first layer, then nodes on top
+    all_traces = [path] + nodes
+    
+    # Create the figure
+    fig = go.Figure(data=all_traces)
+    
+    # Customize the layout
+    fig.update_layout(
+        title="Your Learning Pathway",
+        showlegend=False,
+        height=200,
+        margin=dict(l=20, r=20, t=40, b=20),
+        plot_bgcolor="#F8F9FA",
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False
+        ),
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            scaleanchor="x",
+            scaleratio=1
+        ),
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=12
+        )
+    )
+    
+    # Add annotations for module titles below the nodes
+    for i, module in enumerate(learning_path):
+        fig.add_annotation(
+            x=i,
+            y=-0.2,
+            text=module["name"],
+            showarrow=False,
+            font=dict(
+                size=10,
+                color="black" if module["completed"] else "gray"
+            ),
+            yshift=-15,
+            align="center"
+        )
+    
+    # Display the figure
     st.plotly_chart(fig, use_container_width=True)
     
-    # Display a progress bar for each learning path area
-    st.markdown("#### Progress by Topic Area")
-    
-    for topic, progress in st.session_state.learning_path_progress.items():
-        col1, col2, col3 = st.columns([3, 6, 1])
-        with col1:
-            st.markdown(f"**{topic}**")
-        with col2:
-            st.progress(progress)
-        with col3:
-            st.markdown(f"**{int(progress*100)}%**")
-
-def display_next_steps():
-    """Display recommended next steps on the learning path"""
-    st.markdown("### Recommended Next Steps")
-    
-    # Identify next steps based on progress and interests
-    progress = st.session_state.learning_path_progress
-    interests = st.session_state.interests
-    learning_style = st.session_state.learning_style
-    
-    # Find the area with moderate progress for next focus
-    next_topics = []
-    for topic, prog in progress.items():
-        if 0.1 < prog < 0.7:
-            next_topics.append((topic, prog))
-    
-    # Sort by progress (focus on areas started but not completed)
-    next_topics.sort(key=lambda x: x[1])
-    
-    # Display recommendations
-    if next_topics:
-        # Display the top 3 recommended next activities
-        for i, (topic, prog) in enumerate(next_topics[:3]):
-            activity_type = get_activity_type(learning_style)
-            
-            st.markdown(f"""
-            <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 10px; background-color: #f8f9fa;">
-                <h4 style="margin-top: 0;">Step {i+1}: Continue with {topic}</h4>
-                <p>Try a <strong>{activity_type}</strong> activity to explore {topic} concepts</p>
-                <div style="display: flex; align-items: center;">
-                    <div style="background-color: #9C6DF2; color: white; border-radius: 20px; padding: 5px 15px; font-size: 14px;">
-                        {int(prog*100)}% Complete
-                    </div>
-                    <div style="margin-left: 15px;">
-                        <button style="background-color: #4CAF50; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
-                            Continue Learning
-                        </button>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.info("Complete some activities to get personalized recommendations!")
-
-def display_learning_stats():
-    """Display learning statistics"""
-    st.markdown("### Your Learning Stats")
-    
-    stats = st.session_state.learning_stats
-    
-    # Create metrics in columns
+    # Legend explanation below chart
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("Lessons Completed", f"{stats['lessons_completed']}/{stats['lessons_total']}")
+        st.markdown("""
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div style="background-color: #4CAF50; width: 20px; height: 20px; border-radius: 50%; margin-right: 10px;"></div>
+            <span>Completed modules</span>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.metric("Average Time per Lesson", f"{stats['avg_time_per_lesson']} min")
+        st.markdown("""
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div style="background-color: #B0BEC5; width: 20px; height: 20px; border-radius: 50%; margin-right: 10px;"></div>
+            <span>Upcoming modules</span>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.metric("Favorite Topic", stats['favorite_topic'])
-    
-    # Add a note about strengths and areas to work on
-    st.markdown(f"""
-    <div style="background-color: #e6fffa; padding: 15px; border-radius: 10px; margin-top: 15px;">
-        <p><strong>💪 Your Strength:</strong> You're doing great with {stats['favorite_topic']}!</p>
-        <p><strong>🌱 Area to Grow:</strong> Try spending more time on {stats['challenge_topic']} activities.</p>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown("""
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div style="width: 20px; height: 20px; margin-right: 10px; display: flex; justify-content: center; align-items: center;">
+                <div style="background-color: #B0BEC5; width: 15px; height: 15px; border-radius: 50%;"></div>
+            </div>
+            <span>Beginner</span>
+            <div style="width: 25px; height: 25px; margin: 0 5px 0 15px; display: flex; justify-content: center; align-items: center;">
+                <div style="background-color: #B0BEC5; width: 20px; height: 20px; border-radius: 50%;"></div>
+            </div>
+            <span>Intermediate</span>
+            <div style="width: 30px; height: 30px; margin: 0 5px 0 15px; display: flex; justify-content: center; align-items: center;">
+                <div style="background-color: #B0BEC5; width: 25px; height: 25px; border-radius: 50%;"></div>
+            </div>
+            <span>Advanced</span>
+        </div>
+        """, unsafe_allow_html=True)
 
-def display_badge_progress():
-    """Display badge collection progress"""
-    st.markdown("### Your Badge Collection Progress")
+def display_next_steps():
+    """Display recommended next steps on the learning path"""
+    # Get uncompleted modules
+    learning_path = st.session_state.learning_path
+    uncompleted_modules = [module for module in learning_path if not module["completed"]]
     
-    # Create badge progress bars
-    badge_cols = st.columns(len(st.session_state.badge_progress))
+    # Sort by priority (matching interests and appropriate level)
+    focus_areas = st.session_state.get("focus_areas", ["AI Basics", "Robotics"])
     
-    for i, (badge, progress) in enumerate(st.session_state.badge_progress.items()):
-        with badge_cols[i]:
-            # Badge circle with progress
-            if progress >= 1.0:
-                circle_color = "#4CAF50"  # green for completed
-                icon = "✅"
-            elif progress >= 0.5:
-                circle_color = "#FF9800"  # orange for in progress
-                icon = "🔶"
-            else:
-                circle_color = "#9E9E9E"  # gray for just started
-                icon = "⭐"
-            
+    # Simple priority algorithm:
+    # 1. First prioritize modules in user's focus areas
+    # 2. Then prioritize by appropriate difficulty level
+    for module in uncompleted_modules:
+        priority = 0
+        if module["category"] in focus_areas:
+            priority += 10
+        
+        # Appropriate difficulty based on progress in that category
+        current_progress = st.session_state.progress_per_area.get(module["category"], 0)
+        if (current_progress < 0.3 and module["difficulty"] == "Beginner") or \
+           (0.3 <= current_progress < 0.7 and module["difficulty"] == "Intermediate") or \
+           (current_progress >= 0.7 and module["difficulty"] == "Advanced"):
+            priority += 5
+        
+        module["priority"] = priority
+    
+    # Sort by priority
+    recommended_modules = sorted(uncompleted_modules, key=lambda x: x["priority"], reverse=True)[:3]
+    
+    # Display next steps in cards
+    col1, col2, col3 = st.columns(3)
+    columns = [col1, col2, col3]
+    
+    for i, module in enumerate(recommended_modules):
+        # Get appropriate color based on category
+        category_colors = {
+            "AI Basics": "#4287f5",
+            "Machine Learning": "#9942f5",
+            "Computer Vision": "#42f5c4",
+            "Robotics": "#f59e42",
+            "Natural Language": "#f542a7",
+            "Game AI": "#f54242",
+            "Creative AI": "#42f545",
+            "AI Ethics": "#f5e642"
+        }
+        
+        color = category_colors.get(module["category"], "#4287f5")
+        
+        with columns[i]:
             st.markdown(f"""
-            <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                <div style="width: 60px; height: 60px; border-radius: 50%; background-color: {circle_color}; display: flex; justify-content: center; align-items: center; font-size: 24px;">
-                    {icon}
+            <div style="border: 2px solid {color}; border-radius: 10px; padding: 15px; height: 100%;">
+                <div style="background-color: {color}; color: white; padding: 5px 10px; border-radius: 15px; display: inline-block; margin-bottom: 10px; font-size: 12px;">
+                    {module["category"]}
                 </div>
-                <p style="margin-top: 5px; font-weight: bold;">{badge}</p>
-                <div style="width: 100%; background-color: #f0f0f0; border-radius: 10px; height: 10px; margin-top: 5px;">
-                    <div style="width: {int(progress*100)}%; height: 100%; background-color: {circle_color}; border-radius: 10px;"></div>
+                <h4 style="margin-top: 0;">{module["name"]}</h4>
+                <p style="font-size: 14px;">Difficulty: {module["difficulty"]}</p>
+                <div style="background-color: #f0f4f8; padding: 10px; border-radius: 5px; font-size: 13px;">
+                    <p style="margin: 0;">Good match for your {st.session_state.learning_style} learning style!</p>
                 </div>
-                <p style="margin-top: 5px;">{int(progress*100)}%</p>
             </div>
             """, unsafe_allow_html=True)
 
-def display_custom_recommendations():
-    """Display custom recommendations based on learning style and interests"""
-    st.markdown("### Personalized Activity Suggestions")
+def display_learning_stats():
+    """Display learning statistics"""
+    # Create a visualization of recent activity
+    activities = st.session_state.recent_activities
     
-    learning_style = st.session_state.learning_style
-    interests = st.session_state.interests
-    progress = st.session_state.learning_path_progress
+    # Prepare data for visualization
+    dates = [activity["date"] for activity in activities]
+    minutes = [activity["minutes"] for activity in activities]
+    completed = [activity["completed_items"] for activity in activities]
     
-    # Generate suggestions based on learning style and interests
-    suggestions = generate_personalized_suggestions(learning_style, interests, progress)
+    # Create a bar chart using plotly
+    fig = go.Figure()
     
-    # Display suggestions
-    for i, suggestion in enumerate(suggestions[:3]):  # Show top 3 suggestions
+    # Add time spent bars
+    fig.add_trace(go.Bar(
+        x=dates,
+        y=minutes,
+        name='Minutes Spent',
+        marker_color='#4287f5',
+        hovertemplate='%{y} minutes<extra></extra>'
+    ))
+    
+    # Add completed items line
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=completed,
+        mode='lines+markers',
+        name='Items Completed',
+        marker=dict(size=8, color='#f542a7'),
+        line=dict(width=2, color='#f542a7'),
+        yaxis='y2',
+        hovertemplate='%{y} items<extra></extra>'
+    ))
+    
+    # Update layout for dual y-axis
+    fig.update_layout(
+        title='Your Recent Learning Activity',
+        xaxis=dict(
+            title='Date',
+            tickangle=-45,
+            tickformat='%b %d',
+            tickmode='auto',
+            nticks=7
+        ),
+        yaxis=dict(
+            title='Minutes',
+            titlefont=dict(color='#4287f5'),
+            tickfont=dict(color='#4287f5'),
+            side='left'
+        ),
+        yaxis2=dict(
+            title='Items Completed',
+            titlefont=dict(color='#f542a7'),
+            tickfont=dict(color='#f542a7'),
+            anchor='x',
+            overlaying='y',
+            side='right'
+        ),
+        legend=dict(
+            orientation='h',
+            yanchor='bottom',
+            y=1.02,
+            xanchor='center',
+            x=0.5
+        ),
+        margin=dict(l=50, r=50, t=50, b=100),
+        height=350
+    )
+    
+    # Display the figure
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Calculate and display overall stats
+    total_minutes = sum(minutes)
+    total_completed = sum(completed)
+    avg_minutes = total_minutes / len(activities)
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
         st.markdown(f"""
-        <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 15px; background-color: {suggestion.get('color', '#f8f9fa')};">
-            <h4 style="margin-top: 0;">{suggestion['title']}</h4>
-            <p>{suggestion['description']}</p>
-            <div style="margin-top: 10px;">
-                <span style="background-color: rgba(0,0,0,0.1); padding: 3px 10px; border-radius: 15px; font-size: 12px; margin-right: 5px;">
-                    {suggestion['category']}
-                </span>
-                <span style="background-color: rgba(0,0,0,0.1); padding: 3px 10px; border-radius: 15px; font-size: 12px;">
-                    {suggestion['time']}
-                </span>
-            </div>
+        <div style="background-color: #e6f2ff; padding: 15px; border-radius: 10px; text-align: center;">
+            <h3 style="margin-top: 0; color: #4287f5;">{total_minutes}</h3>
+            <p style="margin-bottom: 0;">Total Minutes</p>
         </div>
         """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div style="background-color: #ffe6f2; padding: 15px; border-radius: 10px; text-align: center;">
+            <h3 style="margin-top: 0; color: #f542a7;">{total_completed}</h3>
+            <p style="margin-bottom: 0;">Items Completed</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown(f"""
+        <div style="background-color: #e6ffee; padding: 15px; border-radius: 10px; text-align: center;">
+            <h3 style="margin-top: 0; color: #42f569;">{avg_minutes:.1f}</h3>
+            <p style="margin-bottom: 0;">Avg. Minutes/Day</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+def display_badge_progress():
+    """Display badge collection progress"""
+    # Show progress towards the next badge
+    next_badge_progress = 0.65  # Simulated progress (0-1)
+    
+    st.markdown("""
+    ### Next Badge: AI Explorer
+    
+    Complete these steps to earn your badge:
+    """)
+    
+    st.progress(next_badge_progress, text=f"{int(next_badge_progress * 100)}% Complete")
+    
+    # Display badge tasks
+    tasks = [
+        {"name": "Complete AI Basics", "done": True},
+        {"name": "Finish 3 AI Games", "done": True},
+        {"name": "Create an AI Project", "done": False},
+        {"name": "Share your learning", "done": False}
+    ]
+    
+    for task in tasks:
+        if task["done"]:
+            st.markdown(f"✅ {task['name']}")
+        else:
+            st.markdown(f"◻️ {task['name']}")
+    
+    # Available badges
+    st.markdown("### Your Badge Collection")
+    
+    # Display badge icons in a grid
+    badge_cols = st.columns(3)
+    
+    # Simple badge display
+    badges = [
+        {"name": "Beginner", "emoji": "🌱", "earned": True},
+        {"name": "Code Genius", "emoji": "💻", "earned": True},
+        {"name": "ML Master", "emoji": "📊", "earned": False},
+        {"name": "AI Explorer", "emoji": "🔍", "earned": False},
+        {"name": "Vision Hero", "emoji": "👁️", "earned": False},
+        {"name": "NLP Wizard", "emoji": "🔤", "earned": False}
+    ]
+    
+    for i, badge in enumerate(badges):
+        with badge_cols[i % 3]:
+            if badge["earned"]:
+                st.markdown(f"""
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 24px;">{badge["emoji"]}</div>
+                    <div style="font-size: 12px;">{badge["name"]}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style="text-align: center; opacity: 0.5; margin-bottom: 15px;">
+                    <div style="font-size: 24px;">{badge["emoji"]}</div>
+                    <div style="font-size: 12px;">{badge["name"]}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+def display_custom_recommendations():
+    """Display custom recommendations based on learning style and interests"""
+    # Get user preferences
+    learning_style = st.session_state.get("learning_style", "Visual")
+    focus_areas = st.session_state.get("focus_areas", ["AI Basics", "Robotics"])
+    activity_preference = st.session_state.get("activity_preference", "Games")
+    
+    # Generate personalized suggestions
+    suggestions = generate_personalized_suggestions(
+        learning_style, 
+        focus_areas,
+        st.session_state.progress_per_area
+    )
+    
+    # Display recommendations in three categories
+    st.markdown("### Recommended for Your Learning Style")
+    style_recommendation = get_style_based_recommendation(learning_style)
+    
+    st.markdown(f"""
+    <div style="background-color: #f0f4fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: flex-start;">
+            <div style="font-size: 40px; margin-right: 20px;">{style_recommendation["emoji"]}</div>
+            <div>
+                <h4 style="margin-top: 0;">{style_recommendation["title"]}</h4>
+                <p>{style_recommendation["description"]}</p>
+                <div style="background-color: #e6f2ff; padding: 10px; border-radius: 5px; font-size: 14px;">
+                    <strong>Why this works for you:</strong> {style_recommendation["explanation"]}
+                </div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Interest-based recommendations
+    st.markdown("### Based on Your Interests")
+    
+    # Display up to 3 interest-based recommendations
+    interest_cols = st.columns(len(focus_areas[:3]))
+    
+    for i, interest in enumerate(focus_areas[:3]):
+        with interest_cols[i]:
+            recommendation = get_interest_based_recommendation(interest)
+            
+            st.markdown(f"""
+            <div style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; height: 100%;">
+                <h4 style="margin-top: 0;">{recommendation["title"]}</h4>
+                <p style="font-size: 14px;">{recommendation["description"]}</p>
+                <div style="margin-top: 15px; font-size: 13px;">
+                    <span style="background-color: #f0f4fa; padding: 5px 10px; border-radius: 15px;">
+                        {get_activity_type(learning_style)}
+                    </span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Parent guidance section
+    st.markdown("### For Parents")
+    
+    parent_guidance = f"""
+    Based on your child's learning profile, here are some ways you can support their AI learning journey:
+    
+    1. **Learning Style Support**: Your child is a {learning_style} learner. They learn best through {get_learning_style_description(learning_style)}
+    
+    2. **Interest Areas**: Focus on {', '.join(focus_areas[:2])} to maintain engagement
+    
+    3. **Activity Suggestions**: {get_parent_activity_suggestions(learning_style, focus_areas)}
+    """
+    
+    st.info(parent_guidance)
 
 def generate_personalized_suggestions(learning_style, focus_areas, progress):
     """
@@ -299,60 +648,17 @@ def generate_personalized_suggestions(learning_style, focus_areas, progress):
     Returns:
         list: List of suggested activities
     """
+    # For demonstration purposes, we'll return a simple list
     suggestions = []
     
-    # Add style-based recommendation
-    style_rec = get_style_based_recommendation(learning_style)
-    if style_rec:
-        suggestions.append(style_rec)
+    # Add a learning style based suggestion
+    style_suggestion = get_style_based_recommendation(learning_style)
+    suggestions.append(style_suggestion)
     
-    # Add interest-based recommendations
-    if focus_areas:
-        primary_interest = focus_areas[0]
-        interest_rec = get_interest_based_recommendation(primary_interest)
-        if interest_rec:
-            suggestions.append(interest_rec)
-    
-    # Add recommendation for area with lowest progress
-    lowest_topic = min(progress.items(), key=lambda x: x[1])
-    if lowest_topic:
-        suggestions.append({
-            'title': f"Explore {lowest_topic[0]} Fundamentals",
-            'description': f"Build your knowledge in {lowest_topic[0]} with this beginner-friendly activity designed to help you master the basics.",
-            'category': lowest_topic[0],
-            'time': "15-20 min",
-            'color': '#e6f9ff'
-        })
-    
-    # Add some general recommendations
-    general_suggestions = [
-        {
-            'title': "AI Ethics Challenge",
-            'description': "Test your understanding of ethical AI use through a series of scenario-based questions.",
-            'category': "Ethics",
-            'time': "10-15 min",
-            'color': '#fff9e6'
-        },
-        {
-            'title': "Create Your AI Story",
-            'description': "Use our AI story generator to craft a tale about robots and technology.",
-            'category': "Creative",
-            'time': "20-25 min",
-            'color': '#f9e6ff'
-        },
-        {
-            'title': "Sorting Algorithm Race",
-            'description': "Race different sorting algorithms to see which is fastest with different data sets.",
-            'category': "Algorithms",
-            'time': "10-15 min",
-            'color': '#e6ffe6'
-        }
-    ]
-    
-    # Add remaining general suggestions as needed
-    for suggestion in general_suggestions:
-        if len(suggestions) < 5:  # Ensure we have up to 5 suggestions
-            suggestions.append(suggestion)
+    # Add interest-based suggestions
+    for area in focus_areas[:2]:  # Take top 2 interests
+        interest_suggestion = get_interest_based_recommendation(area)
+        suggestions.append(interest_suggestion)
     
     return suggestions
 
@@ -366,38 +672,34 @@ def get_style_based_recommendation(learning_style):
     Returns:
         dict: A recommendation tailored to the learning style
     """
-    style_recommendations = {
+    recommendations = {
         "Visual": {
-            'title': "Neural Network Visualizer",
-            'description': "See how neural networks process information through an interactive visualization tool.",
-            'category': "Visual Learning",
-            'time': "15-20 min",
-            'color': '#e6f5ff'
+            "emoji": "👁️",
+            "title": "AI Image Recognition Explorer",
+            "description": "Explore how AI 'sees' images through interactive visualizations that highlight features, patterns, and classifications.",
+            "explanation": "Visual learners benefit from seeing AI concepts in action through color-coded diagrams, interactive visualizations, and image-based examples."
         },
-        "Hands-on": {
-            'title': "Build Your Own Chatbot",
-            'description': "Create a simple chatbot that can answer questions about your favorite topics.",
-            'category': "Interactive",
-            'time': "25-30 min",
-            'color': '#ffe6e6'
+        "Auditory": {
+            "emoji": "👂",
+            "title": "Voice AI Lab",
+            "description": "Experiment with voice recognition and audio processing AI through spoken commands and voice-controlled activities.",
+            "explanation": "Auditory learners thrive when they can listen to explanations and talk through concepts, making voice-interactive AI activities ideal."
         },
         "Reading/Writing": {
-            'title': "AI Concepts Journal",
-            'description': "Document your understanding of key AI concepts and create your own explanations.",
-            'category': "Writing",
-            'time': "15-20 min",
-            'color': '#f0f0f0'
+            "emoji": "📝",
+            "title": "AI Coding Journal",
+            "description": "Document your learning journey with guided coding exercises and written explanations of key AI concepts.",
+            "explanation": "Reading/writing learners excel by taking notes, following written instructions, and expressing concepts in their own words."
         },
-        "Social": {
-            'title': "AI Debate Club",
-            'description': "Join a virtual discussion about the benefits and challenges of AI in everyday life.",
-            'category': "Discussion",
-            'time': "20-25 min",
-            'color': '#e6ffe6'
+        "Kinesthetic": {
+            "emoji": "🤸",
+            "title": "AI Motion & Robotics Workshop",
+            "description": "Learn AI concepts through hands-on robot programming and physical computing activities that respond to movement.",
+            "explanation": "Kinesthetic learners understand best through physical activities and hands-on experiences that connect AI concepts to real-world actions."
         }
     }
     
-    return style_recommendations.get(learning_style, None)
+    return recommendations.get(learning_style, recommendations["Visual"])
 
 def get_interest_based_recommendation(interest):
     """
@@ -409,73 +711,102 @@ def get_interest_based_recommendation(interest):
     Returns:
         dict: A recommendation tailored to the interest
     """
-    interest_recommendations = {
+    recommendations = {
+        "AI Basics": {
+            "title": "AI Detective Challenge",
+            "description": "Identify AI systems in everyday technology and learn how they make decisions."
+        },
+        "Machine Learning": {
+            "title": "Teach a Computer to Play",
+            "description": "Train a simple machine learning model to play a game by showing it examples."
+        },
+        "Computer Vision": {
+            "title": "Build a Simple Image Classifier",
+            "description": "Create a program that can tell the difference between different objects in photos."
+        },
         "Robotics": {
-            'title': "Virtual Robot Programming",
-            'description': "Program a virtual robot to navigate through an obstacle course using simple commands.",
-            'category': "Robotics",
-            'time': "20-25 min",
-            'color': '#e6f9ff'
+            "title": "Program a Virtual Robot",
+            "description": "Design instructions for a robot to navigate through an obstacle course."
         },
-        "Games": {
-            'title': "AI Game Character Design",
-            'description': "Design a game character with AI-powered abilities and test it in a simple game environment.",
-            'category': "Game Design",
-            'time': "25-30 min",
-            'color': '#ffe6f9'
+        "Natural Language": {
+            "title": "Create a Smart Chatbot",
+            "description": "Build a simple chatbot that can answer questions about a topic you choose."
         },
-        "Art": {
-            'title': "AI Art Generator",
-            'description': "Create digital artwork using a simplified AI art generation tool based on your descriptions.",
-            'category': "Creative",
-            'time': "15-20 min",
-            'color': '#fff5e6'
+        "Game AI": {
+            "title": "Design an AI Opponent",
+            "description": "Create rules for an AI player that can compete against you in a simple game."
         },
-        "Science": {
-            'title': "AI in Scientific Discovery",
-            'description': "Explore how AI helps scientists analyze data and make predictions through interactive simulations.",
-            'category': "Science",
-            'time': "20-25 min",
-            'color': '#e6fffa'
+        "Creative AI": {
+            "title": "AI Art Generator",
+            "description": "Experiment with AI tools that can help create original artwork based on your ideas."
         },
-        "Space": {
-            'title': "Space Exploration with AI",
-            'description': "See how AI helps astronauts and spacecraft navigate and make discoveries in space.",
-            'category': "Space",
-            'time': "15-20 min",
-            'color': '#e6e6ff'
-        },
-        "Animals": {
-            'title': "Wildlife Classification Challenge",
-            'description': "Help train an AI to recognize different animal species from photos and sounds.",
-            'category': "Classification",
-            'time': "15-20 min",
-            'color': '#f0ffe6'
+        "AI Ethics": {
+            "title": "Fairness Detective",
+            "description": "Investigate how AI decisions might affect different people and how to make them fair."
         }
     }
     
-    return interest_recommendations.get(interest, None)
+    return recommendations.get(interest, recommendations["AI Basics"])
 
 def get_activity_type(learning_style):
     """Get a suggested activity type based on learning style"""
     activity_types = {
-        "Visual": "visual interactive",
-        "Hands-on": "hands-on building",
-        "Reading/Writing": "guided reading and reflection",
-        "Social": "collaborative discussion"
+        "Visual": "Interactive Visualization",
+        "Auditory": "Audio-based Activity",
+        "Reading/Writing": "Guided Worksheet",
+        "Kinesthetic": "Hands-on Project"
     }
     
-    return activity_types.get(learning_style, "interactive")
+    return activity_types.get(learning_style, "Interactive Activity")
 
-# Session state updater functions
+def get_learning_style_description(style):
+    """Get a description of a learning style"""
+    descriptions = {
+        "Visual": "images, diagrams, and visual demonstrations. Try using color-coding and mind maps when learning new concepts.",
+        "Auditory": "listening and speaking. They benefit from discussions, verbal explanations, and audio content.",
+        "Reading/Writing": "text-based materials and writing. They excel with written instructions and taking detailed notes.",
+        "Kinesthetic": "hands-on activities and physical engagement. They learn best by doing, building, and experimenting."
+    }
+    
+    return descriptions.get(style, "various methods of learning")
+
+def get_learning_speed_description(speed):
+    """Get a description for learning speed preference"""
+    descriptions = {
+        "Very Slow": "You prefer to take plenty of time to fully understand concepts before moving on.",
+        "Slow": "You like to move carefully through new material to ensure solid understanding.",
+        "Medium": "You prefer a balanced pace that allows for both thoroughness and steady progress.",
+        "Fast": "You enjoy moving quickly through material once you've grasped the basic concepts.",
+        "Very Fast": "You thrive on rapid learning and quickly connecting new ideas to what you already know."
+    }
+    
+    return descriptions.get(speed, "You prefer a moderate pace of learning.")
+
+def get_parent_activity_suggestions(learning_style, interests):
+    """Get activity suggestions for parents based on child's learning profile"""
+    primary_interest = interests[0] if interests else "AI Basics"
+    
+    suggestions = {
+        "Visual": f"Try exploring {primary_interest} concepts through videos, diagrams, and color-coded notes.",
+        "Auditory": f"Engage your child in discussions about {primary_interest} and try audio-based learning resources.",
+        "Reading/Writing": f"Provide books and writing activities related to {primary_interest} to reinforce learning.",
+        "Kinesthetic": f"Find hands-on projects related to {primary_interest} that allow your child to build and experiment."
+    }
+    
+    return suggestions.get(learning_style, f"Explore {primary_interest} through varied activities that engage multiple senses.")
+
 def update_learning_style():
-    st.session_state.learning_style = st.session_state.learning_style_select
+    """Update the learning style in session state"""
+    st.session_state.learning_style = st.session_state.learning_style_selector
 
 def update_learning_speed():
-    st.session_state.learning_speed = st.session_state.learning_speed_select
+    """Update the learning speed in session state"""
+    st.session_state.learning_speed = st.session_state.learning_speed_selector
 
 def update_interests():
-    st.session_state.interests = st.session_state.interests_select
+    """Update the focus areas in session state"""
+    st.session_state.focus_areas = st.session_state.focus_areas_selector
 
 def update_activity_preference():
-    st.session_state.activity_preference = st.session_state.activity_preference_select
+    """Update the activity preference in session state"""
+    st.session_state.activity_preference = st.session_state.activity_preference_selector
