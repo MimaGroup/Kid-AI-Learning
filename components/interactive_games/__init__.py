@@ -1,0 +1,1 @@
+# This file makes components/interactive_games a proper Python package

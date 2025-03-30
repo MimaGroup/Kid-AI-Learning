@@ -1,0 +1,1 @@
+# This file makes components/code_playground a proper Python package
