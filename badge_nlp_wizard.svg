@@ -1,0 +1,80 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Badge Background -->
+  <circle cx="50" cy="50" r="45" fill="#9C27B0" stroke="#4A148C" stroke-width="2"/>
+  <circle cx="50" cy="50" r="38" fill="#BA68C8" stroke="#4A148C" stroke-width="1"/>
+  
+  <!-- NLP Icon (Speech Bubble & Text) -->
+  <g transform="translate(25, 28)">
+    <!-- Speech Bubble -->
+    <path d="M 0,5 
+             A 5,5 0 0 1 5,0 
+             H 45 
+             A 5,5 0 0 1 50,5 
+             V 25 
+             A 5,5 0 0 1 45,30 
+             H 30
+             L 25,40
+             L 20,30
+             H 5 
+             A 5,5 0 0 1 0,25 
+             Z" 
+          fill="white" stroke="#4A148C" stroke-width="1.5"/>
+    
+    <!-- Text Inside Bubble -->
+    <text x="10" y="12" font-family="Arial, sans-serif" font-size="6" fill="#4A148C">ABC</text>
+    <text x="25" y="12" font-family="Arial, sans-serif" font-size="6" fill="#4A148C">XYZ</text>
+    <text x="10" y="22" font-family="Arial, sans-serif" font-size="6" fill="#4A148C">NLP</text>
+    <text x="30" y="22" font-family="Arial, sans-serif" font-size="6" fill="#4A148C">AI</text>
+    
+    <!-- Connecting Lines Animation -->
+    <g stroke="#4A148C" stroke-width="0.75" opacity="0.8">
+      <line x1="15" y1="12" x2="20" y2="12">
+        <animate attributeName="x2" values="20;22;20" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="20" y1="22" x2="25" y2="22">
+        <animate attributeName="x2" values="25;28;25" dur="1.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="15" y1="12" x2="15" y2="17">
+        <animate attributeName="y2" values="17;19;17" dur="2.2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="30" y1="12" x2="30" y2="17">
+        <animate attributeName="y2" values="17;19;17" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+    </g>
+  </g>
+  
+  <!-- Magical Elements (Stars, Sparkles) -->
+  <g>
+    <!-- Stars -->
+    <path d="M15,20 L17,15 L20,20 L15,17 Z" fill="#E1BEE7">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M80,25 L83,20 L85,25 L80,23 Z" fill="#E1BEE7">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M25,80 L28,75 L30,80 L25,77 Z" fill="#E1BEE7">
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M75,75 L78,70 L80,75 L75,73 Z" fill="#E1BEE7">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2.3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Magical Sparkle Circles -->
+  <circle cx="20" cy="30" r="1.5" fill="#F3E5F5">
+    <animate attributeName="r" values="1.5;2.5;1.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="75" cy="35" r="1.5" fill="#F3E5F5">
+    <animate attributeName="r" values="1.5;2.5;1.5" dur="1.7s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="35" cy="75" r="1.5" fill="#F3E5F5">
+    <animate attributeName="r" values="1.5;2.5;1.5" dur="2.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="65" cy="70" r="1.5" fill="#F3E5F5">
+    <animate attributeName="r" values="1.5;2.5;1.5" dur="1.9s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Badge Label -->
+  <path d="M 50,85 L 17,85 A 7,7 0 0 1 17,71 L 83,71 A 7,7 0 0 1 83,85 L 50,85 Z" fill="#4A148C"/>
+  <text x="50" y="81" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white" font-weight="bold">NLP WIZARD</text>
+</svg>
