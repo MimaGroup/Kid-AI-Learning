@@ -5,6 +5,12 @@ def display_code_snippet_playground():
     """
     Display a code snippet playground where kids can learn and experiment with simple code
     """
+    # Initialize session state variables if needed
+    if "reset_code" not in st.session_state:
+        st.session_state["reset_code"] = False
+    if "reset_code_value" not in st.session_state:
+        st.session_state["reset_code_value"] = None
+        
     st.markdown("## Code Snippet Playground")
     
     # Code examples
@@ -91,17 +97,26 @@ if question:
         # Get the selected example
         default_code = code_examples[example_selection]
         
+        # Handle reset code logic
+        initial_value = default_code
+        if st.session_state["reset_code"] and st.session_state["reset_code_value"] is not None:
+            initial_value = st.session_state["reset_code_value"]
+            # Reset the flag
+            st.session_state["reset_code"] = False
+        
         # Create an editable text area with the example code
         code = st.text_area(
             "Edit the code below:", 
-            value=default_code,
+            value=initial_value,
             height=300,
             key="code_editor_textarea"
         )
         
         # Add a reset button
         if st.button("Reset Code", key="reset_code_button"):
-            st.session_state["code_editor_textarea"] = default_code
+            # Create a session state variable to indicate reset is needed
+            st.session_state["reset_code"] = True
+            st.session_state["reset_code_value"] = default_code
             st.rerun()
     
     with col2:
