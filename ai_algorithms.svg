@@ -1,0 +1,149 @@
+<svg width="400" height="250" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="250" fill="#f0f8ff" rx="10" ry="10"/>
+  
+  <!-- Grid Lines -->
+  <g stroke="#e0e0e0" stroke-width="1">
+    <line x1="0" y1="50" x2="400" y2="50"/>
+    <line x1="0" y1="100" x2="400" y2="100"/>
+    <line x1="0" y1="150" x2="400" y2="150"/>
+    <line x1="0" y1="200" x2="400" y2="200"/>
+    
+    <line x1="50" y1="0" x2="50" y2="250"/>
+    <line x1="100" y1="0" x2="100" y2="250"/>
+    <line x1="150" y1="0" x2="150" y2="250"/>
+    <line x1="200" y1="0" x2="200" y2="250"/>
+    <line x1="250" y1="0" x2="250" y2="250"/>
+    <line x1="300" y1="0" x2="300" y2="250"/>
+    <line x1="350" y1="0" x2="350" y2="250"/>
+  </g>
+  
+  <!-- Decision Tree -->
+  <g transform="translate(50, 40)">
+    <!-- Tree Structure -->
+    <g fill="none" stroke="#4287f5" stroke-width="2">
+      <line x1="50" y1="20" x2="25" y2="50"/>
+      <line x1="50" y1="20" x2="75" y2="50"/>
+      <line x1="25" y1="50" x2="15" y2="80"/>
+      <line x1="25" y1="50" x2="35" y2="80"/>
+      <line x1="75" y1="50" x2="65" y2="80"/>
+      <line x1="75" y1="50" x2="85" y2="80"/>
+    </g>
+    
+    <!-- Tree Nodes -->
+    <circle cx="50" cy="20" r="10" fill="#4287f5"/>
+    <circle cx="25" cy="50" r="8" fill="#64B5F6"/>
+    <circle cx="75" cy="50" r="8" fill="#64B5F6"/>
+    <circle cx="15" cy="80" r="6" fill="#BBDEFB"/>
+    <circle cx="35" cy="80" r="6" fill="#BBDEFB"/>
+    <circle cx="65" cy="80" r="6" fill="#BBDEFB"/>
+    <circle cx="85" cy="80" r="6" fill="#BBDEFB"/>
+    
+    <!-- Title -->
+    <text x="50" y="120" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1A237E" font-weight="bold">Decision Tree</text>
+  </g>
+  
+  <!-- Clustering -->
+  <g transform="translate(200, 40)">
+    <!-- Cluster Groups -->
+    <g>
+      <!-- Group 1 -->
+      <circle cx="30" cy="30" r="6" fill="#FF9800"/>
+      <circle cx="40" cy="25" r="6" fill="#FF9800"/>
+      <circle cx="25" cy="40" r="6" fill="#FF9800"/>
+      <circle cx="35" cy="45" r="6" fill="#FF9800"/>
+      
+      <!-- Group 2 -->
+      <circle cx="70" cy="30" r="6" fill="#9C27B0"/>
+      <circle cx="80" cy="25" r="6" fill="#9C27B0"/>
+      <circle cx="75" cy="40" r="6" fill="#9C27B0"/>
+      <circle cx="65" cy="35" r="6" fill="#9C27B0"/>
+      
+      <!-- Group 3 -->
+      <circle cx="30" cy="80" r="6" fill="#4CAF50"/>
+      <circle cx="40" cy="75" r="6" fill="#4CAF50"/>
+      <circle cx="25" cy="70" r="6" fill="#4CAF50"/>
+      <circle cx="35" cy="65" r="6" fill="#4CAF50"/>
+      
+      <!-- Group 4 -->
+      <circle cx="70" cy="80" r="6" fill="#F44336"/>
+      <circle cx="80" cy="75" r="6" fill="#F44336"/>
+      <circle cx="75" cy="70" r="6" fill="#F44336"/>
+      <circle cx="65" cy="85" r="6" fill="#F44336"/>
+    </g>
+    
+    <!-- Cluster Circles -->
+    <circle cx="32.5" cy="35" r="20" fill="none" stroke="#FF9800" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="72.5" cy="32.5" r="20" fill="none" stroke="#9C27B0" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="32.5" cy="72.5" r="20" fill="none" stroke="#4CAF50" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="72.5" cy="77.5" r="20" fill="none" stroke="#F44336" stroke-width="1.5" opacity="0.6"/>
+    
+    <!-- Title -->
+    <text x="50" y="120" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1A237E" font-weight="bold">Clustering</text>
+  </g>
+  
+  <!-- Neural Network -->
+  <g transform="translate(260, 170)">
+    <!-- Layers -->
+    <g fill="#4287f5" stroke="#0D47A1" stroke-width="1">
+      <!-- Input Layer -->
+      <circle cx="30" cy="20" r="7"/>
+      <circle cx="30" cy="40" r="7"/>
+      <circle cx="30" cy="60" r="7"/>
+      
+      <!-- Hidden Layer -->
+      <circle cx="70" cy="15" r="7"/>
+      <circle cx="70" cy="35" r="7"/>
+      <circle cx="70" cy="55" r="7"/>
+      <circle cx="70" cy="75" r="7"/>
+      
+      <!-- Output Layer -->
+      <circle cx="110" cy="30" r="7"/>
+      <circle cx="110" cy="60" r="7"/>
+    </g>
+    
+    <!-- Connections -->
+    <g stroke="#0D47A1" stroke-width="0.75" opacity="0.6">
+      <!-- Input to Hidden -->
+      <line x1="37" y1="20" x2="63" y2="15"/>
+      <line x1="37" y1="20" x2="63" y2="35"/>
+      <line x1="37" y1="20" x2="63" y2="55"/>
+      <line x1="37" y1="20" x2="63" y2="75"/>
+      
+      <line x1="37" y1="40" x2="63" y2="15"/>
+      <line x1="37" y1="40" x2="63" y2="35"/>
+      <line x1="37" y1="40" x2="63" y2="55"/>
+      <line x1="37" y1="40" x2="63" y2="75"/>
+      
+      <line x1="37" y1="60" x2="63" y2="15"/>
+      <line x1="37" y1="60" x2="63" y2="35"/>
+      <line x1="37" y1="60" x2="63" y2="55"/>
+      <line x1="37" y1="60" x2="63" y2="75"/>
+      
+      <!-- Hidden to Output -->
+      <line x1="77" y1="15" x2="103" y2="30"/>
+      <line x1="77" y1="15" x2="103" y2="60"/>
+      
+      <line x1="77" y1="35" x2="103" y2="30"/>
+      <line x1="77" y1="35" x2="103" y2="60"/>
+      
+      <line x1="77" y1="55" x2="103" y2="30"/>
+      <line x1="77" y1="55" x2="103" y2="60"/>
+      
+      <line x1="77" y1="75" x2="103" y2="30"/>
+      <line x1="77" y1="75" x2="103" y2="60"/>
+    </g>
+    
+    <!-- Data Flow Animation -->
+    <circle cx="30" cy="40" r="2" fill="#E1BEE7">
+      <animate attributeName="cx" values="30;70;110" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="40;35;30" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Title -->
+    <text x="70" y="-10" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1A237E" font-weight="bold">Neural Network</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="25" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#0D47A1" font-weight="bold">AI Algorithms</text>
+</svg>
