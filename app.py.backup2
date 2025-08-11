@@ -1,0 +1,172 @@
+import streamlit as st
+import os
+import sys
+
+# Add the current directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+# Import functions
+try:
+    from pages.learn_ai_basics import show_learn_ai_basics, show_lesson_content, show_lesson_quiz
+    from pages.fun_coding_games_new import show_fun_coding_games
+    from pages.ai_playground_new import show_ai_playground
+    print("Successfully imported all modules")
+except ImportError as e:
+    print(f"Import error: {e}")
+    # Define fallback functions
+    def show_learn_ai_basics():
+        st.title("Learn AI Basics")
+        st.error("Module not found. Please check your installation.")
+    
+    def show_lesson_content(lesson_name):
+        st.title("Lesson Content")
+        st.error("Module not found. Please check your installation.")
+    
+    def show_lesson_quiz(lesson_name):
+        st.title("Lesson Quiz")
+        st.error("Module not found. Please check your installation.")
+    
+    def show_fun_coding_games():
+        st.title("Fun Coding Games")
+        st.error("Module not found. Please check your installation.")
+    
+    def show_ai_playground():
+        st.title("AI Playground")
+        st.error("Module not found. Please check your installation.")
+
+def initialize_session_state():
+    """Initialize session state variables for the application."""
+    if 'user_progress' not in st.session_state:
+        st.session_state.user_progress = 0
+    
+    if 'completed_lessons' not in st.session_state:
+        st.session_state.completed_lessons = []
+    
+    if 'achievements' not in st.session_state:
+        st.session_state.achievements = []
+    
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "Learn AI Basics"
+    
+    if 'current_lesson' not in st.session_state:
+        st.session_state.current_lesson = None
+    
+    if 'lesson_page' not in st.session_state:
+        st.session_state.lesson_page = None
+
+initialize_session_state()
+
+def main():
+    # Page config
+    st.set_page_config(
+        page_title="AI Kids Learning",
+        page_icon="🤖",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
+    # Sidebar
+    st.sidebar.title("🤖 AI Kids Learning")
+    st.sidebar.write("Learn AI and coding in a fun way!")
+    
+    # Navigation
+    pages = [
+        "🤖 Learn AI Basics", 
+        "🎮 Fun Coding Games", 
+        "🚀 AI Adventures", 
+        "👨‍👩‍👧‍👦 Parent Dashboard", 
+        "🤖 AI Playground", 
+        "⭐ Enhanced Features", 
+        "🎯 Interactive Playground"
+    ]
+    
+    st.sidebar.header("📚 Navigate")
+    selection = st.sidebar.radio("Choose a section:", pages, label_visibility="collapsed")
+    
+    # Remove emoji from selection for routing
+    clean_selection = selection.split(" ", 1)[1] if " " in selection else selection
+    
+    # Main content area
+    if "Learn AI Basics" in selection:
+        if st.session_state.current_lesson and st.session_state.lesson_page:
+            if st.session_state.lesson_page == "content":
+                show_lesson_content(st.session_state.current_lesson)
+            elif st.session_state.lesson_page == "quiz":
+                show_lesson_quiz(st.session_state.current_lesson)
+        else:
+            show_learn_ai_basics()
+    
+    elif "Fun Coding Games" in selection:
+        show_fun_coding_games()
+    
+    elif "AI Playground" in selection:
+        show_ai_playground()
+    
+    elif "AI Adventures" in selection:
+        show_ai_adventures()
+    
+    elif "Parent Dashboard" in selection:
+        show_parent_dashboard()
+    
+    elif "Enhanced Features" in selection:
+        show_enhanced_features()
+    
+    elif "Interactive Playground" in selection:
+        show_interactive_playground()
+    
+    # Sidebar progress
+    st.sidebar.divider()
+    st.sidebar.subheader("🏆 Your Progress")
+    
+    total_lessons = 3  # Based on your current lessons
+    completed = len(st.session_state.completed_lessons)
+    
+    if total_lessons > 0:
+        progress = completed / total_lessons
+        st.sidebar.progress(progress)
+        st.sidebar.write(f"Completed: {completed}/{total_lessons} lessons")
+    
+    # Achievements
+    if st.session_state.achievements:
+        st.sidebar.subheader("🎖️ Achievements")
+        for achievement in st.session_state.achievements[-3:]:  # Show last 3
+            st.sidebar.success(achievement)
+
+# Placeholder functions for remaining pages
+def show_ai_adventures():
+    st.title("🚀 AI Adventures")
+    st.write("Coming soon! Exciting AI adventures await!")
+    st.info("This section will feature interactive AI stories and challenges.")
+
+def show_parent_dashboard():
+    st.title("👨‍👩‍👧‍👦 Parent Dashboard")
+    st.write("Track your child's learning progress!")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("Lessons Completed", len(st.session_state.completed_lessons))
+    
+    with col2:
+        st.metric("Time Spent Learning", "2.5 hours")
+    
+    with col3:
+        st.metric("Achievements Earned", len(st.session_state.achievements))
+    
+    st.subheader("📊 Learning Activity")
+    st.info("Detailed analytics coming soon!")
+
+def show_enhanced_features():
+    st.title("⭐ Enhanced Features")
+    st.write("Advanced learning tools and features!")
+    st.info("Premium features will be available here.")
+
+def show_interactive_playground():
+    st.title("🎯 Interactive Playground")
+    st.write("Hands-on coding and AI experiments!")
+    st.info("Interactive coding environment coming soon!")
+
+if __name__ == "__main__":
+    main()
