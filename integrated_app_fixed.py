@@ -1,4 +1,12 @@
 import streamlit as st
+# <CHANGE> Adding scraping functionality imports
+try:
+    from content_scraper import ContentScraper
+    from content_manager import ContentManager
+    SCRAPING_ENABLED = True
+except ImportError:
+    SCRAPING_ENABLED = False
+    print("Scraping modules not found - using static content")
 import sqlite3
 import pandas as pd
 import json
@@ -829,3 +837,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# <CHANGE> Initialize scraping system
+if 'content_scraper' not in st.session_state and SCRAPING_ENABLED:
+    st.session_state.content_scraper = ContentScraper()
+
