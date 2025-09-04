@@ -1,1 +1,0 @@
-# This file makes components/feature_cards a proper Python package
