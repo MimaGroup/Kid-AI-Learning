@@ -20,7 +20,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password)
-      router.push('/dashboard')
+      router.push('/parent/dashboard') // <CHANGE> Fixed redirect path
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
