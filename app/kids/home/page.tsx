@@ -4,8 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 export default function KidsHome() {
-  const [selectedInterface, setSelectedInterface] = useState('kids')
-
   const activities = [
     {
       id: 'detective',
@@ -39,7 +37,6 @@ export default function KidsHome() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -53,7 +50,6 @@ export default function KidsHome() {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
         <div className="w-80 bg-gradient-to-b from-purple-600 to-purple-800 text-white p-6">
           <div className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
@@ -64,20 +60,14 @@ export default function KidsHome() {
           </div>
 
           <div className="space-y-4">
-            <select 
-              value={selectedInterface}
-              onChange={(e) => setSelectedInterface(e.target.value)}
-              className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20"
-            >
+            <select className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20">
               <option value="kids">🎮 Kids Learning App</option>
               <option value="parent">👨‍👩‍👧‍👦 Parent Dashboard</option>
             </select>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 p-8">
-          {/* Coming Soon Banner */}
           <div className="bg-gradient-to-r from-pink-400 to-pink-600 text-white p-6 rounded-2xl mb-8">
             <div className="flex items-center space-x-3">
               <div className="text-3xl">🎮</div>
@@ -88,13 +78,12 @@ export default function KidsHome() {
             </div>
           </div>
 
-          {/* Activity Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {activities.map((activity) => (
               <Link
                 key={activity.id}
                 href={`/kids/activity/${activity.id}`}
-                className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer`}
+                className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block`}
               >
                 <div className="flex items-center space-x-4">
                   <div className="text-4xl">{activity.icon}</div>
@@ -107,7 +96,6 @@ export default function KidsHome() {
             ))}
           </div>
 
-          {/* Progress Section */}
           <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Your Learning Progress</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
