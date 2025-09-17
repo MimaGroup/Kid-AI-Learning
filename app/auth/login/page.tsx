@@ -8,23 +8,21 @@ import Link from 'next/link'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { signIn } = useAuth()
+  const { login, error, clearError } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setError('')
+    clearError()
 
-    const { error } = await signIn(email, password)
+    const success = await login(email, password)
     
-    if (error) {
-      setError(error.message)
-      setIsLoading(false)
-    } else {
+    if (success) {
       router.push('/parent/dashboard')
+    } else {
+      setIsLoading(false)
     }
   }
 
