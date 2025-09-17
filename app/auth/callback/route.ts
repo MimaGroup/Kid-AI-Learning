@@ -14,6 +14,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // Return the user to login page if there's an error
   return NextResponse.redirect(`${origin}/auth/login`)
 }
