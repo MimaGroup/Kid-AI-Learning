@@ -2,96 +2,111 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase/client'
-import { User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 
 interface AuthContextType {
   user: User | null
-  isLoading: boolean
+  loading: boolean
   error: string | null
-  signUp: (email: string, password: string) => Promise<any>
-  signIn: (email: string, password: string) => Promise<any>
-  signOut: () => Promise<void>
+  login: (email: string, password: string) => Promise<void>
+  register: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+  clearError: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const supabase = createClient()
 
   useEffect(() => {
-    try {
-      const supabase = createClient()
-      
-      const getUser = async () => {
-        const { data: { user } } = await supabase.auth.getUser()
-        setUser(user)
-        setIsLoading(false)
+    // Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+      setLoading(false)
+    }
+
+    getSession()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
       }
+    )
 
-      getUser()
+    return () => subscription.unsubscribe()
+  }, [supabase.auth])
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          setUser(session?.user ?? null)
-          setIsLoading(false)
-        }
-      )
-
-      return () => subscription.unsubscribe()
-    } catch (err) {
-      setError('Failed to initialize authentication')
-      setIsLoading(false)
+  const login = async (email: string, password: string) => {
+    setError(null)
+    setLoading(true)
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    
+    if (error) {
+      setError(error.message)
+      throw error
     }
-  }, [])
+    
+    setLoading(false)
+  }
 
-  const signUp = async (email: string, password: string) => {
-    try {
-      const supabase = createClient()
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
-      return { data, error }
-    } catch (err) {
-      return { data: null, error: { message: 'Authentication service unavailable' } }
+  const register = async (email: string, password: string) => {
+    setError(null)
+    setLoading(true)
+    
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
+      },
+    })
+    
+    if (error) {
+      setError(error.message)
+      throw error
+    }
+    
+    setLoading(false)
+  }
+
+  const logout = async () => {
+    setError(null)
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      setError(error.message)
+      throw error
     }
   }
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      const supabase = createClient()
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      })
-      return { data, error }
-    } catch (err) {
-      return { data: null, error: { message: 'Authentication service unavailable' } }
-    }
+  const clearError = () => {
+    setError(null)
   }
 
-  const signOut = async () => {
-    try {
-      const supabase = createClient()
-      await supabase.auth.signOut()
-    } catch (err) {
-      console.error('Sign out error:', err)
-    }
+  const value = {
+    user,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+    clearError,
   }
 
-  return (
-    <AuthContext.Provider value={{ user, isLoading, error, signUp, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider')
