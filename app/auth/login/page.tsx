@@ -17,11 +17,14 @@ export default function LoginPage() {
     setIsLoading(true)
     clearError()
 
-    const success = await login(email, password)
-    
-    if (success) {
+    try {
+      await login(email, password)
+      // If login succeeds, redirect to dashboard
       router.push('/parent/dashboard')
-    } else {
+    } catch (err) {
+      // Error is handled by the useAuth hook
+      console.error('Login failed:', err)
+    } finally {
       setIsLoading(false)
     }
   }
