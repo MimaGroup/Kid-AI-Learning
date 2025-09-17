@@ -46,28 +46,6 @@ export default function ActivitiesPage() {
       icon: '🎯',
       color: 'from-orange-500 to-red-500',
       href: '/kids/games/ai-quiz'
-    },
-    {
-      id: 'story-builder',
-      title: 'AI Story Builder',
-      description: 'Create stories with AI assistance!',
-      category: 'creative',
-      difficulty: 'Intermediate',
-      icon: '📚',
-      color: 'from-indigo-500 to-purple-500',
-      href: '/kids/games/story-builder',
-      comingSoon: true
-    },
-    {
-      id: 'voice-trainer',
-      title: 'Voice AI Trainer',
-      description: 'Teach AI to understand speech!',
-      category: 'learning',
-      difficulty: 'Advanced',
-      icon: '🎤',
-      color: 'from-teal-500 to-blue-500',
-      href: '/kids/games/voice-trainer',
-      comingSoon: true
     }
   ]
 
@@ -85,17 +63,15 @@ export default function ActivitiesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🎮 AI Learning Activities
+            AI Learning Activities
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Explore interactive AI experiences designed to make learning fun and engaging!
           </p>
         </div>
 
-        {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           {categories.map((category) => (
             <button
@@ -113,20 +89,14 @@ export default function ActivitiesPage() {
           ))}
         </div>
 
-        {/* Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredActivities.map((activity) => (
             <div
               key={activity.id}
               className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
             >
-              <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center relative`}>
+              <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center`}>
                 <span className="text-6xl">{activity.icon}</span>
-                {activity.comingSoon && (
-                  <div className="absolute top-2 right-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">
-                    Coming Soon
-                  </div>
-                )}
               </div>
               
               <div className="p-6">
@@ -146,27 +116,17 @@ export default function ActivitiesPage() {
                   </span>
                 </div>
 
-                {activity.comingSoon ? (
-                  <button
-                    disabled
-                    className="w-full bg-gray-300 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed"
-                  >
-                    Coming Soon
-                  </button>
-                ) : (
-                  <Link
-                    href={activity.href}
-                    className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
-                  >
-                    Start Activity
-                  </Link>
-                )}
+                <Link
+                  href={activity.href}
+                  className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
+                >
+                  Start Activity
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Back to Home */}
         <div className="text-center mt-12">
           <Link
             href="/kids/home"
