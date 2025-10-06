@@ -1,18 +1,18 @@
-'use client'
+"use client"
 
-import { useAuth } from '../../../hooks/use-auth'
-import { useRouter } from 'next/navigation'
+import { useAuth } from "../../../hooks/use-auth"
+import { useRouter } from "next/navigation"
 
 export default function ParentDashboard() {
-  const { user, signOut, isLoading } = useAuth()
+  const { user, logout, loading } = useAuth()
   const router = useRouter()
 
   const handleSignOut = async () => {
-    await signOut()
-    router.push('/auth/login')
+    await logout()
+    router.push("/auth/login")
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-lg">Loading...</div>
@@ -42,7 +42,7 @@ export default function ParentDashboard() {
               <h3 className="text-xl font-semibold mb-2">Kids Learning</h3>
               <p className="text-purple-100 mb-4">Monitor your child's AI learning progress</p>
               <button
-                onClick={() => router.push('/kids/home')}
+                onClick={() => router.push("/kids/home")}
                 className="bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors"
               >
                 View Progress
@@ -53,7 +53,7 @@ export default function ParentDashboard() {
               <h3 className="text-xl font-semibold mb-2">AI Activities</h3>
               <p className="text-blue-100 mb-4">Interactive AI games and learning tools</p>
               <button
-                onClick={() => router.push('/kids/activities')}
+                onClick={() => router.push("/kids/activities")}
                 className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
               >
                 Explore Activities
