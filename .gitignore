@@ -26,5 +26,3 @@ generated_lessons/
 
 # Logs
 *.log
-node_modules/
-.next/
