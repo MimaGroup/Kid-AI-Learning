@@ -22,4 +22,3 @@
 
 ## Stable Version: v1.1.0-supabase
 Ready for user testing and feedback collection.
-

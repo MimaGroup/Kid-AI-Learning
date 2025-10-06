@@ -16,4 +16,3 @@
 
 ## Next Development:
 Ready for feature enhancements and new interactive components.
-

@@ -1,0 +1,227 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "../../../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
+import Link from "next/link"
+
+interface Pattern {
+  sequence: string[]
+  options: string[]
+  correct: number
+  explanation: string
+}
+
+const patterns: Pattern[] = [
+  {
+    sequence: ["🔴", "🔵", "🔴", "🔵", "🔴", "?"],
+    options: ["🔴", "🔵", "🟢", "🟡"],
+    correct: 1,
+    explanation: "The pattern alternates between red and blue circles!",
+  },
+  {
+    sequence: ["1", "2", "3", "4", "5", "?"],
+    options: ["6", "5", "1", "10"],
+    correct: 0,
+    explanation: "The numbers increase by 1 each time!",
+  },
+  {
+    sequence: ["🐶", "🐱", "🐶", "🐱", "🐶", "?"],
+    options: ["🐶", "🐱", "🐭", "🐹"],
+    correct: 1,
+    explanation: "The pattern alternates between dog and cat!",
+  },
+  {
+    sequence: ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "?"],
+    options: ["⭐", "⭐⭐⭐⭐⭐", "⭐⭐", "⭐⭐⭐"],
+    correct: 1,
+    explanation: "Each step adds one more star!",
+  },
+]
+
+export default function PatternTrainingPage() {
+  const [currentPattern, setCurrentPattern] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [showExplanation, setShowExplanation] = useState(false)
+  const [score, setScore] = useState(0)
+  const [streak, setStreak] = useState(0)
+  const [gameComplete, setGameComplete] = useState(false)
+
+  const pattern = patterns[currentPattern]
+
+  const handleAnswerSelect = (answerIndex: number) => {
+    setSelectedAnswer(answerIndex)
+  }
+
+  const handleSubmitAnswer = () => {
+    if (selectedAnswer === null) return
+
+    if (selectedAnswer === pattern.correct) {
+      setScore(score + 1)
+      setStreak(streak + 1)
+    } else {
+      setStreak(0)
+    }
+    setShowExplanation(true)
+  }
+
+  const handleNextPattern = () => {
+    if (currentPattern < patterns.length - 1) {
+      setCurrentPattern(currentPattern + 1)
+      setSelectedAnswer(null)
+      setShowExplanation(false)
+    } else {
+      setGameComplete(true)
+    }
+  }
+
+  const resetGame = () => {
+    setCurrentPattern(0)
+    setSelectedAnswer(null)
+    setShowExplanation(false)
+    setScore(0)
+    setStreak(0)
+    setGameComplete(false)
+  }
+
+  if (gameComplete) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
+        <div className="max-w-2xl mx-auto">
+          <Card className="text-center">
+            <CardHeader>
+              <CardTitle className="text-3xl text-cyan-600">Pattern Master!</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-6xl">🎯</div>
+              <p className="text-xl">
+                You scored <span className="font-bold text-cyan-600">{score}</span> out of{" "}
+                <span className="font-bold">{patterns.length}</span>!
+              </p>
+              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+                <p className="text-cyan-800">
+                  <strong>Pattern Recognition:</strong> You're getting better at spotting patterns! This skill helps AI
+                  systems learn from data.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <Button onClick={resetGame} className="bg-cyan-600 hover:bg-cyan-700">
+                  Play Again
+                </Button>
+                <div>
+                  <Link href="/kids/activities">
+                    <Button variant="outline">Back to Activities</Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-6">
+          <Link href="/kids/activities" className="text-cyan-600 hover:underline">
+            ← Back to Activities
+          </Link>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-2xl text-cyan-600">🎯 Pattern Training</CardTitle>
+              <div className="text-sm text-gray-500">
+                Pattern {currentPattern + 1} of {patterns.length}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div className="text-sm">
+                Score: <span className="font-bold text-cyan-600">{score}</span>
+              </div>
+              <div className="text-sm">
+                Streak: <span className="font-bold text-orange-600">{streak} 🔥</span>
+              </div>
+            </div>
+
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-cyan-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentPattern + 1) / patterns.length) * 100}%` }}
+              />
+            </div>
+
+            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
+              <div className="flex justify-center items-center gap-3 flex-wrap text-4xl">
+                {pattern.sequence.map((item, index) => (
+                  <div
+                    key={index}
+                    className={`${item === "?" ? "text-gray-400 font-bold" : ""} min-w-[50px] text-center`}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-3 text-center">Choose the correct answer:</h4>
+              <div className="grid grid-cols-2 gap-4">
+                {pattern.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    disabled={showExplanation}
+                    className={`p-6 text-4xl rounded-lg border-2 transition-all ${
+                      selectedAnswer === index
+                        ? showExplanation
+                          ? index === pattern.correct
+                            ? "border-green-500 bg-green-50"
+                            : "border-red-500 bg-red-50"
+                          : "border-cyan-500 bg-cyan-50"
+                        : showExplanation && index === pattern.correct
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-300 hover:border-cyan-300"
+                    } ${showExplanation ? "cursor-not-allowed" : "cursor-pointer"}`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {showExplanation && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-blue-800">
+                  <strong>Explanation:</strong> {pattern.explanation}
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              {!showExplanation ? (
+                <Button
+                  onClick={handleSubmitAnswer}
+                  disabled={selectedAnswer === null}
+                  className="bg-cyan-600 hover:bg-cyan-700"
+                >
+                  Submit Answer
+                </Button>
+              ) : (
+                <Button onClick={handleNextPattern} className="bg-cyan-600 hover:bg-cyan-700">
+                  {currentPattern < patterns.length - 1 ? "Next Pattern" : "Finish Game"}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
