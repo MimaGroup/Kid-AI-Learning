@@ -26,3 +26,8 @@ generated_lessons/
 
 # Logs
 *.log
+
+# Dependencies and build artifacts
+node_modules/
+.next/
+next-env.d.ts
