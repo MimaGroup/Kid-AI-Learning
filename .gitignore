@@ -30,3 +30,4 @@ generated_lessons/
 # Build artifacts
 .next/
 node_modules/
+next-env.d.ts
