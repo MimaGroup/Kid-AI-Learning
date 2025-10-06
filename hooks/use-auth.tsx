@@ -1,8 +1,10 @@
-'use client'
+"use client"
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { createClient } from '../lib/supabase/client'
-import type { User } from '@supabase/supabase-js'
+import type React from "react"
+
+import { createContext, useContext, useEffect, useState } from "react"
+import { createClient } from "../lib/supabase/client"
+import type { User } from "@supabase/supabase-js"
 
 interface AuthContextType {
   user: User | null
@@ -24,44 +26,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
       setLoading(false)
     }
 
     getSession()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
-    )
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth])
+  }, [supabase])
 
   const login = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error("Supabase client not initialized")
+    }
+
     setError(null)
     setLoading(true)
-    
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
-    
+
     if (error) {
       setError(error.message)
       throw error
     }
-    
+
     setLoading(false)
   }
 
   const register = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error("Supabase client not initialized")
+    }
+
     setError(null)
     setLoading(true)
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -69,16 +81,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
       },
     })
-    
+
     if (error) {
       setError(error.message)
       throw error
     }
-    
+
     setLoading(false)
   }
 
   const logout = async () => {
+    if (!supabase) {
+      throw new Error("Supabase client not initialized")
+    }
+
     setError(null)
     const { error } = await supabase.auth.signOut()
     if (error) {
@@ -107,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error("useAuth must be used within an AuthProvider")
   }
   return context
 }

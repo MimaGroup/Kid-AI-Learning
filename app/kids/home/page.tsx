@@ -1,39 +1,53 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import Link from 'next/link'
+import type React from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function KidsHome() {
+  const router = useRouter()
+
   const activities = [
     {
-      id: 'detective',
-      title: 'AI Detective Game',
-      description: 'Discover which items use AI technology!',
-      icon: '🕵️',
-      color: 'from-blue-400 to-blue-600'
+      id: "detective",
+      title: "AI Detective Game",
+      description: "Discover which items use AI technology!",
+      icon: "🕵️",
+      color: "from-blue-400 to-blue-600",
+      href: "/kids/games/ai-detective",
     },
     {
-      id: 'friend-creator',
-      title: 'AI Friend Creator',
-      description: 'Design your own AI companion!',
-      icon: '🤖',
-      color: 'from-purple-400 to-purple-600'
+      id: "friend-creator",
+      title: "AI Friend Creator",
+      description: "Design your own AI companion!",
+      icon: "🤖",
+      color: "from-purple-400 to-purple-600",
+      href: "/kids/ai-friend",
     },
     {
-      id: 'pattern-training',
-      title: 'Pattern Training',
-      description: 'Train AI to recognize patterns!',
-      icon: '🧠',
-      color: 'from-green-400 to-green-600'
+      id: "pattern-training",
+      title: "Pattern Training",
+      description: "Train AI to recognize patterns!",
+      icon: "🧠",
+      color: "from-green-400 to-green-600",
+      href: "/kids/games/pattern-training",
     },
     {
-      id: 'ai-quiz',
-      title: 'AI Quiz',
-      description: 'Test your AI knowledge!',
-      icon: '🎯',
-      color: 'from-orange-400 to-orange-600'
-    }
+      id: "ai-quiz",
+      title: "AI Quiz",
+      description: "Test your AI knowledge!",
+      icon: "🎯",
+      color: "from-orange-400 to-orange-600",
+      href: "/kids/games/ai-quiz",
+    },
   ]
+
+  const handleInterfaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    if (value === "parent") {
+      router.push("/parent/dashboard")
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
@@ -60,7 +74,11 @@ export default function KidsHome() {
           </div>
 
           <div className="space-y-4">
-            <select className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20">
+            <select
+              className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20"
+              onChange={handleInterfaceChange}
+              defaultValue="kids"
+            >
               <option value="kids">🎮 Kids Learning App</option>
               <option value="parent">👨‍👩‍👧‍👦 Parent Dashboard</option>
             </select>
@@ -72,7 +90,7 @@ export default function KidsHome() {
             <div className="flex items-center space-x-3">
               <div className="text-3xl">🎮</div>
               <div>
-                <h2 className="text-2xl font-bold">AI Learning Games Coming Soon!</h2>
+                <h2 className="text-2xl font-bold">AI Learning Games</h2>
                 <p className="text-pink-100">Interactive AI games and activities for kids!</p>
               </div>
             </div>
@@ -82,7 +100,7 @@ export default function KidsHome() {
             {activities.map((activity) => (
               <Link
                 key={activity.id}
-                href={`/kids/activity/${activity.id}`}
+                href={activity.href}
                 className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block`}
               >
                 <div className="flex items-center space-x-4">
