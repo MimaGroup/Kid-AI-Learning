@@ -12,37 +12,11 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
 
 interface Case {
-  id: number
   title: string
   description: string
   clues: string[]
   solution: string
 }
-
-const cases: Case[] = [
-  {
-    id: 1,
-    title: "The Missing Robot",
-    description: "A classroom robot has gone missing! Can you find out what happened?",
-    clues: [
-      "The robot was last seen near the art room",
-      "There are paint footprints leading to the storage closet",
-      "The art teacher mentioned needing help with a project",
-    ],
-    solution: "The art teacher borrowed the robot to help demonstrate movement for an art project!",
-  },
-  {
-    id: 2,
-    title: "The Mysterious Code",
-    description: "Someone left a mysterious coded message on the whiteboard. What does it mean?",
-    clues: [
-      "The message uses numbers instead of letters",
-      "A=1, B=2, C=3 pattern is written in the corner",
-      "The decoded message says 'MEET AT LIBRARY'",
-    ],
-    solution: "It was a simple substitution cipher where each number represents a letter's position in the alphabet!",
-  },
-]
 
 export default function AIDetectivePage() {
   const { user, loading } = useAuth()
@@ -50,7 +24,8 @@ export default function AIDetectivePage() {
   const { submitProgress } = useProgress()
   const toast = useToast()
 
-  const [currentCase, setCurrentCase] = useState(0)
+  const [caseData, setCaseData] = useState<Case | null>(null)
+  const [loadingCase, setLoadingCase] = useState(true)
   const [revealedClues, setRevealedClues] = useState<number[]>([])
   const [showSolution, setShowSolution] = useState(false)
   const [theory, setTheory] = useState("")
@@ -63,7 +38,48 @@ export default function AIDetectivePage() {
     }
   }, [user, loading, router])
 
-  const caseData = cases[currentCase]
+  useEffect(() => {
+    const generateMystery = async () => {
+      try {
+        setLoadingCase(true)
+        const response = await fetch("/api/generate/mystery", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            theme: "school",
+            difficulty: "easy",
+          }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok && data.mystery) {
+          setCaseData(data.mystery)
+        } else {
+          console.error("Failed to generate mystery:", data.error)
+          // Fallback to sample case if AI generation fails
+          setCaseData({
+            title: "The Missing Robot",
+            description: "A classroom robot has gone missing! Can you find out what happened?",
+            clues: [
+              "The robot was last seen near the art room",
+              "There are paint footprints leading to the storage closet",
+              "The art teacher mentioned needing help with a project",
+            ],
+            solution: "The art teacher borrowed the robot to help demonstrate movement for an art project!",
+          })
+        }
+      } catch (error) {
+        console.error("Error generating mystery:", error)
+      } finally {
+        setLoadingCase(false)
+      }
+    }
+
+    if (user) {
+      generateMystery()
+    }
+  }, [user])
 
   const revealClue = (index: number) => {
     if (!revealedClues.includes(index)) {
@@ -93,14 +109,33 @@ export default function AIDetectivePage() {
     }
   }
 
-  const nextCase = () => {
-    if (currentCase < cases.length - 1) {
-      setCurrentCase(currentCase + 1)
-      setRevealedClues([])
-      setShowSolution(false)
-      setTheory("")
-      setNewAchievements([])
-      toast.success("Next case loaded!")
+  const newCase = async () => {
+    setRevealedClues([])
+    setShowSolution(false)
+    setTheory("")
+    setNewAchievements([])
+
+    setLoadingCase(true)
+    try {
+      const response = await fetch("/api/generate/mystery", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          theme: "school",
+          difficulty: "easy",
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.mystery) {
+        setCaseData(data.mystery)
+        toast.success("New case loaded!")
+      }
+    } catch (error) {
+      console.error("Error generating mystery:", error)
+      toast.error("Failed to generate new case")
+    } finally {
+      setLoadingCase(false)
     }
   }
 
@@ -111,12 +146,12 @@ export default function AIDetectivePage() {
     setNewAchievements([])
   }
 
-  if (loading) {
+  if (loading || loadingCase || !caseData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4">🔍</div>
-          <p className="text-gray-600">Loading detective case...</p>
+          <p className="text-gray-600">Generating detective case...</p>
         </div>
       </div>
     )
@@ -138,9 +173,9 @@ export default function AIDetectivePage() {
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="text-2xl text-indigo-600">🔍 AI Detective</CardTitle>
-              <div className="text-sm text-gray-500">
-                Case {currentCase + 1} of {cases.length}
-              </div>
+              <Button onClick={newCase} variant="outline" size="sm">
+                New Case
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -198,18 +233,15 @@ export default function AIDetectivePage() {
                 <h4 className="font-semibold text-green-900 mb-2">Solution:</h4>
                 <p className="text-green-800">{caseData.solution}</p>
                 <div className="mt-4 space-x-3">
-                  {currentCase < cases.length - 1 ? (
-                    <Button onClick={nextCase} className="bg-green-600 hover:bg-green-700">
-                      Next Case
-                    </Button>
-                  ) : (
-                    <Link href="/kids/activities">
-                      <Button className="bg-green-600 hover:bg-green-700">Back to Activities</Button>
-                    </Link>
-                  )}
+                  <Button onClick={newCase} className="bg-green-600 hover:bg-green-700">
+                    New Mystery
+                  </Button>
                   <Button onClick={resetCase} variant="outline">
                     Try Again
                   </Button>
+                  <Link href="/kids/activities">
+                    <Button variant="outline">Back to Activities</Button>
+                  </Link>
                 </div>
               </div>
             )}

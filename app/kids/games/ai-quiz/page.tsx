@@ -10,43 +10,19 @@ import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
 
 interface Question {
-  id: number
   question: string
   options: string[]
   correct: number
   explanation: string
 }
 
-const sampleQuestions: Question[] = [
-  {
-    id: 1,
-    question: "What does AI stand for?",
-    options: ["Artificial Intelligence", "Automatic Information", "Advanced Internet", "Amazing Ideas"],
-    correct: 0,
-    explanation:
-      "AI stands for Artificial Intelligence - computer systems that can perform tasks that typically require human intelligence!",
-  },
-  {
-    id: 2,
-    question: "Which of these is an example of AI that you might use every day?",
-    options: ["A calculator", "Voice assistants like Siri or Alexa", "A bicycle", "A pencil"],
-    correct: 1,
-    explanation: "Voice assistants use AI to understand speech and provide helpful responses!",
-  },
-  {
-    id: 3,
-    question: "What can AI help us do?",
-    options: ["Only play games", "Solve problems and learn patterns", "Nothing useful", "Replace all humans"],
-    correct: 1,
-    explanation: "AI is great at finding patterns in data and helping solve complex problems!",
-  },
-]
-
 export default function AIQuizPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const { submitProgress, isSubmitting } = useProgress()
+  const { submitProgress } = useProgress()
 
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [loadingQuestions, setLoadingQuestions] = useState(true)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
@@ -61,6 +37,49 @@ export default function AIQuizPage() {
     }
   }, [user, loading, router])
 
+  useEffect(() => {
+    const generateQuestions = async () => {
+      try {
+        setLoadingQuestions(true)
+        const response = await fetch("/api/generate/quiz", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            topic: "artificial intelligence and technology",
+            difficulty: "beginner",
+            count: 5,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok && data.questions) {
+          setQuestions(data.questions)
+        } else {
+          console.error("Failed to generate questions:", data.error)
+          // Fallback to sample questions if AI generation fails
+          setQuestions([
+            {
+              question: "What does AI stand for?",
+              options: ["Artificial Intelligence", "Automatic Information", "Advanced Internet", "Amazing Ideas"],
+              correct: 0,
+              explanation:
+                "AI stands for Artificial Intelligence - computer systems that can perform tasks that typically require human intelligence!",
+            },
+          ])
+        }
+      } catch (error) {
+        console.error("Error generating questions:", error)
+      } finally {
+        setLoadingQuestions(false)
+      }
+    }
+
+    if (user) {
+      generateQuestions()
+    }
+  }, [user])
+
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
   }
@@ -68,14 +87,14 @@ export default function AIQuizPage() {
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return
 
-    if (selectedAnswer === sampleQuestions[currentQuestion].correct) {
+    if (selectedAnswer === questions[currentQuestion].correct) {
       setScore(score + 1)
     }
     setShowExplanation(true)
   }
 
   const handleNextQuestion = async () => {
-    if (currentQuestion < sampleQuestions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedAnswer(null)
       setShowExplanation(false)
@@ -83,19 +102,65 @@ export default function AIQuizPage() {
       setQuizComplete(true)
       if (user) {
         const timeSpent = Math.floor((Date.now() - startTime) / 1000)
-        const achievements = await submitProgress("ai_quiz", score, sampleQuestions.length, timeSpent)
+        const achievements = await submitProgress("ai_quiz", score, questions.length, timeSpent)
         setNewAchievements(achievements)
       }
     }
   }
 
-  const resetQuiz = () => {
+  const resetQuiz = async () => {
     setCurrentQuestion(0)
     setSelectedAnswer(null)
     setShowExplanation(false)
     setScore(0)
     setQuizComplete(false)
     setNewAchievements([])
+
+    setLoadingQuestions(true)
+    try {
+      const response = await fetch("/api/generate/quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: "artificial intelligence and technology",
+          difficulty: "beginner",
+          count: 5,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.questions) {
+        setQuestions(data.questions)
+      }
+    } catch (error) {
+      console.error("Error generating questions:", error)
+    } finally {
+      setLoadingQuestions(false)
+    }
+  }
+
+  if (loading || loadingQuestions) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🤖</div>
+          <p className="text-gray-600">Generating your personalized quiz...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardContent className="text-center py-8">
+            <p className="text-gray-600 mb-4">Failed to generate quiz questions</p>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (quizComplete) {
@@ -111,7 +176,7 @@ export default function AIQuizPage() {
               <div className="text-6xl">🏆</div>
               <p className="text-xl">
                 You scored <span className="font-bold text-purple-600">{score}</span> out of{" "}
-                <span className="font-bold">{sampleQuestions.length}</span>!
+                <span className="font-bold">{questions.length}</span>!
               </p>
               {newAchievements.length > 0 && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -125,7 +190,7 @@ export default function AIQuizPage() {
               )}
               <div className="space-y-4">
                 <Button onClick={resetQuiz} className="bg-purple-600 hover:bg-purple-700">
-                  Try Again
+                  Try New Quiz
                 </Button>
                 <div>
                   <Link href="/kids/activities">
@@ -140,7 +205,7 @@ export default function AIQuizPage() {
     )
   }
 
-  const question = sampleQuestions[currentQuestion]
+  const question = questions[currentQuestion]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
@@ -156,7 +221,7 @@ export default function AIQuizPage() {
             <div className="flex justify-between items-center">
               <CardTitle className="text-2xl text-purple-600">AI Quiz</CardTitle>
               <div className="text-sm text-gray-500">
-                Question {currentQuestion + 1} of {sampleQuestions.length}
+                Question {currentQuestion + 1} of {questions.length}
               </div>
             </div>
           </CardHeader>
@@ -164,7 +229,7 @@ export default function AIQuizPage() {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${((currentQuestion + 1) / sampleQuestions.length) * 100}%` }}
+                style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
               />
             </div>
 
@@ -212,7 +277,7 @@ export default function AIQuizPage() {
                 </Button>
               ) : (
                 <Button onClick={handleNextQuestion} className="bg-purple-600 hover:bg-purple-700">
-                  {currentQuestion < sampleQuestions.length - 1 ? "Next Question" : "Finish Quiz"}
+                  {currentQuestion < questions.length - 1 ? "Next Question" : "Finish Quiz"}
                 </Button>
               )}
             </div>
