@@ -1,9 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "../../../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
+import { useProgress } from "@/hooks/use-progress"
+import { AchievementPopup } from "@/components/achievement-popup"
 
 interface Pattern {
   sequence: string[]
@@ -40,14 +44,24 @@ const patterns: Pattern[] = [
 ]
 
 export default function PatternTrainingPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const { submitProgress } = useProgress()
+
   const [currentPattern, setCurrentPattern] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
+  const [newAchievements, setNewAchievements] = useState<any[]>([])
+  const [startTime] = useState(Date.now())
 
-  const pattern = patterns[currentPattern]
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login")
+    }
+  }, [user, loading, router])
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
@@ -56,7 +70,7 @@ export default function PatternTrainingPage() {
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return
 
-    if (selectedAnswer === pattern.correct) {
+    if (selectedAnswer === patterns[currentPattern].correct) {
       setScore(score + 1)
       setStreak(streak + 1)
     } else {
@@ -65,13 +79,18 @@ export default function PatternTrainingPage() {
     setShowExplanation(true)
   }
 
-  const handleNextPattern = () => {
+  const handleNextPattern = async () => {
     if (currentPattern < patterns.length - 1) {
       setCurrentPattern(currentPattern + 1)
       setSelectedAnswer(null)
       setShowExplanation(false)
     } else {
       setGameComplete(true)
+      if (user) {
+        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+        const achievements = await submitProgress("pattern_training", score, patterns.length, timeSpent, { streak })
+        setNewAchievements(achievements)
+      }
     }
   }
 
@@ -84,9 +103,12 @@ export default function PatternTrainingPage() {
     setGameComplete(false)
   }
 
+  const pattern = patterns[currentPattern]
+
   if (gameComplete) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
+        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
         <div className="max-w-2xl mx-auto">
           <Card className="text-center">
             <CardHeader>
@@ -98,6 +120,16 @@ export default function PatternTrainingPage() {
                 You scored <span className="font-bold text-cyan-600">{score}</span> out of{" "}
                 <span className="font-bold">{patterns.length}</span>!
               </p>
+              {newAchievements.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h4 className="font-bold text-yellow-900 mb-2">New Achievements!</h4>
+                  {newAchievements.map((achievement) => (
+                    <p key={achievement.id} className="text-yellow-800">
+                      🏆 {achievement.title}
+                    </p>
+                  ))}
+                </div>
+              )}
               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
                 <p className="text-cyan-800">
                   <strong>Pattern Recognition:</strong> You're getting better at spotting patterns! This skill helps AI

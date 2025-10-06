@@ -1,9 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "../../../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
+import { useProgress } from "@/hooks/use-progress"
+import { AchievementPopup } from "@/components/achievement-popup"
+import { useToast } from "@/hooks/use-toast"
+import { ToastContainer } from "@/components/toast-notification"
 
 interface Case {
   id: number
@@ -39,22 +45,51 @@ const cases: Case[] = [
 ]
 
 export default function AIDetectivePage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const { submitProgress } = useProgress()
+  const toast = useToast()
+
   const [currentCase, setCurrentCase] = useState(0)
   const [revealedClues, setRevealedClues] = useState<number[]>([])
   const [showSolution, setShowSolution] = useState(false)
   const [theory, setTheory] = useState("")
+  const [newAchievements, setNewAchievements] = useState<any[]>([])
+  const [startTime] = useState(Date.now())
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login")
+    }
+  }, [user, loading, router])
 
   const caseData = cases[currentCase]
 
   const revealClue = (index: number) => {
     if (!revealedClues.includes(index)) {
       setRevealedClues([...revealedClues, index])
+      toast.info("Clue revealed!")
     }
   }
 
-  const submitTheory = () => {
+  const submitTheory = async () => {
     if (theory.trim()) {
       setShowSolution(true)
+      if (user) {
+        try {
+          const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+          const achievements = await submitProgress("ai_detective", 1, 1, timeSpent, {
+            cluesUsed: revealedClues.length,
+            theoryLength: theory.length,
+          })
+          setNewAchievements(achievements)
+          if (achievements.length > 0) {
+            toast.success("New achievement unlocked!")
+          }
+        } catch (error) {
+          toast.error("Failed to save progress")
+        }
+      }
     }
   }
 
@@ -64,6 +99,8 @@ export default function AIDetectivePage() {
       setRevealedClues([])
       setShowSolution(false)
       setTheory("")
+      setNewAchievements([])
+      toast.success("Next case loaded!")
     }
   }
 
@@ -71,10 +108,25 @@ export default function AIDetectivePage() {
     setRevealedClues([])
     setShowSolution(false)
     setTheory("")
+    setNewAchievements([])
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔍</div>
+          <p className="text-gray-600">Loading detective case...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-4">
+      <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
+      <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
+
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
           <Link href="/kids/activities" className="text-indigo-600 hover:underline">

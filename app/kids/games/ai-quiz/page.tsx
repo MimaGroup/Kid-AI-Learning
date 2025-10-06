@@ -1,9 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "../../../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
+import { useProgress } from "@/hooks/use-progress"
+import { AchievementPopup } from "@/components/achievement-popup"
 
 interface Question {
   id: number
@@ -39,11 +43,23 @@ const sampleQuestions: Question[] = [
 ]
 
 export default function AIQuizPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const { submitProgress, isSubmitting } = useProgress()
+
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [score, setScore] = useState(0)
   const [quizComplete, setQuizComplete] = useState(false)
+  const [newAchievements, setNewAchievements] = useState<any[]>([])
+  const [startTime] = useState(Date.now())
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login")
+    }
+  }, [user, loading, router])
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
@@ -58,13 +74,18 @@ export default function AIQuizPage() {
     setShowExplanation(true)
   }
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentQuestion < sampleQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedAnswer(null)
       setShowExplanation(false)
     } else {
       setQuizComplete(true)
+      if (user) {
+        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+        const achievements = await submitProgress("ai_quiz", score, sampleQuestions.length, timeSpent)
+        setNewAchievements(achievements)
+      }
     }
   }
 
@@ -74,11 +95,13 @@ export default function AIQuizPage() {
     setShowExplanation(false)
     setScore(0)
     setQuizComplete(false)
+    setNewAchievements([])
   }
 
   if (quizComplete) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
+        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
         <div className="max-w-2xl mx-auto">
           <Card className="text-center">
             <CardHeader>
@@ -90,6 +113,16 @@ export default function AIQuizPage() {
                 You scored <span className="font-bold text-purple-600">{score}</span> out of{" "}
                 <span className="font-bold">{sampleQuestions.length}</span>!
               </p>
+              {newAchievements.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h4 className="font-bold text-yellow-900 mb-2">New Achievements!</h4>
+                  {newAchievements.map((achievement) => (
+                    <p key={achievement.id} className="text-yellow-800">
+                      🏆 {achievement.title}
+                    </p>
+                  ))}
+                </div>
+              )}
               <div className="space-y-4">
                 <Button onClick={resetQuiz} className="bg-purple-600 hover:bg-purple-700">
                   Try Again
