@@ -34,6 +34,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    console.log("[v0] Creating child profile - start")
     const supabase = await createClient()
 
     const {
@@ -41,18 +42,21 @@ export async function POST(request: Request) {
       error: authError,
     } = await supabase.auth.getUser()
 
+    console.log("[v0] Auth check:", { user: user?.id, error: authError?.message })
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const body = await request.json()
+    console.log("[v0] Request body:", body)
     const { name, age, avatar_color, learning_level, email, password } = body
 
     if (!name || !age || !email || !password) {
       return NextResponse.json({ error: "Name, age, email, and password are required" }, { status: 400 })
     }
 
-    // Create child auth account
+    console.log("[v0] Creating child auth account...")
     const { data: childAuth, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -64,12 +68,17 @@ export async function POST(request: Request) {
       },
     })
 
+    console.log("[v0] Child auth result:", {
+      userId: childAuth?.user?.id,
+      error: signUpError?.message,
+    })
+
     if (signUpError || !childAuth.user) {
-      console.error("Error creating child auth:", signUpError)
+      console.error("[v0] Error creating child auth:", signUpError)
       return NextResponse.json({ error: signUpError?.message || "Failed to create child account" }, { status: 500 })
     }
 
-    // Create child profile in children table
+    console.log("[v0] Creating child profile in database...")
     const { data: child, error: insertError } = await supabase
       .from("children")
       .insert({
@@ -83,14 +92,28 @@ export async function POST(request: Request) {
       .select()
       .single()
 
+    console.log("[v0] Child profile result:", {
+      child: child?.id,
+      error: insertError?.message,
+      details: insertError?.details,
+    })
+
     if (insertError) {
-      console.error("Error creating child profile:", insertError)
-      return NextResponse.json({ error: insertError.message }, { status: 500 })
+      console.error("[v0] Error creating child profile:", insertError)
+      return NextResponse.json(
+        {
+          error: insertError.message,
+          details: insertError.details,
+          hint: insertError.hint,
+        },
+        { status: 500 },
+      )
     }
 
+    console.log("[v0] Child profile created successfully:", child.id)
     return NextResponse.json({ child }, { status: 201 })
   } catch (error) {
-    console.error("Unexpected error:", error)
+    console.error("[v0] Unexpected error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

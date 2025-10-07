@@ -52,6 +52,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
 
     setLoading(true)
     try {
+      console.log("[v0] Submitting child profile...")
       await onAdd({
         name: formData.name,
         age: Number.parseInt(formData.age),
@@ -61,6 +62,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
         learning_level: formData.learning_level,
       })
 
+      console.log("[v0] Child profile created successfully")
       setFormData({
         name: "",
         age: "",
@@ -71,7 +73,8 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       })
       setOpen(false)
     } catch (error) {
-      console.error("Failed to add child:", error)
+      console.error("[v0] Failed to add child:", error)
+      alert(`Failed to create child profile: ${error instanceof Error ? error.message : "Unknown error"}`)
     } finally {
       setLoading(false)
     }
