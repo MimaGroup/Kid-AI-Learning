@@ -2,6 +2,7 @@ import { createServerClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
+  console.log("[v0] Progress API: Received POST request")
   const supabase = await createServerClient()
 
   const {
@@ -9,13 +10,19 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
+    console.log("[v0] Progress API: Unauthorized - no user")
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  console.log("[v0] Progress API: User authenticated:", user.id)
+
   const body = await request.json()
+  console.log("[v0] Progress API: Request body:", body)
+
   const { activity_type, score, total_questions, time_spent, metadata } = body
 
   if (!activity_type) {
+    console.log("[v0] Progress API: Missing activity_type")
     return NextResponse.json({ error: "Missing activity_type" }, { status: 400 })
   }
 
@@ -33,10 +40,14 @@ export async function POST(request: Request) {
     .single()
 
   if (error) {
+    console.error("[v0] Progress API: Error inserting progress:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  console.log("[v0] Progress API: Progress saved successfully:", progress)
+
   const achievements = await checkAchievements(supabase, user.id, activity_type, score, total_questions)
+  console.log("[v0] Progress API: Achievements earned:", achievements)
 
   return NextResponse.json({ progress, achievements })
 }
@@ -89,8 +100,8 @@ async function checkAchievements(
       .select("*")
       .eq("user_id", userId)
       .eq("achievement_type", "perfect_score")
-      .eq("activity_type", activityType)
-      .single()
+      .eq("metadata->>activity_type", activityType)
+      .maybeSingle()
 
     if (!existing) {
       const { data: achievement } = await supabase
@@ -98,9 +109,11 @@ async function checkAchievements(
         .insert({
           user_id: userId,
           achievement_type: "perfect_score",
-          activity_type: activityType,
-          title: "Perfect Score!",
-          description: `Got a perfect score in ${activityType}`,
+          achievement_name: "Perfect Score!",
+          metadata: {
+            activity_type: activityType,
+            description: `Got a perfect score in ${activityType}`,
+          },
         })
         .select()
         .single()
@@ -117,8 +130,8 @@ async function checkAchievements(
         .select("*")
         .eq("user_id", userId)
         .eq("achievement_type", `completed_${milestone}`)
-        .eq("activity_type", activityType)
-        .single()
+        .eq("metadata->>activity_type", activityType)
+        .maybeSingle()
 
       if (!existing) {
         const { data: achievement } = await supabase
@@ -126,9 +139,11 @@ async function checkAchievements(
           .insert({
             user_id: userId,
             achievement_type: `completed_${milestone}`,
-            activity_type: activityType,
-            title: `${milestone} Completions!`,
-            description: `Completed ${activityType} ${milestone} times`,
+            achievement_name: `${milestone} Completions!`,
+            metadata: {
+              activity_type: activityType,
+              description: `Completed ${activityType} ${milestone} times`,
+            },
           })
           .select()
           .single()
