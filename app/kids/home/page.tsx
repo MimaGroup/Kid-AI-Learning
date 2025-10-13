@@ -3,6 +3,10 @@
 import type React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { RecommendedActivities } from "@/components/recommended-activities"
+import { GamificationDisplay } from "@/components/gamification-display"
+import { DailyChallenges } from "@/components/daily-challenges"
+import { Button } from "@/components/ui/button"
 
 export default function KidsHome() {
   const router = useRouter()
@@ -39,6 +43,38 @@ export default function KidsHome() {
       icon: "🎯",
       color: "from-orange-400 to-orange-600",
       href: "/kids/games/ai-quiz",
+    },
+    {
+      id: "math-adventure",
+      title: "Math Adventure",
+      description: "Solve math problems and level up!",
+      icon: "🧮",
+      color: "from-red-400 to-red-600",
+      href: "/kids/games/math-adventure",
+    },
+    {
+      id: "word-builder",
+      title: "Word Builder",
+      description: "Build your vocabulary!",
+      icon: "📝",
+      color: "from-yellow-400 to-yellow-600",
+      href: "/kids/games/word-builder",
+    },
+    {
+      id: "memory-match",
+      title: "Memory Match",
+      description: "Test your memory skills!",
+      icon: "🧠",
+      color: "from-teal-400 to-teal-600",
+      href: "/kids/games/memory-match",
+    },
+    {
+      id: "library",
+      title: "Learning Library",
+      description: "Videos, stories, and resources!",
+      icon: "📚",
+      color: "from-indigo-400 to-indigo-600",
+      href: "/kids/library",
     },
   ]
 
@@ -96,6 +132,22 @@ export default function KidsHome() {
             </div>
           </div>
 
+          <div className="mb-8">
+            <GamificationDisplay />
+          </div>
+
+          <div className="mb-8">
+            <DailyChallenges />
+          </div>
+
+          <div className="mb-8">
+            <RecommendedActivities />
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">All Activities</h3>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {activities.map((activity) => (
               <Link
@@ -115,7 +167,14 @@ export default function KidsHome() {
           </div>
 
           <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Your Learning Progress</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
+              <Link href="/kids/badges">
+                <Button variant="outline" size="sm">
+                  View All Badges
+                </Button>
+              </Link>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl mb-2">🏆</div>

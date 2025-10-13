@@ -5,7 +5,6 @@ import { Button } from "../../../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
-import { useRouter } from "next/navigation"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
 
@@ -18,7 +17,6 @@ interface Question {
 
 export default function AIQuizPage() {
   const { user, loading } = useAuth()
-  const router = useRouter()
   const { submitProgress } = useProgress()
 
   const [questions, setQuestions] = useState<Question[]>([])
@@ -30,17 +28,13 @@ export default function AIQuizPage() {
   const [quizComplete, setQuizComplete] = useState(false)
   const [newAchievements, setNewAchievements] = useState<any[]>([])
   const [startTime] = useState(Date.now())
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/auth/login")
-    }
-  }, [user, loading, router])
+  const [rateLimitMessage, setRateLimitMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const generateQuestions = async () => {
       try {
         setLoadingQuestions(true)
+        setRateLimitMessage(null)
         const response = await fetch("/api/generate/quiz", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -55,30 +49,23 @@ export default function AIQuizPage() {
 
         if (response.ok && data.questions) {
           setQuestions(data.questions)
+          if (data.fallback && data.message) {
+            setRateLimitMessage(data.message)
+          }
         } else {
-          console.error("Failed to generate questions:", data.error)
-          // Fallback to sample questions if AI generation fails
-          setQuestions([
-            {
-              question: "What does AI stand for?",
-              options: ["Artificial Intelligence", "Automatic Information", "Advanced Internet", "Amazing Ideas"],
-              correct: 0,
-              explanation:
-                "AI stands for Artificial Intelligence - computer systems that can perform tasks that typically require human intelligence!",
-            },
-          ])
+          console.error("[v0] Failed to generate questions:", data.error)
+          throw new Error(data.error || "Failed to generate questions")
         }
       } catch (error) {
-        console.error("Error generating questions:", error)
+        console.error("[v0] Error generating questions:", error)
+        alert("Failed to generate questions. Please try again in a moment.")
       } finally {
         setLoadingQuestions(false)
       }
     }
 
-    if (user) {
-      generateQuestions()
-    }
-  }, [user])
+    generateQuestions()
+  }, [])
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
@@ -115,6 +102,7 @@ export default function AIQuizPage() {
     setScore(0)
     setQuizComplete(false)
     setNewAchievements([])
+    setRateLimitMessage(null)
 
     setLoadingQuestions(true)
     try {
@@ -131,9 +119,13 @@ export default function AIQuizPage() {
       const data = await response.json()
       if (response.ok && data.questions) {
         setQuestions(data.questions)
+        if (data.fallback && data.message) {
+          setRateLimitMessage(data.message)
+        }
       }
     } catch (error) {
-      console.error("Error generating questions:", error)
+      console.error("[v0] Error generating questions:", error)
+      alert("Failed to generate new questions. Please try again in a moment.")
     } finally {
       setLoadingQuestions(false)
     }
@@ -215,6 +207,12 @@ export default function AIQuizPage() {
             ← Back to Activities
           </Link>
         </div>
+
+        {rateLimitMessage && (
+          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-blue-800 text-sm">{rateLimitMessage}</p>
+          </div>
+        )}
 
         <Card>
           <CardHeader>

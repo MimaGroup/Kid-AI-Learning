@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
+import { Button } from "@/components/ui/button"
+import { MessageCircle } from "lucide-react"
 
 interface AIFriend {
   id: string
@@ -15,7 +16,6 @@ interface AIFriend {
 }
 
 export default function AIFriendBuilder() {
-  const { user, loading } = useAuth()
   const router = useRouter()
   const toast = useToast()
 
@@ -28,30 +28,17 @@ export default function AIFriendBuilder() {
   const [isLoadingFriends, setIsLoadingFriends] = useState(true)
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/auth/login")
-    }
-  }, [user, loading, router])
+    loadFriendsFromLocalStorage()
+  }, [])
 
-  useEffect(() => {
-    if (user) {
-      loadFriends()
-    }
-  }, [user])
-
-  const loadFriends = async () => {
+  const loadFriendsFromLocalStorage = () => {
     try {
-      setIsLoadingFriends(true)
-      const response = await fetch("/api/ai-friends")
-      const data = await response.json()
-
-      if (response.ok) {
-        setSavedFriends(data.friends || [])
-      } else {
-        toast.error(data.error || "Failed to load friends")
+      const stored = localStorage.getItem("ai_friends")
+      if (stored) {
+        setSavedFriends(JSON.parse(stored))
       }
     } catch (err) {
-      toast.error("Failed to load friends. Please check your connection.")
+      console.error("Error loading friends from localStorage:", err)
     } finally {
       setIsLoadingFriends(false)
     }
@@ -63,34 +50,30 @@ export default function AIFriendBuilder() {
       return
     }
 
+    setIsSaving(true)
+
     try {
-      setIsSaving(true)
-
-      const response = await fetch("/api/ai-friends", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: friendName,
-          personality,
-          color,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success(`${friendName} has been created!`)
-        setSavedFriends([data.friend, ...savedFriends])
-
-        // Reset form
-        setFriendName("")
-        setPersonality("Friendly")
-        setColor("#4F46E5")
-      } else {
-        toast.error(data.error || "Failed to save friend")
+      const newFriend: AIFriend = {
+        id: crypto.randomUUID(),
+        name: friendName,
+        personality,
+        color,
+        created_at: new Date().toISOString(),
       }
+
+      const updatedFriends = [newFriend, ...savedFriends]
+      setSavedFriends(updatedFriends)
+      localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
+
+      toast.success(`${friendName} has been created!`)
+
+      // Reset form
+      setFriendName("")
+      setPersonality("Friendly")
+      setColor("#4F46E5")
     } catch (err) {
-      toast.error("Failed to save friend. Please try again.")
+      console.error("Error saving friend:", err)
+      toast.error("Failed to create friend. Please try again.")
     } finally {
       setIsSaving(false)
     }
@@ -102,23 +85,24 @@ export default function AIFriendBuilder() {
     }
 
     try {
-      const response = await fetch(`/api/ai-friends/${id}`, {
-        method: "DELETE",
-      })
+      const updatedFriends = savedFriends.filter((f) => f.id !== id)
+      setSavedFriends(updatedFriends)
+      localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
 
-      if (response.ok) {
-        setSavedFriends(savedFriends.filter((f) => f.id !== id))
-        toast.success("Friend deleted successfully")
-      } else {
-        const data = await response.json()
-        toast.error(data.error || "Failed to delete friend")
-      }
+      localStorage.removeItem(`chat_${id}`)
+
+      toast.success("Friend deleted")
     } catch (err) {
+      console.error("Error deleting friend:", err)
       toast.error("Failed to delete friend. Please try again.")
     }
   }
 
-  if (loading || isLoadingFriends) {
+  const handleChatWithFriend = (friendId: string) => {
+    router.push(`/kids/ai-friend/chat/${friendId}`)
+  }
+
+  if (isLoadingFriends) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -141,23 +125,26 @@ export default function AIFriendBuilder() {
       </header>
 
       <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-blue-100 p-4 rounded-lg mb-6 flex items-start space-x-4">
-          <div className="text-4xl">🤖</div>
-          <div>
-            <p className="text-gray-800">
-              Welcome to the AI Playground! This is where you can have fun, create, and explore interactive AI
-              experiences. Choose an activity below to get started!
-            </p>
+        <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
+          <div className="flex items-start space-x-3">
+            <div className="text-2xl">ℹ️</div>
+            <div>
+              <p className="text-gray-800 font-medium">Your friends are saved in your browser</p>
+              <p className="text-gray-600 text-sm mt-1">
+                Create and manage your AI friends! They're stored locally on your device.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="flex space-x-1 mb-6 bg-white rounded-lg p-1">
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🗺️ Adventure Map</button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🏆 Achievements</button>
-          <button className="px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-md">
-            🤖 AI Friend Builder
-          </button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🧪 Experiment Lab</button>
+        <div className="bg-blue-100 p-4 rounded-lg mb-6 flex items-start space-x-4">
+          <div className="text-4xl">🤖</div>
+          <div>
+            <p className="text-gray-600">
+              Welcome to the AI Playground! Create your own AI friends and chat with them. Each friend has their own
+              unique personality!
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -257,7 +244,11 @@ export default function AIFriendBuilder() {
                     </button>
                   </div>
                   <h4 className="text-lg font-bold text-gray-900 mb-1">{friend.name}</h4>
-                  <p className="text-sm text-gray-600">Personality: {friend.personality}</p>
+                  <p className="text-sm text-gray-600 mb-3">Personality: {friend.personality}</p>
+                  <Button onClick={() => handleChatWithFriend(friend.id)} className="w-full" variant="default">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Chat with {friend.name}
+                  </Button>
                 </div>
               ))}
             </div>

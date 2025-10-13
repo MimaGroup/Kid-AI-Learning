@@ -1,31 +1,59 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
 import { generateText } from "ai"
+import { groq } from "@ai-sdk/groq"
+
+const FALLBACK_MYSTERIES = [
+  {
+    title: "The Case of the Missing Lunch",
+    description:
+      "Someone's lunch has disappeared from the cafeteria! The sandwich was there at noon, but by 12:30 it was gone. Can you figure out what happened?",
+    clues: [
+      "There are crumbs leading from the lunch table to the playground door",
+      "A student saw a squirrel near the open window around 12:15",
+      "The lunch bag was found outside, empty but not torn",
+    ],
+    solution:
+      "A clever squirrel came through the open window and took the sandwich! The crumbs show its path, and it carefully removed the sandwich without damaging the bag.",
+  },
+  {
+    title: "The Mystery of the Switched Backpacks",
+    description:
+      "Two students accidentally took each other's identical backpacks home. How can we figure out whose backpack is whose?",
+    clues: [
+      "One backpack has a math book with 'Room 204' written inside",
+      "The other backpack contains a permission slip signed by 'Mrs. Johnson'",
+      "The school directory shows Mrs. Johnson teaches in Room 204",
+    ],
+    solution:
+      "Both backpacks belong to students in Room 204! By checking the class roster and matching the names on the permission slip and math book, we can return each backpack to its owner.",
+  },
+  {
+    title: "The Puzzle of the Rearranged Library",
+    description:
+      "The school librarian arrived to find all the books mysteriously rearranged overnight. Who could have done this and why?",
+    clues: [
+      "The books are now organized by color instead of by subject",
+      "A thank-you note was left on the desk signed 'The Art Club'",
+      "The art teacher mentioned wanting to photograph colorful book displays",
+    ],
+    solution:
+      "The Art Club rearranged the books by color to create a beautiful rainbow display for their photography project! They left a note to explain and planned to help put everything back.",
+  },
+]
 
 export async function POST(request: Request) {
   try {
-    console.log("[v0] Generating mystery - start")
-    const supabase = await createClient()
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser()
-
-    console.log("[v0] Auth check:", { user: user?.id, error: authError?.message })
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const body = await request.json()
-    console.log("[v0] Mystery generation params:", body)
     const { theme = "school", difficulty = "easy" } = body
 
-    console.log("[v0] Calling Groq API...")
-    const { text } = await generateText({
-      model: "groq/llama-3.3-70b-versatile",
-      prompt: `Create a fun detective mystery case for kids aged 8-12 with a ${theme} theme at ${difficulty} difficulty.
+    let retryCount = 0
+    const maxRetries = 2
+
+    while (retryCount < maxRetries) {
+      try {
+        const { text } = await generateText({
+          model: groq("llama-3.1-8b-instant"),
+          prompt: `Create a fun detective mystery case for kids aged 8-12 with a ${theme} theme at ${difficulty} difficulty.
 
 Format the response as JSON with this exact structure:
 {
@@ -48,29 +76,34 @@ Requirements:
 - No violence or scary content
 
 Return ONLY the JSON object, no additional text.`,
-    })
+          maxRetries: 0, // Handle retries manually
+        })
 
-    console.log("[v0] Groq API response received, length:", text.length)
+        const cleanedText = text
+          .trim()
+          .replace(/```json\n?/g, "")
+          .replace(/```\n?/g, "")
 
-    const cleanedText = text
-      .trim()
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?/g, "")
+        const mystery = JSON.parse(cleanedText)
+        return NextResponse.json({ mystery })
+      } catch (aiError: any) {
+        if (aiError?.message?.includes("rate_limit_exceeded") && retryCount < maxRetries - 1) {
+          console.log(`[v0] Rate limited, waiting before retry ${retryCount + 1}/${maxRetries}`)
+          await new Promise((resolve) => setTimeout(resolve, 2000)) // Wait 2 seconds
+          retryCount++
+          continue
+        }
 
-    console.log("[v0] Cleaned text:", cleanedText.substring(0, 200))
+        console.log("[v0] AI generation failed, using fallback mystery:", aiError?.message)
+        break
+      }
+    }
 
-    const mystery = JSON.parse(cleanedText)
-    console.log("[v0] Parsed mystery title:", mystery.title)
-
-    return NextResponse.json({ mystery })
+    const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+    return NextResponse.json({ mystery: randomMystery })
   } catch (error) {
-    console.error("[v0] Error generating mystery:", error)
-    return NextResponse.json(
-      {
-        error: "Failed to generate mystery case",
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 },
-    )
+    console.error("[v0] Error in mystery generation:", error)
+    const randomMystery = FALLBACK_MYSTERIES[0]
+    return NextResponse.json({ mystery: randomMystery }, { status: 200 })
   }
 }

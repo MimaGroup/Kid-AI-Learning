@@ -50,32 +50,10 @@ export async function POST(request: Request) {
 
     const body = await request.json()
     console.log("[v0] Request body:", body)
-    const { name, age, avatar_color, learning_level, email, password } = body
+    const { name, age, avatar_color, learning_level } = body
 
-    if (!name || !age || !email || !password) {
-      return NextResponse.json({ error: "Name, age, email, and password are required" }, { status: 400 })
-    }
-
-    console.log("[v0] Creating child auth account...")
-    const { data: childAuth, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: "child",
-          parent_id: user.id,
-        },
-      },
-    })
-
-    console.log("[v0] Child auth result:", {
-      userId: childAuth?.user?.id,
-      error: signUpError?.message,
-    })
-
-    if (signUpError || !childAuth.user) {
-      console.error("[v0] Error creating child auth:", signUpError)
-      return NextResponse.json({ error: signUpError?.message || "Failed to create child account" }, { status: 500 })
+    if (!name || !age) {
+      return NextResponse.json({ error: "Name and age are required" }, { status: 400 })
     }
 
     console.log("[v0] Creating child profile in database...")
@@ -83,9 +61,8 @@ export async function POST(request: Request) {
       .from("children")
       .insert({
         parent_id: user.id,
-        child_id: childAuth.user.id,
         name,
-        age,
+        age: Number.parseInt(age),
         avatar_color: avatar_color || "#4F46E5",
         learning_level: learning_level || "beginner",
       })

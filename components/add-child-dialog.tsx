@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { CreateChildInput } from "@/types/child"
 
 interface AddChildDialogProps {
-  onAdd: (input: CreateChildInput & { email: string; password: string }) => Promise<void>
+  onAdd: (input: CreateChildInput) => Promise<void>
 }
 
 const AVATAR_COLORS = [
@@ -37,8 +37,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
-    email: "",
-    password: "",
     avatar_color: "#4F46E5",
     learning_level: "beginner" as const,
   })
@@ -46,7 +44,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.name || !formData.age || !formData.email || !formData.password) {
+    if (!formData.name || !formData.age) {
       return
     }
 
@@ -56,8 +54,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       await onAdd({
         name: formData.name,
         age: Number.parseInt(formData.age),
-        email: formData.email,
-        password: formData.password,
         avatar_color: formData.avatar_color,
         learning_level: formData.learning_level,
       })
@@ -66,8 +62,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       setFormData({
         name: "",
         age: "",
-        email: "",
-        password: "",
         avatar_color: "#4F46E5",
         learning_level: "beginner",
       })
@@ -92,7 +86,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
           <DialogHeader>
             <DialogTitle>Add Child Profile</DialogTitle>
             <DialogDescription>
-              Create a new learning profile for your child. They'll get their own login credentials.
+              Create a new learning profile for your child. You'll manage their account from your parent dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -117,29 +111,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
                 onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                 placeholder="Enter age (3-18)"
                 required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email (for login)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="child@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="Create a password"
-                required
-                minLength={6}
               />
             </div>
             <div className="grid gap-2">
