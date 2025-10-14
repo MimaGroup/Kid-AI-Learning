@@ -272,12 +272,15 @@ export default function ContentLibrary() {
 
                   {resource.type === "glossary" && (
                     <div className="space-y-3">
-                      {resource.items.map((item, idx) => (
-                        <div key={idx} className="bg-blue-50 p-3 rounded-lg">
-                          <div className="font-semibold text-blue-900">{item.term}</div>
-                          <div className="text-sm text-gray-700">{item.definition}</div>
-                        </div>
-                      ))}
+                      {resource.items.map((item, idx) => {
+                        const glossaryItem = item as { term: string; definition: string }
+                        return (
+                          <div key={idx} className="bg-blue-50 p-3 rounded-lg">
+                            <div className="font-semibold text-blue-900">{glossaryItem.term}</div>
+                            <div className="text-sm text-gray-700">{glossaryItem.definition}</div>
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
 
@@ -286,7 +289,7 @@ export default function ContentLibrary() {
                       {resource.items.map((fact, idx) => (
                         <li key={idx} className="flex items-start space-x-2">
                           <span className="text-yellow-500 mt-1">⭐</span>
-                          <span className="text-gray-700">{fact}</span>
+                          <span className="text-gray-700">{fact as string}</span>
                         </li>
                       ))}
                     </ul>
@@ -294,27 +297,30 @@ export default function ContentLibrary() {
 
                   {resource.type === "worksheets" && (
                     <div className="space-y-2">
-                      {resource.items.map((worksheet, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <span className="font-medium">{worksheet.name}</span>
-                          <div className="flex items-center space-x-2">
-                            <span
-                              className={`text-xs px-2 py-1 rounded ${
-                                worksheet.difficulty === "Easy"
-                                  ? "bg-green-100 text-green-800"
-                                  : worksheet.difficulty === "Medium"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {worksheet.difficulty}
-                            </span>
-                            <Button size="sm" variant="outline">
-                              Download
-                            </Button>
+                      {resource.items.map((worksheet, idx) => {
+                        const worksheetItem = worksheet as { name: string; difficulty: string }
+                        return (
+                          <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <span className="font-medium">{worksheetItem.name}</span>
+                            <div className="flex items-center space-x-2">
+                              <span
+                                className={`text-xs px-2 py-1 rounded ${
+                                  worksheetItem.difficulty === "Easy"
+                                    ? "bg-green-100 text-green-800"
+                                    : worksheetItem.difficulty === "Medium"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : "bg-red-100 text-red-800"
+                                }`}
+                              >
+                                {worksheetItem.difficulty}
+                              </span>
+                              <Button size="sm" variant="outline">
+                                Download
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   )}
                 </Card>
