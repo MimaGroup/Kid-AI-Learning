@@ -2,9 +2,15 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useSubscription } from "@/hooks/use-subscription"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 export default function ActivitiesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const { hasPremium, loading } = useSubscription()
+  const router = useRouter()
 
   const activities = [
     {
@@ -16,6 +22,7 @@ export default function ActivitiesPage() {
       icon: "🕵️",
       color: "from-blue-500 to-cyan-500",
       href: "/kids/games/ai-detective",
+      isPremium: false,
     },
     {
       id: "pattern-training",
@@ -26,6 +33,7 @@ export default function ActivitiesPage() {
       icon: "🧠",
       color: "from-green-500 to-emerald-500",
       href: "/kids/games/pattern-training",
+      isPremium: true,
     },
     {
       id: "ai-friend",
@@ -36,6 +44,7 @@ export default function ActivitiesPage() {
       icon: "🤖",
       color: "from-purple-500 to-pink-500",
       href: "/kids/ai-friend",
+      isPremium: true,
     },
     {
       id: "ai-quiz",
@@ -46,6 +55,7 @@ export default function ActivitiesPage() {
       icon: "🎯",
       color: "from-orange-500 to-red-500",
       href: "/kids/games/ai-quiz",
+      isPremium: false,
     },
     {
       id: "math-adventure",
@@ -56,6 +66,7 @@ export default function ActivitiesPage() {
       icon: "🧮",
       color: "from-green-500 to-blue-500",
       href: "/kids/games/math-adventure",
+      isPremium: false,
     },
     {
       id: "word-builder",
@@ -66,6 +77,7 @@ export default function ActivitiesPage() {
       icon: "📚",
       color: "from-yellow-500 to-orange-500",
       href: "/kids/games/word-builder",
+      isPremium: false,
     },
     {
       id: "memory-match",
@@ -76,6 +88,7 @@ export default function ActivitiesPage() {
       icon: "🎴",
       color: "from-pink-500 to-purple-500",
       href: "/kids/games/memory-match",
+      isPremium: false,
     },
   ]
 
@@ -88,6 +101,14 @@ export default function ActivitiesPage() {
 
   const filteredActivities =
     selectedCategory === "all" ? activities : activities.filter((activity) => activity.category === selectedCategory)
+
+  const handleActivityClick = (activity: (typeof activities)[0]) => {
+    if (activity.isPremium && !hasPremium) {
+      router.push("/pricing")
+    } else {
+      router.push(activity.href)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
@@ -122,8 +143,11 @@ export default function ActivitiesPage() {
               key={activity.id}
               className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
             >
-              <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center`}>
+              <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center relative`}>
                 <span className="text-6xl">{activity.icon}</span>
+                {activity.isPremium && (
+                  <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-0">Premium</Badge>
+                )}
               </div>
 
               <div className="p-6">
@@ -137,12 +161,21 @@ export default function ActivitiesPage() {
                   <span className="text-sm text-gray-500 capitalize">{activity.category}</span>
                 </div>
 
-                <Link
-                  href={activity.href}
-                  className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
-                >
-                  Start Activity
-                </Link>
+                {activity.isPremium && !hasPremium ? (
+                  <Button
+                    onClick={() => handleActivityClick(activity)}
+                    className="w-full bg-yellow-500 text-white hover:bg-yellow-600"
+                  >
+                    Upgrade to Access
+                  </Button>
+                ) : (
+                  <Link
+                    href={activity.href}
+                    className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
+                  >
+                    Start Activity
+                  </Link>
+                )}
               </div>
             </div>
           ))}
