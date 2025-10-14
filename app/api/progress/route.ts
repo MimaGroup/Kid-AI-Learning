@@ -399,7 +399,7 @@ async function checkDailyChallenges(
       .eq("user_id", userId)
       .gte("completed_at", `${today}T00:00:00`)
 
-    const completedIds = new Set(completedChallenges?.map((c) => c.challenge_id) || [])
+    const completedIds = new Set(completedChallenges?.map((c: { challenge_id: string }) => c.challenge_id) || [])
 
     // Check "complete 3 games" challenge
     if (!completedIds.has("complete_3_games")) {
