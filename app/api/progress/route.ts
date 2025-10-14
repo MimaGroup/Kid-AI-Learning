@@ -403,7 +403,7 @@ async function checkDailyChallenges(
 
     // Check "complete 3 games" challenge
     if (!completedIds.has("complete_3_games")) {
-      const uniqueActivities = new Set(todayProgress?.map((p) => p.activity_type) || [])
+      const uniqueActivities = new Set(todayProgress?.map((p: { activity_type: string }) => p.activity_type) || [])
       if (uniqueActivities.size >= 3) {
         await completeChallenge(supabase, userId, "complete_3_games", 50)
       }
@@ -423,7 +423,8 @@ async function checkDailyChallenges(
 
     const activityChallenge = activityChallenges[activityType]
     if (activityChallenge && !completedIds.has(activityChallenge.id)) {
-      const activityCount = todayProgress?.filter((p) => p.activity_type === activityType).length || 0
+      const activityCount =
+        todayProgress?.filter((p: { activity_type: string }) => p.activity_type === activityType).length || 0
       if (activityCount >= activityChallenge.target) {
         await completeChallenge(supabase, userId, activityChallenge.id, activityChallenge.points)
       }
