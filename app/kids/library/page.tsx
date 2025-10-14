@@ -20,7 +20,7 @@ export default function ContentLibrary() {
       thumbnail: "/ai-robot-learning.jpg",
       duration: "5:30",
       category: "ai-basics",
-      url: "https://www.youtube.com/embed/mJeNghZXtMo",
+      url: "https://www.youtube.com/embed/kWmX3pd1f10",
       ageRange: "6-10",
     },
     {
@@ -30,7 +30,7 @@ export default function ContentLibrary() {
       thumbnail: "/computer-brain-thinking.jpg",
       duration: "4:15",
       category: "ai-basics",
-      url: "https://www.youtube.com/embed/QvyTEx1wyOY",
+      url: "https://www.youtube.com/embed/AkFi90lZmXA",
       ageRange: "8-12",
     },
     {
@@ -40,7 +40,7 @@ export default function ContentLibrary() {
       thumbnail: "/machine-learning-kids.jpg",
       duration: "6:45",
       category: "coding",
-      url: "https://www.youtube.com/embed/T1O3ikmTEdA",
+      url: "https://www.youtube.com/embed/f_uwKZIAeM0",
       ageRange: "9-12",
     },
     {
@@ -50,7 +50,7 @@ export default function ContentLibrary() {
       thumbnail: "/friendly-robot-helping.jpg",
       duration: "5:00",
       category: "robotics",
-      url: "https://www.youtube.com/embed/8wHDj0g5aRw",
+      url: "https://www.youtube.com/embed/7Pq-S557XQU",
       ageRange: "6-10",
     },
   ]
