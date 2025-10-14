@@ -7,9 +7,38 @@ import { RecommendedActivities } from "@/components/recommended-activities"
 import { GamificationDisplay } from "@/components/gamification-display"
 import { DailyChallenges } from "@/components/daily-challenges"
 import { Button } from "@/components/ui/button"
+import { TutorialTour } from "@/components/tutorial-tour"
 
 export default function KidsHome() {
   const router = useRouter()
+
+  const kidsTourSteps = [
+    {
+      target: ".gamification-display",
+      title: "Welcome to AI Kids Learning! 🎉",
+      content: "This shows your points, level, and badges. Complete activities to level up and earn rewards!",
+      position: "bottom" as const,
+    },
+    {
+      target: ".daily-challenges",
+      title: "Daily Challenges 🎯",
+      content: "Complete these special challenges each day to earn bonus points and unlock achievements!",
+      position: "bottom" as const,
+    },
+    {
+      target: ".activities-grid",
+      title: "Learning Games 🎮",
+      content:
+        "Choose from fun games to learn about AI, math, words, and more. Each game helps you learn something new!",
+      position: "top" as const,
+    },
+    {
+      target: ".library-link",
+      title: "Learning Library 📚",
+      content: "Watch educational videos, read stories, and explore fun facts about AI and technology!",
+      position: "top" as const,
+    },
+  ]
 
   const activities = [
     {
@@ -87,6 +116,8 @@ export default function KidsHome() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
+      <TutorialTour tourId="kids-home" steps={kidsTourSteps} />
+
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -132,11 +163,11 @@ export default function KidsHome() {
             </div>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-8 gamification-display">
             <GamificationDisplay />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-8 daily-challenges">
             <DailyChallenges />
           </div>
 
@@ -148,12 +179,14 @@ export default function KidsHome() {
             <h3 className="text-xl font-bold text-gray-900 mb-4">All Activities</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 activities-grid">
             {activities.map((activity) => (
               <Link
                 key={activity.id}
                 href={activity.href}
-                className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block`}
+                className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block ${
+                  activity.id === "library" ? "library-link" : ""
+                }`}
               >
                 <div className="flex items-center space-x-4">
                   <div className="text-4xl">{activity.icon}</div>

@@ -10,6 +10,7 @@ import { ChildProgressCard } from "../../../components/child-progress-card"
 import { useState } from "react"
 import type { Child } from "../../../types/child"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs"
+import { TutorialTour } from "../../../components/tutorial-tour"
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
@@ -34,6 +35,27 @@ export default function ParentDashboard() {
     setSelectedChild(child)
   }
 
+  const parentTourSteps = [
+    {
+      target: ".tabs-list",
+      title: "Welcome to Parent Dashboard! 👋",
+      content: "Switch between managing child profiles and viewing their learning progress.",
+      position: "bottom" as const,
+    },
+    {
+      target: ".add-child-button",
+      title: "Add Child Profiles 👶",
+      content: "Click here to add your children's profiles. You can track multiple children's progress!",
+      position: "left" as const,
+    },
+    {
+      target: ".progress-tab",
+      title: "Track Learning Progress 📊",
+      content: "View detailed analytics of your children's learning activities, achievements, and gamification stats.",
+      position: "bottom" as const,
+    },
+  ]
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -44,6 +66,8 @@ export default function ParentDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} />
+
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex justify-between items-center mb-8">
@@ -60,15 +84,19 @@ export default function ParentDashboard() {
           </div>
 
           <Tabs defaultValue="profiles" className="mb-8">
-            <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsList className="grid w-full max-w-md grid-cols-2 tabs-list">
               <TabsTrigger value="profiles">Child Profiles</TabsTrigger>
-              <TabsTrigger value="progress">Learning Progress</TabsTrigger>
+              <TabsTrigger value="progress" className="progress-tab">
+                Learning Progress
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="profiles" className="mt-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-gray-900">Manage Children</h2>
-                <AddChildDialog onAdd={handleAddChild} />
+                <div className="add-child-button">
+                  <AddChildDialog onAdd={handleAddChild} />
+                </div>
               </div>
 
               {childrenLoading ? (
