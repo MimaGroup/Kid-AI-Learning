@@ -79,7 +79,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return
   }
 
-  const subscription = (await stripe.subscriptions.retrieve(session.subscription as string)) as SubscriptionWithPeriod
+  const subscription = (await stripe.subscriptions.retrieve(
+    session.subscription as string,
+  )) as unknown as SubscriptionWithPeriod
 
   await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
