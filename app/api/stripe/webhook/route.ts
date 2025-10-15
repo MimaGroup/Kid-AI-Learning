@@ -74,7 +74,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return
   }
 
-  const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
+  const subscription = (await stripe.subscriptions.retrieve(session.subscription as string)) as Stripe.Subscription
 
   await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
@@ -82,8 +82,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     stripe_subscription_id: subscription.id,
     plan_type: planType,
     status: "active",
-    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+    current_period_start: new Date((subscription.current_period_start as number) * 1000).toISOString(),
+    current_period_end: new Date((subscription.current_period_end as number) * 1000).toISOString(),
     cancel_at_period_end: false,
   })
 
@@ -109,8 +109,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     .update({
       stripe_subscription_id: subscription.id,
       status: subscription.status,
-      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      current_period_start: new Date((subscription.current_period_start as number) * 1000).toISOString(),
+      current_period_end: new Date((subscription.current_period_end as number) * 1000).toISOString(),
       cancel_at_period_end: subscription.cancel_at_period_end,
       updated_at: new Date().toISOString(),
     })
