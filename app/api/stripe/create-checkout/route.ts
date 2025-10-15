@@ -27,71 +27,127 @@ export async function POST(request: NextRequest) {
     console.log("[v0] User auth:", { userId: user?.id, authError })
 
     if (authError || !user) {
-      console.log("[v0] Unauthorized")
+      console.log("[v0] Unauthorized - authError:", authError)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const supabaseAdmin = await createServiceRoleClient()
+    let supabaseAdmin
+    try {
+      supabaseAdmin = await createServiceRoleClient()
+      console.log("[v0] Service role client created successfully")
+    } catch (error) {
+      console.error("[v0] Failed to create service role client:", error)
+      return NextResponse.json(
+        { error: "Database configuration error", details: error instanceof Error ? error.message : String(error) },
+        { status: 500 },
+      )
+    }
 
-    // Check if user already has a Stripe customer ID
-    const { data: subscription } = await supabaseAdmin
-      .from("subscriptions")
-      .select("stripe_customer_id")
-      .eq("user_id", user.id)
-      .single()
+    let subscription
+    try {
+      const { data, error: dbError } = await supabaseAdmin
+        .from("subscriptions")
+        .select("stripe_customer_id")
+        .eq("user_id", user.id)
+        .single()
 
-    console.log("[v0] Existing subscription:", subscription)
+      if (dbError && dbError.code !== "PGRST116") {
+        // PGRST116 is "not found" which is okay
+        console.error("[v0] Database query error:", dbError)
+        throw dbError
+      }
+
+      subscription = data
+      console.log("[v0] Existing subscription:", subscription)
+    } catch (error) {
+      console.error("[v0] Failed to query subscriptions:", error)
+      return NextResponse.json(
+        { error: "Database query failed", details: error instanceof Error ? error.message : String(error) },
+        { status: 500 },
+      )
+    }
 
     let customerId = subscription?.stripe_customer_id
 
     // Create Stripe customer if doesn't exist
     if (!customerId) {
-      console.log("[v0] Creating new Stripe customer")
-      const customer = await stripe.customers.create({
-        email: user.email,
-        metadata: {
-          supabase_user_id: user.id,
-        },
-      })
-      customerId = customer.id
-      console.log("[v0] Created customer:", customerId)
+      try {
+        console.log("[v0] Creating new Stripe customer")
+        const customer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            supabase_user_id: user.id,
+          },
+        })
+        customerId = customer.id
+        console.log("[v0] Created customer:", customerId)
 
-      // Save customer ID to database
-      await supabaseAdmin.from("subscriptions").upsert({
-        user_id: user.id,
-        stripe_customer_id: customerId,
-        plan_type: "free",
-        status: "active",
-      })
+        const { error: upsertError } = await supabaseAdmin.from("subscriptions").upsert({
+          user_id: user.id,
+          stripe_customer_id: customerId,
+          plan_type: "free",
+          status: "active",
+        })
+
+        if (upsertError) {
+          console.error("[v0] Failed to save customer ID:", upsertError)
+          throw upsertError
+        }
+      } catch (error) {
+        console.error("[v0] Failed to create Stripe customer or save to DB:", error)
+        return NextResponse.json(
+          {
+            error: "Failed to create customer",
+            details: error instanceof Error ? error.message : String(error),
+          },
+          { status: 500 },
+        )
+      }
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://v0-ai-for-kids-inky.vercel.app"
     console.log("[v0] Site URL:", siteUrl)
 
-    // Create Stripe checkout session
-    console.log("[v0] Creating checkout session")
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
+    try {
+      console.log("[v0] Creating checkout session with:", { customerId, priceId, planType })
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        mode: "subscription",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        success_url: `${siteUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${siteUrl}/pricing`,
+        metadata: {
+          user_id: user.id,
+          plan_type: planType,
         },
-      ],
-      success_url: `${siteUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/pricing`,
-      metadata: {
-        user_id: user.id,
-        plan_type: planType,
-      },
-    })
+      })
 
-    console.log("[v0] Checkout session created:", session.id)
-    return NextResponse.json({ url: session.url })
+      console.log("[v0] Checkout session created:", session.id)
+      return NextResponse.json({ url: session.url })
+    } catch (error) {
+      console.error("[v0] Stripe API error:", error)
+      return NextResponse.json(
+        {
+          error: "Failed to create checkout session",
+          details: error instanceof Error ? error.message : String(error),
+        },
+        { status: 500 },
+      )
+    }
   } catch (error) {
-    console.error("[v0] Stripe checkout error:", error)
-    return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 })
+    console.error("[v0] Unexpected error in checkout API:", error)
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    )
   }
 }
