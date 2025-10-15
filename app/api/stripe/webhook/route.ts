@@ -8,6 +8,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
+type SubscriptionWithPeriod = Stripe.Subscription & {
+  current_period_start: number
+  current_period_end: number
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get("stripe-signature")!
@@ -74,7 +79,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return
   }
 
-  const subscription = (await stripe.subscriptions.retrieve(session.subscription as string)) as Stripe.Subscription
+  const subscription = (await stripe.subscriptions.retrieve(session.subscription as string)) as SubscriptionWithPeriod
 
   await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
@@ -82,8 +87,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     stripe_subscription_id: subscription.id,
     plan_type: planType,
     status: "active",
-    current_period_start: new Date((subscription.current_period_start as number) * 1000).toISOString(),
-    current_period_end: new Date((subscription.current_period_end as number) * 1000).toISOString(),
+    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
     cancel_at_period_end: false,
   })
 
@@ -104,14 +109,16 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     return
   }
 
+  const sub = subscription as SubscriptionWithPeriod
+
   await supabaseAdmin
     .from("subscriptions")
     .update({
-      stripe_subscription_id: subscription.id,
-      status: subscription.status,
-      current_period_start: new Date((subscription.current_period_start as number) * 1000).toISOString(),
-      current_period_end: new Date((subscription.current_period_end as number) * 1000).toISOString(),
-      cancel_at_period_end: subscription.cancel_at_period_end,
+      stripe_subscription_id: sub.id,
+      status: sub.status,
+      current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+      cancel_at_period_end: sub.cancel_at_period_end,
       updated_at: new Date().toISOString(),
     })
     .eq("stripe_customer_id", customerId)
