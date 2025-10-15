@@ -160,12 +160,26 @@ export default function ParentDashboard() {
               </Link>
             </div>
 
+            <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-xl">
+              <h3 className="text-xl font-semibold mb-2">Subscription</h3>
+              <p className="text-orange-100 mb-4">Upgrade to premium for full access</p>
+              <Link
+                href="/pricing"
+                className="inline-block bg-white text-orange-600 px-4 py-2 rounded-lg hover:bg-orange-50 transition-colors"
+              >
+                View Plans
+              </Link>
+            </div>
+
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-xl">
               <h3 className="text-xl font-semibold mb-2">Settings</h3>
               <p className="text-green-100 mb-4">Manage account and preferences</p>
-              <button className="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors">
+              <Link
+                href="/parent/subscription"
+                className="inline-block bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
+              >
                 Manage Settings
-              </button>
+              </Link>
             </div>
           </div>
         </div>
