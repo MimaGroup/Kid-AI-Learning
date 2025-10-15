@@ -1,15 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { createBrowserClient } from "@/lib/supabase/client"
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [loading, setLoading] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const router = useRouter()
+  const supabase = createBrowserClient()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      setUser(user)
+      setAuthLoading(false)
+    }
+    checkAuth()
+  }, [])
 
   const plans = [
     {
@@ -70,6 +85,12 @@ export default function PricingPage() {
   const handleSubscribe = async (planId: string, priceId?: string) => {
     if (!priceId) return
 
+    if (!user) {
+      alert("Please log in to subscribe to a plan.")
+      router.push("/login")
+      return
+    }
+
     setLoading(planId)
     try {
       console.log("[v0] Starting subscription:", { planId, priceId })
@@ -95,6 +116,16 @@ export default function PricingPage() {
     } finally {
       setLoading(null)
     }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl text-gray-600">Loading...</div>
+        </div>
+      </div>
+    )
   }
 
   return (
