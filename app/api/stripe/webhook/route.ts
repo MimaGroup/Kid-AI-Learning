@@ -13,6 +13,10 @@ type SubscriptionWithPeriod = Stripe.Subscription & {
   current_period_end: number
 }
 
+type InvoiceWithPaymentIntent = Stripe.Invoice & {
+  payment_intent: string | Stripe.PaymentIntent
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get("stripe-signature")!
@@ -156,10 +160,12 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     return
   }
 
+  const invoiceWithIntent = invoice as unknown as InvoiceWithPaymentIntent
+
   await supabaseAdmin.from("payment_history").insert({
     user_id: subscription.user_id,
     subscription_id: subscription.id,
-    stripe_payment_intent_id: invoice.payment_intent as string,
+    stripe_payment_intent_id: invoiceWithIntent.payment_intent as string,
     amount: invoice.amount_paid,
     currency: invoice.currency,
     status: "succeeded",
@@ -183,6 +189,8 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     return
   }
 
+  const invoiceWithIntent = invoice as unknown as InvoiceWithPaymentIntent
+
   await supabaseAdmin
     .from("subscriptions")
     .update({
@@ -194,7 +202,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   await supabaseAdmin.from("payment_history").insert({
     user_id: subscription.user_id,
     subscription_id: subscription.id,
-    stripe_payment_intent_id: invoice.payment_intent as string,
+    stripe_payment_intent_id: invoiceWithIntent.payment_intent as string,
     amount: invoice.amount_due,
     currency: invoice.currency,
     status: "failed",
