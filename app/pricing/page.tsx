@@ -72,13 +72,17 @@ export default function PricingPage() {
 
     setLoading(planId)
     try {
+      console.log("[v0] Starting subscription:", { planId, priceId })
+
       const response = await fetch("/api/stripe/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priceId, planType: planId }),
       })
 
+      console.log("[v0] Response status:", response.status)
       const data = await response.json()
+      console.log("[v0] Response data:", data)
 
       if (data.url) {
         window.location.href = data.url
@@ -86,7 +90,7 @@ export default function PricingPage() {
         throw new Error(data.error || "Failed to create checkout session")
       }
     } catch (error) {
-      console.error("Subscription error:", error)
+      console.error("[v0] Subscription error:", error)
       alert("Failed to start subscription. Please try again.")
     } finally {
       setLoading(null)
