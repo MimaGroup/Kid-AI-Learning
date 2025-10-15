@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
-import { createServerClient } from "@/lib/supabase/server"
+import { createServerClient } from "@supabase/ssr"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
@@ -18,7 +18,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    const supabase = await createServerClient()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return request.cookies.get(name)?.value
+          },
+          set(name: string, value: string, options: any) {
+            // Cannot set cookies in API route response here
+          },
+          remove(name: string, options: any) {
+            // Cannot remove cookies in API route response here
+          },
+        },
+      },
+    )
+
     const {
       data: { user },
       error: authError,
@@ -31,7 +48,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // The webhook will handle creating the subscription record after payment
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://v0-ai-for-kids-inky.vercel.app"
     console.log("[v0] Creating checkout session for user:", user.email)
 

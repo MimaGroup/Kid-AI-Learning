@@ -26,6 +26,13 @@ export default function PricingPage() {
     checkAuth()
   }, [])
 
+  useEffect(() => {
+    console.log("[v0] Stripe Price IDs:", {
+      monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
+      yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID,
+    })
+  }, [])
+
   const plans = [
     {
       id: "free",
@@ -83,7 +90,11 @@ export default function PricingPage() {
   ]
 
   const handleSubscribe = async (planId: string, priceId?: string) => {
-    if (!priceId) return
+    if (!priceId) {
+      console.error("[v0] Missing price ID for plan:", planId)
+      alert("Configuration error: Missing price ID. Please contact support.")
+      return
+    }
 
     if (!user) {
       alert("Please log in to subscribe to a plan.")
@@ -108,11 +119,12 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url
       } else {
-        throw new Error(data.error || "Failed to create checkout session")
+        const errorMessage = data.details || data.error || "Failed to create checkout session"
+        throw new Error(errorMessage)
       }
     } catch (error) {
       console.error("[v0] Subscription error:", error)
-      alert("Failed to start subscription. Please try again.")
+      alert(`Failed to start subscription: ${error instanceof Error ? error.message : "Please try again."}`)
     } finally {
       setLoading(null)
     }
