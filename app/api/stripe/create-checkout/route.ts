@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
-import { createServerClient } from "@/lib/supabase/server"
+import { createServerClient, createServiceRoleClient } from "@/lib/supabase/server"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // Get authenticated user
     const supabase = await createServerClient()
     const {
       data: { user },
@@ -32,8 +31,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const supabaseAdmin = await createServiceRoleClient()
+
     // Check if user already has a Stripe customer ID
-    const { data: subscription } = await supabase
+    const { data: subscription } = await supabaseAdmin
       .from("subscriptions")
       .select("stripe_customer_id")
       .eq("user_id", user.id)
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       console.log("[v0] Created customer:", customerId)
 
       // Save customer ID to database
-      await supabase.from("subscriptions").upsert({
+      await supabaseAdmin.from("subscriptions").upsert({
         user_id: user.id,
         stripe_customer_id: customerId,
         plan_type: "free",
