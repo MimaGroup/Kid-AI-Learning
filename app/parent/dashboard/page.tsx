@@ -66,9 +66,9 @@ export default function ParentDashboard() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="min-h-screen bg-background p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-card rounded-2xl shadow-xl p-8">
             <DashboardSkeleton />
           </div>
         </div>
@@ -77,21 +77,23 @@ export default function ParentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+
       <OnboardingFlow userType="parent" />
       <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} />
 
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-card rounded-2xl shadow-xl p-8 border border-border">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Parent Dashboard</h1>
-                <p className="text-gray-600 mt-2">Welcome back, {user?.email}</p>
+                <h1 className="text-3xl font-bold text-foreground">Parent Dashboard</h1>
+                <p className="text-muted-foreground mt-2">Welcome back, {user?.email}</p>
               </div>
               <button
                 onClick={handleSignOut}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90 transition-colors shadow-lg"
               >
                 Sign Out
               </button>
@@ -107,7 +109,7 @@ export default function ParentDashboard() {
 
               <TabsContent value="profiles" className="mt-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold text-gray-900">Manage Children</h2>
+                  <h2 className="text-2xl font-bold text-foreground">Manage Children</h2>
                   <div className="add-child-button">
                     <AddChildDialog onAdd={handleAddChild} />
                   </div>
@@ -120,9 +122,9 @@ export default function ParentDashboard() {
                     ))}
                   </div>
                 ) : children.length === 0 ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-600 mb-4">No child profiles yet</p>
-                    <p className="text-sm text-gray-500">
+                  <div className="text-center py-12 bg-muted rounded-lg">
+                    <p className="text-muted-foreground mb-4">No child profiles yet</p>
+                    <p className="text-sm text-muted-foreground">
                       Add your first child profile to start tracking their learning progress
                     </p>
                   </div>
@@ -136,7 +138,7 @@ export default function ParentDashboard() {
               </TabsContent>
 
               <TabsContent value="progress" className="mt-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Learning Progress</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">Learning Progress</h2>
 
                 {childrenLoading ? (
                   <div className="space-y-4">
@@ -145,9 +147,9 @@ export default function ParentDashboard() {
                     ))}
                   </div>
                 ) : children.length === 0 ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-600 mb-4">No children to track</p>
-                    <p className="text-sm text-gray-500">Add child profiles to see their learning progress</p>
+                  <div className="text-center py-12 bg-muted rounded-lg">
+                    <p className="text-muted-foreground mb-4">No children to track</p>
+                    <p className="text-sm text-muted-foreground">Add child profiles to see their learning progress</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -159,46 +161,46 @@ export default function ParentDashboard() {
               </TabsContent>
             </Tabs>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 pt-8 border-t">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 pt-8 border-t border-border">
+              <div className="bg-gradient-to-br from-primary via-primary to-primary/80 text-primary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <h3 className="text-xl font-semibold mb-2">Kids Learning</h3>
-                <p className="text-purple-100 mb-4">Monitor your child's AI learning progress</p>
+                <p className="text-primary-foreground/90 mb-4">Monitor your child's AI learning progress</p>
                 <Link
                   href="/kids/home"
-                  className="inline-block bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors"
+                  className="inline-block bg-primary-foreground text-primary px-4 py-2 rounded-lg hover:bg-primary-foreground/90 transition-colors font-medium shadow-md"
                 >
                   View Progress
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 rounded-xl">
+              <div className="bg-gradient-to-br from-accent via-accent to-accent/80 text-accent-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <h3 className="text-xl font-semibold mb-2">AI Activities</h3>
-                <p className="text-blue-100 mb-4">Interactive AI games and learning tools</p>
+                <p className="text-accent-foreground/90 mb-4">Interactive AI games and learning tools</p>
                 <Link
                   href="/kids/activities"
-                  className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  className="inline-block bg-accent-foreground text-accent px-4 py-2 rounded-lg hover:bg-accent-foreground/90 transition-colors font-medium shadow-md"
                 >
                   Explore Activities
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-xl">
+              <div className="bg-gradient-to-br from-secondary via-secondary to-secondary/80 text-secondary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <h3 className="text-xl font-semibold mb-2">Subscription</h3>
-                <p className="text-orange-100 mb-4">Upgrade to premium for full access</p>
+                <p className="text-secondary-foreground/90 mb-4">Upgrade to premium for full access</p>
                 <Link
                   href="/pricing"
-                  className="inline-block bg-white text-orange-600 px-4 py-2 rounded-lg hover:bg-orange-50 transition-colors"
+                  className="inline-block bg-secondary-foreground text-secondary px-4 py-2 rounded-lg hover:bg-secondary-foreground/90 transition-colors font-medium shadow-md"
                 >
                   View Plans
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-xl">
+              <div className="bg-gradient-to-br from-primary/90 via-accent to-accent/90 text-primary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <h3 className="text-xl font-semibold mb-2">Settings</h3>
-                <p className="text-green-100 mb-4">Manage account and preferences</p>
+                <p className="text-primary-foreground/90 mb-4">Manage account and preferences</p>
                 <Link
                   href="/parent/subscription"
-                  className="inline-block bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
+                  className="inline-block bg-primary-foreground text-primary px-4 py-2 rounded-lg hover:bg-primary-foreground/90 transition-colors font-medium shadow-md"
                 >
                   Manage Settings
                 </Link>
