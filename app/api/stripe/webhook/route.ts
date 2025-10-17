@@ -215,7 +215,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
         userData.name || "there",
         amount,
         date,
-        invoice.hosted_invoice_url || undefined,
+        invoice.hosted_invoice_url || "",
       )
 
       await sendEmail({
