@@ -106,7 +106,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     if (userData?.email) {
       const planName = planType === "monthly" ? "Premium Monthly" : "Premium Yearly"
-      const amount = planType === "monthly" ? "$9.99/month" : "$99.99/year"
+      const amount = planType === "monthly" ? 999 : 9999
 
       const emailTemplate = emailTemplates.subscriptionConfirmation(userData.name || "there", planName, amount)
 
