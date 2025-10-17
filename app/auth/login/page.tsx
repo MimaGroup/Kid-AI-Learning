@@ -1,13 +1,16 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '../../../hooks/use-auth'
-import Link from 'next/link'
+import type React from "react"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "../../../hooks/use-auth"
+import Link from "next/link"
+import { trackEvent, trackError } from "@/lib/analytics"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { login, error, clearError } = useAuth()
   const router = useRouter()
@@ -19,11 +22,14 @@ export default function LoginPage() {
 
     try {
       await login(email, password)
-      // If login succeeds, redirect to dashboard
-      router.push('/parent/dashboard')
+      trackEvent("user_login", {
+        email_domain: email.split("@")[1],
+        timestamp: Date.now(),
+      })
+      router.push("/parent/dashboard")
     } catch (err) {
-      // Error is handled by the useAuth hook
-      console.error('Login failed:', err)
+      trackError(err instanceof Error ? err : new Error("Login failed"), "login")
+      console.error("Login failed:", err)
     } finally {
       setIsLoading(false)
     }
@@ -62,30 +68,26 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               placeholder="Enter your password"
               required
             />
           </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
+          {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>}
 
           <button
             type="submit"
             disabled={isLoading}
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <Link href="/auth/sign-up" className="text-blue-600 hover:underline">
               Sign up
             </Link>

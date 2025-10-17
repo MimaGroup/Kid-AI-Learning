@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
@@ -18,19 +19,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
+    const cookieStore = await cookies()
+
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
           get(name: string) {
-            return request.cookies.get(name)?.value
+            return cookieStore.get(name)?.value
           },
           set(name: string, value: string, options: any) {
-            // Cannot set cookies in API route response here
+            try {
+              cookieStore.set(name, value, options)
+            } catch (error) {
+              // Cookie setting might fail in API routes, but that's okay for read operations
+            }
           },
           remove(name: string, options: any) {
-            // Cannot remove cookies in API route response here
+            try {
+              cookieStore.delete(name)
+            } catch (error) {
+              // Cookie removal might fail in API routes, but that's okay for read operations
+            }
           },
         },
       },
@@ -41,10 +52,10 @@ export async function POST(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser()
 
-    console.log("[v0] User auth:", { userId: user?.id, email: user?.email })
+    console.log("[v0] User auth:", { userId: user?.id, email: user?.email, hasError: !!authError })
 
     if (authError || !user) {
-      console.log("[v0] Unauthorized - authError:", authError)
+      console.log("[v0] Unauthorized - authError:", authError?.message || "Auth session missing!")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 

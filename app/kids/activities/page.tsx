@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useSubscription } from "@/hooks/use-subscription"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ActivityListSkeleton } from "@/components/skeleton-screens"
 
 export default function ActivitiesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -137,49 +138,53 @@ export default function ActivitiesPage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
-            >
-              <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center relative`}>
-                <span className="text-6xl">{activity.icon}</span>
-                {activity.isPremium && (
-                  <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-0">Premium</Badge>
-                )}
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{activity.title}</h3>
-                <p className="text-gray-600 mb-4">{activity.description}</p>
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                    {activity.difficulty}
-                  </span>
-                  <span className="text-sm text-gray-500 capitalize">{activity.category}</span>
+        {loading ? (
+          <ActivityListSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredActivities.map((activity) => (
+              <div
+                key={activity.id}
+                className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              >
+                <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center relative`}>
+                  <span className="text-6xl">{activity.icon}</span>
+                  {activity.isPremium && (
+                    <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-0">Premium</Badge>
+                  )}
                 </div>
 
-                {activity.isPremium && !hasPremium ? (
-                  <Button
-                    onClick={() => handleActivityClick(activity)}
-                    className="w-full bg-yellow-500 text-white hover:bg-yellow-600"
-                  >
-                    Upgrade to Access
-                  </Button>
-                ) : (
-                  <Link
-                    href={activity.href}
-                    className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
-                  >
-                    Start Activity
-                  </Link>
-                )}
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{activity.title}</h3>
+                  <p className="text-gray-600 mb-4">{activity.description}</p>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                      {activity.difficulty}
+                    </span>
+                    <span className="text-sm text-gray-500 capitalize">{activity.category}</span>
+                  </div>
+
+                  {activity.isPremium && !hasPremium ? (
+                    <Button
+                      onClick={() => handleActivityClick(activity)}
+                      className="w-full bg-yellow-500 text-white hover:bg-yellow-600"
+                    >
+                      Upgrade to Access
+                    </Button>
+                  ) : (
+                    <Link
+                      href={activity.href}
+                      className="block w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
+                    >
+                      Start Activity
+                    </Link>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Link

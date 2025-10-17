@@ -1,10 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { createContext, useContext, useEffect, useState } from "react"
 import { createClient } from "../lib/supabase/client"
 import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js"
+import { emailTemplates } from "@/lib/email"
 
 interface AuthContextType {
   user: User | null
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null)
     setLoading(true)
 
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -85,6 +85,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       setError(error.message)
       throw error
+    }
+
+    if (data.user) {
+      try {
+        const emailTemplate = emailTemplates.welcome(email.split("@")[0])
+
+        await fetch("/api/send-welcome-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.user.email,
+            name: email.split("@")[0],
+          }),
+        })
+
+        console.log("[v0] Welcome email queued for", data.user.email)
+      } catch (error) {
+        console.error("[v0] Error sending welcome email:", error)
+        // Don't throw - registration was successful even if email fails
+      }
     }
 
     setLoading(false)

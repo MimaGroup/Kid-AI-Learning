@@ -4,6 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { useAuth } from "../../../hooks/use-auth"
 import Link from "next/link"
+import { trackEvent, trackError } from "@/lib/analytics"
+import { LoadingOverlay } from "@/components/loading-overlay"
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("")
@@ -33,10 +35,16 @@ export default function SignUpPage() {
 
     try {
       await register(email, password)
+      trackEvent("user_signup", {
+        email_domain: email.split("@")[1],
+        timestamp: Date.now(),
+      })
       setSuccess(true)
       setIsLoading(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed")
+      const errorMessage = err instanceof Error ? err.message : "Registration failed"
+      setError(errorMessage)
+      trackError(err instanceof Error ? err : new Error(errorMessage), "signup")
       setIsLoading(false)
     }
   }
@@ -44,7 +52,8 @@ export default function SignUpPage() {
   if (success) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center animate-in zoom-in-95">
+          <div className="text-6xl mb-4">✉️</div>
           <h1 className="text-3xl font-bold text-green-600 mb-4">Check Your Email!</h1>
           <p className="text-gray-600 mb-6">
             We've sent you a confirmation link. Please check your email and click the link to activate your account.
@@ -62,7 +71,9 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 relative">
+        {isLoading && <LoadingOverlay message="Creating your account..." />}
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
           <p className="text-gray-600">Join AI Kids Learning Platform</p>
@@ -116,7 +127,11 @@ export default function SignUpPage() {
             />
           </div>
 
-          {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg animate-in slide-in-from-top">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"

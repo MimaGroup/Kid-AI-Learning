@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
+import { sendEmail, emailTemplates } from "@/lib/email"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
@@ -99,6 +100,27 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   })
 
   console.log(`Subscription created for user ${userId}`)
+
+  try {
+    const { data: userData } = await supabaseAdmin.from("users").select("email, name").eq("id", userId).single()
+
+    if (userData?.email) {
+      const planName = planType === "monthly" ? "Premium Monthly" : "Premium Yearly"
+      const amount = planType === "monthly" ? "$9.99/month" : "$99.99/year"
+
+      const emailTemplate = emailTemplates.subscriptionConfirmation(userData.name || "there", planName, amount)
+
+      await sendEmail({
+        to: userData.email,
+        subject: emailTemplate.subject,
+        html: emailTemplate.html,
+      })
+
+      console.log(`[v0] Subscription confirmation email sent to ${userData.email}`)
+    }
+  } catch (error) {
+    console.error("[v0] Error sending subscription confirmation email:", error)
+  }
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
@@ -173,6 +195,40 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   })
 
   console.log(`Payment succeeded for customer ${customerId}`)
+
+  try {
+    const { data: userData } = await supabaseAdmin
+      .from("users")
+      .select("email, name")
+      .eq("id", subscription.user_id)
+      .single()
+
+    if (userData?.email) {
+      const amount = `$${(invoice.amount_paid / 100).toFixed(2)} ${invoice.currency.toUpperCase()}`
+      const date = new Date(invoice.created * 1000).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+
+      const emailTemplate = emailTemplates.paymentReceipt(
+        userData.name || "there",
+        amount,
+        date,
+        invoice.hosted_invoice_url || undefined,
+      )
+
+      await sendEmail({
+        to: userData.email,
+        subject: emailTemplate.subject,
+        html: emailTemplate.html,
+      })
+
+      console.log(`[v0] Payment receipt email sent to ${userData.email}`)
+    }
+  } catch (error) {
+    console.error("[v0] Error sending payment receipt email:", error)
+  }
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {

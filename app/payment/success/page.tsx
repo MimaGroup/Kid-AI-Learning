@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { trackEvent, trackPayment } from "@/lib/analytics"
 
 export default function PaymentSuccessPage() {
   const router = useRouter()
@@ -14,11 +15,15 @@ export default function PaymentSuccessPage() {
 
   useEffect(() => {
     if (sessionId) {
-      // Verify the payment session
       fetch(`/api/stripe/verify-session?session_id=${sessionId}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
+            trackPayment("success", data.amount, data.currency)
+            trackEvent("subscription_started", {
+              plan: data.plan_type || "unknown",
+              session_id: sessionId,
+            })
             setLoading(false)
           } else {
             setError(data.error || "Payment verification failed")
