@@ -206,7 +206,9 @@ export const emailTemplates = {
               <h2>${achievement.name || "Amazing Achievement"}</h2>
               <p>${achievement.description || "Keep up the excellent work!"}</p>
               
-              <p style="margin-top: 30px;"><strong>Points Earned:</strong> ${achievement.points || 0}</p>
+              <p style="margin-top: 30px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
+                <strong>Points Earned:</strong> ${achievement.points || 0}
+              </p>
               
               <p style="text-align: center;">
                 <a href="https://kids-learning-ai.com/parent/dashboard" class="button">View All Achievements</a>
@@ -375,6 +377,54 @@ export const emailTemplates = {
             </div>
             <div class="footer">
               <p>AI Kids Learning | Making education fun with AI</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
+  contactFormSubmission: (name: string, email: string, subject: string, message: string) => ({
+    subject: `New Contact Form: ${subject}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #8B5CF6; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
+            .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #e5e7eb; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>New Contact Form Submission</h1>
+            </div>
+            <div class="content">
+              <div class="info-box">
+                <p><strong>From:</strong> ${name}</p>
+                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+              </div>
+              
+              <h3>Message:</h3>
+              <div class="message-box">
+                <p>${message.replace(/\n/g, "<br>")}</p>
+              </div>
+              
+              <p style="margin-top: 30px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
+                <strong>⚠️ Action Required:</strong> Please respond to this inquiry within 24-48 hours.
+              </p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning Support System</p>
             </div>
           </div>
         </body>
