@@ -103,7 +103,7 @@ export function TutorialTour({ tourId, steps, onComplete }: TutorialTourProps) {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-40" onClick={handleSkip} />
+      <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-40" onClick={handleSkip} />
       <div
         className="fixed z-50 bg-white rounded-lg shadow-2xl p-6 max-w-md transform -translate-x-1/2"
         style={{ top: `${position.top}px`, left: `${position.left}px` }}

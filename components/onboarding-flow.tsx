@@ -106,7 +106,7 @@ export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | 
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <Card className="max-w-2xl w-full animate-in zoom-in-95">
           <CardHeader>
             <div className="flex items-center justify-between mb-4">
