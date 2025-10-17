@@ -1,6 +1,15 @@
+import type { Metadata } from "next"
+import { createMetadata } from "@/lib/metadata"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Heart, Shield, Sparkles, Users } from "lucide-react"
+
+export const metadata: Metadata = createMetadata({
+  title: "About Us - AI Kids Learning Platform",
+  description:
+    "Learn about our mission to make AI accessible and fun for children ages 5-12. Discover how we're empowering the next generation with interactive AI education.",
+  path: "/about",
+})
 
 export default function AboutPage() {
   return (

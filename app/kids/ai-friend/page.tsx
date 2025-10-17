@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
 import { Button } from "@/components/ui/button"
 import { MessageCircle } from "lucide-react"
+import { trackAIFriend } from "@/lib/analytics"
 
 interface AIFriend {
   id: string
@@ -65,6 +66,8 @@ export default function AIFriendBuilder() {
       setSavedFriends(updatedFriends)
       localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
 
+      trackAIFriend("created", friendName)
+
       toast.success(`${friendName} has been created!`)
 
       // Reset form
@@ -99,6 +102,10 @@ export default function AIFriendBuilder() {
   }
 
   const handleChatWithFriend = (friendId: string) => {
+    const friend = savedFriends.find((f) => f.id === friendId)
+    if (friend) {
+      trackAIFriend("chat_started", friend.name)
+    }
     router.push(`/kids/ai-friend/chat/${friendId}`)
   }
 

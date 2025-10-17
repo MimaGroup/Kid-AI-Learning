@@ -1,51 +1,51 @@
 import { Resend } from "resend"
 
-let resendClient: Resend | null = null
+let resendInstance: Resend | null = null
 
-function getResendClient() {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("[v0] RESEND_API_KEY not configured. Email sending will be skipped.")
-    return null
+function getResendInstance() {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      console.error("[v0] RESEND_API_KEY environment variable is not set")
+      throw new Error("Email service is not configured. Please set RESEND_API_KEY environment variable.")
+    }
+    resendInstance = new Resend(apiKey)
   }
-
-  if (!resendClient) {
-    resendClient = new Resend(process.env.RESEND_API_KEY)
-  }
-
-  return resendClient
+  return resendInstance
 }
 
 export interface EmailOptions {
   to: string
   subject: string
   html: string
+  from?: string
 }
 
-export async function sendEmail({ to, subject, html }: EmailOptions) {
-  const resend = getResendClient()
-
-  if (!resend) {
-    console.log("[v0] Email sending skipped (Resend not configured):", { to, subject })
-    return { success: false, error: "Resend API key not configured" }
-  }
-
+export async function sendEmail(options: EmailOptions) {
   try {
-    const data = await resend.emails.send({
-      from: "AI Kids Learning <noreply@kids-learning-ai.com>",
+    const { to, subject, html, from = "AI Kids Learning <noreply@kids-learning-ai.com>" } = options
+
+    const resend = getResendInstance()
+
+    const { data, error } = await resend.emails.send({
+      from,
       to,
       subject,
       html,
     })
 
-    console.log("[v0] Email sent successfully:", data)
+    if (error) {
+      console.error("[v0] Resend error:", error)
+      return { success: false, error }
+    }
+
     return { success: true, data }
   } catch (error) {
-    console.error("[v0] Error sending email:", error)
+    console.error("[v0] Email sending error:", error)
     return { success: false, error }
   }
 }
 
-// Email Templates
 export const emailTemplates = {
   welcome: (name: string) => ({
     subject: "Welcome to AI Kids Learning! 🎉",
@@ -55,115 +55,285 @@ export const emailTemplates = {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 12px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 12px; margin: 20px 0; }
-            .button { display: inline-block; background: #8B5CF6; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-            .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px; }
-            h1 { margin: 0; font-size: 32px; }
-            h2 { color: #8B5CF6; font-size: 24px; }
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>Welcome to AI Kids Learning!</h1>
-            <p style="font-size: 18px; margin: 10px 0 0 0;">Where curiosity meets artificial intelligence</p>
-          </div>
-          
-          <div class="content">
-            <h2>Hi ${name}! 👋</h2>
-            <p>We're thrilled to have you join our community of parents who believe in the power of AI-enhanced learning!</p>
-            
-            <p><strong>Here's what you can do now:</strong></p>
-            <ul>
-              <li>🎨 Create your child's profile</li>
-              <li>🎮 Explore free AI learning activities</li>
-              <li>📊 Track your child's progress</li>
-              <li>🌟 Unlock premium features with a subscription</li>
-            </ul>
-            
-            <center>
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/parent/dashboard" class="button">
-                Get Started →
-              </a>
-            </center>
-            
-            <p style="margin-top: 30px;">If you have any questions, our support team is here to help at <a href="mailto:support@kids-learning-ai.com">support@kids-learning-ai.com</a></p>
-          </div>
-          
-          <div class="footer">
-            <p>© ${new Date().getFullYear()} AI Kids Learning. All rights reserved.</p>
-            <p><a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/privacy-policy">Privacy Policy</a> | <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/terms-of-service">Terms of Service</a></p>
+          <div class="container">
+            <div class="header">
+              <h1>Welcome to AI Kids Learning!</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>We're thrilled to have you join our community of parents helping their children learn with AI-powered activities!</p>
+              
+              <h3>🚀 Get Started in 3 Easy Steps:</h3>
+              <ol>
+                <li><strong>Add Your Child's Profile</strong> - Set up their age and learning level</li>
+                <li><strong>Explore Activities</strong> - Try our interactive games and quizzes</li>
+                <li><strong>Track Progress</strong> - Watch them grow and achieve milestones</li>
+              </ol>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">Go to Dashboard</a>
+              </p>
+              
+              <h3>✨ What's Included:</h3>
+              <ul>
+                <li>7 Interactive AI-powered games</li>
+                <li>Personalized learning paths</li>
+                <li>Progress tracking and analytics</li>
+                <li>Achievement badges and rewards</li>
+              </ul>
+              
+              <p>Need help getting started? Check out our <a href="https://kids-learning-ai.com/getting-started">Getting Started Guide</a> or reply to this email.</p>
+              
+              <p>Happy learning!<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+            </div>
           </div>
         </body>
       </html>
     `,
   }),
 
-  subscriptionConfirmation: (name: string, plan: string, amount: string) => ({
-    subject: "Subscription Confirmed - Welcome to Premium! 🎉",
+  weeklyProgress: (name: string, childName: string, stats: any) => ({
+    subject: `${childName}'s Weekly Learning Summary 📊`,
     html: `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 12px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 12px; margin: 20px 0; }
-            .plan-box { background: white; border: 2px solid #10b981; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .button { display: inline-block; background: #10b981; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-            .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px; }
-            h1 { margin: 0; font-size: 32px; }
-            h2 { color: #10b981; font-size: 24px; }
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .stat-card { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
+            .stat-number { font-size: 32px; font-weight: bold; color: #8B5CF6; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>🎉 You're Now Premium!</h1>
-            <p style="font-size: 18px; margin: 10px 0 0 0;">Thank you for subscribing</p>
-          </div>
-          
-          <div class="content">
-            <h2>Hi ${name}!</h2>
-            <p>Your subscription has been confirmed. Welcome to the premium AI Kids Learning experience!</p>
-            
-            <div class="plan-box">
-              <h3 style="margin-top: 0; color: #10b981;">Your Plan Details</h3>
-              <p><strong>Plan:</strong> ${plan}</p>
-              <p><strong>Amount:</strong> ${amount}</p>
-              <p><strong>Status:</strong> Active ✓</p>
+          <div class="container">
+            <div class="header">
+              <h1>📊 Weekly Learning Summary</h1>
+              <p>${childName}'s Progress This Week</p>
             </div>
-            
-            <p><strong>Premium Features Now Available:</strong></p>
-            <ul>
-              <li>✨ Unlimited AI learning activities</li>
-              <li>🎯 Personalized learning paths</li>
-              <li>📊 Advanced progress tracking</li>
-              <li>🤖 AI friend companions</li>
-              <li>🎮 Exclusive premium games</li>
-              <li>📈 Detailed analytics and insights</li>
-            </ul>
-            
-            <center>
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/parent/dashboard" class="button">
-                Explore Premium Features →
-              </a>
-            </center>
-            
-            <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">You can manage your subscription anytime from your dashboard.</p>
-          </div>
-          
-          <div class="footer">
-            <p>© ${new Date().getFullYear()} AI Kids Learning. All rights reserved.</p>
-            <p><a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/privacy-policy">Privacy Policy</a> | <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/terms-of-service">Terms of Service</a></p>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>Here's how ${childName} did this week:</p>
+              
+              <div class="stat-card">
+                <div class="stat-number">${stats.activitiesCompleted || 0}</div>
+                <p>Activities Completed</p>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-number">${stats.timeSpent || 0} min</div>
+                <p>Learning Time</p>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-number">${stats.pointsEarned || 0}</div>
+                <p>Points Earned</p>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-number">${stats.achievementsUnlocked || 0}</div>
+                <p>New Achievements</p>
+              </div>
+              
+              <h3>🎯 This Week's Highlights:</h3>
+              <ul>
+                ${stats.highlights?.map((h: string) => `<li>${h}</li>`).join("") || "<li>Keep up the great work!</li>"}
+              </ul>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">View Full Report</a>
+              </p>
+              
+              <p>Keep encouraging ${childName} to explore and learn!</p>
+              
+              <p>Best regards,<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+              <p><a href="https://kids-learning-ai.com/parent/dashboard">Dashboard</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+            </div>
           </div>
         </body>
       </html>
     `,
   }),
 
-  paymentReceipt: (name: string, amount: string, date: string, invoiceUrl?: string) => ({
+  achievementUnlocked: (name: string, childName: string, achievement: any) => ({
+    subject: `🎉 ${childName} Unlocked a New Achievement!`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; text-align: center; }
+            .achievement-badge { font-size: 80px; margin: 20px 0; }
+            .button { display: inline-block; background: #F59E0B; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 Achievement Unlocked!</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>Great news! ${childName} just unlocked a new achievement:</p>
+              
+              <div class="achievement-badge">${achievement.icon || "🏆"}</div>
+              <h2>${achievement.name || "Amazing Achievement"}</h2>
+              <p>${achievement.description || "Keep up the excellent work!"}</p>
+              
+              <p style="margin-top: 30px;"><strong>Points Earned:</strong> ${achievement.points || 0}</p>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">View All Achievements</a>
+              </p>
+              
+              <p>Celebrate this milestone with ${childName}!</p>
+              
+              <p>Proud of you both,<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
+  reEngagement: (name: string, childName: string) => ({
+    subject: `We miss ${childName}! Come back and learn 🌟`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .highlight-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #EC4899; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>We Miss You! 🌟</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>We noticed ${childName} hasn't been learning with us lately. We'd love to see them back!</p>
+              
+              <div class="highlight-box">
+                <h3>🎮 New Activities Added!</h3>
+                <p>We've added exciting new games and challenges that ${childName} will love:</p>
+                <ul>
+                  <li>Interactive storytelling adventures</li>
+                  <li>New math puzzles</li>
+                  <li>Creative AI art projects</li>
+                </ul>
+              </div>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/kids/home" class="button">Continue Learning</a>
+              </p>
+              
+              <p><strong>💡 Quick Tip:</strong> Just 10 minutes a day can make a big difference in ${childName}'s learning journey!</p>
+              
+              <p>We're here to help if you need anything.</p>
+              
+              <p>Looking forward to seeing you,<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
+  subscriptionConfirmation: (name: string, planName: string, amount: number) => ({
+    subject: "Welcome to Premium! 🎉",
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 Welcome to Premium!</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>Thank you for subscribing to <strong>${planName}</strong>! Your payment of $${(amount / 100).toFixed(2)} has been processed.</p>
+              
+              <h3>✨ You now have access to:</h3>
+              <ul>
+                <li>All 7 interactive AI games</li>
+                <li>AI Friend Creator</li>
+                <li>Pattern Training activities</li>
+                <li>Full content library</li>
+                <li>Advanced progress analytics</li>
+                <li>Priority support</li>
+              </ul>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/kids/home" class="button">Start Learning Now</a>
+              </p>
+              
+              <p>If you have any questions, we're here to help!</p>
+              
+              <p>Thank you for choosing AI Kids Learning,<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
+  paymentReceipt: (name: string, amount: number, date: string, invoiceUrl: string) => ({
     subject: "Payment Receipt - AI Kids Learning",
     html: `
       <!DOCTYPE html>
@@ -171,147 +341,41 @@ export const emailTemplates = {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #1f2937; color: white; padding: 40px 20px; text-align: center; border-radius: 12px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 12px; margin: 20px 0; }
-            .receipt-box { background: white; border: 1px solid #e5e7eb; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .button { display: inline-block; background: #8B5CF6; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-            .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px; }
-            h1 { margin: 0; font-size: 28px; }
-            .amount { font-size: 36px; font-weight: bold; color: #10b981; margin: 20px 0; }
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #8B5CF6; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .receipt-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #e5e7eb; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>Payment Receipt</h1>
-            <p style="font-size: 16px; margin: 10px 0 0 0;">Thank you for your payment</p>
-          </div>
-          
-          <div class="content">
-            <h2 style="color: #1f2937;">Hi ${name},</h2>
-            <p>Your payment has been processed successfully.</p>
-            
-            <div class="receipt-box">
-              <h3 style="margin-top: 0;">Payment Details</h3>
-              <p><strong>Amount Paid:</strong></p>
-              <div class="amount">${amount}</div>
-              <p><strong>Date:</strong> ${date}</p>
-              <p><strong>Service:</strong> AI Kids Learning Premium Subscription</p>
+          <div class="container">
+            <div class="header">
+              <h1>Payment Receipt</h1>
             </div>
-            
-            ${
-              invoiceUrl
-                ? `
-              <center>
-                <a href="${invoiceUrl}" class="button">
-                  Download Invoice →
-                </a>
-              </center>
-            `
-                : ""
-            }
-            
-            <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">This is an automated receipt. Please keep it for your records.</p>
-          </div>
-          
-          <div class="footer">
-            <p>Questions? Contact us at <a href="mailto:support@kids-learning-ai.com">support@kids-learning-ai.com</a></p>
-            <p>© ${new Date().getFullYear()} AI Kids Learning. All rights reserved.</p>
-          </div>
-        </body>
-      </html>
-    `,
-  }),
-
-  subscriptionExpiring: (name: string, expiryDate: string) => ({
-    subject: "Your Subscription is Expiring Soon",
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 12px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 12px; margin: 20px 0; }
-            .warning-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .button { display: inline-block; background: #f59e0b; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-            .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px; }
-            h1 { margin: 0; font-size: 28px; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>⏰ Subscription Expiring Soon</h1>
-          </div>
-          
-          <div class="content">
-            <h2 style="color: #f59e0b;">Hi ${name},</h2>
-            <p>We wanted to remind you that your premium subscription will expire soon.</p>
-            
-            <div class="warning-box">
-              <p style="margin: 0;"><strong>Expiry Date:</strong> ${expiryDate}</p>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>Thank you for your payment. Here are the details:</p>
+              
+              <div class="receipt-box">
+                <p><strong>Amount Paid:</strong> $${(amount / 100).toFixed(2)}</p>
+                <p><strong>Date:</strong> ${date}</p>
+                <p><strong>Service:</strong> AI Kids Learning Subscription</p>
+              </div>
+              
+              <p style="text-align: center;">
+                <a href="${invoiceUrl}" class="button">Download Invoice</a>
+              </p>
+              
+              <p>If you have any questions about this payment, please contact our support team.</p>
+              
+              <p>Best regards,<br>The AI Kids Learning Team</p>
             </div>
-            
-            <p><strong>Don't lose access to:</strong></p>
-            <ul>
-              <li>Unlimited AI learning activities</li>
-              <li>Personalized learning paths</li>
-              <li>Advanced progress tracking</li>
-              <li>AI friend companions</li>
-              <li>Premium games and content</li>
-            </ul>
-            
-            <center>
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"}/parent/subscription" class="button">
-                Renew Subscription →
-              </a>
-            </center>
-            
-            <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">If you've already renewed, please disregard this message.</p>
-          </div>
-          
-          <div class="footer">
-            <p>© ${new Date().getFullYear()} AI Kids Learning. All rights reserved.</p>
-          </div>
-        </body>
-      </html>
-    `,
-  }),
-
-  contactFormSubmission: (name: string, email: string, subject: string, message: string) => ({
-    subject: `New Contact Form Submission: ${subject}`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body { font-family: 'Poppins', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #1f2937; color: white; padding: 30px 20px; border-radius: 12px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 12px; margin: 20px 0; }
-            .info-box { background: white; border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; margin: 10px 0; }
-            h1 { margin: 0; font-size: 24px; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>📧 New Contact Form Submission</h1>
-          </div>
-          
-          <div class="content">
-            <div class="info-box">
-              <p><strong>From:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Subject:</strong> ${subject}</p>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
             </div>
-            
-            <div class="info-box">
-              <p><strong>Message:</strong></p>
-              <p>${message.replace(/\n/g, "<br>")}</p>
-            </div>
-            
-            <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">Reply to this message at: <a href="mailto:${email}">${email}</a></p>
           </div>
         </body>
       </html>

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { trackActivity, trackGameScore } from "@/lib/analytics"
 
 type GameMode = "spelling" | "unscramble" | "definition"
 
@@ -131,6 +132,12 @@ export default function WordBuilderPage() {
     setUserInput("")
     setSelectedOption(null)
     setShowResult(false)
+
+    trackActivity("started", "Word Builder", {
+      game_mode: mode,
+      difficulty: diff,
+      word_count: generatedChallenges.length,
+    })
   }
 
   const handleSubmitAnswer = () => {
@@ -158,8 +165,19 @@ export default function WordBuilderPage() {
       setShowResult(false)
     } else {
       setGameComplete(true)
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+
+      trackGameScore("Word Builder", score, undefined, timeSpent)
+      trackActivity("completed", "Word Builder", {
+        game_mode: gameMode,
+        difficulty,
+        score,
+        total_words: challenges.length,
+        time_spent: timeSpent,
+        percentage: Math.round((score / challenges.length) * 100),
+      })
+
       if (user) {
-        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
         const achievements = await submitProgress("word_builder", score, challenges.length, timeSpent)
         setNewAchievements(achievements)
       }

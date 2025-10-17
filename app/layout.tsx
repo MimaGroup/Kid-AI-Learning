@@ -7,17 +7,24 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 import { OfflineIndicator } from "@/components/offline-indicator"
 import Script from "next/script"
+import { Analytics } from "@vercel/analytics/react"
+import { generateStructuredData } from "@/lib/metadata"
+import { StructuredData } from "@/components/structured-data"
 
 const fredoka = Fredoka({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-fredoka",
+  display: "swap",
+  preload: true,
 })
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-poppins",
+  display: "swap",
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -97,15 +104,22 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const organizationSchema = generateStructuredData("Organization", {})
+
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://vercel.live" />
+
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#8b5cf6" />
         <link rel="apple-touch-icon" href="/icon-192.jpg" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AI Kids Learning" />
+        <StructuredData data={organizationSchema} />
       </head>
       <body className={`${fredoka.variable} ${poppins.variable}`}>
         <ErrorBoundary>
@@ -115,6 +129,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <OfflineIndicator />
           </AuthProvider>
         </ErrorBoundary>
+        <Analytics />
         <Script id="register-sw" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {
@@ -128,18 +143,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   });
               });
             }
-          `}
-        </Script>
-        <Script id="error-monitoring" strategy="afterInteractive">
-          {`
-            // Setup global error handling
-            window.addEventListener('error', (event) => {
-              console.error('[v0] Global error:', event.error);
-            });
-            
-            window.addEventListener('unhandledrejection', (event) => {
-              console.error('[v0] Unhandled promise rejection:', event.reason);
-            });
           `}
         </Script>
       </body>

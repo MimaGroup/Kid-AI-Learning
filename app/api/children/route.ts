@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { validateInput, childProfileSchema, sanitizeString } from "@/lib/validation"
+import { createAuditLog, getClientIp } from "@/lib/security"
 
 export async function GET() {
   try {
@@ -34,7 +36,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    console.log("[v0] Creating child profile - start")
     const supabase = await createClient()
 
     const {
@@ -42,55 +43,60 @@ export async function POST(request: Request) {
       error: authError,
     } = await supabase.auth.getUser()
 
-    console.log("[v0] Auth check:", { user: user?.id, error: authError?.message })
-
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const body = await request.json()
-    console.log("[v0] Request body:", body)
-    const { name, age, avatar_color, learning_level } = body
 
-    if (!name || !age) {
-      return NextResponse.json({ error: "Name and age are required" }, { status: 400 })
+    const validation = validateInput(childProfileSchema, {
+      name: sanitizeString(body.name),
+      age: Number.parseInt(body.age),
+      avatar_color: body.avatar_color,
+      learning_level: body.learning_level,
+    })
+
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
     }
 
-    console.log("[v0] Creating child profile in database...")
+    const { name, age, avatar_color, learning_level } = validation.data
+
     const { data: child, error: insertError } = await supabase
       .from("children")
       .insert({
         parent_id: user.id,
         name,
-        age: Number.parseInt(age),
+        age,
         avatar_color: avatar_color || "#4F46E5",
         learning_level: learning_level || "beginner",
       })
       .select()
       .single()
 
-    console.log("[v0] Child profile result:", {
-      child: child?.id,
-      error: insertError?.message,
-      details: insertError?.details,
-    })
-
     if (insertError) {
-      console.error("[v0] Error creating child profile:", insertError)
+      console.error("Error creating child profile:", insertError)
       return NextResponse.json(
         {
           error: insertError.message,
-          details: insertError.details,
-          hint: insertError.hint,
         },
         { status: 500 },
       )
     }
 
-    console.log("[v0] Child profile created successfully:", child.id)
+    createAuditLog({
+      userId: user.id,
+      action: "CREATE",
+      resource: "child_profile",
+      ip: getClientIp(request as any),
+      userAgent: request.headers.get("user-agent") || "unknown",
+      timestamp: new Date(),
+      metadata: { childId: child.id },
+    })
+
     return NextResponse.json({ child }, { status: 201 })
   } catch (error) {
-    console.error("[v0] Unexpected error:", error)
+    console.error("Unexpected error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -214,10 +215,15 @@ export default function ContentLibrary() {
                 .map((video) => (
                   <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="relative">
-                      <img
+                      <Image
                         src={video.thumbnail || "/placeholder.svg"}
                         alt={video.title}
+                        width={400}
+                        height={225}
                         className="w-full h-48 object-cover"
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgZmlsbD0iI2VlZSIvPjwvc3ZnPg=="
                       />
                       <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-sm">
                         {video.duration}

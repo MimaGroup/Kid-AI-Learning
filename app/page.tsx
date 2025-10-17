@@ -2,12 +2,14 @@
 
 import { useAuth } from "../hooks/use-auth"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, Suspense, lazy } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { trackEvent } from "@/lib/analytics"
+import { PageLoadingSkeleton } from "@/components/loading-skeleton"
+import { MobileNav } from "@/components/mobile-nav"
 import {
   Sparkles,
   Brain,
@@ -25,6 +27,8 @@ import {
   TrendingUp,
 } from "lucide-react"
 
+const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
+
 export default function HomePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
@@ -40,14 +44,7 @@ export default function HomePage() {
   }, [user, loading, router])
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary animate-pulse" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
+    return <PageLoadingSkeleton />
   }
 
   if (!user) {
@@ -91,11 +88,7 @@ export default function HomePage() {
                   </Button>
                 </Link>
               </div>
-              <div className="md:hidden">
-                <Link href="/getting-started">
-                  <Button size="sm">Get Started</Button>
-                </Link>
-              </div>
+              <MobileNav />
             </div>
           </div>
         </nav>
@@ -181,6 +174,22 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Trust Logos Section */}
+        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/20 border-y">
+          <div className="max-w-7xl mx-auto">
+            <p className="text-center text-sm text-muted-foreground mb-6">
+              Trusted by leading educational institutions
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60">
+              <div className="text-2xl font-bold text-muted-foreground">EdTech Awards</div>
+              <div className="text-2xl font-bold text-muted-foreground">Parent's Choice</div>
+              <div className="text-2xl font-bold text-muted-foreground">COPPA Certified</div>
+              <div className="text-2xl font-bold text-muted-foreground">Common Sense Media</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary text-primary-foreground">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -251,6 +260,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Benefits Section */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -321,6 +331,34 @@ export default function HomePage() {
                   </div>
                 </Card>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Trust and Guarantee Section */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Risk-Free Learning Experience</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                We're committed to your child's success and your peace of mind
+              </p>
+            </div>
+            <Suspense fallback={<div className="h-32 bg-muted animate-pulse rounded-lg" />}>
+              <TrustBadges />
+            </Suspense>
+            <div className="mt-12 max-w-3xl mx-auto">
+              <Card className="p-8 bg-gradient-to-br from-primary/5 to-accent/5 border-2 border-primary/20">
+                <div className="text-center">
+                  <Award className="w-16 h-16 mx-auto mb-4 text-primary" />
+                  <h3 className="text-2xl font-bold mb-3">30-Day Money-Back Guarantee</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Try AI Kids Learning risk-free for 30 days. If you're not completely satisfied with your child's
+                    learning experience, we'll refund your subscription—no questions asked. Your child's education is
+                    our priority.
+                  </p>
+                </div>
+              </Card>
             </div>
           </div>
         </section>

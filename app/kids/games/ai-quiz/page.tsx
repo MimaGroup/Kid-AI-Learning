@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { trackActivity, trackQuizCompletion } from "@/lib/analytics"
 
 interface Question {
   question: string
@@ -49,6 +50,7 @@ export default function AIQuizPage() {
 
         if (response.ok && data.questions) {
           setQuestions(data.questions)
+          trackActivity("started", "AI Quiz", { question_count: data.questions.length })
           if (data.fallback && data.message) {
             setRateLimitMessage(data.message)
           }
@@ -87,8 +89,17 @@ export default function AIQuizPage() {
       setShowExplanation(false)
     } else {
       setQuizComplete(true)
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+
+      trackQuizCompletion("AI Quiz", score, questions.length, timeSpent)
+      trackActivity("completed", "AI Quiz", {
+        score,
+        total_questions: questions.length,
+        time_spent: timeSpent,
+        percentage: Math.round((score / questions.length) * 100),
+      })
+
       if (user) {
-        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
         const achievements = await submitProgress("ai_quiz", score, questions.length, timeSpent)
         setNewAchievements(achievements)
       }
