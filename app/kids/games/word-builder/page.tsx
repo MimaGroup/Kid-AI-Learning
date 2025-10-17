@@ -169,7 +169,7 @@ export default function WordBuilderPage() {
 
       trackGameScore("Word Builder", score, undefined, timeSpent)
       trackActivity("completed", "Word Builder", {
-        game_mode: gameMode,
+        game_mode: gameMode ?? undefined,
         difficulty,
         score,
         total_words: challenges.length,
