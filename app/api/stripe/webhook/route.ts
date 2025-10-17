@@ -204,7 +204,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       .single()
 
     if (userData?.email) {
-      const amount = `$${(invoice.amount_paid / 100).toFixed(2)} ${invoice.currency.toUpperCase()}`
+      const amount = invoice.amount_paid // Already in cents from Stripe
       const date = new Date(invoice.created * 1000).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
