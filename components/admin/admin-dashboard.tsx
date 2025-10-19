@@ -6,7 +6,10 @@ import { UsersManagement } from "./users-management"
 import { SubscriptionsManagement } from "./subscriptions-management"
 import { AnalyticsDashboard } from "./analytics-dashboard"
 import { SystemHealth } from "./system-health"
-import { Users, CreditCard, BarChart3, Activity } from "lucide-react"
+import { SupportTickets } from "./support-tickets"
+import { MonitoringDashboard } from "./monitoring-dashboard"
+import { ContentValidationDashboard } from "./content-validation-dashboard"
+import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle } from "lucide-react"
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("analytics")
@@ -19,7 +22,7 @@ export function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-7 lg:w-auto">
           <TabsTrigger value="analytics" className="gap-2">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Analytics</span>
@@ -31,6 +34,18 @@ export function AdminDashboard() {
           <TabsTrigger value="subscriptions" className="gap-2">
             <CreditCard className="h-4 w-4" />
             <span className="hidden sm:inline">Subscriptions</span>
+          </TabsTrigger>
+          <TabsTrigger value="support" className="gap-2">
+            <Headphones className="h-4 w-4" />
+            <span className="hidden sm:inline">Support</span>
+          </TabsTrigger>
+          <TabsTrigger value="content" className="gap-2">
+            <CheckCircle className="h-4 w-4" />
+            <span className="hidden sm:inline">Content</span>
+          </TabsTrigger>
+          <TabsTrigger value="monitoring" className="gap-2">
+            <Shield className="h-4 w-4" />
+            <span className="hidden sm:inline">Monitoring</span>
           </TabsTrigger>
           <TabsTrigger value="system" className="gap-2">
             <Activity className="h-4 w-4" />
@@ -48,6 +63,18 @@ export function AdminDashboard() {
 
         <TabsContent value="subscriptions" className="space-y-4">
           <SubscriptionsManagement />
+        </TabsContent>
+
+        <TabsContent value="support" className="space-y-4">
+          <SupportTickets />
+        </TabsContent>
+
+        <TabsContent value="content" className="space-y-4">
+          <ContentValidationDashboard />
+        </TabsContent>
+
+        <TabsContent value="monitoring" className="space-y-4">
+          <MonitoringDashboard />
         </TabsContent>
 
         <TabsContent value="system" className="space-y-4">

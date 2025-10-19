@@ -6,6 +6,7 @@ import { AuthProvider } from "../hooks/use-auth"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 import { OfflineIndicator } from "@/components/offline-indicator"
+import { CoppaConsentBanner } from "@/components/coppa-consent-banner"
 import Script from "next/script"
 import { Analytics } from "@vercel/analytics/react"
 import { generateStructuredData } from "@/lib/metadata"
@@ -127,6 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
             <PWAInstallPrompt />
             <OfflineIndicator />
+            <CoppaConsentBanner />
           </AuthProvider>
         </ErrorBoundary>
         <Analytics />

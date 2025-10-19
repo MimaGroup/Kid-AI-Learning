@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { X, ArrowRight, ArrowLeft, Check } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { trackOnboarding } from "@/lib/analytics"
 
 interface OnboardingStep {
   title: string
@@ -64,17 +65,60 @@ export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | 
   const steps = userType === "parent" ? PARENT_ONBOARDING_STEPS : PARENT_ONBOARDING_STEPS
 
   useEffect(() => {
-    const hasCompletedOnboarding = localStorage.getItem(`onboarding_completed_${userType}`)
-    if (!hasCompletedOnboarding) {
-      setTimeout(() => setIsVisible(true), 500)
-    }
-  }, [userType])
+    const checkOnboardingStatus = async () => {
+      try {
+        const response = await fetch(`/api/onboarding/progress?userType=${userType}`)
+        const data = await response.json()
 
-  const handleNext = () => {
+        if (!data.progress || !data.progress.completed) {
+          setTimeout(() => {
+            setIsVisible(true)
+            trackOnboarding("started", 1, steps.length)
+          }, 500)
+        }
+      } catch (error) {
+        // Fallback to localStorage if API fails
+        const hasCompletedOnboarding = localStorage.getItem(`onboarding_completed_${userType}`)
+        if (!hasCompletedOnboarding) {
+          setTimeout(() => {
+            setIsVisible(true)
+            trackOnboarding("started", 1, steps.length)
+          }, 500)
+        }
+      }
+    }
+
+    checkOnboardingStatus()
+  }, [userType, steps.length])
+
+  const updateProgress = async (step: number, completed: boolean) => {
+    try {
+      await fetch("/api/onboarding/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userType,
+          currentStep: step,
+          totalSteps: steps.length,
+          completed,
+          metadata: {
+            lastStepViewed: steps[step]?.title,
+          },
+        }),
+      })
+    } catch (error) {
+      console.error("[v0] Error updating onboarding progress:", error)
+    }
+  }
+
+  const handleNext = async () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1)
+      const nextStep = currentStep + 1
+      setCurrentStep(nextStep)
+      await updateProgress(nextStep, false)
+      trackOnboarding("started", nextStep + 1, steps.length)
     } else {
-      handleComplete()
+      await handleComplete()
     }
   }
 
@@ -84,12 +128,16 @@ export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | 
     }
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await updateProgress(currentStep, false)
+    trackOnboarding("abandoned", currentStep + 1, steps.length)
     localStorage.setItem(`onboarding_completed_${userType}`, "true")
     setIsVisible(false)
   }
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    await updateProgress(steps.length - 1, true)
+    trackOnboarding("completed", steps.length, steps.length)
     localStorage.setItem(`onboarding_completed_${userType}`, "true")
     setIsVisible(false)
   }

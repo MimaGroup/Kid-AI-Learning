@@ -22,6 +22,7 @@ import { SkillProgressChart } from "@/components/skill-progress-chart"
 import { WeeklyActivityChart } from "@/components/weekly-activity-chart"
 import { LearningRecommendations } from "@/components/learning-recommendations"
 import { DownloadReportButton } from "@/components/download-report-button"
+import { InteractiveTooltip } from "@/components/interactive-tooltip"
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
@@ -72,6 +73,31 @@ export default function ParentDashboard() {
     },
   ]
 
+  const tooltipSteps = [
+    {
+      id: "welcome",
+      target: ".tabs-list",
+      title: "Welcome! Let's get you started",
+      content: "This dashboard helps you manage your children's learning journey. Let me show you around!",
+      position: "bottom" as const,
+    },
+    {
+      id: "add-child",
+      target: ".add-child-button",
+      title: "Add Your First Child",
+      content:
+        "Click here to create a profile for your child. You can add multiple children and track each one separately.",
+      position: "left" as const,
+    },
+    {
+      id: "progress",
+      target: ".progress-tab",
+      title: "Track Progress",
+      content: "View detailed learning analytics, achievements, and activity history for each child.",
+      position: "bottom" as const,
+    },
+  ]
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background p-6">
@@ -90,6 +116,7 @@ export default function ParentDashboard() {
 
       <OnboardingFlow userType="parent" />
       <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} />
+      <InteractiveTooltip steps={tooltipSteps} storageKey="parent-dashboard-tooltips" />
 
       <div className="flex-1 p-6 relative">
         <div className="max-w-7xl mx-auto">

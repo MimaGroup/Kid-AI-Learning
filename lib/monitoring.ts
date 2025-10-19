@@ -1,5 +1,3 @@
-// Performance monitoring and error tracking utilities
-
 /**
  * Monitor performance metrics
  */
@@ -7,9 +5,6 @@ export function trackPerformance(metricName: string, value: number, unit = "ms")
   if (process.env.NODE_ENV === "development") {
     console.log(`[v0] Performance: ${metricName} = ${value}${unit}`)
   }
-
-  // Send to monitoring service (e.g., Vercel Analytics, Sentry)
-  // Example: performance.measure(metricName)
 }
 
 /**
@@ -24,11 +19,29 @@ export async function monitorApiCall<T>(apiName: string, apiCall: () => Promise<
 
     trackPerformance(`api_${apiName}`, duration)
 
+    // Log to database
+    await logPerformanceMetric({
+      metric_type: "api_call",
+      metric_name: apiName,
+      duration_ms: Math.round(duration),
+      status: "success",
+    })
+
     return result
   } catch (error) {
     const duration = performance.now() - startTime
 
     trackPerformance(`api_${apiName}_error`, duration)
+
+    // Log error
+    await logError({
+      error_type: "api_error",
+      error_message: error instanceof Error ? error.message : "Unknown error",
+      stack_trace: error instanceof Error ? error.stack : undefined,
+      severity: "high",
+      source: "api",
+      endpoint: apiName,
+    })
 
     throw error
   }
@@ -63,9 +76,6 @@ export function trackSubscriptionMetrics(metrics: {
   if (process.env.NODE_ENV === "development") {
     console.log("[v0] Subscription Metrics:", metrics)
   }
-
-  // Send to analytics dashboard
-  // This would integrate with your business intelligence tools
 }
 
 /**
@@ -84,12 +94,13 @@ export function setupGlobalErrorHandling() {
     window.addEventListener("unhandledrejection", (event) => {
       console.error("[v0] Unhandled promise rejection:", event.reason)
 
-      // Track error
       if (event.reason instanceof Error) {
-        // You would send this to your error tracking service
-        console.error("[v0] Error details:", {
-          message: event.reason.message,
-          stack: event.reason.stack,
+        logError({
+          error_type: "unhandled_rejection",
+          error_message: event.reason.message,
+          stack_trace: event.reason.stack,
+          severity: "high",
+          source: "client",
         })
       }
     })
@@ -98,14 +109,18 @@ export function setupGlobalErrorHandling() {
     window.addEventListener("error", (event) => {
       console.error("[v0] Global error:", event.error)
 
-      // Track error
       if (event.error instanceof Error) {
-        console.error("[v0] Error details:", {
-          message: event.error.message,
-          stack: event.error.stack,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
+        logError({
+          error_type: "global_error",
+          error_message: event.error.message,
+          stack_trace: event.error.stack,
+          severity: "high",
+          source: "client",
+          metadata: {
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+          },
         })
       }
     })
@@ -131,8 +146,6 @@ export async function performHealthCheck() {
     const apiResponse = await fetch("/api/health")
     checks.checks.api = apiResponse.ok
 
-    // Add more health checks as needed
-
     checks.status = Object.values(checks.checks).every(Boolean) ? "healthy" : "degraded"
   } catch (error) {
     checks.status = "unhealthy"
@@ -140,4 +153,84 @@ export async function performHealthCheck() {
   }
 
   return checks
+}
+
+/**
+ * Log error to database
+ */
+export async function logError(error: {
+  error_type: string
+  error_message: string
+  stack_trace?: string
+  severity: "low" | "medium" | "high" | "critical"
+  source: "api" | "client" | "database" | "external"
+  endpoint?: string
+  user_id?: string
+  metadata?: Record<string, any>
+}) {
+  try {
+    const response = await fetch("/api/admin/monitoring/log-error", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(error),
+    })
+
+    if (!response.ok) {
+      console.error("[v0] Failed to log error to database")
+    }
+  } catch (err) {
+    console.error("[v0] Error logging to database:", err)
+  }
+}
+
+/**
+ * Create system alert
+ */
+export async function createSystemAlert(alert: {
+  alert_type: string
+  title: string
+  description: string
+  severity: "info" | "warning" | "error" | "critical"
+  affected_service?: string
+  metadata?: Record<string, any>
+}) {
+  try {
+    const response = await fetch("/api/admin/monitoring/create-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(alert),
+    })
+
+    if (!response.ok) {
+      console.error("[v0] Failed to create system alert")
+    }
+  } catch (err) {
+    console.error("[v0] Error creating alert:", err)
+  }
+}
+
+/**
+ * Log performance metric to database
+ */
+async function logPerformanceMetric(metric: {
+  metric_type: string
+  metric_name: string
+  duration_ms: number
+  status: string
+  endpoint?: string
+  metadata?: Record<string, any>
+}) {
+  try {
+    const response = await fetch("/api/admin/monitoring/log-performance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(metric),
+    })
+
+    if (!response.ok) {
+      console.error("[v0] Failed to log performance metric")
+    }
+  } catch (err) {
+    console.error("[v0] Error logging performance:", err)
+  }
 }

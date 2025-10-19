@@ -431,4 +431,64 @@ export const emailTemplates = {
       </html>
     `,
   }),
+
+  onboardingFollowUp: (name: string, daysActive: number) => ({
+    subject: "How's your learning journey going? 🌟",
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .tip-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>How's It Going? 🌟</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>It's been ${daysActive} days since you joined AI Kids Learning! We wanted to check in and see how things are going.</p>
+              
+              <div class="tip-box">
+                <h3>💡 Quick Tips for Success:</h3>
+                <ul>
+                  <li><strong>Set a routine:</strong> 10-15 minutes daily works wonders</li>
+                  <li><strong>Celebrate wins:</strong> Acknowledge every achievement, big or small</li>
+                  <li><strong>Mix it up:</strong> Try different activities to keep learning fresh</li>
+                  <li><strong>Track progress:</strong> Check the dashboard weekly to see growth</li>
+                </ul>
+              </div>
+              
+              <h3>🎮 Popular Activities This Week:</h3>
+              <ul>
+                <li>AI Quiz Master - Test knowledge with adaptive quizzes</li>
+                <li>Word Builder - Build vocabulary through fun challenges</li>
+                <li>Science Lab - Explore scientific concepts interactively</li>
+              </ul>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/kids/activities" class="button">Explore Activities</a>
+              </p>
+              
+              <p>Have questions or feedback? We'd love to hear from you! Just reply to this email.</p>
+              
+              <p>Keep up the great work!<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
 }
