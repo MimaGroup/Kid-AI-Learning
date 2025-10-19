@@ -26,23 +26,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
-      setLoading(false)
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        setUser(session?.user ?? null)
+      } catch (error) {
+        console.error("[v0] Error getting session:", error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
     }
 
     getSession()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    try {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
 
-    return () => subscription.unsubscribe()
+      return () => subscription.unsubscribe()
+    } catch (error) {
+      console.error("[v0] Error setting up auth state listener:", error)
+      setLoading(false)
+    }
   }, [supabase])
 
   const login = async (email: string, password: string) => {
