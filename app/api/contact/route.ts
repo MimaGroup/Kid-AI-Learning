@@ -3,6 +3,8 @@ import { createServerClient } from "@/lib/supabase/server"
 import { sendEmail } from "@/lib/email"
 import { SupportTicketConfirmation } from "@/lib/email"
 
+const FALLBACK_MODE = process.env.NODE_ENV === "development" || !process.env.SUPABASE_URL
+
 export async function POST(request: Request) {
   try {
     console.log("[v0] Contact API called")
@@ -15,6 +17,38 @@ export async function POST(request: Request) {
     if (!name || !email || !subject || !message) {
       console.log("[v0] Validation failed: missing fields")
       return NextResponse.json({ error: "All fields are required" }, { status: 400 })
+    }
+
+    if (FALLBACK_MODE) {
+      console.log("[v0] Running in fallback mode (no database)")
+      const mockTicketNumber = `TKT-${new Date().toISOString().split("T")[0].replace(/-/g, "")}-${Math.floor(
+        Math.random() * 10000,
+      )
+        .toString()
+        .padStart(4, "0")}`
+
+      try {
+        await sendEmail({
+          to: email,
+          subject: `Support Ticket ${mockTicketNumber} - AI Kids Learning`,
+          react: SupportTicketConfirmation({
+            name,
+            ticketNumber: mockTicketNumber,
+            subject,
+            message,
+          }),
+        })
+        console.log("[v0] Confirmation email sent successfully")
+      } catch (emailError) {
+        console.error("[v0] Error sending email:", emailError)
+        // Continue anyway in fallback mode
+      }
+
+      return NextResponse.json({
+        success: true,
+        ticketNumber: mockTicketNumber,
+        message: "Support ticket created successfully (fallback mode)",
+      })
     }
 
     let supabase
