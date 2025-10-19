@@ -5,22 +5,29 @@ import { SupportTicketConfirmation } from "@/lib/email"
 
 export async function POST(request: Request) {
   try {
+    console.log("[v0] Contact API called")
     const body = await request.json()
     const { name, email, subject, message } = body
 
+    console.log("[v0] Request body:", { name, email, subject, messageLength: message?.length })
+
     // Validate required fields
     if (!name || !email || !subject || !message) {
+      console.log("[v0] Validation failed: missing fields")
       return NextResponse.json({ error: "All fields are required" }, { status: 400 })
     }
 
     const supabase = await createServerClient()
+    console.log("[v0] Supabase client created")
 
     // Get current user if logged in
     const {
       data: { user },
     } = await supabase.auth.getUser()
+    console.log("[v0] User ID:", user?.id || "not logged in")
 
     // Create support ticket in database
+    console.log("[v0] Creating support ticket...")
     const { data: ticket, error: ticketError } = await supabase
       .from("support_tickets")
       .insert({
@@ -38,11 +45,17 @@ export async function POST(request: Request) {
 
     if (ticketError) {
       console.error("[v0] Error creating support ticket:", ticketError)
-      return NextResponse.json({ error: "Failed to create support ticket" }, { status: 500 })
+      return NextResponse.json(
+        { error: "Failed to create support ticket", details: ticketError.message },
+        { status: 500 },
+      )
     }
+
+    console.log("[v0] Support ticket created:", ticket.ticket_number)
 
     // Send confirmation email to customer
     try {
+      console.log("[v0] Sending confirmation email...")
       await sendEmail({
         to: email,
         subject: `Support Ticket ${ticket.ticket_number} - AI Kids Learning`,
@@ -53,6 +66,7 @@ export async function POST(request: Request) {
           message,
         }),
       })
+      console.log("[v0] Confirmation email sent successfully")
     } catch (emailError) {
       console.error("[v0] Error sending confirmation email:", emailError)
       // Don't fail the request if email fails
@@ -65,6 +79,9 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("[v0] Error in contact API:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 },
+    )
   }
 }
