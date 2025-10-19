@@ -30,6 +30,8 @@ export default function ContactClient() {
     })
 
     try {
+      console.log("[v0] Submitting contact form:", formData)
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -38,10 +40,36 @@ export default function ContactClient() {
         body: JSON.stringify(formData),
       })
 
+      console.log("[v0] Response status:", response.status)
+      console.log("[v0] Response ok:", response.ok)
+
+      const responseText = await response.text()
+      console.log("[v0] Response text:", responseText.substring(0, 200))
+
       if (!response.ok) {
-        throw new Error("Failed to send message")
+        // Try to parse error message from JSON
+        let errorMessage = "Failed to send message"
+        try {
+          const errorData = JSON.parse(responseText)
+          errorMessage = errorData.error || errorData.details || errorMessage
+        } catch (jsonError) {
+          // If JSON parsing fails, use the text response
+          console.error("[v0] Failed to parse error response as JSON:", jsonError)
+          errorMessage = `Server error (${response.status}): ${responseText.substring(0, 100)}`
+        }
+        throw new Error(errorMessage)
       }
 
+      // Parse successful response as JSON
+      let responseData
+      try {
+        responseData = JSON.parse(responseText)
+      } catch (jsonError) {
+        console.error("[v0] Failed to parse success response as JSON:", jsonError)
+        throw new Error("Invalid response from server")
+      }
+
+      console.log("[v0] Contact form submitted successfully:", responseData)
       setIsSubmitted(true)
 
       // Reset form after 3 seconds
@@ -51,7 +79,8 @@ export default function ContactClient() {
       }, 3000)
     } catch (error) {
       console.error("[v0] Error submitting contact form:", error)
-      alert("Failed to send message. Please try again.")
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again."
+      alert(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

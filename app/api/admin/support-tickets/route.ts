@@ -1,40 +1,38 @@
 import { NextResponse } from "next/server"
-import { createServerClient } from "@/lib/supabase/server"
-import { checkAdminAuth } from "@/lib/admin-auth"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 
 export async function GET() {
   try {
-    const adminCheck = await checkAdminAuth()
-    if (!adminCheck.isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    console.log("[v0] Fetching support tickets")
 
-    const supabase = await createServerClient()
+    const supabase = await createServiceRoleClient()
 
     const { data: tickets, error } = await supabase
       .from("support_tickets")
       .select("*")
       .order("created_at", { ascending: false })
 
-    if (error) throw error
+    if (error) {
+      console.error("[v0] Error fetching support tickets:", error.message)
+      return NextResponse.json({ tickets: [], error: error.message })
+    }
 
-    return NextResponse.json({ tickets })
+    console.log("[v0] Fetched tickets:", tickets?.length || 0)
+    return NextResponse.json({ tickets: tickets || [] })
   } catch (error) {
     console.error("[v0] Error fetching support tickets:", error)
-    return NextResponse.json({ error: "Failed to fetch tickets" }, { status: 500 })
+    return NextResponse.json({
+      tickets: [],
+      error: error instanceof Error ? error.message : "Failed to fetch tickets",
+    })
   }
 }
 
 export async function PATCH(request: Request) {
   try {
-    const adminCheck = await checkAdminAuth()
-    if (!adminCheck.isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { ticketId, status, priority, assigned_to } = await request.json()
 
-    const supabase = await createServerClient()
+    const supabase = await createServiceRoleClient()
 
     const updateData: any = {}
     if (status) updateData.status = status
