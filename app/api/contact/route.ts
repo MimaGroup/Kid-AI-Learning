@@ -17,14 +17,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 })
     }
 
-    const supabase = await createServerClient()
-    console.log("[v0] Supabase client created")
+    let supabase
+    try {
+      supabase = await createServerClient()
+      console.log("[v0] Supabase client created successfully")
+    } catch (supabaseError) {
+      console.error("[v0] Failed to create Supabase client:", supabaseError)
+      return NextResponse.json(
+        {
+          error: "Database connection failed",
+          details:
+            "Unable to connect to database. Please try again later or contact support directly at info@kids-learning-ai.com",
+        },
+        { status: 503 },
+      )
+    }
 
     // Get current user if logged in
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    console.log("[v0] User ID:", user?.id || "not logged in")
+    let user = null
+    try {
+      const { data } = await supabase.auth.getUser()
+      user = data.user
+      console.log("[v0] User ID:", user?.id || "not logged in")
+    } catch (authError) {
+      console.warn("[v0] Auth check failed, continuing without user:", authError)
+    }
 
     // Create support ticket in database
     console.log("[v0] Creating support ticket...")

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UsersManagement } from "./users-management"
 import { SubscriptionsManagement } from "./subscriptions-management"
@@ -13,6 +13,11 @@ import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("analytics")
+
+  useEffect(() => {
+    console.log("[v0] AdminDashboard mounted with 7 tabs")
+    console.log("[v0] Active tab:", activeTab)
+  }, [activeTab])
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-7xl">

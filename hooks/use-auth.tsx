@@ -4,7 +4,6 @@ import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 import { createClient } from "../lib/supabase/client"
 import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js"
-import { emailTemplates } from "@/lib/email"
 
 interface AuthContextType {
   user: User | null
@@ -33,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
       } catch (error) {
         console.error("[v0] Error getting session:", error)
+        // Gracefully handle fetch failures - treat as logged out
         setUser(null)
       } finally {
         setLoading(false)
@@ -49,90 +49,103 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
       })
 
-      return () => subscription.unsubscribe()
+      return () => {
+        try {
+          subscription.unsubscribe()
+        } catch (error) {
+          console.error("[v0] Error unsubscribing from auth state:", error)
+        }
+      }
     } catch (error) {
       console.error("[v0] Error setting up auth state listener:", error)
       setLoading(false)
+      return () => {} // Return empty cleanup function
     }
   }, [supabase])
 
   const login = async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error("Supabase client not initialized")
-    }
-
     setError(null)
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    if (error) {
-      setError(error.message)
-      throw error
+      if (error) {
+        setError(error.message)
+        throw error
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to connect to authentication service"
+      setError(errorMessage)
+      throw new Error(errorMessage)
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   const register = async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error("Supabase client not initialized")
-    }
-
     setError(null)
     setLoading(true)
 
-    const { error, data } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
-      },
-    })
+    try {
+      const { error, data } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo:
+            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
+        },
+      })
 
-    if (error) {
-      setError(error.message)
-      throw error
-    }
-
-    if (data.user) {
-      try {
-        const emailTemplate = emailTemplates.welcome(email.split("@")[0])
-
-        await fetch("/api/send-welcome-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data.user.email,
-            name: email.split("@")[0],
-          }),
-        })
-
-        console.log("[v0] Welcome email queued for", data.user.email)
-      } catch (error) {
-        console.error("[v0] Error sending welcome email:", error)
-        // Don't throw - registration was successful even if email fails
+      if (error) {
+        setError(error.message)
+        throw error
       }
-    }
 
-    setLoading(false)
+      if (data.user) {
+        try {
+          await fetch("/api/send-welcome-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: data.user.email,
+              name: email.split("@")[0],
+            }),
+          })
+
+          console.log("[v0] Welcome email queued for", data.user.email)
+        } catch (error) {
+          console.error("[v0] Error sending welcome email:", error)
+          // Don't throw - registration was successful even if email fails
+        }
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to connect to authentication service"
+      setError(errorMessage)
+      throw new Error(errorMessage)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const logout = async () => {
-    if (!supabase) {
-      throw new Error("Supabase client not initialized")
-    }
-
     setError(null)
-    const { error } = await supabase.auth.signOut()
-    if (error) {
-      setError(error.message)
-      throw error
+
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        setError(error.message)
+        throw error
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to sign out"
+      setError(errorMessage)
+      throw new Error(errorMessage)
     }
   }
 
