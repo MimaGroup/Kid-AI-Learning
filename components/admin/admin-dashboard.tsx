@@ -22,7 +22,7 @@ export function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 lg:w-auto overflow-x-auto">
           <TabsTrigger value="analytics" className="gap-2">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Analytics</span>
@@ -35,21 +35,21 @@ export function AdminDashboard() {
             <CreditCard className="h-4 w-4" />
             <span className="hidden sm:inline">Subscriptions</span>
           </TabsTrigger>
+          <TabsTrigger value="system" className="gap-2">
+            <Activity className="h-4 w-4" />
+            <span className="hidden sm:inline">System</span>
+          </TabsTrigger>
           <TabsTrigger value="support" className="gap-2">
             <Headphones className="h-4 w-4" />
             <span className="hidden sm:inline">Support</span>
-          </TabsTrigger>
-          <TabsTrigger value="content" className="gap-2">
-            <CheckCircle className="h-4 w-4" />
-            <span className="hidden sm:inline">Content</span>
           </TabsTrigger>
           <TabsTrigger value="monitoring" className="gap-2">
             <Shield className="h-4 w-4" />
             <span className="hidden sm:inline">Monitoring</span>
           </TabsTrigger>
-          <TabsTrigger value="system" className="gap-2">
-            <Activity className="h-4 w-4" />
-            <span className="hidden sm:inline">System</span>
+          <TabsTrigger value="content" className="gap-2">
+            <CheckCircle className="h-4 w-4" />
+            <span className="hidden sm:inline">Content</span>
           </TabsTrigger>
         </TabsList>
 
