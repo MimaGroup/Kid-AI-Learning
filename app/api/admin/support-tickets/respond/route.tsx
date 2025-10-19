@@ -10,6 +10,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    if (!adminCheck.user) {
+      return NextResponse.json({ error: "User not found" }, { status: 401 })
+    }
+
     const { ticketId, message } = await request.json()
 
     if (!ticketId || !message) {
