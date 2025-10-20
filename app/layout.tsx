@@ -132,6 +132,53 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </AuthProvider>
         </ErrorBoundary>
         <Analytics />
+
+        <Script id="init-monitoring" strategy="afterInteractive">
+          {`
+            // Initialize global error handling
+            if (typeof window !== 'undefined') {
+              // Catch unhandled promise rejections
+              window.addEventListener('unhandledrejection', (event) => {
+                console.error('[v0] Unhandled promise rejection:', event.reason);
+                
+                fetch('/api/admin/monitoring/log-error', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    error_type: 'unhandled_rejection',
+                    error_message: event.reason?.message || String(event.reason),
+                    stack_trace: event.reason?.stack,
+                    severity: 'high',
+                    source: 'client',
+                  }),
+                }).catch(err => console.error('[v0] Failed to log error:', err));
+              });
+
+              // Catch global errors
+              window.addEventListener('error', (event) => {
+                console.error('[v0] Global error:', event.error);
+                
+                fetch('/api/admin/monitoring/log-error', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    error_type: 'global_error',
+                    error_message: event.error?.message || event.message,
+                    stack_trace: event.error?.stack,
+                    severity: 'high',
+                    source: 'client',
+                    metadata: {
+                      filename: event.filename,
+                      lineno: event.lineno,
+                      colno: event.colno,
+                    },
+                  }),
+                }).catch(err => console.error('[v0] Failed to log error:', err));
+              });
+            }
+          `}
+        </Script>
+
         <Script id="register-sw" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {

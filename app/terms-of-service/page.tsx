@@ -136,13 +136,23 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-semibold mb-3 text-gray-900">8. AI-Generated Content</h2>
               <p className="mb-3">Our platform uses AI to generate educational content. Please note:</p>
-              <ul className="list-disc pl-6 space-y-2">
+              <ul className="list-disc pl-6 space-y-2 mb-4">
                 <li>AI-generated content is created in real-time and may vary</li>
-                <li>We strive for age-appropriate content but cannot guarantee perfection</li>
-                <li>Parents should supervise children's interactions</li>
-                <li>Report any inappropriate content immediately</li>
-                <li>We continuously improve our content filters and safety measures</li>
+                <li>We implement multi-layer content filtering and safety measures</li>
+                <li>All AI responses are designed to be age-appropriate and educational</li>
+                <li>We continuously monitor and improve our content safety systems</li>
+                <li>Parents should supervise children's interactions with AI features</li>
+                <li>Report any inappropriate content immediately through the platform or contact form</li>
               </ul>
+
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm">
+                  <strong>Important:</strong> While we use advanced AI safety measures and content filtering, AI
+                  technology is not perfect. We strongly encourage parental supervision and welcome immediate reporting
+                  of any concerns. We review all flagged content within 24 hours and continuously improve our safety
+                  systems.
+                </p>
+              </div>
             </section>
 
             <section>
@@ -162,15 +172,23 @@ export default function TermsOfServicePage() {
               <p className="mb-3">
                 THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. WE DO NOT GUARANTEE:
               </p>
-              <ul className="list-disc pl-6 space-y-2">
+              <ul className="list-disc pl-6 space-y-2 mb-4">
                 <li>Uninterrupted or error-free service</li>
                 <li>Specific educational outcomes or results</li>
                 <li>Compatibility with all devices or browsers</li>
-                <li>Accuracy of all AI-generated content</li>
+                <li>100% accuracy of all AI-generated content</li>
+                <li>That the service will meet your specific requirements</li>
               </ul>
-              <p className="mt-3">
+              <p className="mt-3 mb-3">
                 TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
-                CONSEQUENTIAL, OR PUNITIVE DAMAGES.
+                CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR OTHER
+                INTANGIBLE LOSSES.
+              </p>
+
+              <p className="mt-3">
+                <strong>Limitation of Liability:</strong> Our total liability to you for any claims arising from your
+                use of the Service shall not exceed the amount you paid us in the 12 months prior to the claim, or $100,
+                whichever is greater.
               </p>
             </section>
 
@@ -195,14 +213,32 @@ export default function TermsOfServicePage() {
 
             <section>
               <h2 className="text-2xl font-semibold mb-3 text-gray-900">13. Governing Law</h2>
+              <p className="mb-3">
+                These Terms shall be governed by and construed in accordance with the laws of [JURISDICTION], without
+                regard to conflict of law provisions.
+              </p>
+
+              <h3 className="text-xl font-semibold mb-2 text-gray-800">Dispute Resolution</h3>
+              <p className="mb-2">In the event of any dispute arising from these Terms or your use of the Service:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>We encourage you to contact us first to resolve the issue informally</li>
+                <li>If informal resolution fails, disputes will be resolved through binding arbitration</li>
+                <li>You waive your right to participate in class action lawsuits</li>
+                <li>Small claims court remains available for qualifying disputes</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3 text-gray-900">14. Severability</h2>
               <p>
-                These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which
-                our company is registered, without regard to conflict of law provisions.
+                If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited
+                or eliminated to the minimum extent necessary, and the remaining provisions will remain in full force
+                and effect.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900">14. Contact Information</h2>
+              <h2 className="text-2xl font-semibold mb-3 text-gray-900">15. Contact Information</h2>
               <p className="mb-3">For questions about these Terms of Service, please contact us:</p>
               <ul className="space-y-1">
                 <li>

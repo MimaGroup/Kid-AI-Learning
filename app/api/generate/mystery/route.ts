@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import { generateText } from "ai"
 import { groq } from "@ai-sdk/groq"
+import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
+import { createClient } from "@/lib/supabase/server"
+import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 const FALLBACK_MYSTERIES = [
   {
@@ -43,17 +46,43 @@ const FALLBACK_MYSTERIES = [
 
 export async function POST(request: Request) {
   try {
+    let userId = "anonymous"
+    try {
+      const supabase = await createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        userId = user.id
+      }
+    } catch (error) {
+      console.log("[v0] Auth check failed, using anonymous rate limit")
+    }
+
     const body = await request.json()
     const { theme = "school", difficulty = "easy" } = body
+
+    const sanitizedTheme = sanitizeUserInput(theme)
+
+    const rateLimitKey = getRateLimitKey(userId, "ai-generation")
+    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
+
+    if (!rateLimitResult.allowed) {
+      console.log(`[v0] Rate limit exceeded for user ${userId}, using fallback mystery`)
+      const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+      return NextResponse.json({
+        mystery: randomMystery,
+        fallback: true,
+        message: `Too many requests! Please wait ${rateLimitResult.resetIn} seconds before generating new mysteries. Enjoy this pre-made mystery in the meantime!`,
+      })
+    }
 
     let retryCount = 0
     const maxRetries = 2
 
     while (retryCount < maxRetries) {
       try {
-        const { text } = await generateText({
-          model: groq("llama-3.1-8b-instant"),
-          prompt: `Create a fun detective mystery case for kids aged 8-12 with a ${theme} theme at ${difficulty} difficulty.
+        const basePrompt = `Create a fun detective mystery case for kids aged 8-12 with a ${sanitizedTheme} theme at ${difficulty} difficulty.
 
 Format the response as JSON with this exact structure:
 {
@@ -75,8 +104,14 @@ Requirements:
 - Make it educational but fun
 - No violence or scary content
 
-Return ONLY the JSON object, no additional text.`,
-          maxRetries: 0, // Handle retries manually
+Return ONLY the JSON object, no additional text.`
+
+        const safePrompt = createSafePrompt(basePrompt)
+
+        const { text } = await generateText({
+          model: groq("llama-3.1-8b-instant"),
+          prompt: safePrompt,
+          maxRetries: 0,
         })
 
         const cleanedText = text
@@ -85,11 +120,25 @@ Return ONLY the JSON object, no additional text.`,
           .replace(/```\n?/g, "")
 
         const mystery = JSON.parse(cleanedText)
+
+        const contentToCheck = `${mystery.title} ${mystery.description} ${mystery.clues.join(" ")} ${mystery.solution}`
+        const moderation = await validateAIResponse(contentToCheck, "mystery-generation")
+
+        if (!moderation.isAppropriate) {
+          console.log("[v0] Mystery blocked by content moderation, using fallback")
+          const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+          return NextResponse.json({
+            mystery: randomMystery,
+            fallback: true,
+            message: "Using a pre-made mystery to ensure age-appropriate content!",
+          })
+        }
+
         return NextResponse.json({ mystery })
       } catch (aiError: any) {
         if (aiError?.message?.includes("rate_limit_exceeded") && retryCount < maxRetries - 1) {
           console.log(`[v0] Rate limited, waiting before retry ${retryCount + 1}/${maxRetries}`)
-          await new Promise((resolve) => setTimeout(resolve, 2000)) // Wait 2 seconds
+          await new Promise((resolve) => setTimeout(resolve, 2000))
           retryCount++
           continue
         }

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { generateText } from "ai"
 import { groq } from "@ai-sdk/groq"
+import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
+import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 const FALLBACK_QUESTIONS = [
   {
@@ -51,27 +53,6 @@ const FALLBACK_QUESTIONS = [
   },
 ]
 
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT_WINDOW = 60000 // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 3 // Only 3 AI generations per minute per user
-
-function checkRateLimit(userId: string): { allowed: boolean; resetIn?: number } {
-  const now = Date.now()
-  const userLimit = rateLimitMap.get(userId)
-
-  if (!userLimit || now > userLimit.resetTime) {
-    rateLimitMap.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
-    return { allowed: true }
-  }
-
-  if (userLimit.count >= MAX_REQUESTS_PER_WINDOW) {
-    return { allowed: false, resetIn: Math.ceil((userLimit.resetTime - now) / 1000) }
-  }
-
-  userLimit.count++
-  return { allowed: true }
-}
-
 async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string> {
   let lastError: Error | null = null
 
@@ -87,13 +68,13 @@ async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string
 
       if (error?.message?.includes("rate_limit_exceeded") || error?.message?.includes("429")) {
         const waitMatch = error.message.match(/try again in ([\d.]+)(ms|s)/)
-        let waitTime = 3000 * Math.pow(2, attempt) // 3s, 6s
+        let waitTime = 3000 * Math.pow(2, attempt)
 
         if (waitMatch) {
           const value = Number.parseFloat(waitMatch[1])
           const unit = waitMatch[2]
           waitTime = Math.max(waitTime, unit === "s" ? value * 1000 : value)
-          waitTime += 1000 // Increased buffer from 500ms to 1000ms
+          waitTime += 1000
         }
 
         console.log(`[v0] Rate limited, waiting ${waitTime}ms before retry ${attempt + 1}/${maxRetries}`)
@@ -136,8 +117,12 @@ export async function POST(request: Request) {
     console.log("[v0] Quiz generation params:", body)
     const { topic = "artificial intelligence", difficulty = "beginner", count = 5 } = body
 
-    const rateLimitCheck = checkRateLimit(userId)
-    if (!rateLimitCheck.allowed) {
+    const sanitizedTopic = sanitizeUserInput(topic)
+
+    const rateLimitKey = getRateLimitKey(userId, "ai-generation")
+    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
+
+    if (!rateLimitResult.allowed) {
       console.log(`[v0] Rate limit exceeded for user ${userId}, using fallback questions`)
       const shuffled = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5)
       const selectedQuestions = shuffled.slice(0, Math.min(count, FALLBACK_QUESTIONS.length))
@@ -145,15 +130,14 @@ export async function POST(request: Request) {
       return NextResponse.json({
         questions: selectedQuestions,
         fallback: true,
-        message: `Too many requests! Please wait ${rateLimitCheck.resetIn} seconds before generating new AI questions. Enjoy these pre-made questions in the meantime!`,
+        message: `Too many requests! Please wait ${rateLimitResult.resetIn} seconds before generating new AI questions. Enjoy these pre-made questions in the meantime!`,
       })
     }
 
     try {
       console.log("[v0] Calling Groq API with retry logic...")
 
-      const text =
-        await generateWithRetry(`Generate ${count} multiple choice quiz questions about ${topic} for kids aged 8-12 at ${difficulty} level.
+      const basePrompt = `Generate ${count} multiple choice quiz questions about ${sanitizedTopic} for kids aged 8-12 at ${difficulty} level.
 
 Format the response as a JSON array with this exact structure:
 [
@@ -172,7 +156,11 @@ Requirements:
 - Make sure the correct answer index (0-3) matches the options array
 - Topics should be educational but fun
 
-Return ONLY the JSON array, no additional text.`)
+Return ONLY the JSON array, no additional text.`
+
+      const safePrompt = createSafePrompt(basePrompt)
+
+      const text = await generateWithRetry(safePrompt)
 
       console.log("[v0] Groq API response received, length:", text.length)
 
@@ -185,6 +173,23 @@ Return ONLY the JSON array, no additional text.`)
 
       const questions = JSON.parse(cleanedText)
       console.log("[v0] Parsed questions count:", questions.length)
+
+      for (const question of questions) {
+        const contentToCheck = `${question.question} ${question.options.join(" ")} ${question.explanation}`
+        const moderation = await validateAIResponse(contentToCheck, "quiz-generation")
+
+        if (!moderation.isAppropriate) {
+          console.log("[v0] Quiz question blocked by content moderation, using fallback")
+          const shuffled = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5)
+          const selectedQuestions = shuffled.slice(0, Math.min(count, FALLBACK_QUESTIONS.length))
+
+          return NextResponse.json({
+            questions: selectedQuestions,
+            fallback: true,
+            message: "Using pre-made questions to ensure age-appropriate content!",
+          })
+        }
+      }
 
       return NextResponse.json({ questions })
     } catch (error: any) {

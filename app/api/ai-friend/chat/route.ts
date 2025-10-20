@@ -1,27 +1,13 @@
 import { NextResponse } from "next/server"
 import { generateText } from "ai"
 import { groq } from "@ai-sdk/groq"
+import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
+import { createClient } from "@/lib/supabase/server"
+import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT_WINDOW = 60000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 10 // 10 messages per minute
-
-function checkRateLimit(userId: string): { allowed: boolean; resetIn?: number } {
-  const now = Date.now()
-  const userLimit = rateLimitMap.get(userId)
-
-  if (!userLimit || now > userLimit.resetTime) {
-    rateLimitMap.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
-    return { allowed: true }
-  }
-
-  if (userLimit.count >= MAX_REQUESTS_PER_WINDOW) {
-    return { allowed: false, resetIn: Math.ceil((userLimit.resetTime - now) / 1000) }
-  }
-
-  userLimit.count++
-  return { allowed: true }
-}
 
 const FALLBACK_RESPONSES = [
   "That's really interesting! Tell me more!",
@@ -43,16 +29,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    const userId = request.headers.get("x-forwarded-for") || "anonymous"
-    const rateLimitCheck = checkRateLimit(userId)
+    const sanitizedMessage = sanitizeUserInput(message)
 
-    if (!rateLimitCheck.allowed) {
+    let userId = "anonymous"
+    try {
+      const supabase = await createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        userId = user.id
+      }
+    } catch (error) {
+      console.log("[v0] Auth check failed, using anonymous rate limit")
+    }
+
+    const rateLimitKey = getRateLimitKey(userId, "ai-chat")
+    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiChat)
+
+    if (!rateLimitResult.allowed) {
       console.log(`[v0] Rate limit exceeded, using fallback response`)
       const fallbackResponse = FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
       return NextResponse.json({
         message: fallbackResponse,
         fallback: true,
-        fallbackMessage: `Too many messages! Please wait ${rateLimitCheck.resetIn} seconds. I'll still chat with you using simple responses!`,
+        fallbackMessage: `Too many messages! Please wait ${rateLimitResult.resetIn} seconds. I'll still chat with you using simple responses!`,
       })
     }
 
@@ -65,9 +66,7 @@ export async function POST(request: Request) {
           .join("\n")
       }
 
-      const { text } = await generateText({
-        model: groq("llama-3.1-8b-instant"),
-        prompt: `You are ${friendName}, an AI friend for kids aged 8-12. Your personality is: ${personality}.
+      const basePrompt = `You are ${friendName}, an AI friend for kids aged 8-12. Your personality is: ${personality}.
 
 Guidelines:
 - Be friendly, encouraging, and age-appropriate
@@ -80,12 +79,33 @@ Guidelines:
 
 ${contextMessages ? `Recent conversation:\n${contextMessages}\n` : ""}
 
-Child: ${message}
+Child: ${sanitizedMessage}
 
-Respond as ${friendName} with a ${personality.toLowerCase()} personality:`,
+Respond as ${friendName} with a ${personality.toLowerCase()} personality:`
+
+      const safePrompt = createSafePrompt(basePrompt)
+
+      const { text } = await generateText({
+        model: groq("llama-3.1-8b-instant"),
+        prompt: safePrompt,
       })
 
-      return NextResponse.json({ message: text })
+      const moderation = await validateAIResponse(text, "ai-friend-chat")
+
+      if (!moderation.isAppropriate) {
+        console.log("[v0] AI response blocked by content moderation:", moderation.reason)
+        const fallbackResponse = FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
+        return NextResponse.json({
+          message: fallbackResponse,
+          fallback: true,
+          fallbackMessage: "Let me think of a better way to say that!",
+        })
+      }
+
+      // Use sanitized content if available, otherwise original
+      const finalMessage = moderation.sanitizedContent || text
+
+      return NextResponse.json({ message: finalMessage })
     } catch (error: any) {
       console.error("[v0] Error generating chat response:", error)
 

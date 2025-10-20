@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "apply-rls": "tsx scripts/apply-rls-policies.ts",
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "verify-rls": "tsx scripts/verify-rls.ts"
   },
   "dependencies": {
     "@ai-sdk/groq": "latest",
@@ -41,15 +43,18 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@types/node": "^20",
+    "@upstash/redis": "latest",
     "@vercel/analytics": "latest",
     "ai": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto": "latest",
     "date-fns": "^2.30.0",
+    "fs": "latest",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-themes": "latest",
+    "path": "latest",
     "react": "^18",
     "react-day-picker": "^8.9.1",
     "react-dom": "^18",
