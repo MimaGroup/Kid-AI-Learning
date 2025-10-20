@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 import { validateInput, childProfileSchema, sanitizeString } from "@/lib/validation"
 import { createAuditLog, getClientIp } from "@/lib/security"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     const supabase = await createClient()

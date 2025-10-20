@@ -5,6 +5,8 @@ import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
+export const dynamic = "force-dynamic"
+
 const FALLBACK_MYSTERIES = [
   {
     title: "The Case of the Missing Lunch",

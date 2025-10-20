@@ -5,6 +5,8 @@ import { groq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
+export const dynamic = "force-dynamic"
+
 const FALLBACK_QUESTIONS = [
   {
     question: "What does AI stand for?",

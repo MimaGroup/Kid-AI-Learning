@@ -5,6 +5,8 @@ import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
+export const dynamic = "force-dynamic"
+
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT_WINDOW = 60000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 10 // 10 messages per minute

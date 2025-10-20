@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { checkAdminAuth } from "@/lib/admin-auth"
 import { createServiceRoleClient } from "@/lib/supabase/server"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   const { isAdmin, error } = await checkAdminAuth()
 
