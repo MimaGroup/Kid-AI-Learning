@@ -62,8 +62,38 @@ export async function POST(request: NextRequest) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://v0-ai-for-kids-inky.vercel.app"
     console.log("[v0] Creating checkout session for user:", user.email)
 
+    let customerId: string
+
+    // Try to find existing customer by email
+    const existingCustomers = await stripe.customers.list({
+      email: user.email!,
+      limit: 1,
+    })
+
+    if (existingCustomers.data.length > 0) {
+      customerId = existingCustomers.data[0].id
+      console.log("[v0] Found existing customer:", customerId)
+
+      // Update customer metadata if needed
+      await stripe.customers.update(customerId, {
+        metadata: {
+          user_id: user.id,
+        },
+      })
+    } else {
+      // Create new customer with metadata
+      const customer = await stripe.customers.create({
+        email: user.email!,
+        metadata: {
+          user_id: user.id,
+        },
+      })
+      customerId = customer.id
+      console.log("[v0] Created new customer:", customerId)
+    }
+
     const session = await stripe.checkout.sessions.create({
-      customer_email: user.email,
+      customer: customerId,
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [
