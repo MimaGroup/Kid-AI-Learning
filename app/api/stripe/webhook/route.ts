@@ -79,30 +79,58 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  console.log("[v0] Checkout completed - Session ID:", session.id)
+  console.log("[v0] Session metadata:", session.metadata)
+  console.log("[v0] Session customer:", session.customer)
+  console.log("[v0] Session subscription:", session.subscription)
+
   const userId = session.metadata?.user_id
   const planType = session.metadata?.plan_type
 
   if (!userId || !planType) {
-    console.error("Missing metadata in checkout session")
+    console.error("[v0] Missing metadata in checkout session - userId:", userId, "planType:", planType)
     return
   }
 
-  const subscription = (await stripe.subscriptions.retrieve(
-    session.subscription as string,
-  )) as unknown as SubscriptionWithPeriod
+  if (!session.subscription) {
+    console.error("[v0] No subscription ID in checkout session")
+    return
+  }
 
-  await supabaseAdmin.from("subscriptions").upsert({
-    user_id: userId,
-    stripe_customer_id: session.customer as string,
-    stripe_subscription_id: subscription.id,
-    plan_type: planType,
-    status: "active",
-    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-    cancel_at_period_end: false,
-  })
+  try {
+    const subscription = (await stripe.subscriptions.retrieve(
+      session.subscription as string,
+    )) as unknown as SubscriptionWithPeriod
 
-  console.log(`Subscription created for user ${userId}`)
+    console.log("[v0] Retrieved subscription:", subscription.id, "Status:", subscription.status)
+
+    const { data, error } = await supabaseAdmin.from("subscriptions").upsert(
+      {
+        user_id: userId,
+        stripe_customer_id: session.customer as string,
+        stripe_subscription_id: subscription.id,
+        plan_type: planType,
+        status: "active",
+        current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+        current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+        cancel_at_period_end: false,
+      },
+      {
+        onConflict: "user_id",
+      },
+    )
+
+    if (error) {
+      console.error("[v0] Database error creating subscription:", error)
+      throw error
+    }
+
+    console.log("[v0] Subscription created/updated successfully for user:", userId)
+    console.log("[v0] Database response:", data)
+  } catch (error) {
+    console.error("[v0] Error in handleCheckoutCompleted:", error)
+    throw error
+  }
 
   try {
     const { data: userData } = await supabaseAdmin
