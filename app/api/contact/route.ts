@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createServiceRoleClient } from "@/lib/supabase/server"
+import { sendEmail, emailTemplates } from "@/lib/email"
 
 export async function POST(request: Request) {
   console.log("[v0] Contact API called")
@@ -48,6 +49,45 @@ export async function POST(request: Request) {
     } catch (dbError) {
       console.error("[v0] Database error:", dbError)
       // Continue anyway - we'll still return success to the user
+    }
+
+    try {
+      const userEmailTemplate = emailTemplates.supportTicketConfirmation(name, ticketNumber, subject, message)
+
+      const userEmailResult = await sendEmail({
+        to: email,
+        subject: userEmailTemplate.subject,
+        html: userEmailTemplate.html,
+      })
+
+      if (userEmailResult.success) {
+        console.log("[v0] Confirmation email sent to user:", email)
+      } else {
+        console.error("[v0] Failed to send confirmation email to user:", userEmailResult.error)
+      }
+    } catch (emailError) {
+      console.error("[v0] Error sending confirmation email:", emailError)
+      // Continue anyway - ticket was created
+    }
+
+    try {
+      const adminEmail = process.env.ADMIN_EMAIL || "danijel.milovanovic88@gmail.com"
+      const adminEmailTemplate = emailTemplates.contactFormSubmission(name, email, subject, message)
+
+      const adminEmailResult = await sendEmail({
+        to: adminEmail,
+        subject: adminEmailTemplate.subject,
+        html: adminEmailTemplate.html,
+      })
+
+      if (adminEmailResult.success) {
+        console.log("[v0] Notification email sent to support team")
+      } else {
+        console.error("[v0] Failed to send notification email to support team:", adminEmailResult.error)
+      }
+    } catch (emailError) {
+      console.error("[v0] Error sending notification email:", emailError)
+      // Continue anyway - ticket was created
     }
 
     return NextResponse.json({

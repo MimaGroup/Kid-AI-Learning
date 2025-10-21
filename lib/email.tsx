@@ -494,77 +494,109 @@ export const emailTemplates = {
       </html>
     `,
   }),
-}
 
-export function SupportTicketConfirmation({
-  name,
-  ticketNumber,
-  subject,
-  message,
-}: {
-  name: string
-  ticketNumber: string
-  subject: string
-  message: string
-}) {
-  return (
-    <html>
-      <head>
-        <meta charSet="utf-8" />
-        <style>{`
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-          .ticket-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 2px solid #8B5CF6; text-align: center; }
-          .ticket-number { font-size: 32px; font-weight: bold; color: #8B5CF6; margin: 10px 0; }
-          .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
-          .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        `}</style>
-      </head>
-      <body>
-        <div className="container">
-          <div className="header">
-            <h1>Thank You for Contacting Us!</h1>
-          </div>
-          <div className="content">
-            <p>Hi {name},</p>
-            <p>We've received your message and our team will get back to you within 24-48 hours.</p>
-
-            <div className="ticket-box">
-              <p style={{ color: "#666", margin: "0 0 10px 0" }}>Your Support Ticket Number</p>
-              <div className="ticket-number">{ticketNumber}</div>
+  passwordReset: (name: string, resetLink: string) => ({
+    subject: "Reset Your Password - AI Kids Learning",
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #8B5CF6; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+            .warning-box { background: #FEF3C7; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #F59E0B; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Reset Your Password</h1>
             </div>
-
-            <h3>Your message:</h3>
-            <div className="message-box">
-              <p style={{ margin: "0 0 10px 0" }}>
-                <strong>Subject:</strong> {subject}
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>We received a request to reset your password for your AI Kids Learning account.</p>
+              
+              <p style="text-align: center;">
+                <a href="${resetLink}" class="button">Reset Password</a>
               </p>
-              <p style={{ margin: 0 }}>{message}</p>
+              
+              <p>This link will expire in 1 hour for security reasons.</p>
+              
+              <div class="warning-box">
+                <p><strong>⚠️ Didn't request this?</strong></p>
+                <p>If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+              </div>
+              
+              <p>For security, never share this link with anyone.</p>
+              
+              <p>Best regards,<br>The AI Kids Learning Team</p>
             </div>
-
-            <p>
-              Please save this ticket number for your records. You can reference it in any follow-up communications.
-            </p>
-
-            <p>If you have any urgent questions, feel free to reply to this email.</p>
-
-            <p>
-              Best regards,
-              <br />
-              The AI Kids Learning Team
-            </p>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+              <p>If the button doesn't work, copy and paste this link: ${resetLink}</p>
+            </div>
           </div>
-          <div className="footer">
-            <p>© 2025 AI Kids Learning. All rights reserved.</p>
-            <p>
-              <a href="https://kids-learning-ai.com">Visit Website</a> |{" "}
-              <a href="https://kids-learning-ai.com/contact">Contact Support</a>
-            </p>
+        </body>
+      </html>
+    `,
+  }),
+
+  supportTicketConfirmationUser: (name: string, ticketNumber: string, subject: string, message: string) => ({
+    subject: `Support Ticket Created: ${ticketNumber}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .ticket-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 2px solid #8B5CF6; text-align: center; }
+            .ticket-number { font-size: 32px; font-weight: bold; color: #8B5CF6; margin: 10px 0; }
+            .message-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Thank You for Contacting Us!</h1>
+            </div>
+            <div class="content">
+              <p>Hi ${name},</p>
+              <p>We've received your message and our team will get back to you within 24-48 hours.</p>
+
+              <div class="ticket-box">
+                <p style="color: #666; margin: 0 0 10px 0;">Your Support Ticket Number</p>
+                <div class="ticket-number">${ticketNumber}</div>
+              </div>
+
+              <h3>Your message:</h3>
+              <div class="message-box">
+                <p style="margin: 0 0 10px 0;"><strong>Subject:</strong> ${subject}</p>
+                <p style="margin: 0;">${message.replace(/\n/g, "<br>")}</p>
+              </div>
+
+              <p>Please save this ticket number for your records. You can reference it in any follow-up communications.</p>
+
+              <p>If you have any urgent questions, feel free to reply to this email.</p>
+
+              <p>Best regards,<br>The AI Kids Learning Team</p>
+            </div>
+            <div class="footer">
+              <p>AI Kids Learning | Making education fun with AI</p>
+              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+            </div>
           </div>
-        </div>
-      </body>
-    </html>
-  )
+        </body>
+      </html>
+    `,
+  }),
 }

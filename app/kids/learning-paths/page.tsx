@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, Lock, CheckCircle2, ArrowLeft } from "lucide-react"
+import { useSubscription } from "@/hooks/use-subscription"
+import { useRouter } from "next/navigation"
 
 interface LearningPath {
   id: string
@@ -28,6 +30,8 @@ interface LearningPath {
 
 export default function LearningPathsPage() {
   const [selectedPath, setSelectedPath] = useState<string | null>(null)
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
+  const router = useRouter()
 
   const learningPaths: LearningPath[] = [
     {
@@ -68,7 +72,7 @@ export default function LearningPathsPage() {
           title: "Machine Learning Basics",
           duration: "18 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -76,7 +80,7 @@ export default function LearningPathsPage() {
           title: "Build Your AI Friend",
           duration: "20 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "/kids/ai-friend",
         },
       ],
@@ -111,7 +115,7 @@ export default function LearningPathsPage() {
           title: "Loops & Repetition",
           duration: "15 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -119,7 +123,7 @@ export default function LearningPathsPage() {
           title: "Making Decisions (IF/ELSE)",
           duration: "15 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -127,7 +131,7 @@ export default function LearningPathsPage() {
           title: "Variables & Data",
           duration: "18 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -135,7 +139,7 @@ export default function LearningPathsPage() {
           title: "Build Your First Game",
           duration: "25 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
       ],
@@ -170,7 +174,7 @@ export default function LearningPathsPage() {
           title: "Division Challenge",
           duration: "15 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -178,7 +182,7 @@ export default function LearningPathsPage() {
           title: "Word Problems",
           duration: "18 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
       ],
@@ -213,7 +217,7 @@ export default function LearningPathsPage() {
           title: "Smart Farming",
           duration: "15 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -221,7 +225,7 @@ export default function LearningPathsPage() {
           title: "Weather Prediction",
           duration: "18 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
         {
@@ -229,7 +233,7 @@ export default function LearningPathsPage() {
           title: "Space Exploration",
           duration: "20 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: !hasPremium,
           href: "#",
         },
       ],
@@ -237,6 +241,12 @@ export default function LearningPathsPage() {
   ]
 
   const selectedPathData = learningPaths.find((path) => path.id === selectedPath)
+
+  const handleLessonClick = (lesson: any) => {
+    if (lesson.isLocked && !hasPremium) {
+      router.push("/pricing")
+    }
+  }
 
   if (selectedPath && selectedPathData) {
     return (
@@ -324,9 +334,15 @@ export default function LearningPathsPage() {
                         </Badge>
                       )}
                       {lesson.isLocked && (
-                        <Badge variant="secondary" className="bg-gray-200 text-gray-600">
-                          Locked
-                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-yellow-500 text-yellow-700 hover:bg-yellow-50 bg-transparent"
+                          onClick={() => handleLessonClick(lesson)}
+                        >
+                          <Lock className="w-4 h-4 mr-2" />
+                          Upgrade to Unlock
+                        </Button>
                       )}
                     </div>
                   </div>

@@ -7,6 +7,7 @@ import { ToastContainer } from "@/components/toast-notification"
 import { Button } from "@/components/ui/button"
 import { MessageCircle } from "lucide-react"
 import { trackAIFriend } from "@/lib/analytics"
+import { useSubscription } from "@/hooks/use-subscription"
 
 interface AIFriend {
   id: string
@@ -19,6 +20,7 @@ interface AIFriend {
 export default function AIFriendBuilder() {
   const router = useRouter()
   const toast = useToast()
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
 
   const [friendName, setFriendName] = useState("")
   const [personality, setPersonality] = useState("Friendly")
@@ -30,7 +32,10 @@ export default function AIFriendBuilder() {
 
   useEffect(() => {
     loadFriendsFromLocalStorage()
-  }, [])
+    if (!subscriptionLoading && !hasPremium) {
+      router.push("/pricing")
+    }
+  }, [subscriptionLoading, hasPremium, router])
 
   const loadFriendsFromLocalStorage = () => {
     try {
@@ -109,7 +114,7 @@ export default function AIFriendBuilder() {
     router.push(`/kids/ai-friend/chat/${friendId}`)
   }
 
-  if (isLoadingFriends) {
+  if (isLoadingFriends || subscriptionLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -118,6 +123,10 @@ export default function AIFriendBuilder() {
         </div>
       </div>
     )
+  }
+
+  if (!hasPremium) {
+    return null
   }
 
   return (

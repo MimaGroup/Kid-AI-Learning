@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { useSubscription } from "@/hooks/use-subscription"
 
 interface Pattern {
   sequence: string[]
@@ -47,6 +48,7 @@ export default function PatternTrainingPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const { submitProgress } = useProgress()
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
 
   const [currentPattern, setCurrentPattern] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -61,7 +63,25 @@ export default function PatternTrainingPage() {
     if (!loading && !user) {
       router.push("/auth/login")
     }
-  }, [user, loading, router])
+    if (!loading && !subscriptionLoading && user && !hasPremium) {
+      router.push("/pricing")
+    }
+  }, [user, loading, router, hasPremium, subscriptionLoading])
+
+  if (loading || subscriptionLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🎯</div>
+          <p className="text-gray-600">Loading Pattern Training...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!hasPremium) {
+    return null
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex)
