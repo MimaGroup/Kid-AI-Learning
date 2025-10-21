@@ -168,25 +168,32 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     .single()
 
   if (!existingSub) {
-    console.error("Subscription not found for customer:", customerId)
+    console.log(
+      "[v0] Subscription not found for customer:",
+      customerId,
+      "- Skipping update (will be created by checkout.session.completed)",
+    )
     return
   }
 
   const sub = subscription as SubscriptionWithPeriod
+
+  const periodStart = sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null
+  const periodEnd = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null
 
   await supabaseAdmin
     .from("subscriptions")
     .update({
       stripe_subscription_id: sub.id,
       status: sub.status,
-      current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+      current_period_start: periodStart,
+      current_period_end: periodEnd,
       cancel_at_period_end: sub.cancel_at_period_end,
       updated_at: new Date().toISOString(),
     })
     .eq("stripe_customer_id", customerId)
 
-  console.log(`Subscription updated for customer ${customerId}`)
+  console.log(`[v0] Subscription updated for customer ${customerId}`)
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
@@ -213,7 +220,11 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     .single()
 
   if (!subscription) {
-    console.error("Subscription not found for customer:", customerId)
+    console.log(
+      "[v0] Subscription not found for customer:",
+      customerId,
+      "- Skipping payment record (subscription not created yet)",
+    )
     return
   }
 
@@ -229,7 +240,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     description: invoice.description || "Subscription payment",
   })
 
-  console.log(`Payment succeeded for customer ${customerId}`)
+  console.log(`[v0] Payment succeeded for customer ${customerId}`)
 
   try {
     const { data: userData } = await supabaseAdmin
