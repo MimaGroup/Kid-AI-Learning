@@ -3,6 +3,9 @@ import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 import { sendEmail, emailTemplates } from "@/lib/email"
 
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
 })
@@ -102,13 +105,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   console.log(`Subscription created for user ${userId}`)
 
   try {
-    const { data: userData } = await supabaseAdmin.from("users").select("email, name").eq("id", userId).single()
+    const { data: userData } = await supabaseAdmin
+      .from("profiles")
+      .select("email, display_name")
+      .eq("id", userId)
+      .single()
 
     if (userData?.email) {
       const planName = planType === "monthly" ? "Premium Monthly" : "Premium Yearly"
       const amount = planType === "monthly" ? 999 : 9999
 
-      const emailTemplate = emailTemplates.subscriptionConfirmation(userData.name || "there", planName, amount)
+      const emailTemplate = emailTemplates.subscriptionConfirmation(userData.display_name || "there", planName, amount)
 
       await sendEmail({
         to: userData.email,
@@ -198,13 +205,13 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
   try {
     const { data: userData } = await supabaseAdmin
-      .from("users")
-      .select("email, name")
+      .from("profiles")
+      .select("email, display_name")
       .eq("id", subscription.user_id)
       .single()
 
     if (userData?.email) {
-      const amount = invoice.amount_paid // Already in cents from Stripe
+      const amount = invoice.amount_paid
       const date = new Date(invoice.created * 1000).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -212,7 +219,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       })
 
       const emailTemplate = emailTemplates.paymentReceipt(
-        userData.name || "there",
+        userData.display_name || "there",
         amount,
         date,
         invoice.hosted_invoice_url || "",
