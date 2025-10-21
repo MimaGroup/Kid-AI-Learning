@@ -103,6 +103,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     )) as unknown as SubscriptionWithPeriod
 
     console.log("[v0] Retrieved subscription:", subscription.id, "Status:", subscription.status)
+    console.log("[v0] Subscription periods:", subscription.current_period_start, subscription.current_period_end)
+
+    const periodStart = subscription.current_period_start
+      ? new Date(subscription.current_period_start * 1000).toISOString()
+      : new Date().toISOString()
+
+    const periodEnd = subscription.current_period_end
+      ? new Date(subscription.current_period_end * 1000).toISOString()
+      : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Default to 30 days from now
 
     const { data, error } = await supabaseAdmin.from("subscriptions").upsert(
       {
@@ -111,8 +120,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         stripe_subscription_id: subscription.id,
         plan_type: planType,
         status: "active",
-        current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-        current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+        current_period_start: periodStart,
+        current_period_end: periodEnd,
         cancel_at_period_end: false,
       },
       {
