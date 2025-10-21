@@ -187,13 +187,28 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
   const sub = subscription as SubscriptionWithPeriod
 
-  const periodStart = sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null
-  const periodEnd = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null
+  const periodStart = sub.current_period_start
+    ? new Date(sub.current_period_start * 1000).toISOString()
+    : new Date().toISOString()
+
+  const periodEnd = sub.current_period_end
+    ? new Date(sub.current_period_end * 1000).toISOString()
+    : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
+  let planType = "monthly" // default
+  if (sub.items.data.length > 0) {
+    const priceId = sub.items.data[0].price.id
+    // Check if it's the yearly price
+    if (priceId === process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID) {
+      planType = "yearly"
+    }
+  }
 
   await supabaseAdmin
     .from("subscriptions")
     .update({
       stripe_subscription_id: sub.id,
+      plan_type: planType,
       status: sub.status,
       current_period_start: periodStart,
       current_period_end: periodEnd,
@@ -202,7 +217,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     })
     .eq("stripe_customer_id", customerId)
 
-  console.log(`[v0] Subscription updated for customer ${customerId}`)
+  console.log(
+    `[v0] Subscription updated for customer ${customerId} - Status: ${sub.status}, Plan: ${planType}, Cancel at period end: ${sub.cancel_at_period_end}`,
+  )
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
