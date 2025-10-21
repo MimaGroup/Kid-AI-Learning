@@ -91,7 +91,7 @@ export const RATE_LIMITS = {
   // Premium user limits (higher)
   premiumAiGeneration: { requests: 10, window: 60000 }, // 10 AI generations per minute
   premiumAiChat: { requests: 30, window: 60000 }, // 30 chat messages per minute
-} as const
+} satisfies Record<string, RateLimitConfig>
 
 /**
  * Get rate limit key for a user/IP and endpoint
