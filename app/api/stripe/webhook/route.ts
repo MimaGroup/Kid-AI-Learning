@@ -228,20 +228,37 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     .eq("stripe_customer_id", customerId)
     .single()
 
+  let userId = subscription?.user_id
+  const subscriptionId = subscription?.id
+
   if (!subscription) {
     console.log(
-      "[v0] Subscription not found for customer:",
+      "[v0] Subscription not found in database for customer:",
       customerId,
-      "- Skipping payment record (subscription not created yet)",
+      "- Will create payment record without subscription link",
     )
-    return
+
+    try {
+      const customer = await stripe.customers.retrieve(customerId)
+      if (customer && !customer.deleted && customer.metadata?.user_id) {
+        userId = customer.metadata.user_id
+        console.log("[v0] Found user_id from Stripe customer metadata:", userId)
+      }
+    } catch (error) {
+      console.error("[v0] Error retrieving customer from Stripe:", error)
+    }
+
+    if (!userId) {
+      console.error("[v0] Cannot create payment record - no user_id found for customer:", customerId)
+      return
+    }
   }
 
   const invoiceWithIntent = invoice as unknown as InvoiceWithPaymentIntent
 
-  await supabaseAdmin.from("payment_history").insert({
-    user_id: subscription.user_id,
-    subscription_id: subscription.id,
+  const { error: paymentError } = await supabaseAdmin.from("payment_history").insert({
+    user_id: userId,
+    subscription_id: subscriptionId || null,
     stripe_payment_intent_id: invoiceWithIntent.payment_intent as string,
     amount: invoice.amount_paid,
     currency: invoice.currency,
@@ -249,13 +266,17 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     description: invoice.description || "Subscription payment",
   })
 
-  console.log(`[v0] Payment succeeded for customer ${customerId}`)
+  if (paymentError) {
+    console.error("[v0] Error creating payment record:", paymentError)
+  } else {
+    console.log(`[v0] Payment record created for customer ${customerId}, user ${userId}`)
+  }
 
   try {
     const { data: userData } = await supabaseAdmin
       .from("profiles")
       .select("email, display_name")
-      .eq("id", subscription.user_id)
+      .eq("id", userId)
       .single()
 
     if (userData?.email) {
