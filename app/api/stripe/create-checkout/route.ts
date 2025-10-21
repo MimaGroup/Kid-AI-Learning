@@ -78,9 +78,6 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         plan_type: planType,
       },
-      payment_intent_data: {
-        setup_future_usage: "off_session",
-      },
     })
 
     console.log("[v0] Checkout session created successfully:", session.id)
