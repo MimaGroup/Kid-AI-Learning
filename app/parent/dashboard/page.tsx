@@ -30,6 +30,8 @@ export default function ParentDashboard() {
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
   const [analyticsChildId, setAnalyticsChildId] = useState<string | null>(null)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   const handleSignOut = async () => {
     await logout()
@@ -114,9 +116,13 @@ export default function ParentDashboard() {
     <div className="min-h-screen bg-background flex flex-col relative">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
-      <OnboardingFlow userType="parent" />
-      <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} />
-      <InteractiveTooltip steps={tooltipSteps} storageKey="parent-dashboard-tooltips" />
+      {showOnboarding && <OnboardingFlow userType="parent" onComplete={() => setShowOnboarding(false)} />}
+      {!showOnboarding && showTutorial && (
+        <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} onComplete={() => setShowTutorial(false)} />
+      )}
+      {!showOnboarding && !showTutorial && (
+        <InteractiveTooltip steps={tooltipSteps} storageKey="parent-dashboard-tooltips" />
+      )}
 
       <div className="flex-1 p-6 relative">
         <div className="max-w-7xl mx-auto">

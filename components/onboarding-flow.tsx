@@ -57,7 +57,10 @@ const PARENT_ONBOARDING_STEPS: OnboardingStep[] = [
   },
 ]
 
-export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | "child" }) {
+export function OnboardingFlow({
+  userType = "parent",
+  onComplete,
+}: { userType?: "parent" | "child"; onComplete?: () => void }) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const router = useRouter()
@@ -133,6 +136,7 @@ export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | 
     trackOnboarding("abandoned", currentStep + 1, steps.length)
     localStorage.setItem(`onboarding_completed_${userType}`, "true")
     setIsVisible(false)
+    onComplete?.()
   }
 
   const handleComplete = async () => {
@@ -140,6 +144,7 @@ export function OnboardingFlow({ userType = "parent" }: { userType?: "parent" | 
     trackOnboarding("completed", steps.length, steps.length)
     localStorage.setItem(`onboarding_completed_${userType}`, "true")
     setIsVisible(false)
+    onComplete?.()
   }
 
   const handleAction = (href: string) => {
