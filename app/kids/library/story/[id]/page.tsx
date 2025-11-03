@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Sparkles, ArrowRight } from "lucide-react"
 
 export default function StoryPage() {
   const params = useParams()
@@ -77,56 +78,91 @@ export default function StoryPage() {
     )
   }
 
+  const handleReadNextStory = () => {
+    const currentId = Number.parseInt(storyId)
+    const nextId = currentId >= 3 ? 1 : currentId + 1
+    router.push(`/kids/library/story/${nextId}`)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <Button variant="ghost" onClick={() => router.push("/kids/library")}>
+          <Button variant="ghost" onClick={() => router.push("/kids/library")} className="text-white hover:bg-white/20">
             ← Back to Library
           </Button>
         </div>
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Card className="p-8 mb-6">
-          <div className="text-center mb-8">
-            <div className="text-6xl mb-4">{story.icon}</div>
-            <h1 className="text-3xl font-bold text-gray-900">{story.title}</h1>
+        <Card className="p-8 mb-6 bg-gradient-to-br from-white to-blue-50 border-4 border-purple-200 shadow-xl">
+          <div className="text-center mb-8 relative">
+            <div className="absolute top-0 left-1/4 text-yellow-400 animate-pulse">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div className="absolute top-0 right-1/4 text-pink-400 animate-pulse delay-75">
+              <Sparkles className="w-6 h-6" />
+            </div>
+
+            <div className="text-8xl mb-4 animate-bounce">{story.icon}</div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              {story.title}
+            </h1>
+            <div className="mt-4 flex items-center justify-center space-x-2 text-purple-600">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm font-medium">A Fun AI Story</span>
+              <Sparkles className="w-4 h-4" />
+            </div>
           </div>
 
-          <div className="prose prose-lg max-w-none space-y-6">
+          <div className="space-y-6">
             {story.content.map((paragraph, idx) => (
-              <p key={idx} className="text-gray-700 leading-relaxed text-lg">
-                {paragraph}
-              </p>
+              <div
+                key={idx}
+                className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-100 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <p className="text-gray-800 leading-relaxed text-lg font-medium">{paragraph}</p>
+              </div>
             ))}
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-r from-yellow-50 to-orange-50">
-          <h3 className="text-xl font-bold mb-4 flex items-center space-x-2">
-            <span>🤔</span>
+        <Card className="p-6 bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 border-4 border-yellow-300 shadow-xl">
+          <h3 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-orange-800">
+            <span className="text-3xl">🤔</span>
             <span>Comprehension Questions</span>
           </h3>
           <div className="space-y-4">
             {story.questions.map((item, idx) => (
-              <div key={idx} className="bg-white p-4 rounded-lg">
-                <div className="font-semibold text-gray-900 mb-2">
-                  {idx + 1}. {item.q}
+              <div key={idx} className="bg-white p-5 rounded-xl border-2 border-orange-200 shadow-md">
+                <div className="font-bold text-gray-900 mb-3 text-lg flex items-start space-x-2">
+                  <span className="text-purple-600">{idx + 1}.</span>
+                  <span>{item.q}</span>
                 </div>
-                <details className="text-gray-600">
-                  <summary className="cursor-pointer text-blue-600 hover:text-blue-800">Show Answer</summary>
-                  <div className="mt-2 pl-4 border-l-2 border-blue-300">{item.a}</div>
+                <details className="text-gray-700">
+                  <summary className="cursor-pointer text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-2">
+                    <ArrowRight className="w-4 h-4" />
+                    <span>Show Answer</span>
+                  </summary>
+                  <div className="mt-3 pl-6 py-3 border-l-4 border-blue-400 bg-blue-50 rounded-r-lg">
+                    <span className="text-gray-800 font-medium">{item.a}</span>
+                  </div>
                 </details>
               </div>
             ))}
           </div>
         </Card>
 
-        <div className="mt-6 text-center">
-          <Button onClick={() => router.push("/kids/library")} size="lg">
-            Read Another Story
+        <div className="mt-8 text-center">
+          <Button
+            onClick={handleReadNextStory}
+            size="lg"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+          >
+            <span>Read Another Story</span>
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
+          <p className="mt-4 text-gray-600 text-sm">Click to read the next exciting story!</p>
         </div>
       </div>
     </div>

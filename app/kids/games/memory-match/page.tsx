@@ -7,6 +7,8 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { UserHeader } from "@/components/user-header"
+import { BackToHomeButton } from "@/components/back-to-home-button"
 
 interface MemoryCard {
   id: number
@@ -193,10 +195,9 @@ export default function MemoryMatchPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <Link href="/kids/activities" className="text-purple-600 hover:underline">
-              ← Back to Activities
-            </Link>
+          <div className="flex items-center justify-between mb-6">
+            <BackToHomeButton variant="back" href="/kids/activities" label="Back to Activities" />
+            <UserHeader />
           </div>
 
           <Card className="text-center">
@@ -260,6 +261,10 @@ export default function MemoryMatchPage() {
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 p-4">
         <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
         <div className="max-w-2xl mx-auto">
+          <div className="flex justify-end mb-6">
+            <UserHeader />
+          </div>
+
           <Card className="text-center">
             <CardHeader>
               <CardTitle className="text-3xl text-purple-600">You Won!</CardTitle>
@@ -317,16 +322,17 @@ export default function MemoryMatchPage() {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6 flex justify-between items-center">
-          <Link href="/kids/activities" className="text-purple-600 hover:underline">
-            ← Back
-          </Link>
-          <div className="flex space-x-4 text-sm">
-            <div className="bg-white rounded-lg px-4 py-2 shadow">
-              <span className="font-bold text-purple-600">{moves}</span> moves
+          <BackToHomeButton variant="back" href="/kids/activities" label="Back" />
+          <div className="flex items-center space-x-4">
+            <div className="flex space-x-4 text-sm">
+              <div className="bg-white rounded-lg px-4 py-2 shadow">
+                <span className="font-bold text-purple-600">{moves}</span> moves
+              </div>
+              <div className="bg-white rounded-lg px-4 py-2 shadow">
+                <span className="font-bold text-purple-600">{formatTime(timeElapsed)}</span>
+              </div>
             </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow">
-              <span className="font-bold text-purple-600">{formatTime(timeElapsed)}</span>
-            </div>
+            <UserHeader />
           </div>
         </div>
 

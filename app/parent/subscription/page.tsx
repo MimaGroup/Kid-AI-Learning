@@ -5,6 +5,9 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
+import { UserHeader } from "@/components/user-header"
+import { BackToHomeButton } from "@/components/back-to-home-button"
+import { ContactSupportDialog } from "@/components/contact-support-dialog"
 
 interface Subscription {
   plan_type: string
@@ -79,6 +82,11 @@ export default function SubscriptionManagementPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
       <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <BackToHomeButton variant="home" />
+          <UserHeader />
+        </div>
+
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Subscription Management</h1>
 
         <Card className="p-8 mb-6">
@@ -144,7 +152,7 @@ export default function SubscriptionManagementPage() {
           <p className="text-gray-600 mb-4">
             If you have any questions about your subscription or billing, please contact our support team.
           </p>
-          <Button variant="outline">Contact Support</Button>
+          <ContactSupportDialog />
         </Card>
       </div>
     </div>

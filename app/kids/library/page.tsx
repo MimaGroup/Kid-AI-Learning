@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { generateWorksheetPDF } from "@/lib/worksheet-generator"
 
 export default function ContentLibrary() {
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -137,6 +138,10 @@ export default function ContentLibrary() {
   const handleCloseVideo = () => {
     setIsVideoOpen(false)
     setSelectedVideo(null)
+  }
+
+  const handleDownloadWorksheet = (name: string, difficulty: string) => {
+    generateWorksheetPDF({ name, difficulty, content: "" })
   }
 
   return (
@@ -320,7 +325,11 @@ export default function ContentLibrary() {
                               >
                                 {worksheetItem.difficulty}
                               </span>
-                              <Button size="sm" variant="outline">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDownloadWorksheet(worksheetItem.name, worksheetItem.difficulty)}
+                              >
                                 Download
                               </Button>
                             </div>
