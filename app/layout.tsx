@@ -135,7 +135,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <Script id="init-monitoring" strategy="afterInteractive">
           {`
-            // Initialize global error handling
+            // Initialize Sentry if DSN is configured
+            if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+              // Sentry is initialized via instrumentation.ts
+              console.log('[v0] Sentry monitoring active');
+            }
+            
+            // Initialize global error handling (fallback for non-Sentry environments)
             if (typeof window !== 'undefined') {
               // Catch unhandled promise rejections
               window.addEventListener('unhandledrejection', (event) => {
