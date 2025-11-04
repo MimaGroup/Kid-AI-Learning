@@ -2,20 +2,20 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import Link from "next/link"
 import { trackEvent, trackError } from "@/lib/analytics"
 
-export default function ParentLoginPage() {
+function ParentLoginContent() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { login, error, clearError, user } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/parent/dashboard"
+  const redirect = searchParams?.get("redirect") ?? "/parent/dashboard"
 
   useEffect(() => {
     if (user) {
@@ -76,7 +76,7 @@ export default function ParentLoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               placeholder="Enter your password"
               required
             />
@@ -105,5 +105,19 @@ export default function ParentLoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ParentLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+        </div>
+      }
+    >
+      <ParentLoginContent />
+    </Suspense>
   )
 }

@@ -77,29 +77,24 @@ async function ensureDailyChallengesExist(date: string) {
   const supabaseAdmin = await createServiceRoleClient()
   const dailyChallenges = getDailyChallenges(date)
 
-  // Check if challenges for today already exist
-  const { data: existing } = await supabaseAdmin.from("daily_challenges").select("challenge_id").eq("active_date", date)
+  // Instead of checking and inserting, we'll upsert which updates active_date if challenge exists
+  const challengesToUpsert = dailyChallenges.map((c) => ({
+    challenge_id: c.id,
+    title: c.title,
+    description: c.description,
+    activity_type: c.activity_type,
+    target_value: c.target_value,
+    points_reward: c.points_reward,
+    active_date: date,
+  }))
 
-  const existingIds = new Set(existing?.map((c: any) => c.challenge_id) || [])
+  const { error } = await supabaseAdmin.from("daily_challenges").upsert(challengesToUpsert, {
+    onConflict: "challenge_id",
+    ignoreDuplicates: false, // Update the active_date if challenge already exists
+  })
 
-  // Insert any missing challenges
-  const challengesToInsert = dailyChallenges
-    .filter((c) => !existingIds.has(c.id))
-    .map((c) => ({
-      challenge_id: c.id,
-      title: c.title,
-      description: c.description,
-      activity_type: c.activity_type,
-      target_value: c.target_value,
-      points_reward: c.points_reward,
-      active_date: date,
-    }))
-
-  if (challengesToInsert.length > 0) {
-    const { error } = await supabaseAdmin.from("daily_challenges").insert(challengesToInsert)
-    if (error) {
-      console.error("[v0] Error inserting daily challenges:", error)
-    }
+  if (error) {
+    console.error("[v0] Error upserting daily challenges:", error)
   }
 
   return dailyChallenges
