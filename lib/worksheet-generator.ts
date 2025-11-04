@@ -5,6 +5,8 @@ export interface Worksheet {
 }
 
 export function generateWorksheetPDF(worksheet: Worksheet): void {
+  console.log("[v0] generateWorksheetPDF called with:", worksheet)
+
   const content = `
 AI KIDS LEARNING - ACTIVITY WORKSHEET
 =====================================
@@ -19,15 +21,21 @@ ${getWorksheetContent(worksheet.name)}
 Visit www.kids-learning-ai.com for more fun activities!
   `.trim()
 
+  console.log("[v0] Creating blob with content length:", content.length)
+
   const blob = new Blob([content], { type: "text/plain" })
   const url = window.URL.createObjectURL(blob)
   const a = document.createElement("a")
   a.href = url
   a.download = `${worksheet.name.toLowerCase().replace(/\s+/g, "-")}.txt`
   document.body.appendChild(a)
+
+  console.log("[v0] Triggering download for:", a.download)
   a.click()
+
   window.URL.revokeObjectURL(url)
   document.body.removeChild(a)
+  console.log("[v0] Download complete")
 }
 
 function getWorksheetContent(name: string): string {

@@ -4,6 +4,9 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Sparkles, ArrowRight } from "lucide-react"
+import Link from "next/link"
+import { UserHeader } from "@/components/user-header"
+import { BackToHomeButton } from "@/components/back-to-home-button"
 
 export default function StoryPage() {
   const params = useParams()
@@ -78,19 +81,14 @@ export default function StoryPage() {
     )
   }
 
-  const handleReadNextStory = () => {
-    const currentId = Number.parseInt(storyId)
-    const nextId = currentId >= 3 ? 1 : currentId + 1
-    router.push(`/kids/library/story/${nextId}`)
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <Button variant="ghost" onClick={() => router.push("/kids/library")} className="text-white hover:bg-white/20">
-            ← Back to Library
-          </Button>
+          <div className="flex items-center justify-between">
+            <BackToHomeButton variant="library" className="text-white hover:bg-white/20" />
+            <UserHeader className="text-white" />
+          </div>
         </div>
       </header>
 
@@ -154,14 +152,13 @@ export default function StoryPage() {
         </Card>
 
         <div className="mt-8 text-center">
-          <Button
-            onClick={handleReadNextStory}
-            size="lg"
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+          <Link
+            href={`/kids/library/story/${Number.parseInt(storyId) >= 3 ? 1 : Number.parseInt(storyId) + 1}`}
+            className="inline-flex items-center bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
             <span>Read Another Story</span>
             <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          </Link>
           <p className="mt-4 text-gray-600 text-sm">Click to read the next exciting story!</p>
         </div>
       </div>

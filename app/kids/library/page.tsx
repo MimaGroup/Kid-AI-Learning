@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { generateWorksheetPDF } from "@/lib/worksheet-generator"
+import { UserHeader } from "@/components/user-header"
+import { BackToHomeButton } from "@/components/back-to-home-button"
 
 export default function ContentLibrary() {
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -141,7 +142,9 @@ export default function ContentLibrary() {
   }
 
   const handleDownloadWorksheet = (name: string, difficulty: string) => {
-    generateWorksheetPDF({ name, difficulty, content: "" })
+    const worksheetKey = name.toLowerCase().replace(/ /g, "-")
+    const downloadUrl = `/api/worksheets/${worksheetKey}?difficulty=${difficulty}`
+    window.location.href = downloadUrl
   }
 
   return (
@@ -150,14 +153,11 @@ export default function ContentLibrary() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link href="/kids/home">
-                <Button variant="ghost" size="sm">
-                  ← Back to Home
-                </Button>
-              </Link>
+              <BackToHomeButton variant="home" />
               <div className="text-2xl">📚</div>
               <h1 className="text-2xl font-bold text-gray-900">Learning Library</h1>
             </div>
+            <UserHeader />
           </div>
         </div>
       </header>
