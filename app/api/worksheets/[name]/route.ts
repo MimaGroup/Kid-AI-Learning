@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ name: string }> }) {
-  const { name } = await params
+export async function GET(request: NextRequest, { params }: { params: { name: string } }) {
+  const { name } = params
 
   const searchParams = request.nextUrl?.searchParams
   const difficulty = searchParams?.get("difficulty") || "Medium"
@@ -113,6 +113,243 @@ Instructions: Design your own AI robot!
    _________________________________
 
 Share your robot design with friends and family!
+`,
+    "sorting-game": `
+SORTING GAME
+Difficulty: ${difficulty}
+============
+
+Instructions: Sort these items into the correct categories!
+
+Items to Sort:
+🍎 Apple    🚗 Car      📚 Book     🐕 Dog
+🍌 Banana   ✈️ Plane    ✏️ Pencil   🐱 Cat
+🍊 Orange   🚂 Train    📖 Novel    🐦 Bird
+
+Category 1 - FRUITS:
+_________________
+_________________
+_________________
+
+Category 2 - VEHICLES:
+_________________
+_________________
+_________________
+
+Category 3 - SCHOOL SUPPLIES:
+_________________
+_________________
+_________________
+
+Category 4 - ANIMALS:
+_________________
+_________________
+_________________
+
+Bonus Challenge: Can you think of 2 more items for each category?
+
+This is how AI learns to classify things!
+`,
+    "decision-tree-adventure": `
+DECISION TREE ADVENTURE
+Difficulty: ${difficulty}
+=======================
+
+Instructions: Follow the decision tree to find your adventure!
+
+START: You find a mysterious door...
+
+Do you open it?
+├─ YES → You see a staircase
+│   ├─ Go UP → You find a treasure chest! 🎁
+│   └─ Go DOWN → You discover a secret library! 📚
+│
+└─ NO → You hear a sound
+    ├─ Investigate → You meet a friendly robot! 🤖
+    └─ Walk away → You find a beautiful garden! 🌸
+
+Now create YOUR OWN decision tree:
+
+START: _______________________
+
+Choice 1: ___________________
+├─ Option A → _______________
+│   ├─ Next choice → _________
+│   └─ Next choice → _________
+│
+└─ Option B → _______________
+    ├─ Next choice → _________
+    └─ Next choice → _________
+
+Decision trees help AI make smart choices!
+`,
+    "data-collection-mission": `
+DATA COLLECTION MISSION
+Difficulty: ${difficulty}
+=======================
+
+Instructions: AI needs data to learn! Let's collect some data together.
+
+Mission 1: Weather Data
+Track the weather for 5 days:
+
+Day 1: ☀️ ☁️ 🌧️ ❄️ (Circle one)
+Day 2: ☀️ ☁️ 🌧️ ❄️ (Circle one)
+Day 3: ☀️ ☁️ 🌧️ ❄️ (Circle one)
+Day 4: ☀️ ☁️ 🌧️ ❄️ (Circle one)
+Day 5: ☀️ ☁️ 🌧️ ❄️ (Circle one)
+
+What pattern do you notice? ___________________
+
+Mission 2: Favorite Colors Survey
+Ask 5 people their favorite color:
+
+Person 1: _______________
+Person 2: _______________
+Person 3: _______________
+Person 4: _______________
+Person 5: _______________
+
+Most popular color: _______________
+
+Mission 3: Pet Data
+Count the pets in your neighborhood:
+
+Dogs: _____
+Cats: _____
+Birds: _____
+Other: _____
+
+Total pets: _____
+
+Great job collecting data! This is how AI learns about the world!
+`,
+    "if-then-logic-puzzles": `
+IF-THEN LOGIC PUZZLES
+Difficulty: ${difficulty}
+=====================
+
+Instructions: AI uses IF-THEN rules to make decisions. Let's practice!
+
+Puzzle 1:
+IF it is raining, THEN bring an umbrella.
+It is raining today.
+What should you do? ___________________
+
+Puzzle 2:
+IF you are hungry, THEN eat a snack.
+You are hungry.
+What should you do? ___________________
+
+Puzzle 3:
+IF the light is red, THEN stop.
+IF the light is green, THEN go.
+The light is green.
+What should you do? ___________________
+
+Now create your own IF-THEN rules:
+
+Rule 1:
+IF _________________________, THEN _________________________
+
+Rule 2:
+IF _________________________, THEN _________________________
+
+Rule 3:
+IF _________________________, THEN _________________________
+
+Challenge: Write an IF-THEN rule for a robot helper!
+
+IF _________________________, THEN _________________________
+
+These rules help AI know what to do in different situations!
+`,
+    "training-your-ai-pet": `
+TRAINING YOUR AI PET
+Difficulty: ${difficulty}
+====================
+
+Instructions: Imagine you have an AI pet! Let's train it to learn tricks.
+
+Your AI Pet's Name: ___________________
+
+Draw your AI pet here:
+[Space for drawing]
+
+Training Session 1: Teaching "Sit"
+Step 1: Say "Sit" → Pet sits → Give treat ✓
+Step 2: Say "Sit" → Pet sits → Give treat ✓
+Step 3: Say "Sit" → Pet sits → Give treat ✓
+
+After 3 tries, your pet learned "Sit"! 🎉
+
+Training Session 2: Teaching a New Trick
+Choose a trick: ___________________
+
+Step 1: Command → Action → Reward
+Step 2: Command → Action → Reward
+Step 3: Command → Action → Reward
+
+Training Session 3: Design Your Own Trick!
+Trick name: ___________________
+
+What does your pet do? ___________________
+___________________
+
+How many times to practice? ___________________
+
+Training Log:
+Try 1: ⭐ ⭐ ⭐ ⭐ ⭐ (Circle stars for success)
+Try 2: ⭐ ⭐ ⭐ ⭐ ⭐
+Try 3: ⭐ ⭐ ⭐ ⭐ ⭐
+
+This is called "training data" - it helps AI learn new things!
+`,
+    "ai-helper-scenarios": `
+AI HELPER SCENARIOS
+Difficulty: ${difficulty}
+===================
+
+Instructions: Think about how AI can help in different situations!
+
+Scenario 1: Lost Toy
+Problem: You can't find your favorite toy.
+How could an AI helper assist?
+___________________________________
+___________________________________
+
+Scenario 2: Homework Help
+Problem: You don't understand a math problem.
+How could an AI helper assist?
+___________________________________
+___________________________________
+
+Scenario 3: Bedtime Story
+Problem: You want to hear a new story.
+How could an AI helper assist?
+___________________________________
+___________________________________
+
+Scenario 4: Learning a New Language
+Problem: You want to learn Spanish words.
+How could an AI helper assist?
+___________________________________
+___________________________________
+
+Scenario 5: Planning a Birthday Party
+Problem: You need ideas for your party.
+How could AI help? ___________________________________
+___________________________________
+
+Create Your Own Scenario:
+Problem: ___________________________________
+How could AI help? ___________________________________
+___________________________________
+
+Draw a picture of your AI helper:
+[Space for drawing]
+
+Remember: AI is a tool to help us, not replace our thinking!
 `,
   }
 

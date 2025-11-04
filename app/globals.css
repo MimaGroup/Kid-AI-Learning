@@ -4,31 +4,52 @@
 
 @layer base {
   :root {
-    /* Updated color palette to match design brief */
-    --background: 210 100% 98%;
-    --foreground: 220 20% 20%;
+    /* Updated to vibrant, kid-friendly color palette inspired by playful learning platforms */
+    --background: 220 40% 98%;
+    --foreground: 240 20% 20%;
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 240 20% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
-    --primary: 280 70% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 45 100% 55%;
-    --secondary-foreground: 220 20% 20%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 220 15% 50%;
-    --accent: 170 70% 50%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 85%;
-    --input: 220 20% 85%;
-    --ring: 280 70% 60%;
-    --radius: 1rem;
+    --popover-foreground: 240 20% 20%;
 
-    /* Added font family variables */
+    /* Primary: Vibrant Purple - main brand color */
+    --primary: 270 80% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Sunny Yellow - accent for highlights */
+    --secondary: 45 100% 60%;
+    --secondary-foreground: 240 20% 20%;
+
+    /* Muted: Soft background tones */
+    --muted: 220 30% 95%;
+    --muted-foreground: 240 15% 50%;
+
+    /* Accent: Playful Teal - for interactive elements */
+    --accent: 175 70% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive: Soft Red */
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* UI Elements */
+    --border: 220 25% 88%;
+    --input: 220 25% 88%;
+    --ring: 270 80% 65%;
+
+    /* Rounded corners for playful feel */
+    --radius: 1.25rem;
+
+    /* Font families */
     --font-sans: var(--font-poppins), system-ui, sans-serif;
     --font-heading: var(--font-fredoka), system-ui, sans-serif;
+
+    /* Added kid-friendly color palette for worksheets and activities */
+    --color-fun-pink: 330 85% 70%;
+    --color-fun-blue: 210 85% 65%;
+    --color-fun-green: 145 70% 55%;
+    --color-fun-orange: 25 95% 60%;
+    --color-fun-purple: 270 80% 70%;
   }
 }
 
@@ -37,10 +58,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
-  /* Added heading styles to use Fredoka font */
+  /* Headings use playful Fredoka font with increased weight */
   h1,
   h2,
   h3,
@@ -49,10 +70,141 @@
   h6 {
     font-family: var(--font-heading);
     font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
   }
 }
 
-/* Removed old kid-friendly styles, replaced with design system */
-.fun-shadow {
-  box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.2);
+/* Added kid-friendly utility classes */
+@layer utilities {
+  .fun-shadow {
+    box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.25);
+  }
+
+  .fun-shadow-lg {
+    box-shadow: 0 12px 32px -8px rgba(139, 92, 246, 0.35);
+  }
+
+  .fun-gradient-purple {
+    background: linear-gradient(135deg, hsl(270 80% 65%) 0%, hsl(280 75% 60%) 100%);
+  }
+
+  .fun-gradient-rainbow {
+    background: linear-gradient(
+      135deg,
+      hsl(330 85% 70%) 0%,
+      hsl(270 80% 70%) 25%,
+      hsl(210 85% 65%) 50%,
+      hsl(175 70% 55%) 75%,
+      hsl(145 70% 55%) 100%
+    );
+  }
+
+  .fun-border {
+    border: 3px solid hsl(270 80% 65%);
+    border-radius: 1.25rem;
+  }
+
+  .text-fun-pink {
+    color: hsl(330 85% 70%);
+  }
+
+  .text-fun-blue {
+    color: hsl(210 85% 65%);
+  }
+
+  .text-fun-green {
+    color: hsl(145 70% 55%);
+  }
+
+  .text-fun-orange {
+    color: hsl(25 95% 60%);
+  }
+
+  .bg-fun-pink {
+    background-color: hsl(330 85% 70%);
+  }
+
+  .bg-fun-blue {
+    background-color: hsl(210 85% 65%);
+  }
+
+  .bg-fun-green {
+    background-color: hsl(145 70% 55%);
+  }
+
+  .bg-fun-orange {
+    background-color: hsl(25 95% 60%);
+  }
+
+  .bg-fun-purple {
+    background-color: hsl(270 80% 70%);
+  }
+}
+
+/* Added playful animations for kid-friendly interactions */
+@keyframes bounce-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(139, 92, 246, 0);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Hover effects for interactive elements */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -8px rgba(139, 92, 246, 0.35);
 }
