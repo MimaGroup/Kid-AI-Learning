@@ -1,4 +1,5 @@
-const CACHE_NAME = "ai-kids-learning-v2"
+const CACHE_NAME = "ai-kids-learning-v3"
+const CACHE_VERSION = "2025-11-04-09-35" // Timestamp to force refresh
 const OFFLINE_URL = "/offline"
 
 // Assets to precache
@@ -6,7 +7,7 @@ const PRECACHE_ASSETS = ["/", "/kids/home", "/offline", "/manifest.json", "/icon
 
 // Install event - precache essential assets
 self.addEventListener("install", (event) => {
-  console.log("[v0] Service Worker installing...")
+  console.log("[v0] Service Worker installing... Version:", CACHE_VERSION)
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log("[v0] Precaching app shell")
@@ -18,7 +19,7 @@ self.addEventListener("install", (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("[v0] Service Worker activating...")
+  console.log("[v0] Service Worker activating... Version:", CACHE_VERSION)
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -31,7 +32,7 @@ self.addEventListener("activate", (event) => {
       )
     }),
   )
-  self.clients.claim()
+  return self.clients.claim()
 })
 
 // Fetch event - Network first for HTML, cache first for assets
