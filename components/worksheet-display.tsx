@@ -3,7 +3,8 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Sparkles, Star, Trophy, Download, Share2 } from "lucide-react"
+import { Sparkles, Star, Trophy, Download, Share2, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface WorksheetDisplayProps {
   title: string
@@ -12,6 +13,7 @@ interface WorksheetDisplayProps {
 }
 
 export function WorksheetDisplay({ title, difficulty, content }: WorksheetDisplayProps) {
+  const router = useRouter()
   const sections = content.split("\n\n").filter((section) => section.trim())
 
   const getDifficultyColor = (diff: string) => {
@@ -22,9 +24,60 @@ export function WorksheetDisplay({ title, difficulty, content }: WorksheetDispla
     return "bg-primary text-primary-foreground"
   }
 
+  const handleDownload = () => {
+    const formattedContent = `
+${title.toUpperCase()}
+Difficulty: ${difficulty}
+${"=".repeat(50)}
+
+${content}
+
+${"=".repeat(50)}
+Downloaded from AI for Kids Learning Platform
+Keep learning and exploring AI concepts!
+    `.trim()
+
+    const blob = new Blob([formattedContent], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${title.toLowerCase().replace(/ /g, "-")}.txt`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: `Check out this fun AI worksheet: ${title}`,
+          url: window.location.href,
+        })
+      } catch (err) {
+        console.log("Error sharing:", err)
+      }
+    } else {
+      // Fallback: copy link to clipboard
+      navigator.clipboard.writeText(window.location.href)
+      alert("Link copied to clipboard!")
+    }
+  }
+
+  const handleBack = () => {
+    router.push("/kids/library")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
+        <Button variant="ghost" className="mb-4 hover-lift text-primary font-semibold" onClick={handleBack}>
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          Back to Library
+        </Button>
+
         <Card className="mb-6 p-6 md:p-8 fun-shadow-lg border-4 border-primary/20 bg-white">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
@@ -39,10 +92,22 @@ export function WorksheetDisplay({ title, difficulty, content }: WorksheetDispla
               </Badge>
             </div>
             <div className="flex gap-2">
-              <Button size="icon" variant="outline" className="rounded-full hover-lift bg-transparent">
+              <Button
+                size="icon"
+                variant="outline"
+                className="rounded-full hover-lift bg-transparent"
+                onClick={handleDownload}
+                title="Download worksheet"
+              >
                 <Download className="w-5 h-5" />
               </Button>
-              <Button size="icon" variant="outline" className="rounded-full hover-lift bg-transparent">
+              <Button
+                size="icon"
+                variant="outline"
+                className="rounded-full hover-lift bg-transparent"
+                onClick={handleShare}
+                title="Share worksheet"
+              >
                 <Share2 className="w-5 h-5" />
               </Button>
             </div>

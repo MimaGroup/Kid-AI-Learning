@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      const userEmailTemplate = emailTemplates.supportTicketConfirmation(name, ticketNumber, subject, message)
+      const userEmailTemplate = emailTemplates.supportTicketConfirmationUser(name, ticketNumber, subject, message)
 
       const userEmailResult = await sendEmail({
         to: email,
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      const adminEmail = process.env.ADMIN_EMAIL || "danijel.milovanovic88@gmail.com"
+      const adminEmail = process.env.ADMIN_EMAIL || "support@kids-learning-ai.com"
       const adminEmailTemplate = emailTemplates.contactFormSubmission(name, email, subject, message)
 
       const adminEmailResult = await sendEmail({

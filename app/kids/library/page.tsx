@@ -141,10 +141,9 @@ export default function ContentLibrary() {
     setSelectedVideo(null)
   }
 
-  const handleDownloadWorksheet = (name: string, difficulty: string) => {
+  const handleViewWorksheet = (name: string) => {
     const worksheetKey = name.toLowerCase().replace(/ /g, "-")
-    const downloadUrl = `/api/worksheets/${worksheetKey}?difficulty=${difficulty}`
-    window.location.href = downloadUrl
+    window.location.href = `/worksheets/${worksheetKey}`
   }
 
   return (
@@ -311,7 +310,10 @@ export default function ContentLibrary() {
                       {resource.items.map((worksheet, idx) => {
                         const worksheetItem = worksheet as { name: string; difficulty: string }
                         return (
-                          <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          >
                             <span className="font-medium">{worksheetItem.name}</span>
                             <div className="flex items-center space-x-2">
                               <span
@@ -325,12 +327,8 @@ export default function ContentLibrary() {
                               >
                                 {worksheetItem.difficulty}
                               </span>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleDownloadWorksheet(worksheetItem.name, worksheetItem.difficulty)}
-                              >
-                                Download
+                              <Button size="sm" onClick={() => handleViewWorksheet(worksheetItem.name)}>
+                                View
                               </Button>
                             </div>
                           </div>

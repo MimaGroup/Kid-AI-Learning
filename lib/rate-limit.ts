@@ -38,7 +38,23 @@ export async function checkRateLimit(key: string, config: RateLimitConfig): Prom
     if (requestCount >= config.requests) {
       // Get the oldest request timestamp to calculate reset time
       const oldestRequests = await redis.zrange(rateLimitKey, 0, 0, { withScores: true })
-      const oldestTimestamp = oldestRequests.length > 0 ? Number(oldestRequests[1]) : now
+
+      let oldestTimestamp = now
+
+      // Handle different possible return formats from Upstash Redis
+      if (oldestRequests && Array.isArray(oldestRequests) && oldestRequests.length > 0) {
+        const firstItem = oldestRequests[0]
+
+        // Check if it's an object with score property
+        if (typeof firstItem === "object" && firstItem !== null && "score" in firstItem) {
+          oldestTimestamp = Number(firstItem.score)
+        }
+        // Fallback: if it's a flat array format [member, score]
+        else if (oldestRequests.length >= 2 && typeof oldestRequests[1] === "number") {
+          oldestTimestamp = Number(oldestRequests[1])
+        }
+      }
+
       const resetTime = oldestTimestamp + config.window
 
       return {

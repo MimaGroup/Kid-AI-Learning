@@ -563,7 +563,7 @@ export default function HomePage() {
                 <ul className="space-y-3 text-sm">
                   <li>
                     <a
-                      href="mailto:info@kids-learning-ai.com"
+                      href="mailto:support@kids-learning-ai.com"
                       className="text-muted-foreground hover:text-foreground transition-colors"
                     >
                       Email Us

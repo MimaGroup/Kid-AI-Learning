@@ -219,8 +219,8 @@ export default function ContactClient() {
             <div className="grid md:grid-cols-3 gap-4 text-center text-sm">
               <div>
                 <p className="font-semibold mb-1">General Inquiries</p>
-                <a href="mailto:info@kids-learning-ai.com" className="text-blue-600 hover:underline">
-                  info@kids-learning-ai.com
+                <a href="mailto:support@kids-learning-ai.com" className="text-blue-600 hover:underline">
+                  support@kids-learning-ai.com
                 </a>
               </div>
               <div>
