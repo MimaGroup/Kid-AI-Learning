@@ -192,6 +192,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 navigator.serviceWorker.register('/service-worker.js')
                   .then((registration) => {
                     console.log('[v0] Service Worker registered:', registration.scope);
+                    
+                    // Check for updates every 60 seconds
+                    setInterval(() => {
+                      registration.update();
+                    }, 60000);
+                    
+                    // Listen for new service worker waiting to activate
+                    registration.addEventListener('updatefound', () => {
+                      const newWorker = registration.installing;
+                      if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New service worker is ready, prompt user to reload
+                            console.log('[v0] New version available! Reloading...');
+                            // Auto-reload to get the new version
+                            window.location.reload();
+                          }
+                        });
+                      }
+                    });
                   })
                   .catch((error) => {
                     console.log('[v0] Service Worker registration failed:', error);

@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-kids-learning-v1"
+const CACHE_NAME = "ai-kids-learning-v2"
 const OFFLINE_URL = "/offline"
 
 // Assets to precache
@@ -34,13 +34,34 @@ self.addEventListener("activate", (event) => {
   self.clients.claim()
 })
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - Network first for HTML, cache first for assets
 self.addEventListener("fetch", (event) => {
   // Skip non-GET requests
   if (event.request.method !== "GET") return
 
   // Skip chrome extensions and other non-http requests
   if (!event.request.url.startsWith("http")) return
+
+  if (event.request.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Clone and cache the response
+          const responseToCache = response.clone()
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache)
+          })
+          return response
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request).then((cachedResponse) => {
+            return cachedResponse || caches.match(OFFLINE_URL)
+          })
+        }),
+    )
+    return
+  }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
@@ -77,6 +98,13 @@ self.addEventListener("fetch", (event) => {
         })
     }),
   )
+})
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    console.log("[v0] Received SKIP_WAITING message")
+    self.skipWaiting()
+  }
 })
 
 // Background sync for progress data
