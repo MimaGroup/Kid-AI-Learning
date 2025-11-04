@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { Badge } from "@/components/ui/badge"
 
 interface Notification {
@@ -20,6 +21,7 @@ export function NotificationsDropdown() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [tableExists, setTableExists] = useState(true)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   useEffect(() => {
     fetchNotifications()
@@ -76,21 +78,71 @@ export function NotificationsDropdown() {
     return null
   }
 
+  const previewNotifications = notifications.slice(0, 3)
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-            >
-              {unreadCount}
-            </Badge>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
+    <DropdownMenu onOpenChange={setIsDropdownOpen}>
+      <HoverCard openDelay={300} closeDelay={100}>
+        <HoverCardTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                >
+                  {unreadCount}
+                </Badge>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+        </HoverCardTrigger>
+
+        {!isDropdownOpen && (
+          <HoverCardContent align="end" className="w-80">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold">Recent Notifications</h4>
+                {unreadCount > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {unreadCount} new
+                  </Badge>
+                )}
+              </div>
+              {loading ? (
+                <div className="py-4 text-center text-sm text-muted-foreground">Loading...</div>
+              ) : previewNotifications.length === 0 ? (
+                <div className="py-4 text-center text-sm text-muted-foreground">No notifications yet</div>
+              ) : (
+                <div className="space-y-2">
+                  {previewNotifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`p-2 rounded-lg border ${!notification.read ? "bg-primary/5 border-primary/20" : "border-border"}`}
+                    >
+                      <div className="flex gap-2 items-start">
+                        <div className="text-lg">{getNotificationIcon(notification.type)}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium line-clamp-1">{notification.title}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{notification.message}</p>
+                        </div>
+                        {!notification.read && <div className="w-2 h-2 bg-primary rounded-full mt-1 flex-shrink-0" />}
+                      </div>
+                    </div>
+                  ))}
+                  {notifications.length > 3 && (
+                    <p className="text-xs text-center text-muted-foreground pt-2">
+                      Click to see all {notifications.length} notifications
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </HoverCardContent>
+        )}
+      </HoverCard>
+
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-2 border-b">
           <h3 className="font-semibold">Notifications</h3>
