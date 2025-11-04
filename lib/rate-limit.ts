@@ -36,23 +36,25 @@ export async function checkRateLimit(key: string, config: RateLimitConfig): Prom
     const requestCount = await redis.zcard(rateLimitKey)
 
     if (requestCount >= config.requests) {
-      // Get the oldest request timestamp to calculate reset time
-      const oldestRequests = await redis.zrange(rateLimitKey, 0, 0, { withScores: true })
-
       let oldestTimestamp = now
 
-      // Handle different possible return formats from Upstash Redis
-      if (oldestRequests && Array.isArray(oldestRequests) && oldestRequests.length > 0) {
-        const firstItem = oldestRequests[0]
+      try {
+        // Get the oldest request timestamp without withScores to avoid format issues
+        const oldestMembers = await redis.zrange(rateLimitKey, 0, 0)
 
-        // Check if it's an object with score property
-        if (typeof firstItem === "object" && firstItem !== null && "score" in firstItem) {
-          oldestTimestamp = Number(firstItem.score)
+        if (oldestMembers && Array.isArray(oldestMembers) && oldestMembers.length > 0) {
+          // Get the score separately using zscore
+          const member = oldestMembers[0]
+          const score = await redis.zscore(rateLimitKey, member)
+
+          if (score !== null && score !== undefined) {
+            oldestTimestamp = Number(score)
+          }
         }
-        // Fallback: if it's a flat array format [member, score]
-        else if (oldestRequests.length >= 2 && typeof oldestRequests[1] === "number") {
-          oldestTimestamp = Number(oldestRequests[1])
-        }
+      } catch (zrangeError) {
+        console.error("[v0] Error getting oldest timestamp:", zrangeError)
+        // Use current time as fallback
+        oldestTimestamp = now
       }
 
       const resetTime = oldestTimestamp + config.window

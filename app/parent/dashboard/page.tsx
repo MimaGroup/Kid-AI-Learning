@@ -15,7 +15,6 @@ import { trackEvent } from "@/lib/analytics"
 import { Footer } from "@/components/footer"
 import { DashboardSkeleton, ProgressCardSkeleton } from "@/components/skeleton-screens"
 import { OnboardingFlow } from "@/components/onboarding-flow"
-import { NotificationsDropdown } from "@/components/notifications-dropdown"
 import { ActivityFeed } from "@/components/activity-feed"
 import { ProgressOverviewCard } from "@/components/progress-overview-card"
 import { SkillProgressChart } from "@/components/skill-progress-chart"
@@ -23,6 +22,8 @@ import { WeeklyActivityChart } from "@/components/weekly-activity-chart"
 import { LearningRecommendations } from "@/components/learning-recommendations"
 import { DownloadReportButton } from "@/components/download-report-button"
 import { InteractiveTooltip } from "@/components/interactive-tooltip"
+import { AppNavigation } from "@/components/app-navigation"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
@@ -114,6 +115,9 @@ export default function ParentDashboard() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">
+      <AppNavigation />
+      <Breadcrumbs />
+
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
       {showOnboarding && <OnboardingFlow userType="parent" onComplete={() => setShowOnboarding(false)} />}
@@ -127,20 +131,9 @@ export default function ParentDashboard() {
       <div className="flex-1 p-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="bg-card rounded-2xl shadow-xl p-8 border border-border">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Parent Dashboard</h1>
-                <p className="text-muted-foreground mt-2 text-sm sm:text-base">Welcome back, {user?.email}</p>
-              </div>
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                <NotificationsDropdown />
-                <button
-                  onClick={handleSignOut}
-                  className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90 transition-colors shadow-lg text-sm sm:text-base flex-1 sm:flex-none"
-                >
-                  Sign Out
-                </button>
-              </div>
+            <div className="mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Parent Dashboard</h1>
+              <p className="text-muted-foreground mt-2 text-sm sm:text-base">Welcome back, {user?.email}</p>
             </div>
 
             <Tabs defaultValue="profiles" className="mb-8">

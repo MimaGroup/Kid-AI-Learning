@@ -100,7 +100,7 @@ export function NotificationsDropdown() {
         </HoverCardTrigger>
 
         {!isDropdownOpen && (
-          <HoverCardContent align="end" className="w-80">
+          <HoverCardContent align="end" className="w-80 bg-white border border-gray-200 shadow-lg">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-semibold">Recent Notifications</h4>

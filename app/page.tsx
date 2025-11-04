@@ -36,7 +36,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        router.push("/parent/dashboard")
+        router.push("/kids/home")
       } else {
         trackEvent("page_view", { page: "landing" })
       }

@@ -9,13 +9,14 @@ import { SystemHealth } from "./system-health"
 import { SupportTickets } from "./support-tickets"
 import { MonitoringDashboard } from "./monitoring-dashboard"
 import { ContentValidationDashboard } from "./content-validation-dashboard"
+import { RecentActivity } from "./recent-activity"
 import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle } from "lucide-react"
 
 export function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("analytics")
+  const [activeTab, setActiveTab] = useState("recent")
 
   useEffect(() => {
-    console.log("[v0] AdminDashboard mounted with 7 tabs")
+    console.log("[v0] AdminDashboard mounted with 8 tabs")
     console.log("[v0] Active tab:", activeTab)
   }, [activeTab])
 
@@ -29,6 +30,10 @@ export function AdminDashboard() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="w-full overflow-x-auto">
           <TabsList className="inline-flex w-auto min-w-full">
+            <TabsTrigger value="recent" className="gap-2 flex-shrink-0">
+              <Activity className="h-4 w-4" />
+              <span>Recent Activity</span>
+            </TabsTrigger>
             <TabsTrigger value="analytics" className="gap-2 flex-shrink-0">
               <BarChart3 className="h-4 w-4" />
               <span>Analytics</span>
@@ -59,6 +64,10 @@ export function AdminDashboard() {
             </TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="recent" className="space-y-4">
+          <RecentActivity />
+        </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
           <AnalyticsDashboard />

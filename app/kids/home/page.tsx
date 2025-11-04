@@ -1,17 +1,14 @@
 "use client"
-
-import type React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { RecommendedActivities } from "@/components/recommended-activities"
 import { GamificationDisplay } from "@/components/gamification-display"
 import { DailyChallenges } from "@/components/daily-challenges"
 import { Button } from "@/components/ui/button"
 import { TutorialTour } from "@/components/tutorial-tour"
+import { AppNavigation } from "@/components/app-navigation"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 
 export default function KidsHome() {
-  const router = useRouter()
-
   const kidsTourSteps = [
     {
       target: ".gamification-display",
@@ -107,123 +104,84 @@ export default function KidsHome() {
     },
   ]
 
-  const handleInterfaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-    if (value === "parent") {
-      router.push("/parent/dashboard")
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
       <TutorialTour tourId="kids-home" steps={kidsTourSteps} />
 
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="text-2xl">🚀</div>
-              <h1 className="text-2xl font-bold text-gray-900">AI Kids Learning Platform</h1>
+      <AppNavigation />
+      <Breadcrumbs />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-gradient-to-r from-pink-400 to-pink-600 text-white p-6 rounded-2xl mb-8">
+          <div className="flex items-center space-x-3">
+            <div className="text-3xl">🎮</div>
+            <div>
+              <h2 className="text-2xl font-bold">AI Learning Games</h2>
+              <p className="text-pink-100">Interactive AI games and activities for kids!</p>
             </div>
-            <div className="text-sm text-gray-600">Where Young Minds Meet Artificial Intelligence!</div>
           </div>
         </div>
-      </header>
 
-      <div className="flex">
-        <div className="w-80 bg-gradient-to-b from-purple-600 to-purple-800 text-white p-6">
-          <div className="mb-8">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="text-2xl">🚀</div>
-              <h2 className="text-xl font-bold">AI Kids Learning</h2>
-            </div>
-            <p className="text-purple-200 text-sm">Choose Your Interface</p>
-          </div>
+        <div className="mb-8 gamification-display">
+          <GamificationDisplay />
+        </div>
 
-          <div className="space-y-4">
-            <select
-              className="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20"
-              onChange={handleInterfaceChange}
-              defaultValue="kids"
+        <div className="mb-8 daily-challenges">
+          <DailyChallenges />
+        </div>
+
+        <div className="mb-8">
+          <RecommendedActivities />
+        </div>
+
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">All Activities</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 activities-grid">
+          {activities.map((activity) => (
+            <Link
+              key={activity.id}
+              href={activity.href}
+              className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block ${
+                activity.id === "library" ? "library-link" : ""
+              }`}
             >
-              <option value="kids">🎮 Kids Learning App</option>
-              <option value="parent">👨‍👩‍👧‍👦 Parent Dashboard</option>
-            </select>
-          </div>
+              <div className="flex items-center space-x-4">
+                <div className="text-4xl">{activity.icon}</div>
+                <div>
+                  <h3 className="text-xl font-bold">{activity.title}</h3>
+                  <p className="text-white/90">{activity.description}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
 
-        <div className="flex-1 p-8">
-          <div className="bg-gradient-to-r from-pink-400 to-pink-600 text-white p-6 rounded-2xl mb-8">
-            <div className="flex items-center space-x-3">
-              <div className="text-3xl">🎮</div>
-              <div>
-                <h2 className="text-2xl font-bold">AI Learning Games</h2>
-                <p className="text-pink-100">Interactive AI games and activities for kids!</p>
-              </div>
+        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
+            <Link href="/kids/badges">
+              <Button variant="outline" size="sm">
+                View All Badges
+              </Button>
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-2xl mb-2">🏆</div>
+              <div className="text-lg font-semibold text-blue-900">5 Badges</div>
+              <div className="text-sm text-blue-700">Earned</div>
             </div>
-          </div>
-
-          <div className="mb-8 gamification-display">
-            <GamificationDisplay />
-          </div>
-
-          <div className="mb-8 daily-challenges">
-            <DailyChallenges />
-          </div>
-
-          <div className="mb-8">
-            <RecommendedActivities />
-          </div>
-
-          <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">All Activities</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 activities-grid">
-            {activities.map((activity) => (
-              <Link
-                key={activity.id}
-                href={activity.href}
-                className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block ${
-                  activity.id === "library" ? "library-link" : ""
-                }`}
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="text-4xl">{activity.icon}</div>
-                  <div>
-                    <h3 className="text-xl font-bold">{activity.title}</h3>
-                    <p className="text-white/90">{activity.description}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
-              <Link href="/kids/badges">
-                <Button variant="outline" size="sm">
-                  View All Badges
-                </Button>
-              </Link>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl mb-2">⚡</div>
+              <div className="text-lg font-semibold text-green-900">3 Day</div>
+              <div className="text-sm text-green-700">Streak</div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl mb-2">🏆</div>
-                <div className="text-lg font-semibold text-blue-900">5 Badges</div>
-                <div className="text-sm text-blue-700">Earned</div>
-              </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl mb-2">⚡</div>
-                <div className="text-lg font-semibold text-green-900">3 Day</div>
-                <div className="text-sm text-green-700">Streak</div>
-              </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl mb-2">🎯</div>
-                <div className="text-lg font-semibold text-purple-900">Level 4</div>
-                <div className="text-sm text-purple-700">AI Explorer</div>
-              </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-2xl mb-2">🎯</div>
+              <div className="text-lg font-semibold text-purple-900">Level 4</div>
+              <div className="text-sm text-purple-700">AI Explorer</div>
             </div>
           </div>
         </div>

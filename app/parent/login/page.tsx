@@ -15,7 +15,7 @@ function ParentLoginContent() {
   const { login, error, clearError, user } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams?.get("redirect") ?? "/parent/dashboard"
+  const redirect = searchParams?.get("redirect") ?? "/kids/home"
 
   useEffect(() => {
     if (user) {

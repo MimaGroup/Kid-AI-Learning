@@ -25,7 +25,7 @@ export function LoginPageClient() {
         email_domain: email.split("@")[1],
         timestamp: Date.now(),
       })
-      router.push("/parent/dashboard")
+      router.push("/kids/home")
     } catch (err) {
       trackError(err instanceof Error ? err : new Error("Login failed"), "login")
       console.error("Login failed:", err)
