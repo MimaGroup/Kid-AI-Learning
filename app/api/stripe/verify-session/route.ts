@@ -11,6 +11,10 @@ export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
   try {
+    if (!request?.nextUrl) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 })
+    }
+
     const searchParams = request.nextUrl.searchParams
     const sessionId = searchParams.get("session_id")
 

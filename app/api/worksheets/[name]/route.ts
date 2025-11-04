@@ -2,10 +2,10 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
-  const searchParams = request.nextUrl.searchParams
-  const difficulty = searchParams.get("difficulty") || "Medium"
 
-  // Generate worksheet content based on name
+  const searchParams = request.nextUrl?.searchParams
+  const difficulty = searchParams?.get("difficulty") || "Medium"
+
   const worksheets: Record<string, string> = {
     "pattern-recognition-puzzle": `
 PATTERN RECOGNITION PUZZLE
@@ -119,7 +119,6 @@ Share your robot design with friends and family!
   const worksheetKey = name.toLowerCase().replace(/ /g, "-")
   const content = worksheets[worksheetKey] || `Worksheet: ${name}\nDifficulty: ${difficulty}\n\nContent coming soon!`
 
-  // Return as downloadable text file
   return new NextResponse(content, {
     headers: {
       "Content-Type": "text/plain",

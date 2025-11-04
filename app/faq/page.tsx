@@ -63,7 +63,7 @@ export default function FAQPage() {
               <p className="text-lg text-gray-600">Find answers to common questions about our platform</p>
             </div>
 
-            <Accordion type="single" collapsible className="space-y-4">
+            <Accordion type="multiple" className="space-y-4">
               <AccordionItem value="item-1" className="border rounded-lg px-6">
                 <AccordionTrigger className="text-left font-semibold">
                   What age group is this platform designed for?
