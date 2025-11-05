@@ -49,6 +49,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single()
+
+    if (profileError || !profile) {
+      console.log("[v0] User profile not found, creating one...")
+
+      // Create profile for user
+      const { error: createProfileError } = await supabase.from("profiles").insert({
+        id: user.id,
+        email: user.email,
+        display_name: user.email?.split("@")[0] || "User",
+        role: "parent",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+
+      if (createProfileError) {
+        console.error("[v0] Error creating profile:", createProfileError)
+        return NextResponse.json({ error: "Failed to create user profile. Please contact support." }, { status: 500 })
+      }
+
+      console.log("[v0] User profile created successfully")
+    }
+
     const body = await request.json()
 
     const validation = validateInput(childProfileSchema, {
@@ -80,7 +107,7 @@ export async function POST(request: Request) {
       console.error("Error creating child profile:", insertError)
       return NextResponse.json(
         {
-          error: insertError.message,
+          error: insertError.message || "Failed to create child profile",
         },
         { status: 500 },
       )
@@ -98,7 +125,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ child }, { status: 201 })
   } catch (error) {
-    console.error("Unexpected error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Unexpected error in POST /api/children:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Internal server error" },
+      { status: 500 },
+    )
   }
 }

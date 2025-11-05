@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createServerClient, createServiceRoleClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -21,8 +21,9 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    // Fetch recent activities with user email
-    const { data: activities, error } = await supabase
+    const adminClient = await createServiceRoleClient()
+
+    const { data: activities, error } = await adminClient
       .from("user_progress")
       .select(
         `
@@ -33,7 +34,7 @@ export async function GET() {
         time_spent,
         completed_at,
         user_id,
-        profiles!inner(email)
+        profiles!inner(email, display_name)
       `,
       )
       .order("completed_at", { ascending: false })
@@ -48,6 +49,7 @@ export async function GET() {
     const transformedActivities = activities?.map((activity: any) => ({
       id: activity.id,
       user_email: activity.profiles?.email || "Unknown",
+      user_name: activity.profiles?.display_name || "Unknown",
       activity_type: activity.activity_type,
       activity_id: activity.activity_id,
       score: activity.score || 0,

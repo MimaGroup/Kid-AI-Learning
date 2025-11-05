@@ -146,7 +146,18 @@ export default function PricingPageClient() {
 
       if (data.url) {
         trackConversion("checkout_started", planId)
-        window.location.href = data.url
+        try {
+          // Try to navigate the top-level window (breaks out of iframe)
+          if (window.top) {
+            window.top.location.href = data.url
+          } else {
+            window.location.href = data.url
+          }
+        } catch (e) {
+          // If blocked by cross-origin policy, open in new window
+          console.log("[v0] Iframe redirect blocked, opening in new window")
+          window.open(data.url, "_blank")
+        }
       } else {
         const errorMessage = data.details || data.error || "Failed to create checkout session"
         throw new Error(errorMessage)

@@ -20,7 +20,7 @@ export default function GettingStarted() {
             <p className="text-gray-600 mb-6">
               Start your AI learning journey with fun games, challenges, and rewards!
             </p>
-            <Link href="/kids/home">
+            <Link href="/parent/login?redirect=/kids/home">
               <Button className="w-full" size="lg">
                 Start Learning <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
@@ -31,7 +31,7 @@ export default function GettingStarted() {
             <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">For Parents</h2>
             <p className="text-gray-600 mb-6">Track your children's progress and manage their learning experience.</p>
-            <Link href="/parent/dashboard">
+            <Link href="/parent/login?redirect=/parent/dashboard">
               <Button className="w-full bg-transparent" size="lg" variant="outline">
                 View Dashboard <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
@@ -140,7 +140,7 @@ export default function GettingStarted() {
         </div>
 
         <div className="text-center mt-12">
-          <Link href="/kids/home">
+          <Link href="/parent/login?redirect=/kids/home">
             <Button size="lg" className="text-lg px-8 py-6">
               Start Your Learning Journey <ArrowRight className="ml-2 w-5 h-5" />
             </Button>

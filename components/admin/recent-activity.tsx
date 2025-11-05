@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CheckCircle, UserPlus, Trophy, Clock } from "lucide-react"
+import { CheckCircle, UserPlus, Trophy, Clock, RefreshCw } from "lucide-react"
 
 interface UserActivity {
   id: string
   user_email: string
+  user_name?: string
   activity_type: string
   activity_id: string
   score: number
@@ -28,6 +30,7 @@ export function RecentActivity() {
   const [activities, setActivities] = useState<UserActivity[]>([])
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -36,8 +39,8 @@ export function RecentActivity() {
   const fetchData = async () => {
     try {
       const [activitiesRes, usersRes] = await Promise.all([
-        fetch("/api/admin/recent-activities"),
-        fetch("/api/admin/recent-users"),
+        fetch("/api/admin/recent-activities", { cache: "no-store" }),
+        fetch("/api/admin/recent-users", { cache: "no-store" }),
       ])
 
       const activitiesData = await activitiesRes.json()
@@ -49,7 +52,13 @@ export function RecentActivity() {
       console.error("Failed to fetch recent activity:", error)
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
+  }
+
+  const handleRefresh = () => {
+    setRefreshing(true)
+    fetchData()
   }
 
   const getActivityIcon = (type: string) => {
@@ -84,10 +93,16 @@ export function RecentActivity() {
 
   return (
     <Tabs defaultValue="activities" className="space-y-4">
-      <TabsList>
-        <TabsTrigger value="activities">Recent Activities</TabsTrigger>
-        <TabsTrigger value="users">New Users</TabsTrigger>
-      </TabsList>
+      <div className="flex items-center justify-between">
+        <TabsList>
+          <TabsTrigger value="activities">Recent Activities</TabsTrigger>
+          <TabsTrigger value="users">New Users</TabsTrigger>
+        </TabsList>
+        <Button onClick={handleRefresh} disabled={refreshing} variant="outline" size="sm">
+          <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+          Refresh
+        </Button>
+      </div>
 
       <TabsContent value="activities" className="space-y-4">
         <Card>
@@ -115,13 +130,13 @@ export function RecentActivity() {
                   {activities.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center text-muted-foreground">
-                        No recent activities
+                        No recent activities found. Try refreshing the data.
                       </TableCell>
                     </TableRow>
                   ) : (
                     activities.map((activity) => (
                       <TableRow key={activity.id}>
-                        <TableCell className="font-medium">{activity.user_email}</TableCell>
+                        <TableCell className="font-medium">{activity.user_name || activity.user_email}</TableCell>
                         <TableCell>
                           <Badge className={getActivityColor(activity.activity_type)}>
                             {getActivityIcon(activity.activity_type)} {activity.activity_type}

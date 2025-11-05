@@ -64,9 +64,9 @@ export function Footer() {
             <h4 className="font-semibold mb-3 text-gray-900">Connect</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="mailto:support@kids-learning-ai.com" className="text-gray-600 hover:text-gray-900">
+                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
                   Email Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

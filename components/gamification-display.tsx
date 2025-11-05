@@ -43,18 +43,13 @@ export function GamificationDisplay() {
 
   const fetchGamificationData = async () => {
     try {
-      console.log("[v0] Fetching gamification data...")
       const response = await fetch("/api/gamification")
-
-      console.log("[v0] Gamification API response status:", response.status)
 
       if (response.ok) {
         const result = await response.json()
-        console.log("[v0] Gamification data received:", result)
         setData(result)
         setIsGuest(false)
-      } else if (response.status === 401) {
-        console.log("[v0] User not authenticated, using guest mode")
+      } else if (response.status === 401 || response.status === 404) {
         setIsGuest(true)
         loadGuestData()
       } else {
@@ -129,7 +124,6 @@ export function GamificationDisplay() {
   }
 
   if (!data) {
-    console.log("[v0] No gamification data available")
     return null
   }
 

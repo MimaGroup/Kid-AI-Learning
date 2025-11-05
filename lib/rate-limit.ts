@@ -1,9 +1,16 @@
 import { Redis } from "@upstash/redis"
 
-const redis = new Redis({
-  url: process.env["UPSTASH-KV_KV_REST_API_URL"] || "",
-  token: process.env["UPSTASH-KV_KV_REST_API_TOKEN"] || "",
-})
+const redisUrl = process.env["UPSTASH-KV_KV_REST_API_URL"]
+const redisToken = process.env["UPSTASH-KV_KV_REST_API_TOKEN"]
+
+// Only initialize Redis if credentials are available
+const redis =
+  redisUrl && redisToken
+    ? new Redis({
+        url: redisUrl,
+        token: redisToken,
+      })
+    : null
 
 export interface RateLimitConfig {
   requests: number // Maximum requests allowed
@@ -19,46 +26,33 @@ export interface RateLimitResult {
 
 /**
  * Check rate limit using Upstash Redis
- * Uses sliding window algorithm for accurate rate limiting
+ * Uses fixed window counter algorithm for simplicity and reliability
  */
 export async function checkRateLimit(key: string, config: RateLimitConfig): Promise<RateLimitResult> {
+  if (!redis) {
+    return {
+      allowed: true,
+      remaining: config.requests,
+      resetTime: Date.now() + config.window,
+    }
+  }
+
   try {
     const now = Date.now()
-    const windowStart = now - config.window
+    const windowKey = Math.floor(now / config.window)
+    const rateLimitKey = `ratelimit:${key}:${windowKey}`
 
-    // Use Redis sorted set for sliding window
-    const rateLimitKey = `ratelimit:${key}`
+    // Increment the counter for this window
+    const count = await redis.incr(rateLimitKey)
 
-    // Remove old entries outside the window
-    await redis.zremrangebyscore(rateLimitKey, 0, windowStart)
+    // Set expiry on first request in this window
+    if (count === 1) {
+      await redis.expire(rateLimitKey, Math.ceil(config.window / 1000) + 1)
+    }
 
-    // Count requests in current window
-    const requestCount = await redis.zcard(rateLimitKey)
+    const resetTime = (windowKey + 1) * config.window
 
-    if (requestCount >= config.requests) {
-      let oldestTimestamp = now
-
-      try {
-        // Get the oldest request timestamp without withScores to avoid format issues
-        const oldestMembers = await redis.zrange(rateLimitKey, 0, 0)
-
-        if (oldestMembers && Array.isArray(oldestMembers) && oldestMembers.length > 0) {
-          // Get the score separately using zscore
-          const member = oldestMembers[0]
-          const score = await redis.zscore(rateLimitKey, member)
-
-          if (score !== null && score !== undefined) {
-            oldestTimestamp = Number(score)
-          }
-        }
-      } catch (zrangeError) {
-        console.error("[v0] Error getting oldest timestamp:", zrangeError)
-        // Use current time as fallback
-        oldestTimestamp = now
-      }
-
-      const resetTime = oldestTimestamp + config.window
-
+    if (count > config.requests) {
       return {
         allowed: false,
         remaining: 0,
@@ -67,19 +61,14 @@ export async function checkRateLimit(key: string, config: RateLimitConfig): Prom
       }
     }
 
-    // Add current request
-    await redis.zadd(rateLimitKey, { score: now, member: `${now}-${Math.random()}` })
-
-    // Set expiry on the key (cleanup)
-    await redis.expire(rateLimitKey, Math.ceil(config.window / 1000))
-
     return {
       allowed: true,
-      remaining: config.requests - requestCount - 1,
-      resetTime: now + config.window,
+      remaining: config.requests - count,
+      resetTime,
     }
   } catch (error) {
-    console.error("[v0] Rate limit check failed, allowing request:", error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error("[v0] Rate limit check failed, allowing request:", errorMessage)
     // Fail open - allow request if Redis is down
     return {
       allowed: true,
