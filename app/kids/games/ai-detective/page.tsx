@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button } from "../../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
+import { useState, useEffect, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
@@ -18,11 +18,50 @@ interface Case {
   solution: string
 }
 
+const FALLBACK_MYSTERIES: Case[] = [
+  {
+    title: "The Missing Robot",
+    description: "A classroom robot has gone missing! Can you find out what happened?",
+    clues: [
+      "The robot was last seen near the art room",
+      "There are paint footprints leading to the storage closet",
+      "The art teacher mentioned needing help with a project",
+    ],
+    solution: "The art teacher borrowed the robot to help demonstrate movement for an art project!",
+  },
+  {
+    title: "The Case of the Missing Lunch",
+    description:
+      "Someone's lunch has disappeared from the cafeteria! The sandwich was there at noon, but by 12:30 it was gone.",
+    clues: [
+      "There are crumbs leading from the lunch table to the playground door",
+      "A student saw a squirrel near the open window around 12:15",
+      "The lunch bag was found outside, empty but not torn",
+    ],
+    solution:
+      "A clever squirrel came through the open window and took the sandwich! The crumbs show its path, and it carefully removed the sandwich without damaging the bag.",
+  },
+  {
+    title: "The Mystery of the Switched Backpacks",
+    description:
+      "Two students accidentally took each other's identical backpacks home. How can we figure out whose is whose?",
+    clues: [
+      "One backpack has a math book with 'Room 204' written inside",
+      "The other backpack contains a permission slip signed by 'Mrs. Johnson'",
+      "The school directory shows Mrs. Johnson teaches in Room 204",
+    ],
+    solution:
+      "Both backpacks belong to students in Room 204! By checking the class roster and matching the names, we can return each backpack to its owner.",
+  },
+]
+
 export default function AIDetectivePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const { submitProgress } = useProgress()
   const toast = useToast()
+
+  const isGeneratingRef = useRef(false)
 
   const [caseData, setCaseData] = useState<Case | null>(null)
   const [loadingCase, setLoadingCase] = useState(true)
@@ -40,8 +79,21 @@ export default function AIDetectivePage() {
 
   useEffect(() => {
     const generateMystery = async () => {
+      if (isGeneratingRef.current) return
+
       try {
+        isGeneratingRef.current = true
         setLoadingCase(true)
+
+        // Set a timeout to show fallback if API takes too long
+        const timeoutId = setTimeout(() => {
+          if (!caseData) {
+            const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+            setCaseData(randomMystery)
+            setLoadingCase(false)
+          }
+        }, 3000) // Show fallback after 3 seconds
+
         const response = await fetch("/api/generate/mystery", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,35 +103,33 @@ export default function AIDetectivePage() {
           }),
         })
 
-        const data = await response.json()
+        clearTimeout(timeoutId)
 
-        if (response.ok && data.mystery) {
-          setCaseData(data.mystery)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.mystery) {
+            setCaseData(data.mystery)
+          } else {
+            throw new Error("No mystery in response")
+          }
         } else {
-          console.error("Failed to generate mystery:", data.error)
-          // Fallback to sample case if AI generation fails
-          setCaseData({
-            title: "The Missing Robot",
-            description: "A classroom robot has gone missing! Can you find out what happened?",
-            clues: [
-              "The robot was last seen near the art room",
-              "There are paint footprints leading to the storage closet",
-              "The art teacher mentioned needing help with a project",
-            ],
-            solution: "The art teacher borrowed the robot to help demonstrate movement for an art project!",
-          })
+          throw new Error("API request failed")
         }
       } catch (error) {
-        console.error("Error generating mystery:", error)
+        console.error("[v0] Error generating mystery:", error)
+        // Use fallback mystery on any error
+        const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+        setCaseData(randomMystery)
       } finally {
         setLoadingCase(false)
+        isGeneratingRef.current = false
       }
     }
 
-    if (user) {
+    if (user && !caseData) {
       generateMystery()
     }
-  }, [user])
+  }, [user, caseData])
 
   const revealClue = (index: number) => {
     if (!revealedClues.includes(index)) {
@@ -110,13 +160,18 @@ export default function AIDetectivePage() {
   }
 
   const newCase = async () => {
+    if (isGeneratingRef.current) return
+
     setRevealedClues([])
     setShowSolution(false)
     setTheory("")
     setNewAchievements([])
+    setCaseData(null) // Clear current case
 
-    setLoadingCase(true)
     try {
+      isGeneratingRef.current = true
+      setLoadingCase(true)
+
       const response = await fetch("/api/generate/mystery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -126,16 +181,25 @@ export default function AIDetectivePage() {
         }),
       })
 
-      const data = await response.json()
-      if (response.ok && data.mystery) {
-        setCaseData(data.mystery)
-        toast.success("New case loaded!")
+      if (response.ok) {
+        const data = await response.json()
+        if (data.mystery) {
+          setCaseData(data.mystery)
+          toast.success("New case loaded!")
+        } else {
+          throw new Error("No mystery in response")
+        }
+      } else {
+        throw new Error("API request failed")
       }
     } catch (error) {
-      console.error("Error generating mystery:", error)
-      toast.error("Failed to generate new case")
+      console.error("[v0] Error generating mystery:", error)
+      const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
+      setCaseData(randomMystery)
+      toast.info("Using a pre-made mystery!")
     } finally {
       setLoadingCase(false)
+      isGeneratingRef.current = false
     }
   }
 

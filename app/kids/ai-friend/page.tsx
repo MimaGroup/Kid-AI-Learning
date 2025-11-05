@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { MessageCircle } from "lucide-react"
 import { trackAIFriend } from "@/lib/analytics"
 import { useSubscription } from "@/hooks/use-subscription"
+import Link from "next/link" // Added Link import for back button
 
 interface AIFriend {
   id: string
@@ -133,14 +134,20 @@ export default function AIFriendBuilder() {
     <div className="min-h-screen bg-gray-50">
       <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
 
-      <header className="bg-white shadow-sm border-b p-4">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-          <span className="text-4xl mr-3">🎮</span>
-          AI Playground
-        </h1>
-      </header>
-
       <div className="max-w-7xl mx-auto p-6">
+        <div className="mb-6">
+          <Link href="/kids/activities" className="text-cyan-600 hover:underline">
+            ← Back to Activities
+          </Link>
+        </div>
+
+        <header className="bg-white shadow-sm border-b rounded-lg p-6 mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+            <span className="text-4xl mr-3">🎮</span>
+            AI Playground
+          </h1>
+        </header>
+
         <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
           <div className="flex items-start space-x-3">
             <div className="text-2xl">ℹ️</div>
@@ -231,7 +238,7 @@ export default function AIFriendBuilder() {
                 🤖
               </div>
               <h4 className="text-xl font-bold text-blue-700 mb-2">{friendName || "Your Friend"}</h4>
-              <p className="text-gray-600">Personality: {personality}</p>
+              <p className="text-sm text-gray-600 mb-3">Personality: {personality}</p>
             </div>
           </div>
         </div>
