@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { validateInput, childProfileSchema, sanitizeString } from "@/lib/validation"
-import { createAuditLog, getClientIp } from "@/lib/security"
+import { createServerClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
-    const supabase = await createClient()
+    console.log("[v0] GET /api/children - Fetching children...")
+    const supabase = await createServerClient()
 
     const {
       data: { user },
@@ -15,6 +14,7 @@ export async function GET() {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
+      console.log("[v0] Unauthorized request")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -25,20 +25,22 @@ export async function GET() {
       .order("created_at", { ascending: false })
 
     if (error) {
-      console.error("Error fetching children:", error)
+      console.error("[v0] Error fetching children:", error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    console.log("[v0] Successfully fetched children:", children?.length || 0)
     return NextResponse.json({ children: children || [] })
   } catch (error) {
-    console.error("Unexpected error:", error)
+    console.error("[v0] Unexpected error in GET:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    console.log("[v0] POST /api/children - Creating child profile...")
+    const supabase = await createServerClient()
 
     const {
       data: { user },
@@ -46,8 +48,11 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
+      console.log("[v0] Unauthorized request")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    console.log("[v0] User authenticated:", user.id)
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
@@ -58,7 +63,6 @@ export async function POST(request: Request) {
     if (profileError || !profile) {
       console.log("[v0] User profile not found, creating one...")
 
-      // Create profile for user
       const { error: createProfileError } = await supabase.from("profiles").insert({
         id: user.id,
         email: user.email,
@@ -77,25 +81,35 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
+    console.log("[v0] Request body:", body)
 
-    const validation = validateInput(childProfileSchema, {
-      name: sanitizeString(body.name),
-      age: Number.parseInt(body.age),
-      avatar_color: body.avatar_color,
-      learning_level: body.learning_level,
-    })
+    const { name, age, avatar_color, learning_level } = body
 
-    if (!validation.success) {
-      return NextResponse.json({ error: validation.error }, { status: 400 })
+    if (!name || typeof name !== "string") {
+      return NextResponse.json({ error: "Name is required and must be a string" }, { status: 400 })
     }
 
-    const { name, age, avatar_color, learning_level } = validation.data
+    if (!age || typeof age !== "number" || age < 3 || age > 18) {
+      return NextResponse.json({ error: "Age must be a number between 3 and 18" }, { status: 400 })
+    }
+
+    if (!avatar_color || typeof avatar_color !== "string") {
+      return NextResponse.json({ error: "Avatar color is required" }, { status: 400 })
+    }
+
+    if (!learning_level || typeof learning_level !== "string") {
+      return NextResponse.json({ error: "Learning level is required" }, { status: 400 })
+    }
+
+    const sanitizedName = name.trim().slice(0, 50)
+
+    console.log("[v0] Validated data:", { name: sanitizedName, age, avatar_color, learning_level })
 
     const { data: child, error: insertError } = await supabase
       .from("children")
       .insert({
         parent_id: user.id,
-        name,
+        name: sanitizedName,
         age,
         avatar_color: avatar_color || "#4F46E5",
         learning_level: learning_level || "beginner",
@@ -104,7 +118,7 @@ export async function POST(request: Request) {
       .single()
 
     if (insertError) {
-      console.error("Error creating child profile:", insertError)
+      console.error("[v0] Error creating child profile:", insertError)
       return NextResponse.json(
         {
           error: insertError.message || "Failed to create child profile",
@@ -113,19 +127,60 @@ export async function POST(request: Request) {
       )
     }
 
-    createAuditLog({
-      userId: user.id,
-      action: "CREATE",
-      resource: "child_profile",
-      ip: getClientIp(request as any),
-      userAgent: request.headers.get("user-agent") || "unknown",
-      timestamp: new Date(),
-      metadata: { childId: child.id },
-    })
+    console.log("[v0] Child profile created successfully:", child.id)
 
     return NextResponse.json({ child }, { status: 201 })
   } catch (error) {
-    console.error("Unexpected error in POST /api/children:", error)
+    console.error("[v0] Unexpected error in POST /api/children:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Internal server error" },
+      { status: 500 },
+    )
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    console.log("[v0] DELETE /api/children - Deleting child profile")
+    const supabase = await createServerClient()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      console.log("[v0] Unauthorized - no user")
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const childId = searchParams.get("id")
+
+    if (!childId) {
+      console.log("[v0] Missing child ID")
+      return NextResponse.json({ error: "Missing child ID" }, { status: 400 })
+    }
+
+    console.log("[v0] Deleting child:", childId)
+
+    const { data: child } = await supabase.from("children").select("parent_id").eq("id", childId).single()
+
+    if (!child || child.parent_id !== user.id) {
+      console.log("[v0] Unauthorized - not the parent")
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+    }
+
+    const { error } = await supabase.from("children").delete().eq("id", childId)
+
+    if (error) {
+      console.error("[v0] Error deleting child:", error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    console.log("[v0] Child deleted successfully")
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] Error in DELETE /api/children:", error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 },

@@ -1,21 +1,39 @@
 import type { NextRequest } from "next/server"
-import crypto from "crypto"
 
 export function generateCsrfToken(): string {
-  return crypto.randomBytes(32).toString("hex")
+  const array = new Uint8Array(32)
+  window.crypto.getRandomValues(array)
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("")
 }
 
 export function validateCsrfToken(token: string, storedToken: string): boolean {
   if (!token || !storedToken) return false
-  return crypto.timingSafeEqual(Buffer.from(token), Buffer.from(storedToken))
+  // Simple constant-time comparison
+  if (token.length !== storedToken.length) return false
+
+  let result = 0
+  for (let i = 0; i < token.length; i++) {
+    result |= token.charCodeAt(i) ^ storedToken.charCodeAt(i)
+  }
+  return result === 0
 }
 
 export function generateSecureToken(length = 32): string {
-  return crypto.randomBytes(length).toString("base64url")
+  const array = new Uint8Array(length)
+  window.crypto.getRandomValues(array)
+  // Convert to base64url format
+  return btoa(String.fromCharCode(...array))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "")
 }
 
-export function hashData(data: string): string {
-  return crypto.createHash("sha256").update(data).digest("hex")
+export async function hashData(data: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const dataBuffer = encoder.encode(data)
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", dataBuffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("")
 }
 
 export function getClientIp(request: NextRequest): string {
