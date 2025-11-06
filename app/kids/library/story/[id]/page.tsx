@@ -87,7 +87,7 @@ export default function StoryPage() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <BackToHomeButton variant="back" href="/kids/library" label="Back to Library" />
-            <UserHeader className="text-white" />
+            <UserHeader />
           </div>
         </div>
       </header>
