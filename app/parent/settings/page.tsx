@@ -42,13 +42,7 @@ export default function ParentSettingsPage() {
       <AppNavigation />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/kids/home" },
-            { label: "Parent Dashboard", href: "/parent/dashboard" },
-            { label: "Settings", href: "/parent/settings" },
-          ]}
-        />
+        <Breadcrumbs />
 
         <div className="mt-6 space-y-6">
           <div>
