@@ -30,7 +30,7 @@ export default function ParentSettingsPage() {
       // TODO: Implement API call to save notification preferences
       await new Promise((resolve) => setTimeout(resolve, 1000))
       success("Your notification preferences have been updated.")
-    } catch (error) {
+    } catch (err) {
       error("Failed to save settings. Please try again.")
     } finally {
       setIsLoading(false)
