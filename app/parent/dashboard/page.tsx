@@ -10,7 +10,6 @@ import { ChildProgressCard } from "../../../components/child-progress-card"
 import { useState } from "react"
 import type { Child } from "../../../types/child"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs"
-import { TutorialTour } from "../../../components/tutorial-tour"
 import { trackEvent } from "@/lib/analytics"
 import { Footer } from "@/components/footer"
 import { DashboardSkeleton, ProgressCardSkeleton } from "@/components/skeleton-screens"
@@ -21,7 +20,6 @@ import { SkillProgressChart } from "@/components/skill-progress-chart"
 import { WeeklyActivityChart } from "@/components/weekly-activity-chart"
 import { LearningRecommendations } from "@/components/learning-recommendations"
 import { DownloadReportButton } from "@/components/download-report-button"
-import { InteractiveTooltip } from "@/components/interactive-tooltip"
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 
@@ -30,9 +28,9 @@ export default function ParentDashboard() {
   const { children, loading: childrenLoading, createChild, deleteChild } = useChildren()
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
+  const [selectedProfileId, setSelectedProfileId] = useState<string>("all")
   const [analyticsChildId, setAnalyticsChildId] = useState<string | null>(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [showTutorial, setShowTutorial] = useState(false)
 
   const handleSignOut = async () => {
     await logout()
@@ -49,57 +47,17 @@ export default function ParentDashboard() {
 
   const handleDeleteChild = async (id: string) => {
     await deleteChild(id)
+    if (selectedProfileId === id) {
+      setSelectedProfileId("all")
+    }
   }
 
   const handleEditChild = (child: Child) => {
     setSelectedChild(child)
   }
 
-  const parentTourSteps = [
-    {
-      target: ".tabs-list",
-      title: "Welcome to Parent Dashboard! 👋",
-      content: "Switch between managing child profiles and viewing their learning progress.",
-      position: "bottom" as const,
-    },
-    {
-      target: ".add-child-button",
-      title: "Add Child Profiles 👶",
-      content: "Click here to add your children's profiles. You can track multiple children's progress!",
-      position: "left" as const,
-    },
-    {
-      target: ".progress-tab",
-      title: "Track Learning Progress 📊",
-      content: "View detailed analytics of your children's learning activities, achievements, and gamification stats.",
-      position: "bottom" as const,
-    },
-  ]
-
-  const tooltipSteps = [
-    {
-      id: "welcome",
-      target: ".tabs-list",
-      title: "Welcome! Let's get you started",
-      content: "This dashboard helps you manage your children's learning journey. Let me show you around!",
-      position: "bottom" as const,
-    },
-    {
-      id: "add-child",
-      target: ".add-child-button",
-      title: "Add Your First Child",
-      content:
-        "Click here to create a profile for your child. You can add multiple children and track each one separately.",
-      position: "left" as const,
-    },
-    {
-      id: "progress",
-      target: ".progress-tab",
-      title: "Track Progress",
-      content: "View detailed learning analytics, achievements, and activity history for each child.",
-      position: "bottom" as const,
-    },
-  ]
+  const displayedChildren =
+    selectedProfileId === "all" ? children : children.filter((child) => child.id === selectedProfileId)
 
   if (authLoading) {
     return (
@@ -121,12 +79,6 @@ export default function ParentDashboard() {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
       {showOnboarding && <OnboardingFlow userType="parent" onComplete={() => setShowOnboarding(false)} />}
-      {!showOnboarding && showTutorial && (
-        <TutorialTour tourId="parent-dashboard" steps={parentTourSteps} onComplete={() => setShowTutorial(false)} />
-      )}
-      {!showOnboarding && !showTutorial && (
-        <InteractiveTooltip steps={tooltipSteps} storageKey="parent-dashboard-tooltips" />
-      )}
 
       <div className="flex-1 p-6 relative">
         <div className="max-w-7xl mx-auto">
@@ -137,20 +89,44 @@ export default function ParentDashboard() {
             </div>
 
             <Tabs defaultValue="profiles" className="mb-8">
-              <TabsList className="grid w-full max-w-md grid-cols-3 tabs-list">
-                <TabsTrigger value="profiles">Child Profiles</TabsTrigger>
-                <TabsTrigger value="progress" className="progress-tab">
+              <TabsList className="grid w-full max-w-md grid-cols-3 tabs-list text-xs sm:text-sm">
+                <TabsTrigger value="profiles" className="px-2 py-2">
+                  Child Profiles
+                </TabsTrigger>
+                <TabsTrigger value="progress" className="progress-tab px-2 py-2">
                   Learning Progress
                 </TabsTrigger>
-                <TabsTrigger value="analytics">Advanced Analytics</TabsTrigger>
+                <TabsTrigger value="analytics" className="px-2 py-2">
+                  Advanced Analytics
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="profiles" className="mt-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">Manage Children</h2>
-                  <div className="add-child-button w-full sm:w-auto">
-                    <AddChildDialog onAdd={handleAddChild} />
+                <div className="flex flex-col gap-4 mb-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 className="text-xl sm:text-2xl font-bold text-foreground">Manage Children</h2>
+                    <div className="add-child-button w-full sm:w-auto">
+                      <AddChildDialog onAdd={handleAddChild} />
+                    </div>
                   </div>
+
+                  {children.length > 1 && (
+                    <div className="w-full">
+                      <label className="block text-sm font-medium mb-2">View Child Profile</label>
+                      <select
+                        className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground"
+                        value={selectedProfileId}
+                        onChange={(e) => setSelectedProfileId(e.target.value)}
+                      >
+                        <option value="all">All Children ({children.length})</option>
+                        {children.map((child) => (
+                          <option key={child.id} value={child.id}>
+                            {child.name} ({child.age} years old)
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
 
                 {childrenLoading ? (
@@ -168,7 +144,7 @@ export default function ParentDashboard() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {children.map((child) => (
+                    {displayedChildren.map((child) => (
                       <ChildCard key={child.id} child={child} onDelete={handleDeleteChild} onEdit={handleEditChild} />
                     ))}
                   </div>
@@ -225,7 +201,6 @@ export default function ParentDashboard() {
                   </div>
                 ) : (
                   <>
-                    {/* Child selector */}
                     <div className="mb-6">
                       <label className="block text-sm font-medium mb-2">Select Child</label>
                       <select
