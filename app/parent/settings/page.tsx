@@ -17,7 +17,7 @@ import { User, Bell, Shield, CreditCard, Trash2 } from "lucide-react"
 export default function ParentSettingsPage() {
   const router = useRouter()
   const { user } = useAuth()
-  const { toast } = useToast()
+  const { success, error } = useToast()
   const [isLoading, setIsLoading] = useState(false)
 
   const [emailNotifications, setEmailNotifications] = useState(true)
@@ -29,16 +29,9 @@ export default function ParentSettingsPage() {
     try {
       // TODO: Implement API call to save notification preferences
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      toast({
-        title: "Settings saved",
-        description: "Your notification preferences have been updated.",
-      })
+      success("Your notification preferences have been updated.")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save settings. Please try again.",
-        variant: "destructive",
-      })
+      error("Failed to save settings. Please try again.")
     } finally {
       setIsLoading(false)
     }
