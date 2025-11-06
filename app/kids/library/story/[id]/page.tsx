@@ -86,7 +86,12 @@ export default function StoryPage() {
       <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <BackToHomeButton variant="library" className="text-white hover:bg-white/20" />
+            <BackToHomeButton
+              variant="back"
+              href="/kids/library"
+              label="Back to Library"
+              className="text-white hover:bg-white/20"
+            />
             <UserHeader className="text-white" />
           </div>
         </div>
