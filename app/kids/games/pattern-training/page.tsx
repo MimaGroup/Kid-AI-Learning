@@ -156,15 +156,15 @@ export default function PatternTrainingPage() {
                   systems learn from data.
                 </p>
               </div>
-              <div className="space-y-4">
-                <Button onClick={resetGame} className="bg-cyan-600 hover:bg-cyan-700">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button onClick={resetGame} className="bg-cyan-600 hover:bg-cyan-700 w-full sm:w-auto">
                   Play Again
                 </Button>
-                <div>
-                  <Link href="/kids/activities">
-                    <Button variant="outline">Back to Activities</Button>
-                  </Link>
-                </div>
+                <Link href="/kids/activities">
+                  <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+                    Back to Activities
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -210,11 +210,11 @@ export default function PatternTrainingPage() {
 
             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
-              <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap text-3xl sm:text-4xl">
+              <div className="flex justify-center items-center gap-1 sm:gap-2 flex-wrap">
                 {pattern.sequence.map((item, index) => (
                   <div
                     key={index}
-                    className={`${item === "?" ? "text-gray-400 font-bold" : ""} w-12 sm:w-14 h-12 sm:h-14 flex items-center justify-center`}
+                    className={`${item === "?" ? "text-gray-400 font-bold text-4xl" : "text-3xl sm:text-4xl"} w-10 sm:w-12 h-10 sm:h-12 flex items-center justify-center flex-shrink-0`}
                   >
                     {item}
                   </div>
@@ -224,13 +224,13 @@ export default function PatternTrainingPage() {
 
             <div>
               <h4 className="font-semibold mb-3 text-center">Choose the correct answer:</h4>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-lg mx-auto">
+              <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
                 {pattern.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showExplanation}
-                    className={`p-4 sm:p-6 text-3xl sm:text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[80px] sm:min-h-[100px] ${
+                    className={`p-4 text-3xl sm:text-4xl rounded-lg border-2 transition-all flex items-center justify-center h-20 sm:h-24 ${
                       selectedAnswer === index
                         ? showExplanation
                           ? index === pattern.correct
@@ -239,7 +239,7 @@ export default function PatternTrainingPage() {
                           : "border-cyan-500 bg-cyan-50"
                         : showExplanation && index === pattern.correct
                           ? "border-green-500 bg-green-50"
-                          : "border-gray-300 hover:border-cyan-300"
+                          : "border-gray-300 hover:border-cyan-300 bg-white"
                     } ${showExplanation ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     {option}
@@ -247,14 +247,6 @@ export default function PatternTrainingPage() {
                 ))}
               </div>
             </div>
-
-            {showExplanation && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800">
-                  <strong>Explanation:</strong> {pattern.explanation}
-                </p>
-              </div>
-            )}
 
             <div className="flex justify-center">
               {!showExplanation ? (

@@ -28,17 +28,19 @@ export function UserHeader() {
     <div className="flex items-center gap-3">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2 max-w-[150px] sm:max-w-[200px]">
+          <Button variant="ghost" className="flex items-center gap-2 max-w-[120px] sm:max-w-[200px] h-10">
             <User className="w-4 h-4 flex-shrink-0" />
             <span className="text-sm truncate">{user.email}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent align="end" className="w-56 bg-white z-50">
+          <DropdownMenuLabel className="bg-white">My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-sm text-muted-foreground break-all">{user.email}</DropdownMenuItem>
+          <DropdownMenuItem className="text-sm text-muted-foreground break-all bg-white hover:bg-gray-50">
+            {user.email}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
+          <DropdownMenuItem onClick={handleSignOut} className="text-destructive bg-white hover:bg-gray-50">
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out
           </DropdownMenuItem>
