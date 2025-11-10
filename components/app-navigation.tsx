@@ -41,6 +41,7 @@ export function AppNavigation() {
     },
     {
       label: "Parent Dashboard",
+      mobileLabel: "Parent",
       href: "/parent/dashboard",
       icon: LayoutDashboard,
       active: pathname?.startsWith("/parent"),
@@ -117,18 +118,22 @@ export function AppNavigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden flex items-center gap-2 pb-3 overflow-x-auto">
+        <div className="md:hidden flex items-center gap-2 pb-3 overflow-x-auto scrollbar-hide">
           {navItems.map((item) => {
             const Icon = item.icon
+            const displayLabel = "mobileLabel" in item ? item.mobileLabel : item.label
             return (
               <Link key={item.href} href={item.href}>
                 <Button
                   variant={item.active ? "secondary" : "ghost"}
                   size="sm"
-                  className={cn("gap-2 whitespace-nowrap", item.active && "bg-primary/10 text-primary")}
+                  className={cn(
+                    "gap-2 whitespace-nowrap flex-shrink-0 text-xs sm:text-sm px-3 sm:px-4",
+                    item.active && "bg-primary/10 text-primary",
+                  )}
                 >
                   <Icon className="w-4 h-4" />
-                  {item.label}
+                  <span className="hidden xs:inline">{displayLabel}</span>
                 </Button>
               </Link>
             )

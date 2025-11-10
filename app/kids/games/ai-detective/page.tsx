@@ -296,15 +296,17 @@ export default function AIDetectivePage() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 className="font-semibold text-green-900 mb-2">Solution:</h4>
                 <p className="text-green-800">{caseData.solution}</p>
-                <div className="mt-4 space-x-3">
-                  <Button onClick={newCase} className="bg-green-600 hover:bg-green-700">
+                <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button onClick={newCase} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
                     New Mystery
                   </Button>
-                  <Button onClick={resetCase} variant="outline">
+                  <Button onClick={resetCase} variant="outline" className="w-full sm:w-auto bg-transparent">
                     Try Again
                   </Button>
-                  <Link href="/kids/activities">
-                    <Button variant="outline">Back to Activities</Button>
+                  <Link href="/kids/activities" className="w-full sm:w-auto">
+                    <Button variant="outline" className="w-full bg-transparent">
+                      Back to Activities
+                    </Button>
                   </Link>
                 </div>
               </div>

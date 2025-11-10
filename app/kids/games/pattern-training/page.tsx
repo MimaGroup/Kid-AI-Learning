@@ -210,11 +210,11 @@ export default function PatternTrainingPage() {
 
             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
-              <div className="flex justify-center items-center gap-3 flex-wrap text-4xl">
+              <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap text-3xl sm:text-4xl">
                 {pattern.sequence.map((item, index) => (
                   <div
                     key={index}
-                    className={`${item === "?" ? "text-gray-400 font-bold" : ""} min-w-[50px] text-center`}
+                    className={`${item === "?" ? "text-gray-400 font-bold" : ""} w-12 sm:w-14 h-12 sm:h-14 flex items-center justify-center`}
                   >
                     {item}
                   </div>
@@ -224,13 +224,13 @@ export default function PatternTrainingPage() {
 
             <div>
               <h4 className="font-semibold mb-3 text-center">Choose the correct answer:</h4>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-lg mx-auto">
                 {pattern.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showExplanation}
-                    className={`p-6 text-4xl rounded-lg border-2 transition-all ${
+                    className={`p-4 sm:p-6 text-3xl sm:text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[80px] sm:min-h-[100px] ${
                       selectedAnswer === index
                         ? showExplanation
                           ? index === pattern.correct
