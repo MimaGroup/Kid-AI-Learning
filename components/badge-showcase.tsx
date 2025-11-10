@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface BadgeData {
   badge_id: string
@@ -89,13 +90,16 @@ export function BadgeShowcase() {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="mb-4">
-          {categories.map((category) => (
-            <TabsTrigger key={category} value={category} className="capitalize">
-              {category}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <ScrollArea className="w-full whitespace-nowrap">
+          <TabsList className="mb-4 inline-flex w-auto">
+            {categories.map((category) => (
+              <TabsTrigger key={category} value={category} className="capitalize text-xs sm:text-sm px-3 sm:px-4">
+                {category}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         {categories.map((category) => (
           <TabsContent key={category} value={category}>
