@@ -18,8 +18,7 @@ export function validateInput<T>(
     return { success: true, data: validated }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const zodError = error as z.ZodError<T>
-      const firstError = zodError.errors[0]
+      const firstError = error.issues[0]
       return { success: false, error: firstError.message }
     }
     return { success: false, error: "Validation failed" }
