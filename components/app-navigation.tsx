@@ -19,10 +19,10 @@ import { cn } from "@/lib/utils"
 export function AppNavigation() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, signOut } = useAuth()
+  const { user, logout } = useAuth()
 
   const handleSignOut = async () => {
-    await signOut()
+    await logout()
     router.push("/auth/login")
   }
 
