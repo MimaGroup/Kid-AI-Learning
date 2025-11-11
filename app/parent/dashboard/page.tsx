@@ -89,14 +89,14 @@ export default function ParentDashboard() {
             </div>
 
             <Tabs defaultValue="profiles" className="mb-8">
-              <TabsList className="grid w-full max-w-md grid-cols-3 tabs-list text-xs sm:text-sm">
-                <TabsTrigger value="profiles" className="px-2 py-2">
+              <TabsList className="flex flex-wrap w-full justify-center gap-2 h-auto p-2 tabs-list">
+                <TabsTrigger value="profiles" className="px-4 py-2.5 text-sm flex-1 min-w-[120px]">
                   Child Profiles
                 </TabsTrigger>
-                <TabsTrigger value="progress" className="progress-tab px-2 py-2">
+                <TabsTrigger value="progress" className="progress-tab px-4 py-2.5 text-sm flex-1 min-w-[120px]">
                   Learning Progress
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="px-2 py-2">
+                <TabsTrigger value="analytics" className="px-4 py-2.5 text-sm flex-1 min-w-[120px]">
                   Advanced Analytics
                 </TabsTrigger>
               </TabsList>
