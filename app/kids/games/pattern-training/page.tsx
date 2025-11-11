@@ -210,13 +210,14 @@ export default function PatternTrainingPage() {
 
             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
-              <div className="flex justify-center items-center gap-1 sm:gap-2 flex-wrap">
+              <div className="flex justify-center items-center gap-2 flex-wrap">
                 {pattern.sequence.map((item, index) => (
-                  <div
-                    key={index}
-                    className={`${item === "?" ? "text-gray-400 font-bold text-4xl" : "text-3xl sm:text-4xl"} w-10 sm:w-12 h-10 sm:h-12 flex items-center justify-center flex-shrink-0`}
-                  >
-                    {item}
+                  <div key={index} className="flex items-center justify-center w-12 h-12">
+                    {item === "?" ? (
+                      <span className="text-gray-400 font-bold text-4xl">?</span>
+                    ) : (
+                      <span className="text-4xl">{item}</span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -224,13 +225,13 @@ export default function PatternTrainingPage() {
 
             <div>
               <h4 className="font-semibold mb-3 text-center">Choose the correct answer:</h4>
-              <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                 {pattern.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showExplanation}
-                    className={`p-4 text-3xl sm:text-4xl rounded-lg border-2 transition-all flex items-center justify-center h-20 sm:h-24 ${
+                    className={`p-4 text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[100px] ${
                       selectedAnswer === index
                         ? showExplanation
                           ? index === pattern.correct

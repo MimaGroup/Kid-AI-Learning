@@ -24,13 +24,15 @@ export function UserHeader() {
     router.push("/auth/login")
   }
 
+  const emailUsername = user.email?.split("@")[0] || user.email
+
   return (
     <div className="flex items-center gap-3">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2 max-w-[120px] sm:max-w-[200px] h-10">
+          <Button variant="ghost" className="flex items-center gap-2 h-10 px-3">
             <User className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm truncate">{user.email}</span>
+            <span className="text-sm font-medium">{emailUsername}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 bg-white z-50">

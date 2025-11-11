@@ -153,10 +153,8 @@ export default function ContentLibrary() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <BackToHomeButton variant="home" />
-              <div className="text-2xl">📚</div>
-              <h1 className="text-2xl font-bold text-gray-900">Learning Library</h1>
+              <UserHeader />
             </div>
-            <UserHeader />
           </div>
         </div>
       </header>
