@@ -37,10 +37,10 @@ const patterns: Pattern[] = [
     explanation: "The pattern alternates between dog and cat!",
   },
   {
-    sequence: ["1⭐", "2⭐", "3⭐", "4⭐", "5⭐", "6⭐", "?"],
-    options: ["1⭐", "5⭐", "2⭐", "3⭐"],
-    correct: 0,
-    explanation: "Each step adds one more star!",
+    sequence: ["⭐", "⭐⭐", "⭐⭐⭐", "⭐", "⭐⭐", "?"],
+    options: ["⭐", "⭐⭐⭐", "⭐⭐", "⭐⭐⭐⭐"],
+    correct: 1,
+    explanation: "The pattern repeats: one star, two stars, three stars!",
   },
 ]
 
