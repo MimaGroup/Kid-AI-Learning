@@ -83,6 +83,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
+    console.log("[v0] DELETE /api/children/[id] - Deleting child:", params.id)
     const supabase = await createClient()
 
     const {
@@ -91,32 +92,43 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
+      console.log("[v0] Unauthorized - auth error:", authError)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get child info before deleting
-    const { data: child } = await supabase
+    console.log("[v0] User authenticated:", user.id)
+
+    const { data: child, error: fetchError } = await supabase
       .from("children")
-      .select("child_id")
+      .select("id, parent_id, name")
       .eq("id", params.id)
       .eq("parent_id", user.id)
       .single()
 
-    if (!child) {
+    if (fetchError) {
+      console.error("[v0] Error fetching child:", fetchError)
       return NextResponse.json({ error: "Child not found" }, { status: 404 })
     }
+
+    if (!child) {
+      console.log("[v0] Child not found or unauthorized")
+      return NextResponse.json({ error: "Child not found" }, { status: 404 })
+    }
+
+    console.log("[v0] Found child to delete:", child.name)
 
     // Delete from children table
     const { error: deleteError } = await supabase.from("children").delete().eq("id", params.id).eq("parent_id", user.id)
 
     if (deleteError) {
-      console.error("Error deleting child:", deleteError)
+      console.error("[v0] Error deleting child:", deleteError)
       return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
+    console.log("[v0] Child deleted successfully:", child.name)
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Unexpected error:", error)
+    console.error("[v0] Unexpected error in DELETE:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
