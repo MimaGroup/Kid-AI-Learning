@@ -4,7 +4,9 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Calendar, Crown } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Search, Mail, Calendar, Crown, Settings } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 interface User {
@@ -74,12 +76,13 @@ export function UsersManagement() {
                 <TableHead>Status</TableHead>
                 <TableHead>Joined</TableHead>
                 <TableHead>Last Active</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     No users found
                   </TableCell>
                 </TableRow>
@@ -120,6 +123,14 @@ export function UsersManagement() {
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {user.last_activity_date ? new Date(user.last_activity_date).toLocaleDateString() : "Never"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Link href={`/admin/users/${user.id}/permissions`}>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4 mr-2" />
+                          Permissions
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))
