@@ -21,49 +21,49 @@ export function ProgressOverviewCard({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Activities</CardTitle>
-          <Target className="h-4 w-4 text-muted-foreground" />
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-200 border-2 hover:border-primary/50 hover:scale-105">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-xl">
+          <CardTitle className="text-sm font-semibold">Total Activities</CardTitle>
+          <Target className="h-5 w-5 text-primary" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalActivities}</div>
-          <p className="text-xs text-muted-foreground">Completed this month</p>
+        <CardContent className="pt-4">
+          <div className="text-3xl font-bold text-primary">{totalActivities}</div>
+          <p className="text-xs text-muted-foreground mt-1">Completed this month</p>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Learning Time</CardTitle>
-          <Clock className="h-4 w-4 text-muted-foreground" />
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-200 border-2 hover:border-accent/50 hover:scale-105">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-br from-accent/10 to-accent/5 rounded-t-xl">
+          <CardTitle className="text-sm font-semibold">Learning Time</CardTitle>
+          <Clock className="h-5 w-5 text-accent" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
+        <CardContent className="pt-4">
+          <div className="text-3xl font-bold text-accent">
             {hours}h {minutes}m
           </div>
-          <p className="text-xs text-muted-foreground">Total time invested</p>
+          <p className="text-xs text-muted-foreground mt-1">Total time invested</p>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Weekly Growth</CardTitle>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-200 border-2 hover:border-green-500/50 hover:scale-105">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-br from-green-100 to-green-50 rounded-t-xl">
+          <CardTitle className="text-sm font-semibold">Weekly Growth</CardTitle>
+          <TrendingUp className="h-5 w-5 text-green-600" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">+{weeklyGrowth}%</div>
-          <p className="text-xs text-muted-foreground">Compared to last week</p>
+        <CardContent className="pt-4">
+          <div className="text-3xl font-bold text-green-600">+{weeklyGrowth}%</div>
+          <p className="text-xs text-muted-foreground mt-1">Compared to last week</p>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
-          <Zap className="h-4 w-4 text-muted-foreground" />
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-200 border-2 hover:border-orange-500/50 hover:scale-105">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-br from-orange-100 to-orange-50 rounded-t-xl">
+          <CardTitle className="text-sm font-semibold">Current Streak</CardTitle>
+          <Zap className="h-5 w-5 text-orange-600" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{currentStreak}</div>
-          <p className="text-xs text-muted-foreground">Days in a row</p>
+        <CardContent className="pt-4">
+          <div className="text-3xl font-bold text-orange-600">{currentStreak}</div>
+          <p className="text-xs text-muted-foreground mt-1">Days in a row</p>
         </CardContent>
       </Card>
     </div>

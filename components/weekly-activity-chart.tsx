@@ -27,21 +27,55 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
   })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Weekly Activity Trend</CardTitle>
+    <Card className="shadow-lg hover:shadow-xl transition-shadow border-2">
+      <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-xl">
+        <CardTitle className="text-xl font-bold">Weekly Activity Trend</CardTitle>
+        <p className="text-sm text-muted-foreground">Track daily learning activities and performance</p>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={weeklyData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="activities" stroke="#8884d8" name="Activities" strokeWidth={2} />
-            <Line type="monotone" dataKey="avgScore" stroke="#82ca9d" name="Avg Score %" strokeWidth={2} />
-            <Line type="monotone" dataKey="timeSpent" stroke="#ffc658" name="Time (min)" strokeWidth={2} />
+      <CardContent className="pt-6">
+        <ResponsiveContainer width="100%" height={350}>
+          <LineChart data={weeklyData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <XAxis dataKey="date" stroke="#6b7280" style={{ fontSize: "14px", fontWeight: 500 }} />
+            <YAxis stroke="#6b7280" style={{ fontSize: "14px", fontWeight: 500 }} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "white",
+                border: "2px solid #e5e7eb",
+                borderRadius: "12px",
+                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                padding: "12px",
+              }}
+              labelStyle={{ fontWeight: "bold", marginBottom: "8px" }}
+            />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="line" iconSize={20} />
+            <Line
+              type="monotone"
+              dataKey="activities"
+              stroke="#8b5cf6"
+              strokeWidth={3}
+              dot={{ fill: "#8b5cf6", r: 5 }}
+              activeDot={{ r: 7, fill: "#7c3aed" }}
+              name="Activities"
+            />
+            <Line
+              type="monotone"
+              dataKey="avgScore"
+              stroke="#10b981"
+              strokeWidth={3}
+              dot={{ fill: "#10b981", r: 5 }}
+              activeDot={{ r: 7, fill: "#059669" }}
+              name="Avg Score %"
+            />
+            <Line
+              type="monotone"
+              dataKey="timeSpent"
+              stroke="#f59e0b"
+              strokeWidth={3}
+              dot={{ fill: "#f59e0b", r: 5 }}
+              activeDot={{ r: 7, fill: "#d97706" }}
+              name="Time (min)"
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

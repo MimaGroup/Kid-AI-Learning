@@ -38,27 +38,35 @@ export function ProgressChart({ data }: ProgressChartProps) {
   const maxScore = Math.max(...chartData.map((d) => d.score), 100)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Weekly Progress</CardTitle>
+    <Card className="shadow-md border-2">
+      <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
+        <CardTitle className="text-lg font-bold">Weekly Progress</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <div className="space-y-4">
           <div className="flex items-end justify-between h-48 gap-2">
             {chartData.map((day, index) => (
-              <div key={index} className="flex-1 flex flex-col items-center gap-2">
+              <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
                 <div className="relative w-full flex flex-col items-center justify-end h-full">
-                  {day.count > 0 && <div className="absolute -top-6 text-xs font-bold text-blue-600">{day.score}%</div>}
+                  {day.count > 0 && (
+                    <div className="absolute -top-7 text-sm font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                      {day.score}%
+                    </div>
+                  )}
                   <div
-                    className="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-lg transition-all hover:from-blue-600 hover:to-blue-400"
+                    className="w-full bg-gradient-to-t from-primary via-primary/80 to-primary/60 rounded-t-xl transition-all duration-200 group-hover:from-primary group-hover:via-primary/90 group-hover:to-primary/70 shadow-md group-hover:shadow-lg"
                     style={{
                       height: `${(day.score / maxScore) * 100}%`,
-                      minHeight: day.count > 0 ? "8px" : "0px",
+                      minHeight: day.count > 0 ? "12px" : "0px",
                     }}
                   />
                 </div>
-                <div className="text-xs text-gray-600 font-medium">{day.date}</div>
-                {day.count > 0 && <div className="text-xs text-gray-500">{day.count} activities</div>}
+                <div className="text-sm text-foreground font-semibold">{day.date}</div>
+                {day.count > 0 && (
+                  <div className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                    {day.count} {day.count === 1 ? "activity" : "activities"}
+                  </div>
+                )}
               </div>
             ))}
           </div>
