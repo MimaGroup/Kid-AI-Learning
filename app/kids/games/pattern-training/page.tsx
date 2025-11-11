@@ -37,9 +37,9 @@ const patterns: Pattern[] = [
     explanation: "The pattern alternates between dog and cat!",
   },
   {
-    sequence: ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "?"],
-    options: ["⭐", "⭐⭐⭐⭐⭐", "⭐⭐", "⭐⭐⭐"],
-    correct: 1,
+    sequence: ["1⭐", "2⭐", "3⭐", "4⭐", "5⭐", "6⭐", "?"],
+    options: ["1⭐", "5⭐", "2⭐", "3⭐"],
+    correct: 0,
     explanation: "Each step adds one more star!",
   },
 ]
@@ -210,14 +210,10 @@ export default function PatternTrainingPage() {
 
             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
-              <div className="flex justify-center items-center gap-2 flex-wrap">
+              <div className="flex justify-center items-center gap-3 flex-wrap">
                 {pattern.sequence.map((item, index) => (
-                  <div key={index} className="flex items-center justify-center w-12 h-12">
-                    {item === "?" ? (
-                      <span className="text-gray-400 font-bold text-4xl">?</span>
-                    ) : (
-                      <span className="text-4xl">{item}</span>
-                    )}
+                  <div key={index} className="flex items-center justify-center min-w-[48px] min-h-[48px] text-4xl">
+                    {item === "?" ? <span className="text-gray-400 font-bold">?</span> : <span>{item}</span>}
                   </div>
                 ))}
               </div>
@@ -231,7 +227,7 @@ export default function PatternTrainingPage() {
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showExplanation}
-                    className={`p-4 text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[100px] ${
+                    className={`p-6 text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[100px] ${
                       selectedAnswer === index
                         ? showExplanation
                           ? index === pattern.correct
@@ -243,7 +239,7 @@ export default function PatternTrainingPage() {
                           : "border-gray-300 hover:border-cyan-300 bg-white"
                     } ${showExplanation ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
-                    {option}
+                    <span className="whitespace-nowrap">{option}</span>
                   </button>
                 ))}
               </div>
