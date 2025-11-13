@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Shield, UserCog, AlertCircle, Check, X } from "lucide-react"
+import { createBrowserClient } from "@supabase/ssr"
 
 interface Permission {
   id: string
@@ -28,30 +29,90 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState<string | null>(null)
 
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  )
+
   useEffect(() => {
     fetchData()
   }, [userId])
+
+  console.log("[v0] UserPermissionsManager initialized with userId:", userId, "userName:", userName)
 
   const fetchData = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      const [permsRes, userPermsRes] = await Promise.all([
-        fetch("/api/permissions"),
-        fetch(`/api/permissions/user/${userId}`),
-      ])
+      console.log("[v0] Fetching permissions directly from Supabase")
 
-      if (!permsRes.ok || !userPermsRes.ok) {
-        throw new Error("Failed to fetch permissions")
+      const { data: allPerms, error: permsError } = await supabase
+        .from("permissions")
+        .select("*")
+        .order("resource", { ascending: true })
+
+      if (permsError) {
+        console.error("[v0] Error fetching permissions:", permsError)
+        throw new Error(permsError.message)
       }
 
-      const permsData = await permsRes.json()
-      const userPermsData = await userPermsRes.json()
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single()
 
-      setAllPermissions(permsData.permissions || [])
-      setUserPermissions(userPermsData.permissions || null)
+      if (profileError) {
+        console.error("[v0] Error fetching profile:", profileError)
+        throw new Error(profileError.message)
+      }
+
+      const { data: rolePerms, error: rolePermsError } = await supabase
+        .from("role_permissions")
+        .select("permission_id, permissions(*)")
+        .eq("role", profile.role)
+
+      if (rolePermsError) {
+        console.error("[v0] Error fetching role permissions:", rolePermsError)
+      }
+
+      const { data: userPerms, error: userPermsError } = await supabase
+        .from("user_permissions")
+        .select("permission_id, granted, permissions(*)")
+        .eq("user_id", userId)
+
+      if (userPermsError && userPermsError.code !== "PGRST116") {
+        console.error("[v0] Error fetching user permissions:", userPermsError)
+      }
+
+      console.log("[v0] Loaded permissions:", {
+        allPerms: allPerms?.length,
+        rolePerms: rolePerms?.length,
+        userPerms: userPerms?.length,
+        role: profile.role,
+      })
+
+      const rolePermIds = new Set(rolePerms?.map((rp) => rp.permission_id) || [])
+      const userPermOverrides = new Map(userPerms?.map((up) => [up.permission_id, up.granted]) || [])
+
+      // Determine final permissions
+      const finalPermissions =
+        allPerms?.filter((perm) => {
+          const hasOverride = userPermOverrides.has(perm.id)
+          if (hasOverride) {
+            return userPermOverrides.get(perm.id) // Use override value
+          }
+          return rolePermIds.has(perm.id) // Use role default
+        }) || []
+
+      setAllPermissions(allPerms || [])
+      setUserPermissions({
+        role: profile.role,
+        permissions: finalPermissions,
+      })
     } catch (err) {
+      console.error("[v0] Error in fetchData:", err)
       setError(err instanceof Error ? err.message : "Failed to load permissions")
     } finally {
       setLoading(false)
@@ -63,22 +124,49 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
       setSaving(permissionName)
       setError(null)
 
-      const res = await fetch(`/api/permissions/user/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          permissionName,
-          granted: !currentlyHas,
-        }),
-      })
+      console.log("[v0] Toggling permission:", permissionName, "currently has:", currentlyHas)
 
-      if (!res.ok) {
-        throw new Error("Failed to update permission")
+      const permission = allPermissions.find((p) => p.name === permissionName)
+      if (!permission) {
+        throw new Error("Permission not found")
       }
+
+      const newGranted = !currentlyHas
+
+      const { data: existing } = await supabase
+        .from("user_permissions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("permission_id", permission.id)
+        .single()
+
+      if (existing) {
+        const { error } = await supabase
+          .from("user_permissions")
+          .update({
+            granted: newGranted,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", userId)
+          .eq("permission_id", permission.id)
+
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from("user_permissions").insert({
+          user_id: userId,
+          permission_id: permission.id,
+          granted: newGranted,
+        })
+
+        if (error) throw error
+      }
+
+      console.log("[v0] Permission updated successfully")
 
       // Refresh permissions
       await fetchData()
     } catch (err) {
+      console.error("[v0] Error updating permission:", err)
       setError(err instanceof Error ? err.message : "Failed to update permission")
     } finally {
       setSaving(null)

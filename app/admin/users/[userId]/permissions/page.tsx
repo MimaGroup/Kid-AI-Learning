@@ -10,6 +10,8 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
 
   const supabase = await createServerClient()
 
+  console.log("[v0] UserPermissionsPage - userId from params:", userId)
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -25,12 +27,17 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
     redirect("/parent/dashboard")
   }
 
-  // Get target user info
-  const { data: targetUser } = await supabase.from("profiles").select("email, display_name").eq("id", userId).single()
+  const { data: targetUser } = await supabase
+    .from("profiles")
+    .select("email, display_name, username")
+    .eq("id", userId)
+    .single()
 
   if (!targetUser) {
     redirect("/admin/users")
   }
+
+  const displayName = targetUser.username || targetUser.display_name || targetUser.email || "User"
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -44,7 +51,7 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
           </Link>
         </div>
 
-        <UserPermissionsManager userId={userId} userName={targetUser.display_name || targetUser.email || "User"} />
+        <UserPermissionsManager userId={userId} userName={displayName} />
       </div>
     </div>
   )
