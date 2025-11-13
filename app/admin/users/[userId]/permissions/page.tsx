@@ -5,7 +5,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
-export default async function UserPermissionsPage({ params }: { params: { userId: string } }) {
+export default async function UserPermissionsPage({ params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params
+
   const supabase = await createServerClient()
 
   const {
@@ -24,11 +26,7 @@ export default async function UserPermissionsPage({ params }: { params: { userId
   }
 
   // Get target user info
-  const { data: targetUser } = await supabase
-    .from("profiles")
-    .select("email, display_name")
-    .eq("id", params.userId)
-    .single()
+  const { data: targetUser } = await supabase.from("profiles").select("email, display_name").eq("id", userId).single()
 
   if (!targetUser) {
     redirect("/admin/users")
@@ -46,10 +44,7 @@ export default async function UserPermissionsPage({ params }: { params: { userId
           </Link>
         </div>
 
-        <UserPermissionsManager
-          userId={params.userId}
-          userName={targetUser.display_name || targetUser.email || "User"}
-        />
+        <UserPermissionsManager userId={userId} userName={targetUser.display_name || targetUser.email || "User"} />
       </div>
     </div>
   )
