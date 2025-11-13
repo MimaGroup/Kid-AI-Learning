@@ -4,9 +4,11 @@ import { getUserPermissions } from "@/lib/permissions"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function GET(request: Request, { params }: { params: { userId: string } }) {
   try {
-    const { userId } = await params
+    const { userId } = params
+    console.log("[v0] Fetching permissions for userId:", userId)
+
     const supabase = await createServerClient()
 
     const {
@@ -14,32 +16,41 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
     } = await supabase.auth.getUser()
 
     if (!user) {
+      console.log("[v0] No authenticated user")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    console.log("[v0] Authenticated user:", user.id)
 
     // Check if requester is admin or viewing their own permissions
     const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
 
+    console.log("[v0] Requester role:", profile?.role)
+
     if (profile?.role !== "admin" && user.id !== userId) {
+      console.log("[v0] Access denied - not admin and not own permissions")
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
     const permissions = await getUserPermissions(userId)
 
     if (!permissions) {
+      console.log("[v0] No permissions found for user")
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
+    console.log("[v0] Successfully fetched permissions")
     return NextResponse.json({ permissions })
   } catch (error) {
     console.error("[v0] Error fetching user permissions:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : "Internal server error"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
-export async function POST(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function POST(request: Request, { params }: { params: { userId: string } }) {
   try {
-    const { userId } = await params
+    const { userId } = params
     const supabase = await createServerClient()
 
     const {

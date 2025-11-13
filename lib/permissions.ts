@@ -16,75 +16,120 @@ export interface UserPermissions {
 }
 
 export async function getUserPermissions(userId: string): Promise<UserPermissions | null> {
-  const supabase = await createServerClient()
+  try {
+    const supabase = await createServerClient()
 
-  // Get user role
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).single()
+    console.log("[v0] Getting permissions for user:", userId)
 
-  if (!profile) return null
+    // Get user role
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .single()
 
-  // Get role-based permissions
-  const { data: rolePermissions } = await supabase
-    .from("role_permissions")
-    .select(`
-      permissions (
-        id,
-        name,
-        description,
-        resource,
-        action
-      )
-    `)
-    .eq("role", profile.role)
-
-  // Get user-specific permission overrides
-  const { data: userPermissions } = await supabase
-    .from("user_permissions")
-    .select(`
-      granted,
-      permissions (
-        id,
-        name,
-        description,
-        resource,
-        action
-      )
-    `)
-    .eq("user_id", userId)
-
-  // Combine permissions (user overrides take precedence)
-  const permissionMap = new Map<string, Permission>()
-
-  // Add role permissions
-  if (rolePermissions) {
-    for (const rp of rolePermissions) {
-      if (rp.permissions) {
-        const perm = rp.permissions as unknown as Permission
-        permissionMap.set(perm.name, perm)
-      }
+    if (profileError) {
+      console.error("[v0] Error fetching profile:", profileError)
+      return null
     }
-  }
 
-  // Apply user-specific overrides
-  if (userPermissions) {
-    for (const up of userPermissions) {
-      if (up.permissions) {
-        const perm = up.permissions as unknown as Permission
-        if (up.granted) {
-          permissionMap.set(perm.name, perm)
-        } else {
-          permissionMap.delete(perm.name)
+    if (!profile) {
+      console.error("[v0] Profile not found for user:", userId)
+      return null
+    }
+
+    console.log("[v0] User role:", profile.role)
+
+    // Get role-based permissions
+    const { data: rolePermissions, error: rolePermError } = await supabase
+      .from("role_permissions")
+      .select(`
+        permissions (
+          id,
+          name,
+          description,
+          resource,
+          action
+        )
+      `)
+      .eq("role", profile.role)
+
+    if (rolePermError) {
+      console.error("[v0] Error fetching role permissions:", rolePermError)
+      // Check if table doesn't exist
+      if (rolePermError.message?.includes("does not exist") || rolePermError.code === "42P01") {
+        throw new Error("Permissions system not initialized. Please run the permissions SQL script.")
+      }
+      throw rolePermError
+    }
+
+    console.log("[v0] Role permissions:", rolePermissions?.length || 0)
+
+    // Get user-specific permission overrides
+    const { data: userPermissions, error: userPermError } = await supabase
+      .from("user_permissions")
+      .select(`
+        granted,
+        permissions (
+          id,
+          name,
+          description,
+          resource,
+          action
+        )
+      `)
+      .eq("user_id", userId)
+
+    if (userPermError) {
+      console.error("[v0] Error fetching user permissions:", userPermError)
+      throw userPermError
+    }
+
+    console.log("[v0] User-specific permissions:", userPermissions?.length || 0)
+
+    // Combine permissions (user overrides take precedence)
+    const permissionMap = new Map<string, Permission>()
+
+    // Add role permissions
+    if (rolePermissions) {
+      for (const rp of rolePermissions) {
+        if (rp.permissions) {
+          const permArray = rp.permissions as unknown as Permission[]
+          for (const perm of permArray) {
+            permissionMap.set(perm.name, perm)
+          }
         }
       }
     }
-  }
 
-  const permissions = Array.from(permissionMap.values())
+    // Apply user-specific overrides
+    if (userPermissions) {
+      for (const up of userPermissions) {
+        if (up.permissions) {
+          const permArray = up.permissions as unknown as Permission[]
+          for (const perm of permArray) {
+            if (up.granted) {
+              permissionMap.set(perm.name, perm)
+            } else {
+              permissionMap.delete(perm.name)
+            }
+          }
+        }
+      }
+    }
 
-  return {
-    role: profile.role,
-    permissions,
-    hasPermission: (permissionName: string) => permissions.some((p) => p.name === permissionName),
+    const permissions = Array.from(permissionMap.values())
+
+    console.log("[v0] Total permissions for user:", permissions.length)
+
+    return {
+      role: profile.role,
+      permissions,
+      hasPermission: (permissionName: string) => permissions.some((p) => p.name === permissionName),
+    }
+  } catch (error) {
+    console.error("[v0] Error in getUserPermissions:", error)
+    throw error
   }
 }
 
