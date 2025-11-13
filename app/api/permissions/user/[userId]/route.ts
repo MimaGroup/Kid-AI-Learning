@@ -4,8 +4,9 @@ import { getUserPermissions } from "@/lib/permissions"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, { params }: { params: { userId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
+    const { userId } = await params
     const supabase = await createServerClient()
 
     const {
@@ -19,11 +20,11 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     // Check if requester is admin or viewing their own permissions
     const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
 
-    if (profile?.role !== "admin" && user.id !== params.userId) {
+    if (profile?.role !== "admin" && user.id !== userId) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    const permissions = await getUserPermissions(params.userId)
+    const permissions = await getUserPermissions(userId)
 
     if (!permissions) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
@@ -36,8 +37,9 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   }
 }
 
-export async function POST(request: Request, { params }: { params: { userId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
+    const { userId } = await params
     const supabase = await createServerClient()
 
     const {
@@ -71,7 +73,7 @@ export async function POST(request: Request, { params }: { params: { userId: str
     // Upsert user permission
     const { error } = await supabase.from("user_permissions").upsert(
       {
-        user_id: params.userId,
+        user_id: userId,
         permission_id: permission.id,
         granted,
         updated_at: new Date().toISOString(),

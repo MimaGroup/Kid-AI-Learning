@@ -1,7 +1,12 @@
 import * as Sentry from "@sentry/nextjs"
 
 export function initSentry() {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  // Only initialize if DSN is configured and we're in a supported environment
+  if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    return
+  }
+
+  try {
     Sentry.init({
       dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
@@ -58,15 +63,22 @@ export function initSentry() {
         "User cancelled",
       ],
     })
+  } catch (error) {
+    // Gracefully handle Sentry initialization errors
+    console.warn("Sentry initialization failed:", error)
   }
 }
 
 // Helper to capture exceptions with context
 export function captureException(error: Error, context?: Record<string, any>) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.captureException(error, {
-      extra: context,
-    })
+  try {
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.captureException(error, {
+        extra: context,
+      })
+    }
+  } catch (e) {
+    // Ignore Sentry errors
   }
 
   // Also log to console in development
@@ -77,8 +89,12 @@ export function captureException(error: Error, context?: Record<string, any>) {
 
 // Helper to capture messages
 export function captureMessage(message: string, level: "info" | "warning" | "error" = "info") {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.captureMessage(message, level)
+  try {
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.captureMessage(message, level)
+    }
+  } catch (e) {
+    // Ignore Sentry errors
   }
 
   if (process.env.NODE_ENV === "development") {
@@ -88,8 +104,12 @@ export function captureMessage(message: string, level: "info" | "warning" | "err
 
 // Helper to set user context
 export function setUser(user: { id: string; email?: string; username?: string } | null) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.setUser(user)
+  try {
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.setUser(user)
+    }
+  } catch (e) {
+    // Ignore Sentry errors
   }
 }
 
@@ -100,7 +120,11 @@ export function addBreadcrumb(breadcrumb: {
   level?: "info" | "warning" | "error"
   data?: Record<string, any>
 }) {
-  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.addBreadcrumb(breadcrumb)
+  try {
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.addBreadcrumb(breadcrumb)
+    }
+  } catch (e) {
+    // Ignore Sentry errors
   }
 }
