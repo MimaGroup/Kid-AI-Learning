@@ -4,9 +4,9 @@ import { getUserPermissions } from "@/lib/permissions"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, { params }: { params: { userId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const { userId } = params
+    const { userId } = await params
     console.log("[v0] Fetching permissions for userId:", userId)
 
     const supabase = await createServerClient()
@@ -48,9 +48,9 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   }
 }
 
-export async function POST(request: Request, { params }: { params: { userId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const { userId } = params
+    const { userId } = await params
     const supabase = await createServerClient()
 
     const {
