@@ -49,7 +49,18 @@ export function UsersManagement() {
 
   const handlePermissionsClick = (userId: string, userEmail: string) => {
     console.log("[v0] Permissions button clicked for user:", userId, userEmail)
-    router.push(`/admin/users/${userId}/permissions`)
+    const targetUrl = `/admin/users/${userId}/permissions`
+    console.log("[v0] Navigating to:", targetUrl)
+
+    // Try Next.js router first
+    try {
+      router.push(targetUrl)
+      console.log("[v0] Router.push called successfully")
+    } catch (error) {
+      console.error("[v0] Router.push failed:", error)
+      // Fallback to direct navigation
+      window.location.href = targetUrl
+    }
   }
 
   if (loading) {
