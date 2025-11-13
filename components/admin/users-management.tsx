@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { Search, Mail, Calendar, Crown, Settings } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useRouter } from "next/navigation"
 
 interface User {
   id: string
@@ -23,6 +23,7 @@ export function UsersManagement() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
     fetchUsers()
@@ -45,6 +46,11 @@ export function UsersManagement() {
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.display_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  const handlePermissionsClick = (userId: string, userEmail: string) => {
+    console.log("[v0] Permissions button clicked for user:", userId, userEmail)
+    router.push(`/admin/users/${userId}/permissions`)
+  }
 
   if (loading) {
     return <div className="text-center py-8">Loading users...</div>
@@ -125,12 +131,10 @@ export function UsersManagement() {
                       {user.last_activity_date ? new Date(user.last_activity_date).toLocaleDateString() : "Never"}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Link href={`/admin/users/${user.id}/permissions`}>
-                        <Button variant="ghost" size="sm">
-                          <Settings className="h-4 w-4 mr-2" />
-                          Permissions
-                        </Button>
-                      </Link>
+                      <Button variant="ghost" size="sm" onClick={() => handlePermissionsClick(user.id, user.email)}>
+                        <Settings className="h-4 w-4 mr-2" />
+                        Permissions
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
