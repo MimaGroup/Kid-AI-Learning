@@ -1,202 +1,203 @@
-@import "tailwindcss";
+/* Replaced Tailwind v4 @import syntax with standard v3 @tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
+/* CSS Custom Properties for theme */
+:root {
   /* Updated to match Rainbow School / BubaKids theme with purple, teal, coral palette */
   --font-sans: var(--font-poppins), system-ui, sans-serif;
   --font-heading: var(--font-fredoka), system-ui, sans-serif;
 
   /* Primary colors - Playful rainbow theme */
-  --color-background: #f8f6f3;
-  --color-foreground: #2d2a3d;
-  --color-card: #ffffff;
-  --color-card-foreground: #2d2a3d;
+  --background: #f8f6f3;
+  --foreground: #2d2a3d;
+  --card: #ffffff;
+  --card-foreground: #2d2a3d;
 
   /* Brand colors - Purple to teal gradient theme */
-  --color-primary: #7c3aed; /* Deep purple */
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #ff9980; /* Coral */
-  --color-secondary-foreground: #ffffff;
+  --primary: #7c3aed;
+  --primary-foreground: #ffffff;
+  --secondary: #ff9980;
+  --secondary-foreground: #ffffff;
 
   /* Accent colors */
-  --color-accent: #6cd4c3; /* Teal mint */
-  --color-accent-foreground: #ffffff;
+  --accent: #6cd4c3;
+  --accent-foreground: #ffffff;
 
   /* Fun playroom palette */
-  --color-fun-purple: #a78bfa;
-  --color-fun-pink: #ffb5da;
-  --color-fun-coral: #ff9980;
-  --color-fun-mint: #6cd4c3;
-  --color-fun-teal: #5cb8b2;
-  --color-fun-lavender: #d4c5f9;
-  --color-fun-peach: #ffdab9;
-  --color-fun-yellow: #fcd34d;
-  --color-fun-cream: #fff8f0;
+  --fun-purple: #a78bfa;
+  --fun-pink: #ffb5da;
+  --fun-coral: #ff9980;
+  --fun-mint: #6cd4c3;
+  --fun-teal: #5cb8b2;
+  --fun-lavender: #d4c5f9;
+  --fun-peach: #ffdab9;
+  --fun-yellow: #fcd34d;
+  --fun-cream: #fff8f0;
 
   /* Muted tones */
-  --color-muted: #f3efe9;
-  --color-muted-foreground: #7a7585;
+  --muted: #f3efe9;
+  --muted-foreground: #7a7585;
 
   /* UI elements */
-  --color-border: #e8e3db;
-  --color-input: #f3efe9;
-  --color-ring: #7c3aed;
+  --border: #e8e3db;
+  --input: #f3efe9;
+  --ring: #7c3aed;
 
   /* Destructive */
-  --color-destructive: #ff7a7a;
-  --color-destructive-foreground: #ffffff;
+  --destructive: #ff7a7a;
+  --destructive-foreground: #ffffff;
 
   /* Popover */
-  --color-popover: #ffffff;
-  --color-popover-foreground: #2d2a3d;
+  --popover: #ffffff;
+  --popover-foreground: #2d2a3d;
 
   /* Rounded corners for playful feel */
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
-  --radius-2xl: 2.5rem;
+  --radius: 1rem;
 }
 
-/* Removed @layer base - using regular CSS for Tailwind v4 compatibility */
-* {
-  border-color: var(--color-border);
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Headings use playful Fredoka font */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
 }
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
-  font-feature-settings: "rlig" 1, "calt" 1;
-}
+@layer utilities {
+  /* Added cloud wave shapes and organic borders */
+  .cloud-wave-top {
+    clip-path: ellipse(140% 100% at 50% 0%);
+  }
 
-/* Headings use playful Fredoka font */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
+  .cloud-wave-bottom {
+    clip-path: ellipse(140% 100% at 50% 100%);
+  }
 
-/* Removed @layer utilities - using regular CSS for Tailwind v4 compatibility */
-/* Added cloud wave shapes and organic borders */
-.cloud-wave-top {
-  clip-path: ellipse(140% 100% at 50% 0%);
-}
+  .organic-blob {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
 
-.cloud-wave-bottom {
-  clip-path: ellipse(140% 100% at 50% 100%);
-}
+  .dashed-circle {
+    border: 3px dashed currentColor;
+    border-radius: 50%;
+  }
 
-.organic-blob {
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-}
+  /* Fun gradients matching the theme */
+  .gradient-purple-blue {
+    background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #3b82f6 100%);
+  }
 
-.dashed-circle {
-  border: 3px dashed currentColor;
-  border-radius: 50%;
-}
+  .gradient-mint-cream {
+    background: linear-gradient(135deg, #6cd4c3 0%, #fff8f0 100%);
+  }
 
-/* Fun gradients matching the theme */
-.gradient-purple-blue {
-  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #3b82f6 100%);
-}
+  .gradient-coral-peach {
+    background: linear-gradient(135deg, #ff9980 0%, #ffdab9 100%);
+  }
 
-.gradient-mint-cream {
-  background: linear-gradient(135deg, #6cd4c3 0%, #fff8f0 100%);
-}
+  /* Badge styles for age groups */
+  .age-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-.gradient-coral-peach {
-  background: linear-gradient(135deg, #ff9980 0%, #ffdab9 100%);
-}
+  /* Numbered circles for features */
+  .number-circle {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+  }
 
-/* Badge styles for age groups */
-.age-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.875rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+  /* Soft shadows */
+  .soft-shadow {
+    box-shadow: 0 10px 40px -10px rgba(124, 58, 237, 0.15);
+  }
 
-/* Numbered circles for features */
-.number-circle {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-family: var(--font-heading);
-}
+  .soft-shadow-lg {
+    box-shadow: 0 20px 60px -15px rgba(124, 58, 237, 0.2);
+  }
 
-/* Soft shadows */
-.soft-shadow {
-  box-shadow: 0 10px 40px -10px rgba(124, 58, 237, 0.15);
-}
+  /* Added playful shadows and animations */
+  .fun-shadow {
+    box-shadow: 0 8px 24px -4px rgba(167, 139, 250, 0.25);
+  }
 
-.soft-shadow-lg {
-  box-shadow: 0 20px 60px -15px rgba(124, 58, 237, 0.2);
-}
+  .fun-shadow-lg {
+    box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.35);
+  }
 
-/* Added playful shadows and animations */
-.fun-shadow {
-  box-shadow: 0 8px 24px -4px rgba(167, 139, 250, 0.25);
-}
+  .fun-shadow-xl {
+    box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
+  }
 
-.fun-shadow-lg {
-  box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.35);
-}
+  .cloud-shape {
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
 
-.fun-shadow-xl {
-  box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
-}
+  .blob-shape {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
 
-.cloud-shape {
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-}
+  /* Playful gradients */
+  .gradient-pastel {
+    background: linear-gradient(135deg, #ffb5da 0%, #a78bfa 50%, #6cd4c3 100%);
+  }
 
-.blob-shape {
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-}
+  .gradient-mint-lavender {
+    background: linear-gradient(135deg, #c6e6e3 0%, #d4c5f9 100%);
+  }
 
-/* Playful gradients */
-.gradient-pastel {
-  background: linear-gradient(135deg, #ffb5da 0%, #a78bfa 50%, #6cd4c3 100%);
-}
+  .gradient-peach-yellow {
+    background: linear-gradient(135deg, #ffdab9 0%, #fcd34d 100%);
+  }
 
-.gradient-mint-lavender {
-  background: linear-gradient(135deg, #c6e6e3 0%, #d4c5f9 100%);
-}
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
 
-.gradient-peach-yellow {
-  background: linear-gradient(135deg, #ffdab9 0%, #fcd34d 100%);
-}
+  .hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
+  }
 
-/* Hover effects */
-.hover-lift {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-}
+  .hover-bounce {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
 
-.hover-lift:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
-}
-
-.hover-bounce {
-  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.hover-bounce:hover {
-  transform: scale(1.05);
+  .hover-bounce:hover {
+    transform: scale(1.05);
+  }
 }
 
 /* Playful animations for cloud waves and floating elements */
