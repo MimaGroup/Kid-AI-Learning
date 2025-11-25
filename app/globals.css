@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme inline {
   /* Updated to match Rainbow School / BubaKids theme with purple, teal, coral palette */
@@ -6,49 +6,49 @@
   --font-heading: var(--font-fredoka), system-ui, sans-serif;
 
   /* Primary colors - Playful rainbow theme */
-  --color-background: #F8F6F3;
-  --color-foreground: #2D2A3D;
-  --color-card: #FFFFFF;
-  --color-card-foreground: #2D2A3D;
-  
+  --color-background: #f8f6f3;
+  --color-foreground: #2d2a3d;
+  --color-card: #ffffff;
+  --color-card-foreground: #2d2a3d;
+
   /* Brand colors - Purple to teal gradient theme */
-  --color-primary: #7C3AED; /* Deep purple */
-  --color-primary-foreground: #FFFFFF;
-  --color-secondary: #FF9980; /* Coral */
-  --color-secondary-foreground: #FFFFFF;
-  
+  --color-primary: #7c3aed; /* Deep purple */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #ff9980; /* Coral */
+  --color-secondary-foreground: #ffffff;
+
   /* Accent colors */
-  --color-accent: #6CD4C3; /* Teal mint */
-  --color-accent-foreground: #FFFFFF;
-  
+  --color-accent: #6cd4c3; /* Teal mint */
+  --color-accent-foreground: #ffffff;
+
   /* Fun playroom palette */
-  --color-fun-purple: #A78BFA;
-  --color-fun-pink: #FFB5DA;
-  --color-fun-coral: #FF9980;
-  --color-fun-mint: #6CD4C3;
-  --color-fun-teal: #5CB8B2;
-  --color-fun-lavender: #D4C5F9;
-  --color-fun-peach: #FFDAB9;
-  --color-fun-yellow: #FCD34D;
-  --color-fun-cream: #FFF8F0;
-  
+  --color-fun-purple: #a78bfa;
+  --color-fun-pink: #ffb5da;
+  --color-fun-coral: #ff9980;
+  --color-fun-mint: #6cd4c3;
+  --color-fun-teal: #5cb8b2;
+  --color-fun-lavender: #d4c5f9;
+  --color-fun-peach: #ffdab9;
+  --color-fun-yellow: #fcd34d;
+  --color-fun-cream: #fff8f0;
+
   /* Muted tones */
-  --color-muted: #F3EFE9;
-  --color-muted-foreground: #7A7585;
-  
+  --color-muted: #f3efe9;
+  --color-muted-foreground: #7a7585;
+
   /* UI elements */
-  --color-border: #E8E3DB;
-  --color-input: #F3EFE9;
-  --color-ring: #7C3AED;
-  
+  --color-border: #e8e3db;
+  --color-input: #f3efe9;
+  --color-ring: #7c3aed;
+
   /* Destructive */
-  --color-destructive: #FF7A7A;
-  --color-destructive-foreground: #FFFFFF;
-  
+  --color-destructive: #ff7a7a;
+  --color-destructive-foreground: #ffffff;
+
   /* Popover */
-  --color-popover: #FFFFFF;
-  --color-popover-foreground: #2D2A3D;
-  
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2d2a3d;
+
   /* Rounded corners for playful feel */
   --radius-sm: 0.75rem;
   --radius-md: 1rem;
@@ -57,20 +57,26 @@
   --radius-2xl: 2.5rem;
 }
 
+/* Fixed theme() function calls to use CSS variables directly for Tailwind v4 compatibility */
 @layer base {
   * {
-    border-color: theme('colors.border');
+    border-color: var(--color-border);
   }
-  
+
   body {
-    background-color: theme('colors.background');
-    color: theme('colors.foreground');
-    font-family: theme('fontFamily.sans');
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  
+
   /* Headings use playful Fredoka font */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
     font-weight: 600;
     letter-spacing: -0.02em;
@@ -83,33 +89,33 @@
   .cloud-wave-top {
     clip-path: ellipse(140% 100% at 50% 0%);
   }
-  
+
   .cloud-wave-bottom {
     clip-path: ellipse(140% 100% at 50% 100%);
   }
-  
+
   .organic-blob {
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   }
-  
+
   .dashed-circle {
     border: 3px dashed currentColor;
     border-radius: 50%;
   }
-  
+
   /* Fun gradients matching the theme */
   .gradient-purple-blue {
-    background: linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #3B82F6 100%);
+    background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #3b82f6 100%);
   }
-  
+
   .gradient-mint-cream {
-    background: linear-gradient(135deg, #6CD4C3 0%, #FFF8F0 100%);
+    background: linear-gradient(135deg, #6cd4c3 0%, #fff8f0 100%);
   }
-  
+
   .gradient-coral-peach {
-    background: linear-gradient(135deg, #FF9980 0%, #FFDAB9 100%);
+    background: linear-gradient(135deg, #ff9980 0%, #ffdab9 100%);
   }
-  
+
   /* Badge styles for age groups */
   .age-badge {
     padding: 0.5rem 1rem;
@@ -120,7 +126,7 @@
     align-items: center;
     gap: 0.5rem;
   }
-  
+
   /* Numbered circles for features */
   .number-circle {
     width: 3.5rem;
@@ -133,12 +139,12 @@
     font-weight: 700;
     font-family: var(--font-heading);
   }
-  
+
   /* Soft shadows */
   .soft-shadow {
     box-shadow: 0 10px 40px -10px rgba(124, 58, 237, 0.15);
   }
-  
+
   .soft-shadow-lg {
     box-shadow: 0 20px 60px -15px rgba(124, 58, 237, 0.2);
   }
@@ -147,50 +153,50 @@
   .fun-shadow {
     box-shadow: 0 8px 24px -4px rgba(167, 139, 250, 0.25);
   }
-  
+
   .fun-shadow-lg {
     box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.35);
   }
-  
+
   .fun-shadow-xl {
     box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
   }
-  
+
   .cloud-shape {
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   }
-  
+
   .blob-shape {
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   }
-  
+
   /* Playful gradients */
   .gradient-pastel {
-    background: linear-gradient(135deg, #FFB5DA 0%, #A78BFA 50%, #6CD4C3 100%);
+    background: linear-gradient(135deg, #ffb5da 0%, #a78bfa 50%, #6cd4c3 100%);
   }
-  
+
   .gradient-mint-lavender {
-    background: linear-gradient(135deg, #C6E6E3 0%, #D4C5F9 100%);
+    background: linear-gradient(135deg, #c6e6e3 0%, #d4c5f9 100%);
   }
-  
+
   .gradient-peach-yellow {
-    background: linear-gradient(135deg, #FFDAB9 0%, #FCD34D 100%);
+    background: linear-gradient(135deg, #ffdab9 0%, #fcd34d 100%);
   }
-  
+
   /* Hover effects */
   .hover-lift {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 16px 48px -12px rgba(167, 139, 250, 0.4);
   }
-  
+
   .hover-bounce {
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
-  
+
   .hover-bounce:hover {
     transform: scale(1.05);
   }
@@ -198,18 +204,32 @@
 
 /* Playful animations for cloud waves and floating elements */
 @keyframes wave {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(20px) translateY(-10px); }
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(20px) translateY(-10px);
+  }
 }
 
 @keyframes float-gentle {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
 @keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-wave {
@@ -226,25 +246,49 @@
 
 /* Playful animations for kid-friendly interactions */
 @keyframes bounce-gentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.5); }
-  50% { box-shadow: 0 0 0 20px rgba(167, 139, 250, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(167, 139, 250, 0);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(2deg); }
-  66% { transform: translateY(5px) rotate(-2deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-2deg);
+  }
 }
 
 .animate-bounce-gentle {
@@ -265,8 +309,12 @@
 
 /* Added slow spin animation for decorative elements */
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin-slow {
