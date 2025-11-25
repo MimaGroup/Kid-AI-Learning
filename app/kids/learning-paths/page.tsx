@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, Lock, CheckCircle2, ArrowLeft } from "lucide-react"
+import { BookOpen, Lock, CheckCircle2, ArrowLeft } from 'lucide-react'
 import { useSubscription } from "@/hooks/use-subscription"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 
 interface LearningPath {
   id: string
@@ -250,16 +250,19 @@ export default function LearningPathsPage() {
 
   if (selectedPath && selectedPathData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden p-6">
+        <div className="absolute top-16 left-10 text-6xl opacity-20 animate-float">🎓</div>
+        <div className="absolute top-40 right-20 text-5xl opacity-15 animate-float" style={{ animationDelay: '1s' }}>📚</div>
+        <div className="absolute bottom-32 left-1/4 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>🤖</div>
+        <div className="absolute top-20 right-10 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+        <div className="max-w-4xl mx-auto relative z-10">
           <div className="mb-6">
-            <Button variant="ghost" size="sm" onClick={() => setSelectedPath(null)}>
+            <Button variant="ghost" size="sm" onClick={() => setSelectedPath(null)} className="hover:bg-white/50 rounded-full">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Paths
             </Button>
           </div>
-
-          <Card>
+          <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-2xl rounded-3xl">
             <CardHeader>
               <div className={`bg-gradient-to-r ${selectedPathData.color} text-white p-6 rounded-lg mb-4`}>
                 <div className="flex items-center gap-4 mb-3">
@@ -283,7 +286,6 @@ export default function LearningPathsPage() {
                 </div>
               </div>
             </CardHeader>
-
             <CardContent>
               <div className="space-y-4">
                 {selectedPathData.lessons.map((lesson, index) => (
@@ -356,30 +358,34 @@ export default function LearningPathsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden p-6">
+      <div className="absolute top-16 left-10 text-7xl opacity-25 animate-float">🎓</div>
+      <div className="absolute top-40 right-16 text-6xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}>🚀</div>
+      <div className="absolute bottom-32 right-1/4 text-6xl opacity-25 animate-float" style={{ animationDelay: '1s' }}>💡</div>
+      <div className="absolute bottom-20 left-20 text-5xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>⭐</div>
+      <div className="absolute top-10 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+      <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="mb-6">
           <Link href="/kids/home">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="hover:bg-white/50 rounded-full">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
           </Link>
         </div>
-
         <div className="text-center mb-8">
           <div className="text-5xl mb-4">🎓</div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Learning Paths</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Learning Paths</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Follow structured learning journeys to master new skills! Complete lessons to unlock the next ones.
           </p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {learningPaths.map((path) => (
             <Card
               key={path.id}
-              className="hover:shadow-xl transition-shadow cursor-pointer"
+              className="bg-white/70 backdrop-blur-xl border-white/20 hover:shadow-2xl transition-all duration-300 cursor-pointer hover:scale-105 rounded-3xl"
               onClick={() => setSelectedPath(path.id)}
             >
               <CardHeader>
@@ -391,7 +397,6 @@ export default function LearningPathsPage() {
                   <p className="text-white/90">{path.description}</p>
                 </div>
               </CardHeader>
-
               <CardContent>
                 <div className="space-y-4">
                   <div>
@@ -403,7 +408,6 @@ export default function LearningPathsPage() {
                     </div>
                     <Progress value={(path.completedLessons / path.totalLessons) * 100} className="h-2" />
                   </div>
-
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <BookOpen className="w-4 h-4" />

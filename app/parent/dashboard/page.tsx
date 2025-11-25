@@ -2,7 +2,7 @@
 
 import { useAuth } from "../../../hooks/use-auth"
 import { useChildren } from "../../../hooks/use-children"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 import Link from "next/link"
 import { AddChildDialog } from "../../../components/add-child-dialog"
 import { ChildCard } from "../../../components/child-card"
@@ -72,32 +72,39 @@ export default function ParentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 left-10 text-6xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>🤖</div>
+      <div className="absolute top-40 right-20 text-5xl opacity-20 animate-pulse delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>🧠</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>💻</div>
+      <div className="absolute top-60 right-1/3 text-5xl opacity-15 animate-float delay-300" style={{ filter: 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3))' }}>⚙️</div>
+      <div className="absolute bottom-60 right-10 text-4xl opacity-20 animate-pulse delay-400" style={{ filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3))' }}>📚</div>
+      
       <AppNavigation />
       <Breadcrumbs />
 
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
-
       {showOnboarding && <OnboardingFlow userType="parent" onComplete={() => setShowOnboarding(false)} />}
 
-      <div className="flex-1 p-6 relative">
+      <div className="flex-1 p-6 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-card rounded-2xl shadow-xl p-8 border border-border">
+          <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-purple-200">
             <div className="mb-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Parent Dashboard</h1>
-              <p className="text-muted-foreground mt-2 text-sm sm:text-base">Welcome back, {user?.email}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
+                Parent Dashboard
+              </h1>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">Welcome back, {user?.email}</p>
             </div>
 
             <Tabs defaultValue="profiles" className="mb-8">
-              <TabsList className="flex flex-wrap w-full justify-center gap-2 h-auto p-2 tabs-list">
-                <TabsTrigger value="profiles" className="px-4 py-2.5 text-sm flex-1 min-w-[120px]">
-                  Child Profiles
+              <TabsList className="flex flex-wrap w-full justify-center gap-2 h-auto p-2 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 rounded-2xl">
+                <TabsTrigger value="profiles" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                  👨‍👩‍👧 Child Profiles
                 </TabsTrigger>
-                <TabsTrigger value="progress" className="progress-tab px-4 py-2.5 text-sm flex-1 min-w-[120px]">
-                  Learning Progress
+                <TabsTrigger value="progress" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                  📊 Learning Progress
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="px-4 py-2.5 text-sm flex-1 min-w-[120px]">
-                  Advanced Analytics
+                <TabsTrigger value="analytics" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                  📈 Advanced Analytics
                 </TabsTrigger>
               </TabsList>
 
@@ -229,53 +236,67 @@ export default function ParentDashboard() {
               </TabsContent>
             </Tabs>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 pt-8 border-t border-border">
-              <div className="bg-gradient-to-br from-primary via-primary to-primary/80 text-primary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 pt-8 border-t-2 border-purple-100">
+              <div className="bg-gradient-to-br from-purple-500 via-purple-600 to-indigo-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <div className="text-4xl mb-3">🎮</div>
                 <h3 className="text-xl font-semibold mb-2">Kids Learning</h3>
-                <p className="text-primary-foreground/90 mb-4">Monitor your child's AI learning progress</p>
+                <p className="text-white/90 mb-4 text-sm">Monitor your child's AI learning progress</p>
                 <Link
                   href="/kids/home"
-                  className="inline-block bg-primary-foreground text-primary px-4 py-2 rounded-lg hover:bg-primary-foreground/90 transition-colors font-medium shadow-md"
+                  className="inline-block bg-white text-purple-600 px-4 py-2 rounded-full hover:bg-purple-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  View Progress
+                  View Progress →
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-br from-accent via-accent to-accent/80 text-accent-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <div className="text-4xl mb-3">🎯</div>
                 <h3 className="text-xl font-semibold mb-2">AI Activities</h3>
-                <p className="text-accent-foreground/90 mb-4">Interactive AI games and learning tools</p>
+                <p className="text-white/90 mb-4 text-sm">Interactive AI games and learning tools</p>
                 <Link
                   href="/kids/activities"
-                  className="inline-block bg-accent-foreground text-accent px-4 py-2 rounded-lg hover:bg-accent-foreground/90 transition-colors font-medium shadow-md"
+                  className="inline-block bg-white text-pink-600 px-4 py-2 rounded-full hover:bg-pink-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  Explore Activities
+                  Explore Activities →
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-br from-secondary via-secondary to-secondary/80 text-secondary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <div className="text-4xl mb-3">⭐</div>
                 <h3 className="text-xl font-semibold mb-2">Subscription</h3>
-                <p className="text-secondary-foreground/90 mb-4">Upgrade to premium for full access</p>
+                <p className="text-white/90 mb-4 text-sm">Upgrade to premium for full access</p>
                 <Link
                   href="/pricing"
-                  className="inline-block bg-secondary-foreground text-secondary px-4 py-2 rounded-lg hover:bg-secondary-foreground/90 transition-colors font-medium shadow-md"
+                  className="inline-block bg-white text-orange-600 px-4 py-2 rounded-full hover:bg-orange-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  View Plans
+                  View Plans →
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-br from-primary/90 via-accent to-accent/90 text-primary-foreground p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <div className="text-4xl mb-3">⚙️</div>
                 <h3 className="text-xl font-semibold mb-2">Settings</h3>
-                <p className="text-primary-foreground/90 mb-4">Manage account and preferences</p>
+                <p className="text-white/90 mb-4 text-sm">Manage account and preferences</p>
                 <Link
                   href="/parent/subscription"
-                  className="inline-block bg-primary-foreground text-primary px-4 py-2 rounded-lg hover:bg-primary-foreground/90 transition-colors font-medium shadow-md"
+                  className="inline-block bg-white text-teal-600 px-4 py-2 rounded-full hover:bg-teal-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  Manage Settings
+                  Manage Settings →
                 </Link>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="relative h-24">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,64 C240,20 480,20 720,64 C960,108 1200,108 1440,64 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.9"
+          />
+        </svg>
       </div>
 
       <Footer />

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,7 @@ import { trackEvent, trackConversion } from "@/lib/analytics"
 import { generateStructuredData } from "@/lib/metadata"
 import { TrustBadges } from "@/components/trust-badges"
 import { PricingComparison } from "@/components/pricing-comparison"
-import { Award, Shield, Users, TrendingUp, Check } from "lucide-react"
+import { Award, Shield, Users, TrendingUp, Check } from 'lucide-react'
 
 export default function PricingPageClient() {
   const productSchemas = [
@@ -47,11 +47,6 @@ export default function PricingPageClient() {
 
   useEffect(() => {
     trackConversion("pricing_viewed")
-
-    console.log("[v0] Stripe Price IDs:", {
-      monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
-      yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID,
-    })
   }, [])
 
   const plans = [
@@ -181,14 +176,19 @@ export default function PricingPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-transparent to-accent/5 flex flex-col">
-      <div className="flex-1">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 left-10 text-5xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>💎</div>
+      <div className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>⭐</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>🎯</div>
+      
+      <div className="flex-1 relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-16">
           <div className="text-center mb-8 sm:mb-12 px-4">
-            <Badge variant="secondary" className="mb-4">
+            <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 border-purple-200">
               Special Offer
             </Badge>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 text-balance">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent mb-4 text-balance">
               Choose Your Learning Plan
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto text-balance">
@@ -204,9 +204,9 @@ export default function PricingPageClient() {
             {plans.map((plan) => (
               <Card
                 key={plan.id}
-                className={`relative p-8 ${
-                  plan.popular ? "border-2 border-primary shadow-2xl scale-105" : "border border-gray-200"
-                }`}
+                className={`relative p-8 bg-white/80 backdrop-blur-md ${
+                  plan.popular ? "border-2 border-purple-400 shadow-2xl scale-105" : "border-2 border-purple-100"
+                } rounded-3xl hover:shadow-2xl transition-all duration-300`}
               >
                 {plan.popular && (
                   <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-4 py-1">
@@ -353,6 +353,16 @@ export default function PricingPageClient() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="relative h-24">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,64 C240,20 480,20 720,64 C960,108 1200,108 1440,64 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.9"
+          />
+        </svg>
       </div>
 
       <Footer />

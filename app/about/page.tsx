@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { createMetadata } from "@/lib/metadata"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Heart, Shield, Sparkles, Users } from "lucide-react"
+import { ArrowLeft, Heart, Shield, Sparkles, Users } from 'lucide-react'
 
 export const metadata: Metadata = createMetadata({
   title: "About Us - AI Kids Learning Platform",
@@ -13,19 +13,26 @@ export const metadata: Metadata = createMetadata({
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 right-20 text-6xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>🤖</div>
+      <div className="absolute top-60 left-10 text-5xl opacity-20 animate-pulse" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>🧠</div>
+      <div className="absolute bottom-40 right-1/4 text-4xl opacity-20 animate-bounce" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>💻</div>
+
+      <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
         <Link href="/">
-          <Button variant="ghost" className="mb-6">
+          <Button variant="ghost" className="mb-6 rounded-full">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Home
           </Button>
         </Link>
 
-        <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+        <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 border-2 border-purple-200">
           <div className="text-center mb-12">
-            <div className="text-6xl mb-4">🚀</div>
-            <h1 className="text-4xl font-bold mb-4 text-gray-900">About AI Kids Learning Platform</h1>
+            <div className="text-7xl mb-4 animate-bounce">🚀</div>
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
+              About AI Kids Learning Platform
+            </h1>
             <p className="text-xl text-gray-600">Where Young Minds Meet Artificial Intelligence</p>
           </div>
 
@@ -42,7 +49,7 @@ export default function AboutPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-gray-900">What We Offer</h2>
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-blue-50 p-6 rounded-lg">
+                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 p-6 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-transform">
                   <div className="text-3xl mb-3">🎮</div>
                   <h3 className="font-bold text-lg mb-2">Interactive Games</h3>
                   <p className="text-sm">
@@ -51,7 +58,7 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="bg-purple-50 p-6 rounded-lg">
+                <div className="bg-gradient-to-br from-purple-100 to-violet-100 p-6 rounded-2xl border-2 border-purple-200 hover:scale-105 transition-transform">
                   <div className="text-3xl mb-3">📚</div>
                   <h3 className="font-bold text-lg mb-2">AI Storytelling</h3>
                   <p className="text-sm">
@@ -60,7 +67,7 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="bg-pink-50 p-6 rounded-lg">
+                <div className="bg-gradient-to-br from-pink-100 to-rose-100 p-6 rounded-2xl border-2 border-pink-200 hover:scale-105 transition-transform">
                   <div className="text-3xl mb-3">🤖</div>
                   <h3 className="font-bold text-lg mb-2">AI Friends</h3>
                   <p className="text-sm">
@@ -69,7 +76,7 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="bg-orange-50 p-6 rounded-lg">
+                <div className="bg-gradient-to-br from-orange-100 to-yellow-100 p-6 rounded-2xl border-2 border-orange-200 hover:scale-105 transition-transform">
                   <div className="text-3xl mb-3">🏆</div>
                   <h3 className="font-bold text-lg mb-2">Progress Tracking</h3>
                   <p className="text-sm">
@@ -194,6 +201,16 @@ export default function AboutPage() {
             </section>
           </div>
         </div>
+      </div>
+
+      <div className="relative h-32 mt-12">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,32 C320,96 640,96 960,32 C1280,0 1600,0 1440,32 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.8"
+          />
+        </svg>
       </div>
     </div>
   )

@@ -441,12 +441,37 @@ async function checkDailyChallenges(
 
 async function completeChallenge(supabase: any, userId: string, challengeId: string, points: number) {
   try {
+    const { data: existing } = await supabase
+      .from("user_daily_challenges")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("challenge_id", challengeId)
+      .gte("completed_at", `${new Date().toISOString().split("T")[0]}T00:00:00`)
+      .maybeSingle()
+
+    // If already completed today, skip
+    if (existing) {
+      console.log(`[v0] Challenge ${challengeId} already completed today, skipping`)
+      return
+    }
+
     // Mark challenge as completed
-    await supabase.from("user_daily_challenges").insert({
+    const { error: insertError } = await supabase.from("user_daily_challenges").insert({
       user_id: userId,
       challenge_id: challengeId,
       points_earned: points,
     })
+
+    // If duplicate key error, just skip (race condition)
+    if (insertError?.code === "23505") {
+      console.log(`[v0] Challenge ${challengeId} already completed (race condition), skipping`)
+      return
+    }
+
+    if (insertError) {
+      console.error("[v0] Error inserting challenge completion:", insertError)
+      return
+    }
 
     // Award bonus points
     const { data: profile } = await supabase.from("profiles").select("points, experience").eq("id", userId).single()

@@ -68,17 +68,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("[v0] Calling Supabase signInWithPassword...")
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) {
+        console.error("[v0] Login error from Supabase:", error)
         setError(error.message)
         throw error
       }
+      
+      if (data.user) {
+        console.log("[v0] Login successful, user:", data.user.id)
+        setUser(data.user)
+      }
     } catch (error: any) {
       const errorMessage = error?.message || "Failed to connect to authentication service"
+      console.error("[v0] Login exception:", errorMessage)
       setError(errorMessage)
       throw new Error(errorMessage)
     } finally {

@@ -2,7 +2,7 @@
  * Monitor performance metrics
  */
 export function trackPerformance(metricName: string, value: number, unit = "ms") {
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     console.log(`[v0] Performance: ${metricName} = ${value}${unit}`)
   }
 }
@@ -51,7 +51,7 @@ export async function monitorApiCall<T>(apiName: string, apiCall: () => Promise<
  * Monitor component render times
  */
 export function useRenderMonitoring(componentName: string) {
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     const startTime = performance.now()
 
     return () => {
@@ -73,7 +73,7 @@ export function trackSubscriptionMetrics(metrics: {
   revenue?: number
   conversionRate?: number
 }) {
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     console.log("[v0] Subscription Metrics:", metrics)
   }
 }

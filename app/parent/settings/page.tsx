@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Button } from "@/components/ui/button"
@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
-import { User, Bell, Shield, CreditCard, Trash2 } from "lucide-react"
+import { User, Bell, Shield, CreditCard, Trash2 } from 'lucide-react'
 
 export default function ParentSettingsPage() {
   const router = useRouter()
@@ -38,20 +38,29 @@ export default function ParentSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden">
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 text-6xl opacity-20 animate-float">⚙️</div>
+      <div className="absolute top-40 right-20 text-5xl opacity-15 animate-float" style={{ animationDelay: '1s' }}>🔒</div>
+      <div className="absolute bottom-32 left-1/4 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>👨‍👩‍👧‍👦</div>
+
+      {/* Gradient blobs */}
+      <div className="absolute top-10 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" />
+      <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+
       <AppNavigation />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
         <Breadcrumbs />
 
         <div className="mt-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Account Settings</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Account Settings</h1>
             <p className="text-muted-foreground mt-2">Manage your account preferences and settings</p>
           </div>
 
           {/* Account Information */}
-          <Card>
+          <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-xl rounded-3xl">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <User className="w-5 h-5 text-primary" />
@@ -83,7 +92,7 @@ export default function ParentSettingsPage() {
           </Card>
 
           {/* Notification Preferences */}
-          <Card>
+          <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-xl rounded-3xl">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Bell className="w-5 h-5 text-primary" />
@@ -124,7 +133,7 @@ export default function ParentSettingsPage() {
           </Card>
 
           {/* Privacy & Security */}
-          <Card>
+          <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-xl rounded-3xl">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary" />
@@ -151,7 +160,7 @@ export default function ParentSettingsPage() {
           </Card>
 
           {/* Subscription */}
-          <Card>
+          <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-xl rounded-3xl">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-primary" />
@@ -167,7 +176,7 @@ export default function ParentSettingsPage() {
           </Card>
 
           {/* Danger Zone */}
-          <Card className="border-destructive">
+          <Card className="border-destructive bg-white/70 backdrop-blur-xl shadow-xl rounded-3xl">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Trash2 className="w-5 h-5 text-destructive" />

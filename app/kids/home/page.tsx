@@ -55,6 +55,14 @@ export default function KidsHome() {
       href: "/kids/ai-friend",
     },
     {
+      id: "my-friends",
+      title: "My Friends",
+      description: "Connect and learn with friends!",
+      icon: "👥",
+      color: "from-pink-400 to-pink-600",
+      href: "/friends",
+    },
+    {
       id: "pattern-training",
       title: "Pattern Training",
       description: "Train AI to recognize patterns!",
@@ -105,19 +113,28 @@ export default function KidsHome() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 left-10 text-6xl opacity-25 animate-bounce" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.4))' }}>🤖</div>
+      <div className="absolute top-40 right-20 text-5xl opacity-25 animate-pulse" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.4))' }}>🧠</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-25 animate-bounce delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.4))' }}>💻</div>
+      <div className="absolute bottom-60 right-1/3 text-5xl opacity-20 animate-pulse delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.4))' }}>⚙️</div>
+      <div className="absolute top-1/2 right-10 text-4xl opacity-25 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.4))' }}>📚</div>
+
       <TutorialTour tourId="kids-home" steps={kidsTourSteps} />
 
       <AppNavigation />
       <Breadcrumbs />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gradient-to-r from-pink-400 to-pink-600 text-white p-6 rounded-2xl mb-8">
-          <div className="flex items-center space-x-3">
-            <div className="text-3xl">🎮</div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <div className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white p-8 rounded-3xl mb-8 shadow-2xl overflow-hidden">
+          <div className="absolute top-0 right-0 text-9xl opacity-10">🎮</div>
+          <div className="absolute bottom-0 left-0 text-7xl opacity-10">🚀</div>
+          <div className="relative z-10 flex items-center space-x-4">
+            <div className="text-5xl">🎮</div>
             <div>
-              <h2 className="text-2xl font-bold">AI Learning Games</h2>
-              <p className="text-pink-100">Interactive AI games and activities for kids!</p>
+              <h2 className="text-3xl font-bold">AI Learning Games</h2>
+              <p className="text-pink-100 text-lg">Interactive AI games and activities for kids!</p>
             </div>
           </div>
         </div>
@@ -143,48 +160,58 @@ export default function KidsHome() {
             <Link
               key={activity.id}
               href={activity.href}
-              className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer block ${
+              className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-3xl hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer block ${
                 activity.id === "library" ? "library-link" : ""
               }`}
             >
               <div className="flex items-center space-x-4">
-                <div className="text-4xl">{activity.icon}</div>
+                <div className="text-5xl">{activity.icon}</div>
                 <div>
                   <h3 className="text-xl font-bold">{activity.title}</h3>
-                  <p className="text-white/90">{activity.description}</p>
+                  <p className="text-white/90 text-sm">{activity.description}</p>
                 </div>
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
+        <div className="mt-8 bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-purple-200">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
             <Link href="/kids/badges">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="rounded-full">
                 View All Badges
               </Button>
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-transform">
               <div className="text-2xl mb-2">🏆</div>
               <div className="text-lg font-semibold text-blue-900">5 Badges</div>
               <div className="text-sm text-blue-700">Earned</div>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl border-2 border-green-200 hover:scale-105 transition-transform">
               <div className="text-2xl mb-2">⚡</div>
               <div className="text-lg font-semibold text-green-900">3 Day</div>
               <div className="text-sm text-green-700">Streak</div>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl border-2 border-purple-200 hover:scale-105 transition-transform">
               <div className="text-2xl mb-2">🎯</div>
               <div className="text-lg font-semibold text-purple-900">Level 4</div>
               <div className="text-sm text-purple-700">AI Explorer</div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="relative h-24 mt-12">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,64 C240,108 480,108 720,64 C960,20 1200,20 1440,64 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.8"
+          />
+        </svg>
       </div>
     </div>
   )

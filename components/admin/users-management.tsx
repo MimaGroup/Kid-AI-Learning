@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Search, Mail, Calendar, Crown, Settings } from "lucide-react"
+import { Search, Mail, Calendar, Crown, Settings } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 
 interface User {
   id: string
@@ -52,15 +52,7 @@ export function UsersManagement() {
     const targetUrl = `/admin/users/${userId}/permissions`
     console.log("[v0] Navigating to:", targetUrl)
 
-    // Try Next.js router first
-    try {
-      router.push(targetUrl)
-      console.log("[v0] Router.push called successfully")
-    } catch (error) {
-      console.error("[v0] Router.push failed:", error)
-      // Fallback to direct navigation
-      window.location.href = targetUrl
-    }
+    window.location.href = targetUrl
   }
 
   if (loading) {

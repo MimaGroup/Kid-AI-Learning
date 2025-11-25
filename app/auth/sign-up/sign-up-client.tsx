@@ -51,10 +51,13 @@ function SignUpPageClient() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center animate-in zoom-in-95">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-20 left-10 text-5xl opacity-20 animate-bounce">✨</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse">🎉</div>
+        
+        <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95 border-2 border-green-200 relative z-10">
           <div className="text-6xl mb-4">✉️</div>
-          <h1 className="text-3xl font-bold text-green-600 mb-4">Check Your Email!</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">Check Your Email!</h1>
           <p className="text-gray-600 mb-6">
             We've sent you a confirmation link. Please check your email and click the link to activate your account.
           </p>
@@ -70,12 +73,16 @@ function SignUpPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 relative">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-20 left-10 text-5xl opacity-15 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>🤖</div>
+      <div className="absolute top-40 right-20 text-4xl opacity-15 animate-pulse delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>🎨</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-15 animate-bounce delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(244, 114, 182, 0.3))' }}>✨</div>
+      
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 relative border-2 border-purple-200 z-10">
         {isLoading && <LoadingOverlay message="Creating your account..." />}
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">Create Account</h1>
           <p className="text-gray-600">Join AI Kids Learning Platform</p>
         </div>
 

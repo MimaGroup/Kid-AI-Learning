@@ -75,7 +75,7 @@ export interface AuditLogEntry {
 
 export function createAuditLog(entry: AuditLogEntry): void {
   // In production, send to logging service (e.g., Vercel Analytics, Sentry)
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     console.log("[AUDIT]", JSON.stringify(entry, null, 2))
   }
   // TODO: Implement production logging

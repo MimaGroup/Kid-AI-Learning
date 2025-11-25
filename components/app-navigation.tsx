@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { NotificationsDropdown } from "@/components/notifications-dropdown"
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut } from "lucide-react"
+import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut, Users } from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 
@@ -38,6 +38,12 @@ export function AppNavigation() {
       href: "/kids/activities",
       icon: Gamepad2,
       active: pathname === "/kids/activities",
+    },
+    {
+      label: "My Friends",
+      href: "/friends",
+      icon: Users,
+      active: pathname === "/friends",
     },
     {
       label: "Parent Dashboard",

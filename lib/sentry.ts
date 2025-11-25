@@ -10,7 +10,7 @@ export function initSentry() {
 // Helper to capture exceptions with context
 export function captureException(error: Error, context?: Record<string, any>) {
   // Log to console instead of Sentry
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     console.error("[Error]", error, context)
   }
 }
@@ -18,7 +18,7 @@ export function captureException(error: Error, context?: Record<string, any>) {
 // Helper to capture messages
 export function captureMessage(message: string, level: "info" | "warning" | "error" = "info") {
   // Log to console instead of Sentry
-  if (process.env.NODE_ENV === "development") {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
     console.log(`[${level}]:`, message)
   }
 }
