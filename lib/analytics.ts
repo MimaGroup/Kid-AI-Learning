@@ -44,7 +44,7 @@ type EventProperties = Record<string, string | number | boolean | undefined>
  */
 export function trackEvent(eventName: EventName, properties?: EventProperties) {
   try {
-    if (typeof window !== "undefined" && window.NEXT_PUBLIC_DEV_MODE === "true") {
+    if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_DEV_MODE === "true") {
       console.log("[v0] Analytics Event:", eventName, properties)
     }
 
