@@ -35,14 +35,21 @@ export function UserHeader() {
             <span className="text-sm font-medium">{emailUsername}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 bg-white z-50">
-          <DropdownMenuLabel className="bg-white">My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-sm text-muted-foreground break-all bg-white hover:bg-gray-50">
+        <DropdownMenuContent
+          align="end"
+          className="w-56 bg-white border-2 shadow-xl z-50"
+          style={{ backgroundColor: "white" }}
+        >
+          <DropdownMenuLabel className="bg-white text-gray-900">My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-gray-200" />
+          <DropdownMenuItem className="text-sm text-gray-500 break-all bg-white hover:bg-gray-100">
             {user.email}
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut} className="text-destructive bg-white hover:bg-gray-50">
+          <DropdownMenuSeparator className="bg-gray-200" />
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            className="bg-white hover:bg-red-50 text-red-600 focus:text-red-600 focus:bg-red-50"
+          >
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out
           </DropdownMenuItem>

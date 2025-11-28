@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { NotificationsDropdown } from "@/components/notifications-dropdown"
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut, Users } from 'lucide-react'
+import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut, Users } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 
@@ -96,24 +96,29 @@ export function AppNavigation() {
                   <User className="w-5 h-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-background border-2 shadow-lg" sideOffset={8}>
-                <DropdownMenuLabel className="pb-3">
+              <DropdownMenuContent
+                align="end"
+                className="w-64 bg-white border-2 shadow-xl"
+                sideOffset={8}
+                style={{ backgroundColor: "white" }}
+              >
+                <DropdownMenuLabel className="pb-3 bg-white">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-semibold">My Account</p>
-                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    <p className="text-sm font-semibold text-gray-900">My Account</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer py-2.5">
+                <DropdownMenuSeparator className="bg-gray-200" />
+                <DropdownMenuItem asChild className="cursor-pointer py-2.5 bg-white hover:bg-gray-100">
                   <Link href="/parent/settings" className="flex items-center">
-                    <Settings className="w-4 h-4 mr-3" />
-                    <span className="font-medium">Settings</span>
+                    <Settings className="w-4 h-4 mr-3 text-gray-600" />
+                    <span className="font-medium text-gray-900">Settings</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-200" />
                 <DropdownMenuItem
                   onClick={handleSignOut}
-                  className="cursor-pointer text-destructive focus:text-destructive py-2.5"
+                  className="cursor-pointer py-2.5 bg-white hover:bg-red-50 text-red-600 focus:text-red-600 focus:bg-red-50"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
                   <span className="font-medium">Sign Out</span>

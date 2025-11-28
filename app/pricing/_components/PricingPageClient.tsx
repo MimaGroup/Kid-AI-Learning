@@ -7,11 +7,13 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { createBrowserClient } from "@/lib/supabase/client"
 import { Footer } from "@/components/footer"
+import { AppNavigation } from "@/components/app-navigation"
 import { trackEvent, trackConversion } from "@/lib/analytics"
 import { generateStructuredData } from "@/lib/metadata"
 import { TrustBadges } from "@/components/trust-badges"
 import { PricingComparison } from "@/components/pricing-comparison"
-import { Award, Shield, Users, TrendingUp, Check } from "lucide-react"
+import { Award, Shield, Users, TrendingUp, Check, Home } from "lucide-react"
+import Link from "next/link"
 
 export default function PricingPageClient() {
   const productSchemas = [
@@ -177,6 +179,27 @@ export default function PricingPageClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
+      {/* Conditional header - AppNavigation for logged in users, simple home link for guests */}
+      {user ? (
+        <AppNavigation />
+      ) : (
+        <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <Home className="w-5 h-5 text-primary" />
+                <span className="font-bold text-lg">AI Kids Learning</span>
+              </Link>
+              <Link href="/auth/login">
+                <Button variant="outline" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* AI-themed floating decorative emojis */}
       <div
         className="absolute top-20 left-10 text-5xl opacity-20 animate-float"

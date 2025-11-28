@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation"
 import { useSubscription } from "@/hooks/use-subscription"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -114,16 +114,37 @@ export default function ActivitiesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden p-6">
       {/* Floating AI-themed decorative elements */}
-      <div className="absolute top-16 left-10 text-6xl opacity-25 animate-float">🤖</div>
-      <div className="absolute top-32 right-20 text-5xl opacity-20 animate-float" style={{ animationDelay: '1s' }}>🎮</div>
-      <div className="absolute bottom-40 left-1/4 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>🧠</div>
-      <div className="absolute bottom-20 right-1/4 text-5xl opacity-25 animate-float" style={{ animationDelay: '1.5s' }}>⚙️</div>
+      <div className="absolute top-32 left-10 text-6xl opacity-50 animate-float">🤖</div>
+      <div className="absolute top-48 right-20 text-5xl opacity-40 animate-float" style={{ animationDelay: "1s" }}>
+        🎮
+      </div>
+      <div className="absolute bottom-40 left-1/4 text-6xl opacity-40 animate-float" style={{ animationDelay: "2s" }}>
+        🧠
+      </div>
+      <div
+        className="absolute bottom-20 right-1/4 text-5xl opacity-50 animate-float"
+        style={{ animationDelay: "1.5s" }}
+      >
+        ⚙️
+      </div>
 
       {/* Gradient blobs */}
-      <div className="absolute top-20 right-10 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-20 right-10 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" />
+      <div
+        className="absolute bottom-20 left-20 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"
+        style={{ animationDelay: "1s" }}
+      />
 
       <div className="max-w-6xl mx-auto relative z-10">
+        <div className="mb-6">
+          <Link
+            href="/kids/home"
+            className="inline-flex items-center px-5 py-2 bg-white/70 backdrop-blur-sm text-purple-600 rounded-full hover:bg-white transition-colors font-medium border-2 border-purple-200 shadow-md"
+          >
+            ← Back to Home
+          </Link>
+        </div>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">AI Learning Activities</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -160,7 +181,9 @@ export default function ActivitiesPage() {
                 <div className={`h-32 bg-gradient-to-r ${activity.color} flex items-center justify-center relative`}>
                   <span className="text-6xl drop-shadow-lg">{activity.icon}</span>
                   {activity.isPremium && (
-                    <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-0 rounded-full">Premium</Badge>
+                    <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-0 rounded-full">
+                      Premium
+                    </Badge>
                   )}
                 </div>
 
@@ -196,6 +219,7 @@ export default function ActivitiesPage() {
           </div>
         )}
 
+        {/* Home button at the bottom is kept as is */}
         <div className="text-center mt-12">
           <Link
             href="/kids/home"
