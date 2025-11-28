@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,7 @@ import { trackEvent, trackConversion } from "@/lib/analytics"
 import { generateStructuredData } from "@/lib/metadata"
 import { TrustBadges } from "@/components/trust-badges"
 import { PricingComparison } from "@/components/pricing-comparison"
-import { Award, Shield, Users, TrendingUp, Check } from 'lucide-react'
+import { Award, Shield, Users, TrendingUp, Check } from "lucide-react"
 
 export default function PricingPageClient() {
   const productSchemas = [
@@ -178,14 +178,32 @@ export default function PricingPageClient() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
       {/* AI-themed floating decorative emojis */}
-      <div className="absolute top-20 left-10 text-5xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>💎</div>
-      <div className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>⭐</div>
-      <div className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>🎯</div>
-      
+      <div
+        className="absolute top-20 left-10 text-5xl opacity-20 animate-float"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))" }}
+      >
+        💎
+      </div>
+      <div
+        className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse delay-100"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))" }}
+      >
+        ⭐
+      </div>
+      <div
+        className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))" }}
+      >
+        🎯
+      </div>
+
       <div className="flex-1 relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-16">
           <div className="text-center mb-8 sm:mb-12 px-4">
-            <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 border-purple-200">
+            <Badge
+              variant="secondary"
+              className="mb-4 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 border-purple-200"
+            >
               Special Offer
             </Badge>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent mb-4 text-balance">
@@ -237,8 +255,12 @@ export default function PricingPageClient() {
                 <Button
                   onClick={() => handleSubscribe(plan.id, plan.priceId)}
                   disabled={plan.disabled || loading === plan.id}
-                  className={`w-full mb-6 ${
-                    plan.popular ? "bg-purple-600 hover:bg-purple-700" : "bg-gray-900 hover:bg-gray-800"
+                  className={`w-full mb-6 text-white font-semibold ${
+                    plan.disabled
+                      ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                      : plan.popular
+                        ? "bg-purple-600 hover:bg-purple-700 text-white"
+                        : "bg-gray-800 hover:bg-gray-900 text-white"
                   }`}
                 >
                   {loading === plan.id ? "Processing..." : plan.cta}
