@@ -48,7 +48,8 @@ export function getClientIp(request: NextRequest): string {
     return realIp
   }
 
-  return request.ip || "unknown"
+  // On Vercel, x-forwarded-for or x-real-ip headers are always set
+  return "unknown"
 }
 
 export function isAllowedOrigin(origin: string | null): boolean {
