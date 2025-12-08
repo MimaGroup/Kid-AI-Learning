@@ -2,7 +2,7 @@
 
 import { useAuth } from "../../../hooks/use-auth"
 import { useChildren } from "../../../hooks/use-children"
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { AddChildDialog } from "../../../components/add-child-dialog"
 import { ChildCard } from "../../../components/child-card"
@@ -22,6 +22,7 @@ import { LearningRecommendations } from "@/components/learning-recommendations"
 import { DownloadReportButton } from "@/components/download-report-button"
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { ReferralWidget } from "@/components/referral-widget"
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
@@ -74,12 +75,37 @@ export default function ParentDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
       {/* AI-themed floating decorative emojis */}
-      <div className="absolute top-20 left-10 text-6xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>🤖</div>
-      <div className="absolute top-40 right-20 text-5xl opacity-20 animate-pulse delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>🧠</div>
-      <div className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>💻</div>
-      <div className="absolute top-60 right-1/3 text-5xl opacity-15 animate-float delay-300" style={{ filter: 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3))' }}>⚙️</div>
-      <div className="absolute bottom-60 right-10 text-4xl opacity-20 animate-pulse delay-400" style={{ filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3))' }}>📚</div>
-      
+      <div
+        className="absolute top-20 left-10 text-6xl opacity-20 animate-float"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))" }}
+      >
+        🤖
+      </div>
+      <div
+        className="absolute top-40 right-20 text-5xl opacity-20 animate-pulse delay-100"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))" }}
+      >
+        🧠
+      </div>
+      <div
+        className="absolute bottom-40 left-1/4 text-4xl opacity-20 animate-bounce delay-200"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))" }}
+      >
+        💻
+      </div>
+      <div
+        className="absolute top-60 right-1/3 text-5xl opacity-15 animate-float delay-300"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3))" }}
+      >
+        ⚙️
+      </div>
+      <div
+        className="absolute bottom-60 right-10 text-4xl opacity-20 animate-pulse delay-400"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3))" }}
+      >
+        📚
+      </div>
+
       <AppNavigation />
       <Breadcrumbs />
 
@@ -97,13 +123,22 @@ export default function ParentDashboard() {
 
             <Tabs defaultValue="profiles" className="mb-8">
               <TabsList className="flex flex-wrap w-full justify-center gap-2 h-auto p-2 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 rounded-2xl">
-                <TabsTrigger value="profiles" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                <TabsTrigger
+                  value="profiles"
+                  className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
+                >
                   👨‍👩‍👧 Child Profiles
                 </TabsTrigger>
-                <TabsTrigger value="progress" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                <TabsTrigger
+                  value="progress"
+                  className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
+                >
                   📊 Learning Progress
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
+                <TabsTrigger
+                  value="analytics"
+                  className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
+                >
                   📈 Advanced Analytics
                 </TabsTrigger>
               </TabsList>
@@ -235,6 +270,10 @@ export default function ParentDashboard() {
                 )}
               </TabsContent>
             </Tabs>
+
+            <div className="mb-8">
+              <ReferralWidget />
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 pt-8 border-t-2 border-purple-100">
               <div className="bg-gradient-to-br from-purple-500 via-purple-600 to-indigo-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
