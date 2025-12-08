@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   try {
     const supabase = await createClient()
 
@@ -19,7 +20,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: child, error } = await supabase
       .from("children")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("parent_id", user.id)
       .single()
 
@@ -39,7 +40,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   try {
     const supabase = await createClient()
 
@@ -64,7 +66,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { data: child, error } = await supabase
       .from("children")
       .update(updates)
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("parent_id", user.id)
       .select()
       .single()
@@ -81,9 +83,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   try {
-    console.log("[v0] DELETE /api/children/[id] - Deleting child:", params.id)
+    console.log("[v0] DELETE /api/children/[id] - Deleting child:", id)
     const supabase = await createClient()
 
     const {
@@ -101,7 +104,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const { data: child, error: fetchError } = await supabase
       .from("children")
       .select("id, parent_id, name")
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("parent_id", user.id)
       .single()
 
@@ -118,7 +121,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     console.log("[v0] Found child to delete:", child.name)
 
     // Delete from children table
-    const { error: deleteError } = await supabase.from("children").delete().eq("id", params.id).eq("parent_id", user.id)
+    const { error: deleteError } = await supabase.from("children").delete().eq("id", id).eq("parent_id", user.id)
 
     if (deleteError) {
       console.error("[v0] Error deleting child:", deleteError)

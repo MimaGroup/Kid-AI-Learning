@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   try {
     const supabase = await createClient()
 
@@ -20,7 +21,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: child } = await supabase
       .from("children")
       .select("child_id")
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("parent_id", user.id)
       .single()
 
