@@ -39,7 +39,8 @@ import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const ip = request.ip || request.headers.get("x-forwarded-for") || "unknown"
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown"
 
   let rateLimit = RATE_LIMITS.api
   let endpoint = "api"
