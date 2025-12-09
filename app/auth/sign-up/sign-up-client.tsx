@@ -35,13 +35,13 @@ function SignUpPageClient() {
     setError("")
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError("Gesli se ne ujemata")
       setIsLoading(false)
       return
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters")
+      setError("Geslo mora imeti vsaj 6 znakov")
       setIsLoading(false)
       return
     }
@@ -72,7 +72,7 @@ function SignUpPageClient() {
       setSuccess(true)
       setIsLoading(false)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Registration failed"
+      const errorMessage = err instanceof Error ? err.message : "Registracija ni uspela"
       setError(errorMessage)
       trackError(err instanceof Error ? err : new Error(errorMessage), "signup")
       setIsLoading(false)
@@ -88,16 +88,16 @@ function SignUpPageClient() {
         <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95 border-2 border-green-200 relative z-10">
           <div className="text-6xl mb-4">✉️</div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
-            Check Your Email!
+            Preverite svojo e-pošto!
           </h1>
           <p className="text-gray-600 mb-6">
-            We've sent you a confirmation link. Please check your email and click the link to activate your account.
+            Poslali smo vam potrditveno povezavo. Preverite svojo e-pošto in kliknite povezavo za aktivacijo računa.
           </p>
           {referralCode && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
               <p className="text-sm text-green-700 flex items-center justify-center gap-2">
                 <Gift className="w-4 h-4" />
-                Referral bonus applied! You'll get a 14-day free trial.
+                Priporočilni bonus aktiviran! Dobili boste 14-dnevni brezplačni preizkus.
               </p>
             </div>
           )}
@@ -105,7 +105,7 @@ function SignUpPageClient() {
             href="/auth/login"
             className="inline-block bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
           >
-            Back to Login
+            Nazaj na prijavo
           </Link>
         </div>
       </div>
@@ -134,21 +134,21 @@ function SignUpPageClient() {
       </div>
 
       <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 relative border-2 border-purple-200 z-10">
-        {isLoading && <LoadingOverlay message="Creating your account..." />}
+        {isLoading && <LoadingOverlay message="Ustvarjanje vašega računa..." />}
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
-            Create Account
+            Ustvari račun
           </h1>
-          <p className="text-gray-600">Join AI Kids Learning Platform</p>
+          <p className="text-gray-600">Pridružite se KidsLearnAI platformi</p>
 
           {referralCode && (
             <div className="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">
               <div className="flex items-center justify-center gap-2">
                 <Gift className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-medium text-purple-700">Referral Bonus Active!</span>
+                <span className="text-sm font-medium text-purple-700">Priporočilni bonus aktiviran!</span>
               </div>
-              <p className="text-xs text-purple-600 mt-1">You'll get a 14-day free trial instead of 7 days</p>
+              <p className="text-xs text-purple-600 mt-1">Dobili boste 14-dnevni brezplačni preizkus namesto 7 dni</p>
             </div>
           )}
         </div>
@@ -156,7 +156,7 @@ function SignUpPageClient() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+              E-pošta
             </label>
             <input
               id="email"
@@ -164,14 +164,14 @@ function SignUpPageClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter your email"
+              placeholder="Vnesite svojo e-pošto"
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+              Geslo
             </label>
             <input
               id="password"
@@ -179,7 +179,7 @@ function SignUpPageClient() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Create a password (min 6 characters)"
+              placeholder="Ustvarite geslo (najmanj 6 znakov)"
               required
               minLength={6}
             />
@@ -187,7 +187,7 @@ function SignUpPageClient() {
 
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-              Confirm Password
+              Potrdi geslo
             </label>
             <input
               id="confirmPassword"
@@ -195,7 +195,7 @@ function SignUpPageClient() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Confirm your password"
+              placeholder="Potrdite svoje geslo"
               required
               minLength={6}
             />
@@ -203,7 +203,7 @@ function SignUpPageClient() {
 
           <div>
             <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700 mb-2">
-              Referral Code <span className="text-gray-400 font-normal">(Optional)</span>
+              Priporočilna koda <span className="text-gray-400 font-normal">(Neobvezno)</span>
             </label>
             <div className="relative">
               <input
@@ -212,7 +212,7 @@ function SignUpPageClient() {
                 value={referralCode}
                 onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono uppercase"
-                placeholder="Enter referral code"
+                placeholder="Vnesite priporočilno kodo"
                 maxLength={8}
               />
               {referralCode && referralValid && (
@@ -222,7 +222,7 @@ function SignUpPageClient() {
             {referralCode && (
               <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
                 <Gift className="w-3 h-3" />
-                You'll get a 14-day free trial!
+                Dobili boste 14-dnevni brezplačni preizkus!
               </p>
             )}
           </div>
@@ -238,15 +238,15 @@ function SignUpPageClient() {
             disabled={isLoading}
             className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isLoading ? "Ustvarjanje računa..." : "Ustvari račun"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Already have an account?{" "}
+            Že imate račun?{" "}
             <Link href="/auth/login" className="text-purple-600 hover:underline">
-              Sign in
+              Prijavite se
             </Link>
           </p>
         </div>

@@ -214,8 +214,8 @@ export default function TermsOfServicePage() {
             <section>
               <h2 className="text-2xl font-semibold mb-3 text-gray-900">13. Governing Law</h2>
               <p className="mb-3">
-                These Terms shall be governed by and construed in accordance with the laws of [JURISDICTION], without
-                regard to conflict of law provisions.
+                These Terms shall be governed by and construed in accordance with the laws of the Republic of Slovenia,
+                without regard to conflict of law provisions.
               </p>
 
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Dispute Resolution</h3>

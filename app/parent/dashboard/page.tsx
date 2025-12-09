@@ -2,6 +2,7 @@
 
 import { useAuth } from "../../../hooks/use-auth"
 import { useChildren } from "../../../hooks/use-children"
+import { useSubscription } from "../../../hooks/use-subscription"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { AddChildDialog } from "../../../components/add-child-dialog"
@@ -23,10 +24,12 @@ import { DownloadReportButton } from "@/components/download-report-button"
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ReferralWidget } from "@/components/referral-widget"
+import { Clock, Gift } from "lucide-react"
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
   const { children, loading: childrenLoading, createChild, deleteChild } = useChildren()
+  const { hasPremium, isLoading: subscriptionLoading, trialDaysRemaining, hasExtendedTrial } = useSubscription()
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
   const [selectedProfileId, setSelectedProfileId] = useState<string>("all")
@@ -116,10 +119,43 @@ export default function ParentDashboard() {
           <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-purple-200">
             <div className="mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
-                Parent Dashboard
+                Nadzorna plošča za starše
               </h1>
-              <p className="text-gray-600 mt-2 text-sm sm:text-base">Welcome back, {user?.email}</p>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">Dobrodošli nazaj, {user?.email}</p>
             </div>
+
+            {!subscriptionLoading && hasPremium && trialDaysRemaining !== null && trialDaysRemaining > 0 && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-100 rounded-full">
+                    <Clock className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-amber-900">
+                        {hasExtendedTrial ? "Podaljšan preizkus aktiven" : "Brezplačni preizkus aktiven"}
+                      </h3>
+                      {hasExtendedTrial && (
+                        <span className="px-2 py-0.5 bg-amber-200 text-amber-800 text-xs font-medium rounded-full flex items-center gap-1">
+                          <Gift className="w-3 h-3" /> Priporočilni bonus
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-amber-700">
+                      {trialDaysRemaining === 1
+                        ? "Vaš preizkus se konča jutri! Naročite se zdaj za ohranitev dostopa do vseh premium funkcij."
+                        : `Še ${trialDaysRemaining} dni vašega preizkusa. Naročite se za nadaljevanje uživanja premium funkcij.`}
+                    </p>
+                  </div>
+                  <a
+                    href="/pricing"
+                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md whitespace-nowrap"
+                  >
+                    Naroči se zdaj
+                  </a>
+                </div>
+              </div>
+            )}
 
             <Tabs defaultValue="profiles" className="mb-8">
               <TabsList className="flex flex-wrap w-full justify-center gap-2 h-auto p-2 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 rounded-2xl">
@@ -127,26 +163,26 @@ export default function ParentDashboard() {
                   value="profiles"
                   className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
                 >
-                  👨‍👩‍👧 Child Profiles
+                  👨‍👩‍👧 Profili otrok
                 </TabsTrigger>
                 <TabsTrigger
                   value="progress"
                   className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
                 >
-                  📊 Learning Progress
+                  📊 Učni napredek
                 </TabsTrigger>
                 <TabsTrigger
                   value="analytics"
                   className="px-4 py-2.5 text-sm flex-1 min-w-[120px] rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all"
                 >
-                  📈 Advanced Analytics
+                  📈 Napredna analitika
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="profiles" className="mt-6">
                 <div className="flex flex-col gap-4 mb-6">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h2 className="text-xl sm:text-2xl font-bold text-foreground">Manage Children</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-foreground">Upravljanje otrok</h2>
                     <div className="add-child-button w-full sm:w-auto">
                       <AddChildDialog onAdd={handleAddChild} />
                     </div>
@@ -154,16 +190,16 @@ export default function ParentDashboard() {
 
                   {children.length > 1 && (
                     <div className="w-full">
-                      <label className="block text-sm font-medium mb-2">View Child Profile</label>
+                      <label className="block text-sm font-medium mb-2">Poglej profil otroka</label>
                       <select
                         className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground"
                         value={selectedProfileId}
                         onChange={(e) => setSelectedProfileId(e.target.value)}
                       >
-                        <option value="all">All Children ({children.length})</option>
+                        <option value="all">Vsi otroci ({children.length})</option>
                         {children.map((child) => (
                           <option key={child.id} value={child.id}>
-                            {child.name} ({child.age} years old)
+                            {child.name} ({child.age} let)
                           </option>
                         ))}
                       </select>
@@ -179,9 +215,9 @@ export default function ParentDashboard() {
                   </div>
                 ) : children.length === 0 ? (
                   <div className="text-center py-12 bg-muted rounded-lg">
-                    <p className="text-muted-foreground mb-4">No child profiles yet</p>
+                    <p className="text-muted-foreground mb-4">Še ni profilov otrok</p>
                     <p className="text-sm text-muted-foreground">
-                      Add your first child profile to start tracking their learning progress
+                      Dodajte svoj prvi profil otroka za sledenje učnemu napredku
                     </p>
                   </div>
                 ) : (
@@ -194,7 +230,7 @@ export default function ParentDashboard() {
               </TabsContent>
 
               <TabsContent value="progress" className="mt-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Learning Progress</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Učni napredek</h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                   <div className="lg:col-span-2">
@@ -206,10 +242,8 @@ export default function ParentDashboard() {
                       </div>
                     ) : children.length === 0 ? (
                       <div className="text-center py-12 bg-muted rounded-lg">
-                        <p className="text-muted-foreground mb-4">No children to track</p>
-                        <p className="text-sm text-muted-foreground">
-                          Add child profiles to see their learning progress
-                        </p>
+                        <p className="text-muted-foreground mb-4">Ni otrok za sledenje</p>
+                        <p className="text-sm text-muted-foreground">Dodajte profile otrok za ogled učnega napredka</p>
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -227,30 +261,30 @@ export default function ParentDashboard() {
 
               <TabsContent value="analytics" className="mt-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">Advanced Analytics</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">Napredna analitika</h2>
                   {analyticsChildId && (
                     <DownloadReportButton
                       childId={analyticsChildId}
-                      childName={children.find((c) => c.id === analyticsChildId)?.name || "Child"}
+                      childName={children.find((c) => c.id === analyticsChildId)?.name || "Otrok"}
                     />
                   )}
                 </div>
 
                 {children.length === 0 ? (
                   <div className="text-center py-12 bg-muted rounded-lg">
-                    <p className="text-muted-foreground mb-4">No children to analyze</p>
-                    <p className="text-sm text-muted-foreground">Add child profiles to see detailed analytics</p>
+                    <p className="text-muted-foreground mb-4">Ni otrok za analizo</p>
+                    <p className="text-sm text-muted-foreground">Dodajte profile otrok za podrobno analitiko</p>
                   </div>
                 ) : (
                   <>
                     <div className="mb-6">
-                      <label className="block text-sm font-medium mb-2">Select Child</label>
+                      <label className="block text-sm font-medium mb-2">Izberite otroka</label>
                       <select
                         className="w-full max-w-xs px-4 py-2 border border-border rounded-lg bg-background"
                         value={analyticsChildId || ""}
                         onChange={(e) => setAnalyticsChildId(e.target.value)}
                       >
-                        <option value="">Choose a child...</option>
+                        <option value="">Izberite otroka...</option>
                         {children.map((child) => (
                           <option key={child.id} value={child.id}>
                             {child.name}
@@ -263,7 +297,7 @@ export default function ParentDashboard() {
                       <AnalyticsView childId={analyticsChildId} />
                     ) : (
                       <div className="text-center py-12 bg-muted rounded-lg">
-                        <p className="text-muted-foreground">Select a child to view detailed analytics</p>
+                        <p className="text-muted-foreground">Izberite otroka za ogled podrobne analitike</p>
                       </div>
                     )}
                   </>
@@ -278,49 +312,49 @@ export default function ParentDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 pt-8 border-t-2 border-purple-100">
               <div className="bg-gradient-to-br from-purple-500 via-purple-600 to-indigo-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 <div className="text-4xl mb-3">🎮</div>
-                <h3 className="text-xl font-semibold mb-2">Kids Learning</h3>
-                <p className="text-white/90 mb-4 text-sm">Monitor your child's AI learning progress</p>
+                <h3 className="text-xl font-semibold mb-2">Učenje otrok</h3>
+                <p className="text-white/90 mb-4 text-sm">Spremljajte AI učni napredek vašega otroka</p>
                 <Link
                   href="/kids/home"
                   className="inline-block bg-white text-purple-600 px-4 py-2 rounded-full hover:bg-purple-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  View Progress →
+                  Ogled napredka →
                 </Link>
               </div>
 
               <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 <div className="text-4xl mb-3">🎯</div>
-                <h3 className="text-xl font-semibold mb-2">AI Activities</h3>
-                <p className="text-white/90 mb-4 text-sm">Interactive AI games and learning tools</p>
+                <h3 className="text-xl font-semibold mb-2">AI aktivnosti</h3>
+                <p className="text-white/90 mb-4 text-sm">Interaktivne AI igre in učna orodja</p>
                 <Link
                   href="/kids/activities"
                   className="inline-block bg-white text-pink-600 px-4 py-2 rounded-full hover:bg-pink-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  Explore Activities →
+                  Razišči aktivnosti →
                 </Link>
               </div>
 
               <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 <div className="text-4xl mb-3">⭐</div>
-                <h3 className="text-xl font-semibold mb-2">Subscription</h3>
-                <p className="text-white/90 mb-4 text-sm">Upgrade to premium for full access</p>
+                <h3 className="text-xl font-semibold mb-2">Naročnina</h3>
+                <p className="text-white/90 mb-4 text-sm">Nadgradite na premium za poln dostop</p>
                 <Link
                   href="/pricing"
                   className="inline-block bg-white text-orange-600 px-4 py-2 rounded-full hover:bg-orange-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  View Plans →
+                  Ogled paketov →
                 </Link>
               </div>
 
               <div className="bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-600 text-white p-6 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                 <div className="text-4xl mb-3">⚙️</div>
-                <h3 className="text-xl font-semibold mb-2">Settings</h3>
-                <p className="text-white/90 mb-4 text-sm">Manage account and preferences</p>
+                <h3 className="text-xl font-semibold mb-2">Nastavitve</h3>
+                <p className="text-white/90 mb-4 text-sm">Upravljajte račun in nastavitve</p>
                 <Link
                   href="/parent/subscription"
                   className="inline-block bg-white text-teal-600 px-4 py-2 rounded-full hover:bg-teal-50 transition-colors font-medium shadow-md text-sm"
                 >
-                  Manage Settings →
+                  Upravljaj nastavitve →
                 </Link>
               </div>
             </div>
@@ -364,11 +398,11 @@ function AnalyticsView({ childId }: { childId: string }) {
   })
 
   if (loading) {
-    return <div className="text-center py-12">Loading analytics...</div>
+    return <div className="text-center py-12">Nalaganje analitike...</div>
   }
 
   if (!data) {
-    return <div className="text-center py-12 text-muted-foreground">No data available</div>
+    return <div className="text-center py-12 text-muted-foreground">Ni razpoložljivih podatkov</div>
   }
 
   const totalTimeSpent = data.progress?.reduce((sum: number, p: any) => sum + (p.time_spent || 0), 0) || 0

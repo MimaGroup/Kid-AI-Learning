@@ -57,13 +57,13 @@ export function useSubscription() {
         .eq("user_id", user.id)
         .eq("reward_type", "extended_trial")
         .in("status", ["pending", "claimed"])
-        .single()
+        .maybeSingle()
 
       const { data: profileData } = await supabase
         .from("profiles")
         .select("created_at, referred_by")
         .eq("id", user.id)
-        .single()
+        .maybeSingle()
 
       let isInTrial = false
       let daysRemaining: number | null = null

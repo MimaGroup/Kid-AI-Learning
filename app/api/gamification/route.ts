@@ -28,11 +28,28 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  // Get user profile with gamification data
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle()
 
+  // If profile doesn't exist, return default gamification data
   if (!profile) {
-    return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+    return NextResponse.json({
+      points: 0,
+      level: 1,
+      experience: 0,
+      experienceProgress: 0,
+      experienceNeeded: 100,
+      experienceForNextLevel: 100,
+      streakDays: 0,
+      lastActivityDate: null,
+      earnedBadges: [],
+      allBadges: [],
+      badgeCount: 0,
+      totalBadges: 0,
+    })
   }
 
   // Get earned badges
@@ -84,21 +101,21 @@ export async function POST(request: Request) {
   const { action, points, activityType } = body
 
   if (action === "award_points") {
-    // Get current profile
-    const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+    const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
 
-    if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
-    }
+    const currentPoints = profile?.points || 0
+    const currentExperience = profile?.experience || 0
+    const currentLevel = profile?.level || 1
+    const currentStreak = profile?.streak_days || 0
+    const lastActivity = profile?.last_activity_date
 
-    const newPoints = (profile.points || 0) + points
-    const newExperience = (profile.experience || 0) + points
+    const newPoints = currentPoints + points
+    const newExperience = currentExperience + points
     const newLevel = calculateLevel(newExperience)
 
     // Update streak
     const today = new Date().toISOString().split("T")[0]
-    const lastActivity = profile.last_activity_date
-    let newStreak = profile.streak_days || 0
+    let newStreak = currentStreak
 
     if (lastActivity) {
       const lastDate = new Date(lastActivity)
@@ -114,17 +131,14 @@ export async function POST(request: Request) {
       newStreak = 1
     }
 
-    // Update profile
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({
-        points: newPoints,
-        experience: newExperience,
-        level: newLevel,
-        streak_days: newStreak,
-        last_activity_date: today,
-      })
-      .eq("id", user.id)
+    const { error: updateError } = await supabase.from("profiles").upsert({
+      id: user.id,
+      points: newPoints,
+      experience: newExperience,
+      level: newLevel,
+      streak_days: newStreak,
+      last_activity_date: today,
+    })
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 500 })
@@ -143,7 +157,7 @@ export async function POST(request: Request) {
       points: newPoints,
       experience: newExperience,
       level: newLevel,
-      leveledUp: newLevel > (profile.level || 1),
+      leveledUp: newLevel > currentLevel,
       streak: newStreak,
       newBadges,
     })

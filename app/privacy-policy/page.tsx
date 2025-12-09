@@ -29,11 +29,9 @@ export default function PrivacyPolicyPage() {
                 <p className="text-sm">
                   <strong>Company Information:</strong>
                   <br />
-                  [COMPANY LEGAL NAME]
+                  Mima Group Inc.
                   <br />
-                  [REGISTERED ADDRESS]
-                  <br />
-                  [REGISTRATION NUMBER]
+                  Pot za Krajem 38, 4000 Kranj, Slovenia
                 </p>
               </div>
             </section>
@@ -259,7 +257,7 @@ export default function PrivacyPolicyPage() {
                   </Link>
                 </li>
                 <li>
-                  <strong>Mailing Address:</strong> [COMPANY ADDRESS]
+                  <strong>Mailing Address:</strong> Pot za Krajem 38, 4000 Kranj, Slovenia
                 </li>
               </ul>
               <p className="mt-4 text-sm text-gray-600">
