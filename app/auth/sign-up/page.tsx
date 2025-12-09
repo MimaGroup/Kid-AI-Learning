@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { createMetadata } from "@/lib/metadata"
 import SignUpPageClient from "./sign-up-client"
+import { Suspense } from "react"
 
 export const metadata: Metadata = createMetadata({
   title: "Sign Up - Create Your Free Account",
@@ -11,5 +12,15 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function SignUpPage() {
-  return <SignUpPageClient />
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100">
+          <div className="text-center">Loading...</div>
+        </div>
+      }
+    >
+      <SignUpPageClient />
+    </Suspense>
+  )
 }
