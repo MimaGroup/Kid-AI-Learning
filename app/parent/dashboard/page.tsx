@@ -29,7 +29,7 @@ import { Clock, Gift } from "lucide-react"
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
   const { children, loading: childrenLoading, createChild, deleteChild } = useChildren()
-  const { hasPremium, isLoading: subscriptionLoading, trialDaysRemaining, hasExtendedTrial } = useSubscription()
+  const { hasPremium, loading: subscriptionLoading, trialDaysRemaining, hasExtendedTrial } = useSubscription()
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
   const [selectedProfileId, setSelectedProfileId] = useState<string>("all")
