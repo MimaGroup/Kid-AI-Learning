@@ -29,7 +29,7 @@ After running the script, test signup:
 
 Some users may have successfully created auth accounts but failed to create profiles. Run this query to find them:
 
-\`\`\`sql
+```sql
 -- Find users without profiles
 SELECT 
   au.id,
@@ -39,11 +39,11 @@ FROM auth.users au
 LEFT JOIN public.profiles p ON au.id = p.id
 WHERE p.id IS NULL
 ORDER BY au.created_at DESC;
-\`\`\`
+```
 
 If you find any, create their profiles manually:
 
-\`\`\`sql
+```sql
 -- Create missing profiles (replace with actual user IDs)
 INSERT INTO public.profiles (id, email, display_name, role, created_at, updated_at)
 SELECT 
@@ -56,7 +56,7 @@ SELECT
 FROM auth.users au
 LEFT JOIN public.profiles p ON au.id = p.id
 WHERE p.id IS NULL;
-\`\`\`
+```
 
 ### Step 4: Notify Affected Users
 

@@ -45,10 +45,10 @@
 ## Testing Performance
 
 ### Using Lighthouse
-\`\`\`bash
+```bash
 # Run Lighthouse audit
 npx lighthouse https://kids-learning-ai.com --view
-\`\`\`
+```
 
 ### Using WebPageTest
 Visit: https://www.webpagetest.org/

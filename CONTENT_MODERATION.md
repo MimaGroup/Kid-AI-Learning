@@ -32,9 +32,9 @@ The AI Kids Learning platform implements a comprehensive content moderation syst
 
 ### Content Moderation Utility (`lib/content-moderation.ts`)
 
-\`\`\`typescript
+```typescript
 import { moderateContent, validateAIResponse, sanitizeUserInput, createSafePrompt } from '@/lib/content-moderation'
-\`\`\`
+```
 
 ### Key Functions
 

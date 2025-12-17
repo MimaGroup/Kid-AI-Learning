@@ -446,13 +446,13 @@ At $10k MRR, you can raise $500k-1M at a $3-5M valuation with strong metrics.
 
 ## Success Formula
 
-\`\`\`
+```
 Paying Customers = Revenue
 Revenue = Marketing Budget
 Marketing Budget = More Customers
 More Customers = More Revenue
 Repeat = Growth
-\`\`\`
+```
 
 **Start small, compound fast, stay profitable.**
 

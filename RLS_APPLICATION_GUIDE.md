@@ -47,28 +47,28 @@ If you prefer to run from the command line:
 ### Steps:
 
 1. **Install tsx (if not already installed)**
-   \`\`\`bash
+   ```bash
    npm install -g tsx
-   \`\`\`
+   ```
 
 2. **Run the Application Script**
-   \`\`\`bash
+   ```bash
    npm run apply-rls
-   \`\`\`
+   ```
 
 3. **Verify the Application**
-   \`\`\`bash
+   ```bash
    npm run verify-rls
-   \`\`\`
+   ```
 
 ## Verification
 
 After applying RLS policies, verify they're working correctly:
 
 ### Option A: Run Verification Script
-\`\`\`bash
+```bash
 npm run verify-rls
-\`\`\`
+```
 
 Expected output:
 - ✅ All 21 tables should have RLS enabled
@@ -79,12 +79,12 @@ Expected output:
 
 1. Go to SQL Editor in Supabase Dashboard
 2. Run this query:
-   \`\`\`sql
+   ```sql
    SELECT tablename, rowsecurity 
    FROM pg_tables 
    WHERE schemaname = 'public' 
    ORDER BY tablename;
-   \`\`\`
+   ```
 3. Verify all tables show `rowsecurity = true`
 
 ## What RLS Policies Do
@@ -151,7 +151,7 @@ The helper function wasn't created properly.
 
 **Solution:**
 Run this SQL in Supabase Dashboard:
-\`\`\`sql
+```sql
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
@@ -161,7 +161,7 @@ BEGIN
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-\`\`\`
+```
 
 ### Some tables still show RLS disabled
 

@@ -70,10 +70,10 @@ When rate limited, responses include:
 ## Environment Variables
 
 Required Upstash Redis environment variables:
-\`\`\`
+```
 UPSTASH-KV_KV_REST_API_URL=https://your-redis-url.upstash.io
 UPSTASH-KV_KV_REST_API_TOKEN=your-token-here
-\`\`\`
+```
 
 These are automatically configured when you connect the Upstash integration in Vercel.
 
@@ -102,7 +102,7 @@ These are automatically configured when you connect the Upstash integration in V
 ## Testing Rate Limits
 
 ### Test Authentication Rate Limit
-\`\`\`bash
+```bash
 # Make 6 login attempts within 5 minutes
 for i in {1..6}; do
   curl -X POST http://localhost:3000/api/auth/login \
@@ -110,10 +110,10 @@ for i in {1..6}; do
     -d '{"email":"test@example.com","password":"wrong"}'
 done
 # 6th request should return 429
-\`\`\`
+```
 
 ### Test AI Generation Rate Limit
-\`\`\`bash
+```bash
 # Make 4 quiz generation requests within 1 minute
 for i in {1..4}; do
   curl -X POST http://localhost:3000/api/generate/quiz \
@@ -121,10 +121,10 @@ for i in {1..4}; do
     -d '{"topic":"AI","difficulty":"beginner","count":5}'
 done
 # 4th request should return fallback questions
-\`\`\`
+```
 
 ### Test AI Chat Rate Limit
-\`\`\`bash
+```bash
 # Make 11 chat requests within 1 minute
 for i in {1..11}; do
   curl -X POST http://localhost:3000/api/ai-friend/chat \
@@ -132,7 +132,7 @@ for i in {1..11}; do
     -d '{"friendName":"Buddy","personality":"Friendly","message":"Hi!"}'
 done
 # 11th request should return fallback response
-\`\`\`
+```
 
 ## Monitoring
 
@@ -146,9 +146,9 @@ You can monitor rate limit usage in Upstash Redis dashboard:
 ### Key Patterns
 
 Rate limit keys follow this pattern:
-\`\`\`
+```
 ratelimit:{identifier}:{endpoint}
-\`\`\`
+```
 
 Examples:
 - `ratelimit:192.168.1.1:api` - IP-based API rate limit
@@ -182,11 +182,11 @@ Examples:
 ### Rate Limits Not Working
 
 1. **Check Upstash Connection**
-   \`\`\`bash
+   ```bash
    # Verify environment variables are set
    echo $UPSTASH-KV_KV_REST_API_URL
    echo $UPSTASH-KV_KV_REST_API_TOKEN
-   \`\`\`
+   ```
 
 2. **Check Redis Connectivity**
    - Verify Upstash dashboard shows active connections

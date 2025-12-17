@@ -14,13 +14,13 @@ Your app already has many optimizations in place:
 ### 1. Image Optimization
 
 #### Audit Current Images
-\`\`\`bash
+```bash
 # Check image sizes in public folder
 # Ensure all images are:
 # - WebP or AVIF format
 # - Properly sized (not oversized)
 # - Compressed
-\`\`\`
+```
 
 #### Recommendations:
 - Use `next/image` for all images (already doing this)
@@ -38,13 +38,13 @@ Already implemented:
 
 Implement dynamic imports for heavy components:
 
-\`\`\`tsx
+```tsx
 // Example: Lazy load heavy components
 const HeavyComponent = dynamic(() => import('@/components/heavy-component'), {
   loading: () => <Skeleton />,
   ssr: false // if component doesn't need SSR
 })
-\`\`\`
+```
 
 Components to consider lazy loading:
 - Chart components (Recharts)
@@ -56,14 +56,14 @@ Components to consider lazy loading:
 
 #### Add Indexes to Supabase Tables
 
-\`\`\`sql
+```sql
 -- Add indexes for frequently queried columns
 CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
 CREATE INDEX idx_subscriptions_stripe_subscription_id ON subscriptions(stripe_subscription_id);
 CREATE INDEX idx_children_parent_id ON children(parent_id);
 CREATE INDEX idx_progress_child_id ON progress(child_id);
 CREATE INDEX idx_progress_activity_type ON progress((metadata->>'activity_type'));
-\`\`\`
+```
 
 #### Optimize Queries
 - Use `.select()` to fetch only needed columns
@@ -74,7 +74,7 @@ CREATE INDEX idx_progress_activity_type ON progress((metadata->>'activity_type')
 
 #### Add Response Caching
 
-\`\`\`tsx
+```tsx
 // Example: Cache API responses
 export async function GET(request: Request) {
   return NextResponse.json(data, {
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
     }
   })
 }
-\`\`\`
+```
 
 #### Implement Rate Limiting
 Consider using Vercel Edge Config or Upstash Redis for rate limiting.
@@ -91,10 +91,10 @@ Consider using Vercel Edge Config or Upstash Redis for rate limiting.
 ### 6. Bundle Size Optimization
 
 #### Analyze Bundle Size
-\`\`\`bash
+```bash
 # Add to package.json scripts
 "analyze": "ANALYZE=true next build"
-\`\`\`
+```
 
 #### Remove Unused Dependencies
 - Audit `package.json` for unused packages

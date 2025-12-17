@@ -80,9 +80,9 @@ The AI Kids Learning platform now has a comprehensive customer support system in
 
 Run this SQL script in Supabase to enable the support system:
 
-\`\`\`sql
+```sql
 -- See scripts/create-support-tickets-table.sql
-\`\`\`
+```
 
 ## Support Email Addresses
 

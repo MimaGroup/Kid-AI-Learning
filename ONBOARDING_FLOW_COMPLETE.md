@@ -46,14 +46,14 @@ A comprehensive onboarding system that guides new users through the platform wit
 
 ### GET /api/onboarding/progress
 Retrieves user's onboarding progress
-\`\`\`typescript
+```typescript
 Query params: userType (parent|child)
 Response: { progress: OnboardingProgress | null }
-\`\`\`
+```
 
 ### POST /api/onboarding/progress
 Updates onboarding progress
-\`\`\`typescript
+```typescript
 Body: {
   userType: string
   currentStep: number
@@ -61,7 +61,7 @@ Body: {
   completed: boolean
   metadata: object
 }
-\`\`\`
+```
 
 ## Success Metrics Tracked
 

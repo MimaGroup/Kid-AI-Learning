@@ -317,18 +317,18 @@ The AI for Kids Learning Platform is a comprehensive educational web application
 ## Environment Variables
 
 ### Required:
-\`\`\`
+```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 GROQ_API_KEY=your_groq_api_key
-\`\`\`
+```
 
 ### Optional:
-\`\`\`
+```
 NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
-\`\`\`
+```
 
 ---
 

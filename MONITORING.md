@@ -40,7 +40,7 @@ The platform includes comprehensive monitoring for:
 
 ### Logging Errors Manually
 
-\`\`\`typescript
+```typescript
 import { logError } from '@/lib/monitoring'
 
 try {
@@ -55,11 +55,11 @@ try {
     endpoint: '/api/my-endpoint',
   })
 }
-\`\`\`
+```
 
 ### Tracking Performance
 
-\`\`\`typescript
+```typescript
 import { trackOperation } from '@/lib/api-monitor'
 
 const result = await trackOperation(
@@ -69,11 +69,11 @@ const result = await trackOperation(
   },
   { severity: 'medium' }
 )
-\`\`\`
+```
 
 ### Wrapping API Routes
 
-\`\`\`typescript
+```typescript
 import { withMonitoring } from '@/lib/api-monitor'
 
 export const POST = withMonitoring(
@@ -83,11 +83,11 @@ export const POST = withMonitoring(
   },
   { endpoint: '/api/my-endpoint' }
 )
-\`\`\`
+```
 
 ### Creating System Alerts
 
-\`\`\`typescript
+```typescript
 import { createSystemAlert } from '@/lib/monitoring'
 
 await createSystemAlert({
@@ -97,7 +97,7 @@ await createSystemAlert({
   severity: 'warning',
   affected_service: 'api',
 })
-\`\`\`
+```
 
 ## Error Severity Levels
 

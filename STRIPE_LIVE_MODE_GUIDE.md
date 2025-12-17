@@ -82,14 +82,14 @@
 4. Update the following variables with LIVE values:
 
 ### Update These Variables:
-\`\`\`
+```
 STRIPE_SECRET_KEY=sk_live_YOUR_LIVE_SECRET_KEY
 STRIPE_PUBLISHABLE_KEY=pk_live_YOUR_LIVE_PUBLISHABLE_KEY
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_YOUR_LIVE_PUBLISHABLE_KEY
 NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID=price_live_YOUR_MONTHLY_PRICE_ID
 NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID=price_live_YOUR_YEARLY_PRICE_ID
 STRIPE_WEBHOOK_SECRET=whsec_YOUR_LIVE_WEBHOOK_SECRET
-\`\`\`
+```
 
 5. Make sure to select **Production** environment for these variables
 6. Click **Save**
