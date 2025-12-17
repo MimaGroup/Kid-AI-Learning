@@ -125,8 +125,7 @@ export function UsersManagement() {
     console.log("[v0] Permissions button clicked for user:", userId, userEmail)
     const targetUrl = `/admin/users/${userId}/permissions`
     console.log("[v0] Navigating to:", targetUrl)
-
-    window.location.href = targetUrl
+    router.push(targetUrl)
   }
 
   if (loading) {
@@ -202,7 +201,7 @@ export function UsersManagement() {
                       onValueChange={(value) => setActivityFilter(value as ActivityFilter)}
                     >
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue placeholder="Sort by..." />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Users</SelectItem>
