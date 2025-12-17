@@ -27,17 +27,13 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
     redirect("/parent/dashboard")
   }
 
-  const { data: targetUser } = await supabase
-    .from("profiles")
-    .select("email, display_name, username")
-    .eq("id", userId)
-    .single()
+  const { data: targetUser } = await supabase.from("profiles").select("email, display_name").eq("id", userId).single()
 
   if (!targetUser) {
     redirect("/admin/users")
   }
 
-  const displayName = targetUser.username || targetUser.display_name || targetUser.email || "User"
+  const displayName = targetUser.display_name || targetUser.email || "User"
 
   return (
     <div className="min-h-screen bg-background p-6">

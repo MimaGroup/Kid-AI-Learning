@@ -30,12 +30,13 @@ export async function GET() {
     // Get subscription status for each user
     const usersWithSubscriptions = await Promise.all(
       (users || []).map(async (user) => {
+        // Remove .single() and use .maybeSingle() to handle 0 results gracefully
         const { data: subscription } = await supabase
           .from("subscriptions")
           .select("status")
           .eq("user_id", user.id)
           .eq("status", "active")
-          .single()
+          .maybeSingle()
 
         return {
           ...user,
