@@ -3,14 +3,20 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MobileNav } from "@/components/mobile-nav"
-import { lazy } from "react"
+import { lazy, Suspense } from "react"
 import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket } from "lucide-react"
+import { SocialProofCounter } from "@/components/social-proof-counter"
+import { ConversionTracker } from "@/components/conversion-tracker"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+      <Suspense fallback={null}>
+        <ConversionTracker />
+      </Suspense>
+
       <nav className="border-b border-border/40 bg-white/95 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -87,6 +93,10 @@ export default function HomePage() {
                 KidsLearnAI je zabavna in pametna AI učna platforma, ki otrokom od 5–12 let pomaga hitreje in lažje
                 učiti — preko iger, izzivov in osebnega AI tutorja.
               </p>
+
+              <div className="pt-2">
+                <SocialProofCounter />
+              </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link href="/getting-started">
@@ -216,7 +226,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">Varno okolje</h3>
               <p className="text-[#64748B] leading-relaxed">
-                Skladno s COPPA z robustnimi starševskimi kontrolami, filtriranjem vsebine in spremljanjem v realnem
+                Skladno s COPPA z robustnimi starševskimi kontrolami, filtririranjem vsebine in spremljanjem v realnem
                 času.
               </p>
             </Card>
@@ -259,7 +269,7 @@ export default function HomePage() {
             <Link href="/pricing">
               <Button
                 size="lg"
-                className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED]"
+                className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED] font-semibold"
               >
                 Poglej pakete
               </Button>

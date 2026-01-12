@@ -1,6 +1,7 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createServerClient, createServiceRoleClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { UserPermissionsManager } from "@/components/admin/user-permissions-manager"
+import { SubscriptionManager } from "@/components/admin/subscription-manager"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
@@ -21,19 +22,31 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
   }
 
   // Check admin access
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle()
 
   if (profile?.role !== "admin") {
     redirect("/parent/dashboard")
   }
 
-  const { data: targetUser } = await supabase.from("profiles").select("email, display_name").eq("id", userId).single()
+  const { data: targetUser } = await supabase
+    .from("profiles")
+    .select("email, display_name")
+    .eq("id", userId)
+    .maybeSingle()
+
+  let displayName = targetUser?.display_name || targetUser?.email || "User"
+  let userEmail = targetUser?.email || ""
 
   if (!targetUser) {
-    redirect("/admin/users")
+    // Use service role client to access auth admin API
+    const serviceClient = await createServiceRoleClient()
+    const { data: authUser } = await serviceClient.auth.admin.getUserById(userId)
+    if (!authUser?.user) {
+      redirect("/admin/users")
+    }
+    displayName = authUser.user.email || "User"
+    userEmail = authUser.user.email || ""
   }
-
-  const displayName = targetUser.display_name || targetUser.email || "User"
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -46,6 +59,8 @@ export default async function UserPermissionsPage({ params }: { params: Promise<
             </Button>
           </Link>
         </div>
+
+        <SubscriptionManager userId={userId} userEmail={userEmail} />
 
         <UserPermissionsManager userId={userId} userName={displayName} />
       </div>

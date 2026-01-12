@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Search, Mail, Calendar, Crown, Settings, ArrowUpDown, Filter, X } from "lucide-react"
+import { Search, Mail, Calendar, Crown, Settings, ArrowUpDown, Filter, X, CircleDollarSign } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -163,50 +163,81 @@ export function UsersManagement() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Role</label>
+              <PopoverContent className="w-96 p-6" align="end">
+                <div className="space-y-5">
+                  <div className="text-lg font-bold text-foreground pb-3 border-b-2 border-slate-200">Filter Users</div>
+
+                  <div className="space-y-3 bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <label className="text-base font-bold flex items-center gap-2">
+                      <Crown className="h-5 w-5 text-[#7c3aed]" />
+                      Role
+                    </label>
                     <Select value={roleFilter} onValueChange={(value) => setRoleFilter(value as RoleFilter)}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white h-12 text-base font-semibold shadow-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Roles</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="parent">Parent</SelectItem>
-                        <SelectItem value="child">Child</SelectItem>
+                        <SelectItem value="all" className="font-bold text-base py-3">
+                          All Roles
+                        </SelectItem>
+                        <SelectItem value="admin" className="font-bold text-base py-3">
+                          Admin
+                        </SelectItem>
+                        <SelectItem value="parent" className="font-bold text-base py-3">
+                          Parent
+                        </SelectItem>
+                        <SelectItem value="child" className="font-bold text-base py-3">
+                          Child
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Subscription</label>
+                  <div className="space-y-3 bg-teal-50 p-4 rounded-lg border border-teal-200">
+                    <label className="text-base font-bold flex items-center gap-2">
+                      <CircleDollarSign className="h-5 w-5 text-[#6cd4c3]" />
+                      Subscription
+                    </label>
                     <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as StatusFilter)}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white h-12 text-base font-semibold shadow-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Status</SelectItem>
-                        <SelectItem value="premium">Premium Only</SelectItem>
-                        <SelectItem value="free">Free Only</SelectItem>
+                        <SelectItem value="all" className="font-bold text-base py-3">
+                          All Status
+                        </SelectItem>
+                        <SelectItem value="premium" className="font-bold text-base py-3">
+                          Premium Only
+                        </SelectItem>
+                        <SelectItem value="free" className="font-bold text-base py-3">
+                          Free Only
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Activity</label>
+                  <div className="space-y-3 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <label className="text-base font-bold flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                      Activity
+                    </label>
                     <Select
                       value={activityFilter}
                       onValueChange={(value) => setActivityFilter(value as ActivityFilter)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white h-12 text-base font-semibold shadow-sm">
                         <SelectValue placeholder="Sort by..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Users</SelectItem>
-                        <SelectItem value="active">Active (Last 7 days)</SelectItem>
-                        <SelectItem value="inactive">Inactive (7+ days)</SelectItem>
+                        <SelectItem value="all" className="font-bold text-base py-3">
+                          All Users
+                        </SelectItem>
+                        <SelectItem value="active" className="font-bold text-base py-3">
+                          Active (Last 7 days)
+                        </SelectItem>
+                        <SelectItem value="inactive" className="font-bold text-base py-3">
+                          Inactive (7+ days)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -215,14 +246,34 @@ export function UsersManagement() {
             </Popover>
 
             <Select value={sortField} onValueChange={(value) => setSortField(value as SortField)}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[200px] h-11 text-base font-semibold">
                 <SelectValue placeholder="Sort by..." />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created_at">Joined Date</SelectItem>
-                <SelectItem value="last_activity_date">Last Activity</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="display_name">Name</SelectItem>
+              <SelectContent className="bg-white">
+                <SelectItem value="created_at" className="font-bold text-base py-3 hover:bg-purple-50">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="h-5 w-5 text-[#7c3aed]" />
+                    Joined Date
+                  </div>
+                </SelectItem>
+                <SelectItem value="last_activity_date" className="font-bold text-base py-3 hover:bg-teal-50">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="h-5 w-5 text-[#6cd4c3]" />
+                    Last Activity
+                  </div>
+                </SelectItem>
+                <SelectItem value="email" className="font-bold text-base py-3 hover:bg-orange-50">
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-orange-500" />
+                    Email
+                  </div>
+                </SelectItem>
+                <SelectItem value="display_name" className="font-bold text-base py-3 hover:bg-slate-50">
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-slate-600" />
+                    Name
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
 

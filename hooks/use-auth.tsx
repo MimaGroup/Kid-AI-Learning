@@ -76,19 +76,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error("[v0] Login error from Supabase:", error)
-        setError(error.message)
-        throw error
+        let userFriendlyError = error.message
+
+        if (error.message.includes("Database error")) {
+          userFriendlyError =
+            "Napaka pri povezavi s podatkovno bazo. Prosimo, poskusite znova čez nekaj trenutkov ali preverite svoje poverilnice."
+        } else if (error.message.includes("Invalid login credentials")) {
+          userFriendlyError = "Napačno geslo ali e-pošta. Prosimo, preverite svoje podatke."
+        } else if (error.message.includes("Email not confirmed")) {
+          userFriendlyError = "Prosimo, potrdite svoj e-poštni naslov pred prijavo."
+        }
+
+        console.error("[v0] User-friendly error:", userFriendlyError)
+        setError(userFriendlyError)
+        throw new Error(userFriendlyError)
       }
-      
+
       if (data.user) {
         console.log("[v0] Login successful, user:", data.user.id)
         setUser(data.user)
       }
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to connect to authentication service"
+      const errorMessage = error?.message || "Napaka pri prijavi. Prosimo, poskusite znova."
       console.error("[v0] Login exception:", errorMessage)
       setError(errorMessage)
-      throw new Error(errorMessage)
+      throw error
     } finally {
       setLoading(false)
     }
@@ -153,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       const errorMessage = error?.message || "Failed to sign out"
       setError(errorMessage)
-      throw new Error(errorMessage)
+      throw error
     }
   }
 

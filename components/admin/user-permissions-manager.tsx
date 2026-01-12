@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Shield, UserCog, AlertCircle, Check, X } from "lucide-react"
 import { createBrowserClient } from "@supabase/ssr"
+import { cn } from "@/lib/utils" // Fixed import path from @/utils/cn to @/lib/utils
 
 interface Permission {
   id: string
@@ -61,17 +62,20 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
         .from("profiles")
         .select("role")
         .eq("id", userId)
-        .single()
+        .maybeSingle()
 
       if (profileError) {
         console.error("[v0] Error fetching profile:", profileError)
         throw new Error(profileError.message)
       }
 
+      const userRole = profile?.role || "parent"
+      console.log("[v0] User role:", userRole, "profile exists:", !!profile)
+
       const { data: rolePerms, error: rolePermsError } = await supabase
         .from("role_permissions")
         .select("permission_id, permissions(*)")
-        .eq("role", profile.role)
+        .eq("role", userRole)
 
       if (rolePermsError) {
         console.error("[v0] Error fetching role permissions:", rolePermsError)
@@ -90,7 +94,7 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
         allPerms: allPerms?.length,
         rolePerms: rolePerms?.length,
         userPerms: userPerms?.length,
-        role: profile.role,
+        role: userRole,
       })
 
       const rolePermIds = new Set(rolePerms?.map((rp) => rp.permission_id) || [])
@@ -108,7 +112,7 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
 
       setAllPermissions(allPerms || [])
       setUserPermissions({
-        role: profile.role,
+        role: userRole,
         permissions: finalPermissions,
       })
     } catch (err) {
@@ -239,27 +243,51 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
                   return (
                     <div
                       key={perm.id}
-                      className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                      className={cn(
+                        "flex items-center justify-between p-4 rounded-lg border-2 transition-all",
+                        hasIt
+                          ? "bg-gradient-to-br from-[#6cd4c3]/10 to-[#7c3aed]/5 border-[#6cd4c3]"
+                          : "bg-muted/30 border-muted-foreground/20",
+                        isSaving && "opacity-50 cursor-wait",
+                      )}
                     >
                       <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{perm.name}</span>
-                          {hasIt ? (
-                            <Check className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <X className="h-4 w-4 text-muted-foreground" />
-                          )}
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={cn(
+                              "flex h-7 w-7 items-center justify-center rounded-full",
+                              hasIt
+                                ? "bg-gradient-to-br from-[#6cd4c3] to-[#7c3aed] text-white"
+                                : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {hasIt ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+                          </div>
+                          <div>
+                            <span className="font-medium text-base">{perm.name}</span>
+                            {hasIt && (
+                              <Badge className="ml-2 bg-gradient-to-r from-[#6cd4c3] to-[#7c3aed] text-white border-0">
+                                Enabled
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                        {perm.description && <p className="text-sm text-muted-foreground mt-1">{perm.description}</p>}
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Action: <code className="bg-muted px-1 py-0.5 rounded">{perm.action}</code>
+                        {perm.description && (
+                          <p className="text-sm text-muted-foreground mt-2 ml-10">{perm.description}</p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1 ml-10">
+                          Action: <code className="bg-muted px-1.5 py-0.5 rounded text-xs">{perm.action}</code>
                         </p>
                       </div>
-                      <Switch
-                        checked={hasIt}
-                        onCheckedChange={() => togglePermission(perm.name, hasIt)}
-                        disabled={isSaving}
-                      />
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-muted-foreground">{hasIt ? "ON" : "OFF"}</span>
+                        <Switch
+                          checked={hasIt}
+                          onCheckedChange={() => togglePermission(perm.name, hasIt)}
+                          disabled={isSaving}
+                          className="data-[state=checked]:bg-[#7c3aed]"
+                        />
+                      </div>
                     </div>
                   )
                 })}

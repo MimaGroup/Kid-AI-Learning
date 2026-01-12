@@ -24,6 +24,7 @@ import { DownloadReportButton } from "@/components/download-report-button"
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ReferralWidget } from "@/components/referral-widget"
+import { ReferralShareCard } from "@/components/referral-share-card"
 import { Clock, Gift } from "lucide-react"
 
 export default function ParentDashboard() {
@@ -307,6 +308,10 @@ export default function ParentDashboard() {
 
             <div className="mb-8">
               <ReferralWidget />
+            </div>
+
+            <div className="mb-8">
+              <ReferralShareCard />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 pt-8 border-t-2 border-purple-100">
