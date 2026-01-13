@@ -54,7 +54,7 @@
     "date-fns": "^2.30.0",
     "fs": "0.0.1-security",
     "lucide-react": "^0.454.0",
-    "next": "15.0.5",
+    "next": "15.0.7",
     "next-themes": "latest",
     "path": "0.12.7",
     "react": "^18",
