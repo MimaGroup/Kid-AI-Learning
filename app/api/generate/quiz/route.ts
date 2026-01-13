@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { generateText } from "ai"
-import { groq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
@@ -61,7 +60,7 @@ async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const { text } = await generateText({
-        model: groq("llama-3.1-8b-instant"),
+        model: "groq/llama-3.1-8b-instant",
         prompt,
       })
       return text

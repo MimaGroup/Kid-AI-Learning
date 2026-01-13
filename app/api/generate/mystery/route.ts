@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { generateText } from "ai"
-import { groq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
@@ -111,7 +110,7 @@ Return ONLY the JSON object, no additional text.`
         const safePrompt = createSafePrompt(basePrompt)
 
         const { text } = await generateText({
-          model: groq("llama-3.1-8b-instant"),
+          model: "groq/llama-3.1-8b-instant",
           prompt: safePrompt,
           maxRetries: 0,
         })
