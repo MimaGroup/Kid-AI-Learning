@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { checkAdminAuth } from "@/lib/admin-auth"
 import { createServiceRoleClient } from "@/lib/supabase/server"
 
-export async function GET(request: Request, { params }: { params: { userId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { isAdmin, error } = await checkAdminAuth()
 
   if (!isAdmin) {
@@ -11,7 +11,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
 
   try {
     const supabase = await createServiceRoleClient()
-    const { userId } = params
+    const { userId } = await params
 
     const { data: subscription, error: subError } = await supabase
       .from("subscriptions")
@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { userId: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { isAdmin, error } = await checkAdminAuth()
 
   if (!isAdmin) {
@@ -40,7 +40,7 @@ export async function PATCH(request: Request, { params }: { params: { userId: st
 
   try {
     const supabase = await createServiceRoleClient()
-    const { userId } = params
+    const { userId } = await params
     const { status } = await request.json()
 
     if (!status) {
