@@ -7,6 +7,7 @@ import { lazy, Suspense } from "react"
 import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket } from "lucide-react"
 import { SocialProofCounter } from "@/components/social-proof-counter"
 import { ConversionTracker } from "@/components/conversion-tracker"
+import { ReferralHeroSection } from "@/components/referral-hero-section"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
 
@@ -243,6 +244,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <ReferralHeroSection />
 
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] to-[#F0FDFA]">
         <div className="max-w-4xl mx-auto text-center relative z-10">

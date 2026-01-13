@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
   try {
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
 
     const { count, error } = await supabase.from("profiles").select("*", { count: "exact", head: true })
 
