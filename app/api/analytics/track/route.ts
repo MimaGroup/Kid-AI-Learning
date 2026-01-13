@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     console.log("[v0] Tracking event:", { event, source, metadata })
 
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
 
     const {
       data: { user },
