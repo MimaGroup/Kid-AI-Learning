@@ -53,7 +53,7 @@ export default function HomePage() {
                   Log in
                 </Button>
               </Link>
-              <Link href="/getting-started">
+              <Link href="/auth/sign-up">
                 <Button
                   size="lg"
                   className="rounded-full font-medium soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
@@ -100,7 +100,7 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/getting-started">
+                <Link href="/auth/sign-up">
                   <Button
                     size="lg"
                     className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
@@ -260,7 +260,7 @@ export default function HomePage() {
             brezplačno preizkusno obdobje še danes — brez kreditne kartice.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/getting-started">
+            <Link href="/auth/sign-up">
               <Button
                 size="lg"
                 className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
