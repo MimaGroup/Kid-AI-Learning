@@ -1,10 +1,7 @@
-import { useState } from "react";
-use client;
-
 interface Stats {
-  userCount: number;
-  activityCount: number;
-  satisfactionRate: number;
+  userCount: number
+  activityCount: number
+  satisfactionRate: number
 }
 
 export function StatsSection() {
@@ -12,18 +9,16 @@ export function StatsSection() {
   const stats: Stats = {
     userCount: 159,
     activityCount: 50,
-    satisfactionRate: 98
-  };
-
-  const [loading, setLoading] = useState(false);
+    satisfactionRate: 98,
+  }
 
   // Format number with appropriate suffix
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
-      return `${Math.floor(num / 1000)}K+`;
+      return `${Math.floor(num / 1000)}K+`
     }
-    return `${num}+`;
-  };
+    return `${num}+`
+  }
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#7C3AED]">
@@ -50,5 +45,5 @@ export function StatsSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
