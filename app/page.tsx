@@ -8,6 +8,9 @@ import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, 
 import { SocialProofCounter } from "@/components/social-proof-counter"
 import { ConversionTracker } from "@/components/conversion-tracker"
 import { ReferralHeroSection } from "@/components/referral-hero-section"
+import { TestimonialsSection } from "@/components/testimonials-section"
+import { DemoVideoSection } from "@/components/demo-video-section"
+import { StatsSection } from "@/components/stats-section"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
 
@@ -173,28 +176,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#7C3AED]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-            <div className="space-y-2">
-              <div className="text-5xl md:text-6xl font-heading font-bold">10K+</div>
-              <div className="text-lg font-medium opacity-90">Aktivnih učencev</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl md:text-6xl font-heading font-bold">50+</div>
-              <div className="text-lg font-medium opacity-90">Učnih aktivnosti</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl md:text-6xl font-heading font-bold">98%</div>
-              <div className="text-lg font-medium opacity-90">Zadovoljnih staršev</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl md:text-6xl font-heading font-bold">24/7</div>
-              <div className="text-lg font-medium opacity-90">Dostop do učenja</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StatsSection />
 
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -244,6 +226,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <TestimonialsSection />
+
+      <DemoVideoSection />
 
       <ReferralHeroSection />
 
