@@ -602,7 +602,16 @@ export const emailTemplates = {
               
               <p>Če imate kakršnakoli vprašanja ali potrebujete pomoč, nam preprosto odgovorite na to sporočilo.</p>
               
-              <p>Lep pozdrav,<br>Ekipa KidsLearnAI</p>
+              <table cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:12px;">
+                    <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-avatar.jpg" alt="Byte" width="48" height="48" style="border-radius:50%;display:block;" />
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <p style="margin:0;">Lep pozdrav,<br><strong>Byte</strong> in Ekipa KidsLearnAI</p>
+                  </td>
+                </tr>
+              </table>
             </div>
             <div class="footer">
               <p>KidsLearnAI | AI učna platforma za otroke 5-12 let</p>

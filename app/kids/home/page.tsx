@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { TutorialTour } from "@/components/tutorial-tour"
 import { AppNavigation } from "@/components/app-navigation"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 export default function KidsHome() {
   const kidsTourSteps = [
@@ -127,14 +129,29 @@ export default function KidsHome() {
       <Breadcrumbs />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        <div className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white p-8 rounded-3xl mb-8 shadow-2xl overflow-hidden">
-          <div className="absolute top-0 right-0 text-9xl opacity-10">🎮</div>
-          <div className="absolute bottom-0 left-0 text-7xl opacity-10">🚀</div>
-          <div className="relative z-10 flex items-center space-x-4">
-            <div className="text-5xl">🎮</div>
+        <div className="relative bg-gradient-to-r from-purple-500 via-purple-600 to-teal-500 text-white p-8 rounded-3xl mb-8 shadow-2xl overflow-hidden">
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-90 hidden md:block">
+            <Image
+              src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+              alt={BYTE_CHARACTER.fullName}
+              width={120}
+              height={120}
+              className="rounded-full ring-4 ring-white/20"
+            />
+          </div>
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="md:hidden flex-shrink-0">
+              <Image
+                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={64}
+                height={64}
+                className="rounded-full ring-2 ring-white/30"
+              />
+            </div>
             <div>
               <h2 className="text-3xl font-bold">AI Learning Games</h2>
-              <p className="text-pink-100 text-lg">Interactive AI games and activities for kids!</p>
+              <p className="text-purple-100 text-lg">Byte te vabi na ucno pustolovscino!</p>
             </div>
           </div>
         </div>
@@ -179,7 +196,7 @@ export default function KidsHome() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
             <Link href="/kids/badges">
-              <Button variant="outline" size="sm" className="rounded-full">
+              <Button variant="outline" size="sm" className="rounded-full bg-transparent">
                 View All Badges
               </Button>
             </Link>

@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
 import { ArrowLeft, Send } from "lucide-react"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 interface AIFriend {
   id: string
@@ -71,10 +73,18 @@ export default function AIFriendChat() {
       if (stored) {
         setMessages(JSON.parse(stored))
       } else {
+        // Check if this is Byte for a personalized welcome
+        const stored = localStorage.getItem("ai_friends")
+        const friends: AIFriend[] = stored ? JSON.parse(stored) : []
+        const currentFriend = friends.find((f) => f.id === friendId)
+        const isByte = currentFriend?.name === BYTE_CHARACTER.name
+        
         const welcomeMessage: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Hi! I'm so excited to chat with you! Ask me anything or tell me about your day!",
+          content: isByte 
+            ? "Zdravo! Jaz sem Byte, tvoj robotski prijatelj! Skupaj bova odkrivala svet umetne inteligence. Kaj te danes zanima?"
+            : "Hi! I'm so excited to chat with you! Ask me anything or tell me about your day!",
           timestamp: new Date().toISOString(),
         }
         setMessages([welcomeMessage])
@@ -183,12 +193,22 @@ export default function AIFriendChat() {
             <Button variant="ghost" size="icon" onClick={() => router.push("/kids/ai-friend")}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-              style={{ backgroundColor: friend.color }}
-            >
-              🤖
-            </div>
+            {friend.name === BYTE_CHARACTER.name ? (
+              <Image
+                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={48}
+                height={48}
+                className="w-12 h-12 rounded-full ring-2 ring-purple-200"
+              />
+            ) : (
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white"
+                style={{ backgroundColor: friend.color }}
+              >
+                {friend.name.charAt(0).toUpperCase()}
+              </div>
+            )}
             <div>
               <h1 className="text-xl font-bold text-gray-900">{friend.name}</h1>
               <p className="text-sm text-gray-600">{friend.personality}</p>

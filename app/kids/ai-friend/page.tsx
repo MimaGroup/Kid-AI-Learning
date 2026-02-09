@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
 import { Button } from "@/components/ui/button"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, Sparkles } from "lucide-react"
 import { trackAIFriend } from "@/lib/analytics"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { ByteMascot, ByteBanner } from "@/components/byte-mascot"
+import Image from "next/image"
 import { useSubscription } from "@/hooks/use-subscription"
 import Link from "next/link" // Added Link import for back button
 
@@ -141,31 +144,68 @@ export default function AIFriendBuilder() {
           </Link>
         </div>
 
-        <header className="bg-white shadow-sm border-b rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <span className="text-4xl mr-3">🎮</span>
-            AI Playground
-          </h1>
-        </header>
+        <ByteBanner
+          title="AI Playground"
+          subtitle="Spoznaj Byte-a in ustvari svoje AI prijatelje!"
+          variant="waving"
+          className="mb-6"
+        />
 
-        <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
-          <div className="flex items-start space-x-3">
-            <div className="text-2xl">ℹ️</div>
-            <div>
-              <p className="text-gray-800 font-medium">Your friends are saved in your browser</p>
-              <p className="text-gray-600 text-sm mt-1">
-                Create and manage your AI friends! They're stored locally on your device.
+        {/* Meet Byte - Featured Character */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-purple-200 mb-6">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-shrink-0">
+              <Image
+                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={120}
+                height={120}
+                className="rounded-full ring-4 ring-purple-200 shadow-lg"
+              />
+            </div>
+            <div className="text-center md:text-left flex-1">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                <h2 className="text-2xl font-bold text-gray-900">Spoznaj Byte-a!</h2>
+                <Sparkles className="h-5 w-5 text-purple-500" />
+              </div>
+              <p className="text-gray-600 mb-4">
+                Byte je prijazen robotek, ki te bo spremljal na poti ucenja o umetni inteligenci. Pogovarjaj se z njim, postavljaj vprasanja in skupaj odkrivajta svet AI!
               </p>
+              <Button
+                onClick={() => {
+                  // Ensure Byte exists in saved friends
+                  const stored = localStorage.getItem("ai_friends")
+                  const friends: AIFriend[] = stored ? JSON.parse(stored) : []
+                  let byteFriend = friends.find((f) => f.name === BYTE_CHARACTER.name)
+                  if (!byteFriend) {
+                    byteFriend = {
+                      id: "byte-default",
+                      name: BYTE_CHARACTER.name,
+                      personality: "Curious, Playful, Encouraging",
+                      color: BYTE_CHARACTER.colors.primary,
+                      created_at: new Date().toISOString(),
+                    }
+                    const updatedFriends = [byteFriend, ...friends]
+                    localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
+                    setSavedFriends(updatedFriends)
+                  }
+                  handleChatWithFriend(byteFriend.id)
+                }}
+                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Klepetaj z Byte-om
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="bg-blue-100 p-4 rounded-lg mb-6 flex items-start space-x-4">
-          <div className="text-4xl">🤖</div>
+        <div className="bg-purple-50 border border-purple-200 p-4 rounded-2xl mb-6 flex items-start gap-4">
+          <ByteMascot variant="teaching" size="sm" />
           <div>
-            <p className="text-gray-600">
-              Welcome to the AI Playground! Create your own AI friends and chat with them. Each friend has their own
-              unique personality!
+            <p className="text-sm font-semibold text-purple-700">Byte pravi:</p>
+            <p className="text-sm text-purple-900 mt-1">
+              Ustvari si lahko tudi svoje AI prijatelje! Izberi jim ime, osebnost in barvo.
             </p>
           </div>
         </div>
@@ -232,10 +272,10 @@ export default function AIFriendBuilder() {
             <h3 className="text-xl font-bold text-gray-900 mb-4">Your AI Friend Preview</h3>
             <div className="border-2 border-blue-200 rounded-lg p-8 text-center">
               <div
-                className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl"
+                className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl text-white font-bold"
                 style={{ backgroundColor: color }}
               >
-                🤖
+                {friendName ? friendName.charAt(0).toUpperCase() : "?"}
               </div>
               <h4 className="text-xl font-bold text-blue-700 mb-2">{friendName || "Your Friend"}</h4>
               <p className="text-sm text-gray-600 mb-3">Personality: {personality}</p>
@@ -253,12 +293,22 @@ export default function AIFriendBuilder() {
                   className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
-                      style={{ backgroundColor: friend.color }}
-                    >
-                      🤖
-                    </div>
+                    {friend.name === BYTE_CHARACTER.name ? (
+                      <Image
+                        src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                        alt={BYTE_CHARACTER.fullName}
+                        width={64}
+                        height={64}
+                        className="w-16 h-16 rounded-full ring-2 ring-purple-200"
+                      />
+                    ) : (
+                      <div
+                        className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white font-bold"
+                        style={{ backgroundColor: friend.color }}
+                      >
+                        {friend.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <button
                       onClick={() => handleDeleteFriend(friend.id, friend.name)}
                       className="text-red-500 hover:text-red-700 text-sm font-medium"
