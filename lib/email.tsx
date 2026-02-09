@@ -21,11 +21,12 @@ export interface EmailOptions {
   html?: string
   react?: ReactElement
   from?: string
+  replyTo?: string
 }
 
 export async function sendEmail(options: EmailOptions) {
   try {
-    const { to, subject, html, react, from = "AI Kids Learning <noreply@kids-learning-ai.com>" } = options
+    const { to, subject, html, react, from = "AI Kids Learning <noreply@kids-learning-ai.com>", replyTo = "support@kids-learning-ai.com" } = options
 
     const resend = getResendInstance()
 
@@ -35,6 +36,7 @@ export async function sendEmail(options: EmailOptions) {
       subject,
       html,
       react,
+      replyTo,
     } as any)
 
     if (error) {
