@@ -561,8 +561,7 @@ export const emailTemplates = {
             .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
             .button { display: inline-block; background: #8B5CF6; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; font-size: 16px; }
-            .step-box { background: white; padding: 16px 20px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; display: flex; align-items: center; }
-            .step-number { background: #8B5CF6; color: white; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; }
+            .step-box { background: white; padding: 12px 20px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
           </style>
         </head>
@@ -573,22 +572,28 @@ export const emailTemplates = {
               <p>Opazili smo, da še niste začeli z učenjem</p>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>Pozdravljeni${name ? ` ${name}` : ""},</p>
               <p>Hvala, da ste se prijavili na KidsLearnAI! Opazili smo, da vaš otrok še ni preizkusil nobene aktivnosti. Začetek je preprost:</p>
               
               <div class="step-box">
-                <span class="step-number">1</span>
-                <div><strong>Dodajte profil otroka</strong> - nastavite ime in starost</div>
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:32px;height:32px;background:#8B5CF6;border-radius:50%;text-align:center;vertical-align:middle;color:#ffffff;font-weight:bold;font-size:14px;font-family:Arial,sans-serif;">1</td>
+                  <td style="padding-left:12px;vertical-align:middle;"><strong>Dodajte profil otroka</strong> - nastavite ime in starost</td>
+                </tr></table>
               </div>
               
               <div class="step-box">
-                <span class="step-number">2</span>
-                <div><strong>Izberite igro</strong> - priporočamo Pattern Training za začetek</div>
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:32px;height:32px;background:#8B5CF6;border-radius:50%;text-align:center;vertical-align:middle;color:#ffffff;font-weight:bold;font-size:14px;font-family:Arial,sans-serif;">2</td>
+                  <td style="padding-left:12px;vertical-align:middle;"><strong>Izberite igro</strong> - priporočamo Pattern Training za začetek</td>
+                </tr></table>
               </div>
               
               <div class="step-box">
-                <span class="step-number">3</span>
-                <div><strong>Igrajte skupaj</strong> - samo 10 minut na dan naredi razliko</div>
+                <table cellpadding="0" cellspacing="0" border="0"><tr>
+                  <td style="width:32px;height:32px;background:#8B5CF6;border-radius:50%;text-align:center;vertical-align:middle;color:#ffffff;font-weight:bold;font-size:14px;font-family:Arial,sans-serif;">3</td>
+                  <td style="padding-left:12px;vertical-align:middle;"><strong>Igrajte skupaj</strong> - samo 10 minut na dan naredi razliko</td>
+                </tr></table>
               </div>
               
               <p style="text-align: center;">
@@ -632,7 +637,7 @@ export const emailTemplates = {
               <h1>Pogrešamo vas!</h1>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>Pozdravljeni${name ? ` ${name}` : ""},</p>
               <p>Že nekaj časa vas nismo videli na KidsLearnAI. Naša platforma ponuja zabavne in interaktivne AI igre, ki pomagajo otrokom pri učenju:</p>
               
               <div class="highlight-box">
