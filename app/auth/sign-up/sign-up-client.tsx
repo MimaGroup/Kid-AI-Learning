@@ -8,6 +8,8 @@ import Link from "next/link"
 import { trackEvent, trackError } from "@/lib/analytics"
 import { LoadingOverlay } from "@/components/loading-overlay"
 import { Gift, Check } from "lucide-react"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 function SignUpPageClient() {
   const [email, setEmail] = useState("")
@@ -137,10 +139,18 @@ function SignUpPageClient() {
         {isLoading && <LoadingOverlay message="Ustvarjanje vašega računa..." />}
 
         <div className="text-center mb-8">
+          <div className="relative w-16 h-16 mx-auto mb-3">
+            <Image
+              src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+              alt={BYTE_CHARACTER.fullName}
+              fill
+              className="object-cover rounded-full ring-2 ring-purple-200 shadow-md"
+            />
+          </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
-            Ustvari račun
+            Ustvari racun
           </h1>
-          <p className="text-gray-600">Pridružite se KidsLearnAI platformi</p>
+          <p className="text-gray-600">Byte te ze komaj caka! Pridruzi se KidsLearnAI platformi.</p>
 
           {referralCode && (
             <div className="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">

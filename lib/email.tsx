@@ -71,11 +71,15 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Welcome to AI Kids Learning! 🎉</h1>
+              <h1>Welcome to AI Kids Learning!</h1>
+              <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Byte te pozdravlja!</p>
             </div>
             <div class="content">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #E9D5FF;" />
+              </div>
               <p>Hi ${name},</p>
-              <p>We're thrilled to have you join our community of parents helping their children learn with AI-powered activities!</p>
+              <p>We're thrilled to have you join our community! Your child's new AI learning buddy, <strong>Byte</strong>, is already excited to start teaching and playing together!</p>
               
               <h3>🚀 Get Started in 3 Easy Steps:</h3>
               <ol>
@@ -98,7 +102,7 @@ export const emailTemplates = {
               
               <p>Need help getting started? Check out our <a href="https://kids-learning-ai.com/getting-started">Getting Started Guide</a> or reply to this email.</p>
               
-              <p>Happy learning!<br>The AI Kids Learning Team</p>
+              <p>Happy learning!<br>Tvoj prijatelj Byte & The AI Kids Learning Team</p>
             </div>
             <div class="footer">
               <p>AI Kids Learning | Making education fun with AI</p>
@@ -135,8 +139,11 @@ export const emailTemplates = {
               <p>${childName}'s Progress This Week</p>
             </div>
             <div class="content">
+              <div style="text-align: center; margin-bottom: 15px;">
+                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-celebrating.jpg" alt="Byte celebrating" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #E9D5FF;" />
+              </div>
               <p>Hi ${name},</p>
-              <p>Here's how ${childName} did this week:</p>
+              <p>Byte is proud of ${childName}'s progress this week! Here's the summary:</p>
               
               <div class="stat-card">
                 <div class="stat-number">${stats.activitiesCompleted || 0}</div>
@@ -255,8 +262,12 @@ export const emailTemplates = {
               <h1>We Miss You! 🌟</h1>
             </div>
             <div class="content">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #E9D5FF;" />
+                <p style="font-weight: bold; color: #8B5CF6; margin-top: 8px;">Byte te pogreSa!</p>
+              </div>
               <p>Hi ${name},</p>
-              <p>We noticed ${childName} hasn't been learning with us lately. We'd love to see them back!</p>
+              <p>Byte and the whole team noticed ${childName} hasn't been learning with us lately. Byte has been practicing new tricks and can't wait to show them!</p>
               
               <div class="highlight-box">
                 <h3>🎮 New Activities Added!</h3>
@@ -602,16 +613,7 @@ export const emailTemplates = {
               
               <p>Če imate kakršnakoli vprašanja ali potrebujete pomoč, nam preprosto odgovorite na to sporočilo.</p>
               
-              <table cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;">
-                <tr>
-                  <td style="vertical-align:middle;padding-right:12px;">
-                    <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-avatar.jpg" alt="Byte" width="48" height="48" style="border-radius:50%;display:block;" />
-                  </td>
-                  <td style="vertical-align:middle;">
-                    <p style="margin:0;">Lep pozdrav,<br><strong>Byte</strong> in Ekipa KidsLearnAI</p>
-                  </td>
-                </tr>
-              </table>
+              <p>Lep pozdrav,<br>Ekipa KidsLearnAI</p>
             </div>
             <div class="footer">
               <p>KidsLearnAI | AI učna platforma za otroke 5-12 let</p>

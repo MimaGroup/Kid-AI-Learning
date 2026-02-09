@@ -27,6 +27,8 @@ Byte speaks Slovenian and loves helping kids in Slovenia learn about AI.`,
     waving: "/images/byte-waving.jpg",
     teaching: "/images/byte-teaching.jpg",
     celebrating: "/images/byte-celebrating.jpg",
+    thinking: "/images/byte-thinking.jpg",
+    hero: "/images/byte-hero.jpg",
     profile: "/images/robot-profile-picture.jpg",
   },
 
@@ -36,6 +38,16 @@ Byte speaks Slovenian and loves helping kids in Slovenia learn about AI.`,
     secondary: "#2DD4BF", // Teal
     accent: "#F472B6", // Pink cheeks
     background: "#F3E8FF", // Light purple
+  },
+
+  // Marketing copy for landing pages and social media
+  marketing: {
+    headline: "Spoznaj Byte-a - tvojega AI ucitelja!",
+    headlineEn: "Meet Byte - your AI learning buddy!",
+    description: "Byte je prijazen robotek, ki otroke vodi skozi svet umetne inteligence z igrami, izzivi in pustolovscinami.",
+    descriptionEn: "Byte is a friendly robot who guides kids through the world of AI with games, challenges, and adventures.",
+    socialBio: "Hi, I'm Byte! A friendly robot who helps kids learn about AI through fun games and adventures. Join me at KidsLearnAI!",
+    emailSignature: "Tvoj prijatelj Byte",
   },
 
   // Slovenian greetings and phrases Byte uses
