@@ -38,7 +38,7 @@ Create a manual backup before your soft launch:
 
 ### Option B: Using pg_dump (Advanced)
 
-```bash
+\`\`\`bash
 # Install PostgreSQL client tools
 brew install postgresql  # macOS
 # or
@@ -52,7 +52,7 @@ pg_dump "postgresql://postgres:[YOUR-PASSWORD]@[YOUR-PROJECT-REF].supabase.co:54
 
 # Verify backup file
 ls -lh backup_*.sql
-```
+\`\`\`
 
 ## Step 3: Test Restore Process
 
@@ -87,7 +87,7 @@ Only do this in development/staging:
 
 After creating a backup, verify it contains all critical data:
 
-```sql
+\`\`\`sql
 -- Check all tables exist
 SELECT table_name 
 FROM information_schema.tables 
@@ -119,7 +119,7 @@ SELECT tablename, indexname
 FROM pg_indexes 
 WHERE schemaname = 'public'
 ORDER BY tablename;
-```
+\`\`\`
 
 ## Step 5: Set Up Backup Monitoring
 
@@ -232,7 +232,7 @@ Store backups in:
 
 Create a cron job to backup daily:
 
-```bash
+\`\`\`bash
 #!/bin/bash
 # backup-supabase.sh
 
@@ -256,13 +256,13 @@ aws s3 cp $BACKUP_FILE.gz s3://my-backups/supabase/
 find $BACKUP_DIR -name "backup_*.sql.gz" -mtime +30 -delete
 
 echo "Backup completed: $BACKUP_FILE.gz"
-```
+\`\`\`
 
 Add to crontab:
-```bash
+\`\`\`bash
 # Run daily at 3 AM
 0 3 * * * /path/to/backup-supabase.sh
-```
+\`\`\`
 
 ## Support
 

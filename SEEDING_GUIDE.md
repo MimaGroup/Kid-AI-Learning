@@ -65,30 +65,30 @@ That's it! Your database now has all the initial content needed for launch.
 If you prefer to run scripts separately:
 
 ### Badges Only
-```sql
+\`\`\`sql
 -- Run: scripts/006_gamification_system_v2.sql
-```
+\`\`\`
 
 ### Daily Challenges Only
-```sql
+\`\`\`sql
 -- Run: scripts/seed-daily-challenges.sql
-```
+\`\`\`
 
 ### Quiz Questions Only
-```sql
+\`\`\`sql
 -- Run: scripts/seed-quiz-content.sql
-```
+\`\`\`
 
 ### Premium Activities Only
-```sql
+\`\`\`sql
 -- Run: scripts/008_create_subscriptions_schema.sql
-```
+\`\`\`
 
 ## Verification
 
 After seeding, verify the data was inserted:
 
-```sql
+\`\`\`sql
 -- Check badges
 SELECT COUNT(*) as badge_count FROM badges;
 -- Expected: 16
@@ -120,30 +120,30 @@ ORDER BY
     WHEN 'epic' THEN 3 
     WHEN 'legendary' THEN 4 
   END;
-```
+\`\`\`
 
 ## Adding More Content
 
 ### Add More Quiz Questions
 
-```sql
+\`\`\`sql
 INSERT INTO quiz_questions (subject, difficulty, age_group, question, options, correct_answer, explanation, points) VALUES
   ('math', 'easy', '6-8', 'Your question here?', '["Option 1", "Option 2", "Option 3", "Option 4"]', 'Correct Answer', 'Explanation here', 10);
-```
+\`\`\`
 
 ### Add More Badges
 
-```sql
+\`\`\`sql
 INSERT INTO badges (badge_id, name, description, icon, points_required, category, rarity) VALUES
   ('new_badge', 'Badge Name', 'Badge description', '🎯', 100, 'milestone', 'rare');
-```
+\`\`\`
 
 ### Add More Daily Challenges
 
-```sql
+\`\`\`sql
 INSERT INTO daily_challenges (challenge_id, title, description, activity_type, target_value, points_reward, active_date) VALUES
   ('challenge_031', 'New Challenge', 'Challenge description', 'quiz', 5, 50, CURRENT_DATE + INTERVAL '30 days');
-```
+\`\`\`
 
 ## Content Recommendations for Production
 

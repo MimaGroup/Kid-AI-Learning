@@ -546,6 +546,121 @@ export const emailTemplates = {
     `,
   }),
 
+  inactiveUserNudge: (name: string) => ({
+    subject: "Potrebujete pomoč pri začetku? - KidsLearnAI",
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #8B5CF6; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; font-size: 16px; }
+            .step-box { background: white; padding: 16px 20px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #8B5CF6; display: flex; align-items: center; }
+            .step-number { background: #8B5CF6; color: white; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Potrebujete pomoč?</h1>
+              <p>Opazili smo, da še niste začeli z učenjem</p>
+            </div>
+            <div class="content">
+              <p>Pozdravljeni ${name},</p>
+              <p>Hvala, da ste se prijavili na KidsLearnAI! Opazili smo, da vaš otrok še ni preizkusil nobene aktivnosti. Začetek je preprost:</p>
+              
+              <div class="step-box">
+                <span class="step-number">1</span>
+                <div><strong>Dodajte profil otroka</strong> - nastavite ime in starost</div>
+              </div>
+              
+              <div class="step-box">
+                <span class="step-number">2</span>
+                <div><strong>Izberite igro</strong> - priporočamo Pattern Training za začetek</div>
+              </div>
+              
+              <div class="step-box">
+                <span class="step-number">3</span>
+                <div><strong>Igrajte skupaj</strong> - samo 10 minut na dan naredi razliko</div>
+              </div>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/kids/home" class="button">Začnite z učenjem</a>
+              </p>
+              
+              <p>Če imate kakršnakoli vprašanja ali potrebujete pomoč, nam preprosto odgovorite na to sporočilo.</p>
+              
+              <p>Lep pozdrav,<br>Ekipa KidsLearnAI</p>
+            </div>
+            <div class="footer">
+              <p>KidsLearnAI | AI učna platforma za otroke 5-12 let</p>
+              <p><a href="https://kids-learning-ai.com">Obiščite spletno stran</a> | <a href="https://kids-learning-ai.com/contact">Kontakt</a></p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
+  inactiveUserFinalNudge: (name: string) => ({
+    subject: "Vas še vedno zanimamo? - KidsLearnAI",
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #F59E0B 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #F59E0B; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; font-size: 16px; }
+            .highlight-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #F59E0B; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Pogrešamo vas!</h1>
+            </div>
+            <div class="content">
+              <p>Pozdravljeni ${name},</p>
+              <p>Že nekaj časa vas nismo videli na KidsLearnAI. Naša platforma ponuja zabavne in interaktivne AI igre, ki pomagajo otrokom pri učenju:</p>
+              
+              <div class="highlight-box">
+                <h3>Kaj ponujamo:</h3>
+                <ul>
+                  <li><strong>AI Kviz</strong> - prilagodljivi kvizi za razne predmete</li>
+                  <li><strong>Učenje vzorcev</strong> - razvoj logičnega mišljenja</li>
+                  <li><strong>AI Detektiv</strong> - reševanje skrivnostnih zgodb</li>
+                  <li><strong>Gradnik besed</strong> - širjenje besednega zaklada</li>
+                  <li><strong>Matematična avantura</strong> - zabavna matematika</li>
+                </ul>
+              </div>
+              
+              <p style="text-align: center;">
+                <a href="https://kids-learning-ai.com/kids/home" class="button">Preizkusite brezplačno</a>
+              </p>
+              
+              <p>Če imate kakršnokoli vprašanje, smo vam na voljo na <a href="https://kids-learning-ai.com/contact">kontaktni strani</a>.</p>
+              
+              <p>Lep pozdrav,<br>Ekipa KidsLearnAI</p>
+            </div>
+            <div class="footer">
+              <p>KidsLearnAI | AI učna platforma za otroke 5-12 let</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  }),
+
   supportTicketConfirmationUser: (name: string, ticketNumber: string, subject: string, message: string) => ({
     subject: `Support Ticket Created: ${ticketNumber}`,
     html: `

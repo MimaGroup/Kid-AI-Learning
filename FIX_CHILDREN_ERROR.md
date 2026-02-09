@@ -11,7 +11,7 @@ The foreign key constraint is checking if the parent_id exists in the profiles t
 ### Step 1: Fix User Signup Trigger (if not done already)
 Run the script from earlier to ensure all new signups create profiles:
 
-```sql
+\`\`\`sql
 -- Drop and recreate the signup trigger with error handling
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_user();
@@ -43,12 +43,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-```
+\`\`\`
 
 ### Step 2: Create Missing Profiles for Existing Users
 This ensures all existing auth users have profiles:
 
-```sql
+\`\`\`sql
 -- Create profiles for any auth users that don't have them
 INSERT INTO public.profiles (id, email, display_name, role, created_at, updated_at)
 SELECT 
@@ -62,7 +62,7 @@ FROM auth.users au
 LEFT JOIN public.profiles p ON p.id = au.id
 WHERE p.id IS NULL
 ON CONFLICT (id) DO NOTHING;
-```
+\`\`\`
 
 ### Step 3: Fix the Foreign Key Constraint
 Run the script `scripts/13-fix-children-foreign-key.sql`
