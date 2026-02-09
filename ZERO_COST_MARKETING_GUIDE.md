@@ -43,7 +43,7 @@
    - Evening (10 min): Share one valuable post to your page + 3 groups
    
 3. **Content Calendar Template:**
-   ```
+   \`\`\`
    Monday: Educational Tip
    Tuesday: Success Story/Testimonial
    Wednesday: Interactive Poll/Question
@@ -51,7 +51,7 @@
    Friday: Feature Highlight
    Saturday: Weekend Activity Challenge
    Sunday: Weekly Recap + Next Week Preview
-   ```
+   \`\`\`
 
 4. **Engagement Hacks:**
    - Always respond to comments within 1 hour
@@ -69,7 +69,7 @@
 - **IGTV/Long-form (1x/week):** Tutorials, parent interviews
 
 **Hashtag Strategy:**
-```
+\`\`\`
 Primary (5-7 per post):
 #EdTech #KidsLearning #AIForKids #STEMEducation #ParentingTips
 
@@ -80,7 +80,7 @@ Secondary (8-10 per post):
 Long-tail (10-15 per post):
 #AILearningForKids #EducationalTechnology #OnlineLearningForKids
 #KidsEducation #ParentingInTheDigitalAge #STEMForKids
-```
+\`\`\`
 
 **Growth Tactics:**
 1. Follow 50-100 parent/education accounts daily
@@ -113,12 +113,12 @@ Long-tail (10-15 per post):
    - Parent influencers
 
 2. Personalized message template:
-   ```
+   \`\`\`
    Hi [Name], I noticed you're passionate about [education/parenting/tech]. 
    I'm building KidsLearnAI, an AI-powered learning platform for kids. 
    Would love to connect and exchange insights on [specific topic]. 
    Looking forward to connecting!
-   ```
+   \`\`\`
 
 ### TikTok Strategy (High-Growth Potential)
 **Target Audience:** Gen Z parents (20-35)
@@ -251,7 +251,7 @@ Long-tail (10-15 per post):
 - Local news sites
 
 **Pitch Template:**
-```
+\`\`\`
 Subject: Guest Post Idea: [Specific Title]
 
 Hi [Name],
@@ -275,7 +275,7 @@ Would this be a good fit? Happy to adjust based on your guidelines.
 
 Best,
 Danijel
-```
+\`\`\`
 
 **Target:** 2-4 guest posts per month
 
@@ -436,7 +436,7 @@ Danijel
 **Welcome Sequence (5 emails over 7 days):**
 
 1. **Email 1 (Immediate):** Welcome + deliver lead magnet
-   ```
+   \`\`\`
    Subject: Your [Lead Magnet] is ready! 
    
    Hi [Name],
@@ -455,7 +455,7 @@ Danijel
    
    Danijel
    Founder, KidsLearnAI
-   ```
+   \`\`\`
 
 2. **Email 2 (Day 2):** Your story + platform introduction
 3. **Email 3 (Day 4):** Social proof + testimonials
@@ -499,7 +499,7 @@ Danijel
 - YouTube (search "parenting channel" + sort by upload date)
 
 **Outreach Template:**
-```
+\`\`\`
 Hi [Name],
 
 I love your content on [specific topic]! Your post about [X] 
@@ -519,7 +519,7 @@ Would this be of interest?
 
 Best,
 Danijel
-```
+\`\`\`
 
 **What to Offer:**
 - Free premium access (lifetime or 1 year)
@@ -560,7 +560,7 @@ Danijel
 - Social media shoutouts
 
 **Pitch Template:**
-```
+\`\`\`
 Subject: Partnership Opportunity: [Your Brand] + [Their Brand]
 
 Hi [Name],
@@ -580,7 +580,7 @@ Would any of these interest you? Open to other ideas too!
 
 Best,
 Danijel
-```
+\`\`\`
 
 ---
 
@@ -595,7 +595,7 @@ Danijel
 - After positive support interaction
 
 **How to Ask:**
-```
+\`\`\`
 Email Subject: Quick question about your experience
 
 Hi [Parent Name],
@@ -614,7 +614,7 @@ As a thank you, I'll extend your subscription by 1 month free!
 
 Thanks,
 Danijel
-```
+\`\`\`
 
 **Survey Questions:**
 1. What problem were you trying to solve?
@@ -684,7 +684,7 @@ Danijel
 5. Include brief bio with link
 
 **Response Template:**
-```
+\`\`\`
 Subject: Response to [Query Title]
 
 Hi [Reporter Name],
@@ -702,7 +702,7 @@ Available for quotes/interviews
 Best,
 Danijel
 [Contact info]
-```
+\`\`\`
 
 ### Podcast Outreach
 
@@ -720,7 +720,7 @@ Danijel
 - PodcastGuest.com
 
 **Pitch Template:**
-```
+\`\`\`
 Subject: Guest Idea: AI-Powered Learning for Kids
 
 Hi [Host Name],
@@ -747,7 +747,7 @@ Available [dates/times].
 
 Best,
 Danijel
-```
+\`\`\`
 
 ---
 

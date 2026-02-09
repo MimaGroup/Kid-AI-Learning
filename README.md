@@ -27,6 +27,6 @@ A comprehensive educational platform that combines interactive AI learning activ
 ## 🚀 Quick Start
 
 ### Prerequisites
-```bash
+\`\`\`bash
 pip install streamlit pandas
 ENDFILE

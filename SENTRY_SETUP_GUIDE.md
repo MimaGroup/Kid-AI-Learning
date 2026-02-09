@@ -15,9 +15,9 @@ This guide walks you through setting up Sentry for error tracking and performanc
 
 After creating the project, Sentry will show you a DSN (Data Source Name). It looks like:
 
-```
+\`\`\`
 https://abc123def456@o123456.ingest.sentry.io/7890123
-```
+\`\`\`
 
 Copy this DSN - you'll need it in the next step.
 
@@ -38,10 +38,10 @@ Add the Sentry DSN to your Vercel project:
 
 Redeploy your application to activate Sentry:
 
-```bash
+\`\`\`bash
 git commit -m "Add Sentry monitoring"
 git push
-```
+\`\`\`
 
 Or trigger a redeploy from the Vercel dashboard.
 
@@ -65,7 +65,7 @@ Or trigger a redeploy from the Vercel dashboard.
 ### Manual Tracking
 Use the Sentry helpers in your code:
 
-```typescript
+\`\`\`typescript
 import { captureException, captureMessage, setUser } from '@/lib/sentry'
 
 // Capture an exception with context
@@ -87,7 +87,7 @@ setUser({
   email: user.email,
   username: user.name,
 })
-```
+\`\`\`
 
 ## Sentry Dashboard Features
 
@@ -155,9 +155,9 @@ Set up email/Slack alerts:
 ### Too Many Errors
 
 1. Adjust sample rate in `lib/sentry.ts`:
-   ```typescript
+   \`\`\`typescript
    tracesSampleRate: 0.1, // 10% of transactions
-   ```
+   \`\`\`
 
 2. Add error filters to ignore non-critical errors
 

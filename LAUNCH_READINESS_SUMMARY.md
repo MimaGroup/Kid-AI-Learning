@@ -34,21 +34,21 @@
 ### 1. Apply RLS Policies to Database ⚠️
 **Status:** SQL created but not executed  
 **Action Required:**
-```bash
+\`\`\`bash
 # Go to Supabase Dashboard → SQL Editor
 # Execute: scripts/complete-rls-policies.sql
 # Then verify: scripts/verify-rls-policies.sql
-```
+\`\`\`
 **Why Critical:** Database is currently vulnerable without proper RLS policies
 
 ### 2. Run Content Seed Scripts ⚠️
 **Status:** Scripts created but not executed  
 **Action Required:**
-```bash
+\`\`\`bash
 # Execute in Supabase SQL Editor:
 1. scripts/seed-daily-challenges.sql
 2. scripts/seed-quiz-content.sql
-```
+\`\`\`
 **Why Critical:** Users need content to interact with on day 1
 
 ### 3. Stripe Production Setup ⚠️
@@ -188,13 +188,13 @@
 To get launch-ready quickly, follow these steps in order:
 
 ### Step 1: Database Setup (30 minutes)
-```sql
+\`\`\`sql
 -- In Supabase SQL Editor, run:
 1. scripts/complete-rls-policies.sql
 2. scripts/verify-rls-policies.sql (check results)
 3. scripts/seed-daily-challenges.sql
 4. scripts/seed-quiz-content.sql
-```
+\`\`\`
 
 ### Step 2: Stripe Setup (2-3 hours)
 1. Complete Stripe verification

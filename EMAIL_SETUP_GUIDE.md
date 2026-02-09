@@ -55,14 +55,14 @@ Add the Resend API key to your Vercel project:
 Update the email addresses in the code:
 
 **In `lib/email.tsx`:**
-```typescript
+\`\`\`typescript
 from: "AI Kids Learning <noreply@kids-learning-ai.com>"
-```
+\`\`\`
 
 **In `app/api/contact/route.ts`:**
-```typescript
+\`\`\`typescript
 to: "support@kids-learning-ai.com" // Your actual support email
-```
+\`\`\`
 
 ## Email Templates
 

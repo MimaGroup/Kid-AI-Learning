@@ -60,7 +60,7 @@ A comprehensive playbook for marketing KidsLearnAI without spending money.
 ### Post Templates
 
 #### Template 1: Value-First Discussion
-```
+\`\`\`
 Title: How are you teaching your kids about AI? Looking for age-appropriate approaches
 
 ---
@@ -78,10 +78,10 @@ What's worked for us so far:
 Still struggling with explaining how AI "learns" in a kid-friendly way.
 
 What approaches have worked for your families? Any resources you'd recommend?
-```
+\`\`\`
 
 #### Template 2: Resource Sharing
-```
+\`\`\`
 Title: Free resource: Teaching AI concepts to kids through play [ages 4-10]
 
 ---
@@ -103,10 +103,10 @@ I've been building some interactive games around these concepts. Happy to
 share more details if anyone's interested.
 
 What other approaches have worked for you?
-```
+\`\`\`
 
 #### Template 3: Question/Engagement Post
-```
+\`\`\`
 Title: Parents of kids 5-10: How much do your kids know about AI already?
 
 ---
@@ -121,7 +121,7 @@ A few questions:
 3. Do you think AI literacy should be taught young?
 
 Trying to figure out if I'm behind on this or overthinking it.
-```
+\`\`\`
 
 ### Comment Strategy
 
@@ -134,7 +134,7 @@ Search these terms in target subreddits:
 - "future skills children"
 
 **Comment Template:**
-```
+\`\`\`
 Great question! We've had similar conversations at home.
 
 What worked for us: [genuine personal tip related to topic]
@@ -142,7 +142,7 @@ What worked for us: [genuine personal tip related to topic]
 [If directly relevant] We've been using some AI learning games that 
 teach concepts through detective/puzzle games - my kids love that it 
 doesn't feel like "learning." Happy to share more if you're interested.
-```
+\`\`\`
 
 ### Posting Schedule
 
@@ -197,7 +197,7 @@ doesn't feel like "learning." Happy to share more if you're interested.
 ### Post Templates
 
 #### Template 1: Problem/Solution
-```
+\`\`\`
 Anyone else finding it hard to balance screen time with educational value?
 
 My kids (6 and 8) want to be on devices constantly, but I've been trying 
@@ -212,10 +212,10 @@ Recently found some AI learning games that teach pattern recognition and
 logic through detective mysteries - they don't even realize they're learning!
 
 What rules/boundaries do you set around educational screen time?
-```
+\`\`\`
 
 #### Template 2: Seeking Advice
-```
+\`\`\`
 Question for parents of 5-8 year olds:
 
 How are you approaching AI/technology education with your kids?
@@ -231,10 +231,10 @@ What I'm looking for:
 - Appropriate for 6-year-olds
 
 Thanks in advance!
-```
+\`\`\`
 
 #### Template 3: Success Share
-```
+\`\`\`
 Small win to share!
 
 My 7-year-old just explained to his grandmother how "computers learn 
@@ -249,28 +249,28 @@ For anyone interested, we've been using:
 - Simple sorting exercises that show how AI categorizes things
 
 Happy to share more specifics if anyone wants them!
-```
+\`\`\`
 
 ### Engagement Templates
 
 **Helpful Comment:**
-```
+\`\`\`
 Great question! We dealt with something similar. What worked for us was 
 [specific solution]. Have you tried [suggestion]? Happy to share more 
 details if helpful!
-```
+\`\`\`
 
 **Adding Value:**
-```
+\`\`\`
 Love this tip! Adding on - we also found that [related suggestion]. 
 It made a big difference for [specific outcome].
-```
+\`\`\`
 
 **Asking Follow-up:**
-```
+\`\`\`
 This is so helpful, thank you! Quick question - did you find that 
 [related question]? Trying to figure out what might work for us.
-```
+\`\`\`
 
 ---
 
@@ -279,13 +279,13 @@ This is so helpful, thank you! Quick question - did you find that
 ### Profile Optimization
 
 **Headline:**
-```
+\`\`\`
 Founder @ KidsLearnAI | Helping kids understand AI through play | 
 Parent of 2 | Building the future of education
-```
+\`\`\`
 
 **About Section:**
-```
+\`\`\`
 As a parent and [your background], I noticed a gap in how we prepare 
 kids for an AI-driven future.
 
@@ -303,7 +303,7 @@ My mission: Make AI literacy accessible to every child.
 💡 Currently: Building, learning, sharing the journey
 📫 Let's connect: [email]
 🌐 Try it: kids-learning-ai.com
-```
+\`\`\`
 
 ### Content Strategy
 
@@ -318,7 +318,7 @@ My mission: Make AI literacy accessible to every child.
 ### Post Templates
 
 #### Template 1: Personal Story
-```
+\`\`\`
 3 months ago, my 6-year-old asked me: "Is Alexa smarter than you?"
 
 I laughed. Then I realized I had no good answer.
@@ -349,10 +349,10 @@ Sometimes the best products come from the questions our kids ask us.
 ---
 
 Building in public. Following along? 👇
-```
+\`\`\`
 
 #### Template 2: Industry Insight
-```
+\`\`\`
 AI literacy will be as fundamental as reading by 2030.
 
 Yet most schools don't teach it at all.
@@ -381,10 +381,10 @@ What are you doing to prepare your kids for an AI-driven world?
 ---
 
 #AIEducation #FutureOfLearning #EdTech #Parenting
-```
+\`\`\`
 
 #### Template 3: Behind-the-Scenes
-```
+\`\`\`
 Week 8 of building KidsLearnAI.
 
 Biggest lesson so far: Kids don't care about your features.
@@ -407,7 +407,7 @@ What's a lesson that seems obvious now but took you too long to learn?
 ---
 
 #BuildingInPublic #EdTech #StartupLessons
-```
+\`\`\`
 
 ### Engagement Strategy
 
@@ -425,13 +425,13 @@ What's a lesson that seems obvious now but took you too long to learn?
 - Other indie hackers/builders
 
 **Comment Strategy:**
-```
+\`\`\`
 Great point about [specific thing they said]. 
 
 I've seen this play out with [your relevant experience]. 
 
 Question: [thoughtful follow-up question]?
-```
+\`\`\`
 
 ---
 
@@ -469,7 +469,7 @@ Question: [thoughtful follow-up question]?
 
 ### Blog Post Template
 
-```markdown
+\`\`\`markdown
 # [Title with Primary Keyword]
 
 **Reading time:** X minutes
@@ -535,7 +535,7 @@ through play-based learning.
 - [Internal link 1]
 - [Internal link 2]
 - [Internal link 3]
-```
+\`\`\`
 
 ### SEO Checklist for Each Post
 
@@ -586,7 +586,7 @@ through play-based learning.
 
 **Pin Template Ideas:**
 
-```
+\`\`\`
 Infographic: "5 AI Concepts Kids Can Understand"
 - Pattern recognition
 - Sorting and categorizing
@@ -595,16 +595,16 @@ Infographic: "5 AI Concepts Kids Can Understand"
 - Following rules (algorithms)
 
 Visual: Colorful, kid-friendly icons for each concept
-```
+\`\`\`
 
-```
+\`\`\`
 Quote Pin: 
 "The best time to teach kids about AI was yesterday.
 The second best time is today."
 
 Visual: Clean design with your branding
 CTA: "Start learning at KidsLearnAI.com"
-```
+\`\`\`
 
 ### Pinning Schedule
 
@@ -642,7 +642,7 @@ CTA: "Start learning at KidsLearnAI.com"
 #### Welcome Sequence (New Subscribers)
 
 **Email 1: Welcome (Day 0)**
-```
+\`\`\`
 Subject: Welcome! Here's your [lead magnet name]
 
 Hi [Name],
@@ -668,10 +668,10 @@ Founder, KidsLearnAI
 
 P.S. If you want to dive right in, try our AI Detective Game free for 
 7 days: [link]
-```
+\`\`\`
 
 **Email 2: Value (Day 2)**
-```
+\`\`\`
 Subject: The #1 mistake parents make teaching kids about AI
 
 Hi [Name],
@@ -706,10 +706,10 @@ kids tonight.
 
 P.S. If you want structured learning, check out our AI Detective Game - 
 it teaches pattern recognition through mystery solving: [link]
-```
+\`\`\`
 
 **Email 3: Activity (Day 4)**
-```
+\`\`\`
 Subject: Try this tonight: 5-minute AI activity
 
 Hi [Name],
@@ -743,11 +743,11 @@ Let me know how it goes!
 
 P.S. Want more activities like this delivered through games? Try 
 KidsLearnAI free for 7 days: [link]
-```
+\`\`\`
 
 ### Newsletter Template (Weekly)
 
-```
+\`\`\`
 Subject: This week in AI for Kids: [Hook]
 
 Hi [Name],
@@ -778,7 +778,7 @@ Questions? Just reply - I read every email.
 ---
 Try KidsLearnAI free: [Link]
 Unsubscribe: [Link]
-```
+\`\`\`
 
 ---
 
@@ -796,16 +796,16 @@ Unsubscribe: [Link]
 ### Required Assets
 
 **Tagline (60 characters max):**
-```
+\`\`\`
 AI learning games that kids love, parents trust
-```
+\`\`\`
 
 **Description (260 characters):**
-```
+\`\`\`
 KidsLearnAI teaches children ages 4-12 about AI through interactive 
 games. Kids learn pattern recognition, logical thinking, and how AI 
 works - all while having fun. No coding required. Try free for 7 days.
-```
+\`\`\`
 
 **Gallery Images (5 images, 1270x760px):**
 1. Hero shot: Kid playing the game (or mockup)
@@ -815,7 +815,7 @@ works - all while having fun. No coding required. Try free for 7 days.
 5. Social proof: Testimonial or benefit highlights
 
 **First Comment (Maker comment):**
-```
+\`\`\`
 Hi Product Hunt! 👋
 
 I'm [name], founder of KidsLearnAI.
@@ -840,7 +840,7 @@ First 100 signups get 50% off annual plan (use code PRODUCTHUNT)
 I'd love your feedback! What AI concepts do you think kids should learn?
 
 [Your name]
-```
+\`\`\`
 
 ### Launch Day Schedule
 
@@ -885,7 +885,7 @@ Search for and answer:
 - "What STEM activities are good for young children?"
 
 **Answer Template:**
-```
+\`\`\`
 [Personal hook related to the question]
 
 [2-3 paragraphs of genuine, helpful answer]
@@ -898,7 +898,7 @@ and they've learned concepts like pattern recognition without realizing
 they're "learning."
 
 [Closing thought or question back]
-```
+\`\`\`
 
 ### Other Forums
 
@@ -925,7 +925,7 @@ they're "learning."
 
 ### Outreach Template
 
-```
+\`\`\`
 Subject: Quick question + free access to KidsLearnAI
 
 Hi [Name],
@@ -949,7 +949,7 @@ Would you be interested?
 [Your name]
 Founder, KidsLearnAI
 [Website]
-```
+\`\`\`
 
 ### Cross-Promotion Ideas
 
@@ -986,12 +986,12 @@ Founder, KidsLearnAI
 ### Referral Program Ideas
 
 **Simple Structure:**
-```
+\`\`\`
 Give 1 Month, Get 1 Month
 
 Share your referral link.
 When a friend subscribes, you both get a free month.
-```
+\`\`\`
 
 **Implementation (Future):**
 - Unique referral links per user

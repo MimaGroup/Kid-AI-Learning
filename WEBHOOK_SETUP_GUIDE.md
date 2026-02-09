@@ -7,14 +7,14 @@ Since you've already configured products and prices in Stripe, here's how to set
 ### Step 1: Get Your Deployment URL
 
 After deploying to Vercel, your webhook URL will be:
-```
+\`\`\`
 https://your-domain.vercel.app/api/stripe/webhook
-```
+\`\`\`
 
 Or if you have a custom domain:
-```
+\`\`\`
 https://your-domain.com/api/stripe/webhook
-```
+\`\`\`
 
 ### Step 2: Configure Webhook in Stripe Dashboard
 

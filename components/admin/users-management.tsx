@@ -5,7 +5,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Search, Mail, Calendar, Crown, Settings, ArrowUpDown, Filter, X, CircleDollarSign } from "lucide-react"
+import {
+  Search,
+  Mail,
+  Calendar,
+  Crown,
+  Settings,
+  ArrowUpDown,
+  Filter,
+  X,
+  CircleDollarSign,
+  Send,
+  Loader2,
+  Check,
+} from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -36,6 +49,8 @@ export function UsersManagement() {
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all")
   const [activityFilter, setActivityFilter] = useState<ActivityFilter>("all")
+  const [sendingNudge, setSendingNudge] = useState<Record<string, boolean>>({})
+  const [nudgeSent, setNudgeSent] = useState<Record<string, boolean>>({})
   const router = useRouter()
 
   useEffect(() => {
@@ -120,6 +135,34 @@ export function UsersManagement() {
   }
 
   const hasActiveFilters = searchTerm || roleFilter !== "all" || statusFilter !== "all" || activityFilter !== "all"
+
+  const handleSendNudge = async (user: User) => {
+    setSendingNudge((prev) => ({ ...prev, [user.id]: true }))
+    try {
+      const response = await fetch("/api/admin/send-nudge-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          email: user.email,
+          displayName: user.display_name,
+          emailType: "inactive_nudge",
+        }),
+      })
+
+      if (response.ok) {
+        setNudgeSent((prev) => ({ ...prev, [user.id]: true }))
+      } else {
+        const data = await response.json()
+        alert(`Failed to send email: ${data.error || "Unknown error"}`)
+      }
+    } catch (error) {
+      console.error("Failed to send nudge email:", error)
+      alert("Failed to send email. Check console for details.")
+    } finally {
+      setSendingNudge((prev) => ({ ...prev, [user.id]: false }))
+    }
+  }
 
   const handlePermissionsClick = (userId: string, userEmail: string) => {
     console.log("[v0] Permissions button clicked for user:", userId, userEmail)
@@ -372,10 +415,34 @@ export function UsersManagement() {
                       {user.last_activity_date ? new Date(user.last_activity_date).toLocaleDateString() : "Never"}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => handlePermissionsClick(user.id, user.email)}>
-                        <Settings className="h-4 w-4 mr-2" />
-                        Permissions
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        {!user.last_activity_date && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className={`gap-1 bg-transparent ${
+                              nudgeSent[user.id]
+                                ? "text-green-600 border-green-300"
+                                : "text-orange-600 border-orange-300 hover:bg-orange-50"
+                            }`}
+                            onClick={() => handleSendNudge(user)}
+                            disabled={sendingNudge[user.id] || nudgeSent[user.id]}
+                          >
+                            {sendingNudge[user.id] ? (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : nudgeSent[user.id] ? (
+                              <Check className="h-3 w-3" />
+                            ) : (
+                              <Send className="h-3 w-3" />
+                            )}
+                            {nudgeSent[user.id] ? "Sent" : "Nudge"}
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={() => handlePermissionsClick(user.id, user.email)}>
+                          <Settings className="h-4 w-4 mr-2" />
+                          Permissions
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))

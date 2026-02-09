@@ -131,7 +131,7 @@ This document provides a comprehensive analysis of KidsLearnAI's readiness for s
 ## 5. Pre-Marketing Checklist
 
 ### Stripe Live Mode Transition
-```
+\`\`\`
 ⚠️ CRITICAL: Before accepting real payments:
 1. Go to Stripe Dashboard → Developers → API Keys
 2. Copy LIVE publishable key and secret key
@@ -144,7 +144,7 @@ This document provides a comprehensive analysis of KidsLearnAI's readiness for s
 6. Update NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID
 7. Configure live webhook endpoint in Stripe
 8. Test with a real card (you can refund immediately)
-```
+\`\`\`
 
 ### Analytics Setup (Recommended)
 - [ ] Vercel Analytics enabled
@@ -189,10 +189,10 @@ This document provides a comprehensive analysis of KidsLearnAI's readiness for s
 | Avg Session Time | 5+ min | Analytics |
 
 ### Conversion Funnel
-```
+\`\`\`
 Visit → Sign Up → Trial Start → Paid Conversion
 100%  →  20%    →    75%      →     25%
-```
+\`\`\`
 
 ---
 

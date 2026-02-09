@@ -6,7 +6,7 @@
 **Platform:** Both
 **Image:** App screenshot showing AI friend chat
 **Copy:**
-```
+\`\`\`
 Ali vaš otrok preživlja čas pred zaslonom? 📱
 
 Veste, da je problem. Ampak kaj lahko naredite?
@@ -24,7 +24,7 @@ Zaslon, ki uči. Igra, ki razvija.
 (brez kreditne kartice)
 
 #KidsLearnAI #AIzaOtroke #Starševstvo #Izobraževanje #UčenjeSezAI
-```
+\`\`\`
 
 ---
 
@@ -32,7 +32,7 @@ Zaslon, ki uči. Igra, ki razvija.
 **Platform:** Facebook
 **Image:** Infographic with stats
 **Copy:**
-```
+\`\`\`
 Ali veste? 🤔
 
 📊 Otroci danes preživijo povprečno 7 ur/dan pred zaslonom
@@ -50,7 +50,7 @@ Vaš otrok bo:
 Preizkusite 7 dni brezplačno 👉 kids-learning-ai.com
 
 #produktivniZaslon #AIučenje #SlovenskiStartup
-```
+\`\`\`
 
 ---
 
@@ -58,7 +58,7 @@ Preizkusite 7 dni brezplačno 👉 kids-learning-ai.com
 **Platform:** Instagram
 **Image:** Carousel (3 slides): 1) Problem, 2) Solution, 3) Results
 **Copy:**
-```
+\`\`\`
 Od dolgčasa pred zaslonom do pametnega učenja 🚀
 
 Slide 1️⃣: Problem
@@ -77,7 +77,7 @@ Slide 3️⃣: Rezultat
 Link v bio ⬆️
 
 #KidsLearnAI #SlovenianStartup #EdTech
-```
+\`\`\`
 
 ---
 
@@ -94,7 +94,7 @@ Link v bio ⬆️
 **Platform:** Facebook
 **Image:** Testimonial graphic (or placeholder)
 **Copy:**
-```
+\`\`\`
 "Moj 7-letni sin je vprašal, 'Mama, kako deluje AI?'"
 
 Prej: "Ne vem, dragi..."
@@ -111,7 +111,7 @@ Zainteresirani? Komentirajte "ZANIMA ME" ali obiščite:
 👉 kids-learning-ai.com
 
 #SlovenskiStarši #AI #Prihodnost
-```
+\`\`\`
 
 ---
 
@@ -119,7 +119,7 @@ Zainteresirani? Komentirajte "ZANIMA ME" ali obiščite:
 **Platform:** Instagram
 **Image:** Bright, fun graphic with stats
 **Copy:**
-```
+\`\`\`
 5 razlogov, zakaj slovenski starši izberejo KidsLearnAI:
 
 1️⃣ Slovenski jezik - celotna platforma v slovenščini
@@ -133,7 +133,7 @@ Zaslon, ki uči. Igra, ki razvija. 🚀
 Povezava v bio!
 
 #EdTech #Slovenia #AIzaOtroke
-```
+\`\`\`
 
 ---
 
@@ -141,7 +141,7 @@ Povezava v bio!
 **Platform:** Facebook
 **Image:** Feature spotlight (AI Tutor screenshot)
 **Copy:**
-```
+\`\`\`
 Predstavljamo: Osebni AI tutor za vašega otroka 🤖📚
 
 Ne več:
@@ -160,7 +160,7 @@ Zdaj:
 Preizkusite 7 dni brezplačno 👉 kids-learning-ai.com
 
 #AItechnology #EdTech #Starševstvo
-```
+\`\`\`
 
 ---
 
@@ -170,7 +170,7 @@ Preizkusite 7 dni brezplačno 👉 kids-learning-ai.com
 **Platform:** Both
 **Image:** Social proof counter graphic
 **Copy:**
-```
+\`\`\`
 🎉 Več kot 100+ slovenskih družin že uporablja KidsLearnAI!
 
 "Najboljša odločitev za učenje mojega otroka!" - ⭐⭐⭐⭐⭐
@@ -186,14 +186,14 @@ Pridružite se slovenskim družinam, ki svojim otrokom dajejo prednost v dobi AI
 Link: kids-learning-ai.com
 
 #KidsLearnAI #SocialProof #SlovenskeDružine
-```
+\`\`\`
 
 ---
 
 ### Day 9 (Tuesday) - Instagram Reel
 **Format:** 15-30 second Reel
 **Script:**
-```
+\`\`\`
 [Scene 1: Parent looking frustrated at child on tablet]
 Text overlay: "Screen time guilt?"
 
@@ -208,7 +208,7 @@ Text overlay: "7 dni brezplačno"
 Voiceover: "Začnite na kids-learning-ai.com"
 
 Music: Upbeat, playful
-```
+\`\`\`
 
 ---
 
@@ -216,7 +216,7 @@ Music: Upbeat, playful
 **Platform:** Facebook
 **Image:** Before/After comparison
 **Copy:**
-```
+\`\`\`
 PREJ: "Ne morem več gledati, kako igra Minecraft..." 😩
 
 ZDAJ: "Ustvarja AI zgodbe in rešuje matematične uganke!" 🎉
@@ -235,7 +235,7 @@ Preizkusite danes 👉 kids-learning-ai.com
 Označite starša, ki potrebuje to!
 
 #parenting #screentime #edtech
-```
+\`\`\`
 
 ---
 
@@ -243,7 +243,7 @@ Označite starša, ki potrebuje to!
 **Platform:** Instagram
 **Image:** User-generated content request
 **Copy:**
-```
+\`\`\`
 IŠČEMO: 10 slovenskih družin za BREZPLAČEN dostop! 🎁
 
 V zameno:
@@ -261,7 +261,7 @@ Komentirajte "ZANIMA ME" + starost otroka
 Izbor do ponedeljka! ⏰
 
 #giveaway #KidsLearnAI #slovenija
-```
+\`\`\`
 
 ---
 
@@ -269,7 +269,7 @@ Izbor do ponedeljka! ⏰
 **Platform:** Facebook
 **Image:** FAQ graphic
 **Copy:**
-```
+\`\`\`
 ❓ Pogosta vprašanja o KidsLearnAI
 
 Q: "Ali je varno za mojega otroka?"
@@ -292,7 +292,7 @@ A: NE! Popolnoma brezplačen preizkus.
 kids-learning-ai.com
 
 #FAQ #KidsLearnAI
-```
+\`\`\`
 
 ---
 
@@ -300,7 +300,7 @@ kids-learning-ai.com
 **Platform:** Instagram
 **Image:** Urgency/FOMO graphic
 **Copy:**
-```
+\`\`\`
 ⏰ Samo še 48 ur do konca meseca!
 
 Priključite se ZDAJ in dobite:
@@ -313,7 +313,7 @@ Samo prvih 50 prijav!
 Hitro 👉 Link v bio
 
 #limitedoffer #KidsLearnAI #hurry
-```
+\`\`\`
 
 ---
 
@@ -321,7 +321,7 @@ Hitro 👉 Link v bio
 **Platform:** Both
 **Image:** Celebration/milestone graphic
 **Copy:**
-```
+\`\`\`
 🎉 200+ OTROK že uporablja KidsLearnAI!
 
 Hvala vsem slovenskim družinam za zaupanje! ❤️
@@ -337,7 +337,7 @@ Vaš otrok si zasluži najboljše AI učne orodje.
 Začnite DANES 👉 kids-learning-ai.com
 
 #milestone #celebration #thankyou #KidsLearnAI
-```
+\`\`\`
 
 ---
 

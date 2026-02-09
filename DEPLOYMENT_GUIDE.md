@@ -71,7 +71,7 @@
 
 Create a `.env.local` file in your project root:
 
-```env
+\`\`\`env
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -83,7 +83,7 @@ GROQ_API_KEY=your_groq_api_key
 # Site URLs
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
-```
+\`\`\`
 
 ---
 
@@ -94,58 +94,58 @@ NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
 Execute the following SQL scripts in order in your Supabase SQL Editor:
 
 **Script 1: Initial Schema**
-```sql
+\`\`\`sql
 -- Run: scripts/001_create_database_schema.sql
 -- Creates: profiles, children, user_progress, achievements, ai_friends tables
-```
+\`\`\`
 
 **Script 2: Enable RLS**
-```sql
+\`\`\`sql
 -- Run: scripts/01-enable-rls.sql
 -- Enables Row Level Security on all tables
-```
+\`\`\`
 
 **Script 3: Children Table**
-```sql
+\`\`\`sql
 -- Run: scripts/08-create-children-table.sql
 -- Creates children table with proper relationships
-```
+\`\`\`
 
 **Script 4: Fix Children Table**
-```sql
+\`\`\`sql
 -- Run: scripts/09-fix-children-table.sql
 -- Fixes children table structure
-```
+\`\`\`
 
 **Script 5: Fix User Progress**
-```sql
+\`\`\`sql
 -- Run: scripts/10-fix-user-progress-table.sql
 -- Fixes user_progress table
-```
+\`\`\`
 
 **Script 6: Gamification System**
-```sql
+\`\`\`sql
 -- Run: scripts/006_gamification_system_v2.sql
 -- Creates: badges, user_badges, daily_challenges, user_daily_challenges tables
 -- Inserts 16 default badges
-```
+\`\`\`
 
 **Script 7: Fix Daily Challenges RLS**
-```sql
+\`\`\`sql
 -- Run: scripts/007_fix_daily_challenges_rls.sql
 -- Fixes RLS policies for daily challenges
-```
+\`\`\`
 
 ### 2. Verify Database Setup
 
 Run this query to verify all tables exist:
 
-```sql
+\`\`\`sql
 SELECT table_name 
 FROM information_schema.tables 
 WHERE table_schema = 'public' 
 ORDER BY table_name;
-```
+\`\`\`
 
 Expected tables:
 - achievements
