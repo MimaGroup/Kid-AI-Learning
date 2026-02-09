@@ -7,11 +7,14 @@ import { Progress } from "@/components/ui/progress"
 import { X, ArrowRight, ArrowLeft, Check } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { trackOnboarding } from "@/lib/analytics"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 interface OnboardingStep {
   title: string
   description: string
-  icon: string
+  byteImage: string
+  byteSays?: string
   action?: {
     label: string
     href: string
@@ -20,38 +23,43 @@ interface OnboardingStep {
 
 const PARENT_ONBOARDING_STEPS: OnboardingStep[] = [
   {
-    title: "Welcome to AI Kids Learning!",
+    title: "Dobrodosli v AI Kids Learning!",
     description:
-      "We're excited to help your child learn with AI-powered activities. Let's get you started with a quick tour.",
-    icon: "👋",
+      "Veseli smo, da ste tu! Byte, nas prijazen robotek, bo vasega otroka vodil skozi zabavno ucenje o umetni inteligenci.",
+    byteImage: BYTE_CHARACTER.images.waving,
+    byteSays: "Zdravo! Jaz sem Byte in komaj cakam, da zaenemo!",
   },
   {
-    title: "Create Child Profiles",
-    description: "Add your children's profiles to track their progress and customize their learning experience.",
-    icon: "👶",
+    title: "Ustvarite profil otroka",
+    description: "Dodajte profil vasega otroka, da lahko prilagodimo ucno izkusnjo njegovi starosti in znanju.",
+    byteImage: BYTE_CHARACTER.images.teaching,
+    byteSays: "Ko bom vedel vec o tvojem otroku, mu bom lahko se bolje pomagal!",
     action: {
-      label: "Add Child Profile",
+      label: "Dodaj profil otroka",
       href: "/parent/dashboard",
     },
   },
   {
-    title: "Explore Activities",
+    title: "Razisite aktivnosti",
     description:
-      "We offer quizzes, games, storytelling, and more! Each activity is designed to make learning fun and engaging.",
-    icon: "🎮",
+      "Ponujamo kvize, igre, zgodbe in se vec! Vsaka aktivnost je zasnovana tako, da je ucenje zabavno in ucinkovito.",
+    byteImage: BYTE_CHARACTER.images.hero,
+    byteSays: "Imam toliko iger za pokazat! Katero bova najprej poskusila?",
   },
   {
-    title: "Track Progress",
-    description: "Monitor your child's learning journey with detailed progress reports, achievements, and insights.",
-    icon: "📊",
+    title: "Spremljajte napredek",
+    description: "Spremljajte ucno pot vasega otroka s podrobnimi porocili, dosezki in vpogledi.",
+    byteImage: BYTE_CHARACTER.images.celebrating,
+    byteSays: "Skupaj bomo praznovali vsak uspeh!",
   },
   {
-    title: "Upgrade for More",
+    title: "Odklenite vse moznosti",
     description:
-      "Get unlimited access to all activities, advanced features, and personalized learning paths with Premium.",
-    icon: "⭐",
+      "S Premium nacrtom dobite neomejen dostop do vseh aktivnosti, naprednih funkcij in prilagojenih ucnih poti.",
+    byteImage: BYTE_CHARACTER.images.thinking,
+    byteSays: "S Premium paketom ti lahko pokazem se vec neverjetnih stvari!",
     action: {
-      label: "View Plans",
+      label: "Poglej pakete",
       href: "/pricing",
     },
   },
@@ -171,10 +179,23 @@ export function OnboardingFlow({
             <Progress value={progress} className="h-2" />
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="text-center py-8">
-              <div className="text-6xl mb-4">{step.icon}</div>
-              <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-              <p className="text-gray-600 text-lg max-w-md mx-auto">{step.description}</p>
+            <div className="text-center py-6">
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <Image
+                  src={step.byteImage || "/placeholder.svg"}
+                  alt={BYTE_CHARACTER.fullName}
+                  fill
+                  className="object-cover rounded-full ring-4 ring-purple-200 shadow-lg"
+                />
+              </div>
+              {step.byteSays && (
+                <div className="inline-block bg-purple-50 border border-purple-200 rounded-2xl px-5 py-3 mb-4 max-w-sm">
+                  <p className="text-sm text-purple-800 italic">{`"${step.byteSays}"`}</p>
+                  <p className="text-xs text-purple-500 font-semibold mt-1">- Byte</p>
+                </div>
+              )}
+              <h3 className="text-2xl font-bold mb-3 text-foreground">{step.title}</h3>
+              <p className="text-muted-foreground text-lg max-w-md mx-auto">{step.description}</p>
             </div>
 
             {step.action && (

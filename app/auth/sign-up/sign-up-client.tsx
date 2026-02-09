@@ -8,6 +8,8 @@ import Link from "next/link"
 import { trackEvent, trackError } from "@/lib/analytics"
 import { LoadingOverlay } from "@/components/loading-overlay"
 import { Gift, Check } from "lucide-react"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 function SignUpPageClient() {
   const [email, setEmail] = useState("")
@@ -137,10 +139,36 @@ function SignUpPageClient() {
         {isLoading && <LoadingOverlay message="Ustvarjanje vašega računa..." />}
 
         <div className="text-center mb-8">
+          {/* Byte avatar with speech bubble */}
+          <div className="flex flex-col items-center mb-5">
+            <div className="relative mb-3">
+              {/* Speech bubble */}
+              <div className="bg-purple-50 border border-purple-200 rounded-2xl px-5 py-3 max-w-[260px] shadow-sm">
+                <p className="text-sm text-purple-800 font-medium">
+                  {"Zdravo! Jaz sem Byte — komaj cakam, da se skupaj uciva!"}
+                </p>
+              </div>
+              {/* Speech bubble tail */}
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-50 border-b border-r border-purple-200 rotate-45" />
+            </div>
+
+            {/* Byte avatar */}
+            <div className="relative w-20 h-20 mt-1">
+              <Image
+                src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                fill
+                className="object-cover rounded-full ring-4 ring-purple-100 shadow-lg"
+              />
+              {/* Pulsing online indicator */}
+              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 border-white rounded-full animate-pulse" />
+            </div>
+          </div>
+
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
-            Ustvari račun
+            Ustvari racun
           </h1>
-          <p className="text-gray-600">Pridružite se KidsLearnAI platformi</p>
+          <p className="text-gray-600">Pridruzi se KidsLearnAI platformi</p>
 
           {referralCode && (
             <div className="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">

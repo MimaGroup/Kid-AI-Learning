@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Gamepad2, Trophy, BookOpen, Users, Sparkles, Target } from 'lucide-react'
+import Image from "next/image"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
 
 export default function GettingStarted() {
   return (
@@ -20,8 +22,17 @@ export default function GettingStarted() {
 
       <div className="max-w-6xl mx-auto px-4 py-12 relative z-10">
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">Getting Started with AI Kids Learning</h1>
-          <p className="text-xl text-gray-600">Everything you need to know to start your learning adventure!</p>
+          <div className="mx-auto mb-6 w-28 h-28">
+            <Image
+              src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+              alt={BYTE_CHARACTER.fullName}
+              width={112}
+              height={112}
+              className="rounded-full ring-4 ring-purple-200 shadow-xl mx-auto"
+            />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4 text-balance">Getting Started with AI Kids Learning</h1>
+          <p className="text-xl text-gray-600">Byte te bo popeljal skozi vse, kar moras vedeti!</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">

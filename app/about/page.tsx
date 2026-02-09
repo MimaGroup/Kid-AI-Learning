@@ -3,6 +3,8 @@ import { createMetadata } from "@/lib/metadata"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Heart, Shield, Sparkles, Users } from 'lucide-react'
+import Image from "next/image"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
 
 export const metadata: Metadata = createMetadata({
   title: "About Us - AI Kids Learning Platform",
@@ -29,7 +31,15 @@ export default function AboutPage() {
 
         <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 border-2 border-purple-200">
           <div className="text-center mb-12">
-            <div className="text-7xl mb-4 animate-bounce">🚀</div>
+            <div className="mx-auto mb-4 w-24 h-24">
+              <Image
+                src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={96}
+                height={96}
+                className="rounded-full ring-4 ring-purple-200 shadow-lg mx-auto"
+              />
+            </div>
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
               About AI Kids Learning Platform
             </h1>
@@ -156,6 +166,29 @@ export default function AboutPage() {
                 building critical thinking skills, fostering creativity, and preparing children to be informed,
                 confident participants in an AI-powered future.
               </p>
+            </section>
+
+            <section className="bg-gradient-to-r from-purple-50 to-teal-50 rounded-2xl p-6 border border-purple-200">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-shrink-0">
+                  <Image
+                    src={BYTE_CHARACTER.images.teaching || "/placeholder.svg"}
+                    alt={`${BYTE_CHARACTER.name} - our mascot`}
+                    width={120}
+                    height={120}
+                    className="rounded-full ring-4 ring-purple-200 shadow-lg"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold mb-2 text-gray-900">Meet Byte - Our AI Learning Buddy</h2>
+                  <p className="leading-relaxed">
+                    Byte is our friendly robot mascot who guides children through their AI learning journey.
+                    With a curious personality and endless patience, Byte makes complex AI concepts fun and
+                    approachable. Kids can chat with Byte, ask questions, and learn together in a safe,
+                    encouraging environment.
+                  </p>
+                </div>
+              </div>
             </section>
 
             <section>

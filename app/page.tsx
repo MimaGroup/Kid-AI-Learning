@@ -1,16 +1,18 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MobileNav } from "@/components/mobile-nav"
 import { lazy, Suspense } from "react"
-import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket } from "lucide-react"
+import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket, MessageCircle } from "lucide-react"
 import { SocialProofCounter } from "@/components/social-proof-counter"
 import { ConversionTracker } from "@/components/conversion-tracker"
 import { ReferralHeroSection } from "@/components/referral-hero-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { DemoVideoSection } from "@/components/demo-video-section"
 import { StatsSection } from "@/components/stats-section"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
 
@@ -138,39 +140,44 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Feature cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="p-6 bg-white/80 backdrop-blur border-[#E2E8F0] hover:shadow-lg transition-all hover:scale-105 rounded-2xl">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] flex items-center justify-center mb-4">
-                  <Monitor className="w-7 h-7 text-white" />
+            {/* Byte Hero Image with speech bubble */}
+            <div className="flex flex-col items-center justify-center relative">
+              <div className="relative">
+                {/* Speech bubble */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white rounded-2xl px-6 py-3 shadow-lg border border-[#E2E8F0] z-10 whitespace-nowrap">
+                  <p className="text-base font-semibold text-[#7C3AED]">{BYTE_CHARACTER.phrases.greeting}</p>
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-[#E2E8F0] rotate-45" />
                 </div>
-                <h3 className="font-heading font-bold text-lg mb-2 text-[#2D2A3D]">Produktivni zaslon</h3>
-                <p className="text-sm text-[#64748B]">Manj krivde glede "screen time"</p>
-              </Card>
-
-              <Card className="p-6 bg-white/80 backdrop-blur border-[#E2E8F0] hover:shadow-lg transition-all hover:scale-105 rounded-2xl">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6CD4C3] to-[#4FACAB] flex items-center justify-center mb-4">
-                  <Gamepad2 className="w-7 h-7 text-white" />
+                {/* Byte image */}
+                <div className="mt-8 relative w-[280px] h-[280px] md:w-[360px] md:h-[360px]">
+                  <Image
+                    src={BYTE_CHARACTER.images.hero || "/placeholder.svg"}
+                    alt={BYTE_CHARACTER.fullName}
+                    fill
+                    className="object-contain drop-shadow-2xl"
+                    priority
+                  />
                 </div>
-                <h3 className="font-heading font-bold text-lg mb-2 text-[#2D2A3D]">Igre, ki učijo</h3>
-                <p className="text-sm text-[#64748B]">Zabavno in učinkovito</p>
-              </Card>
-
-              <Card className="p-6 bg-white/80 backdrop-blur border-[#E2E8F0] hover:shadow-lg transition-all hover:scale-105 rounded-2xl">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#FCD34D] to-[#F59E0B] flex items-center justify-center mb-4">
-                  <Rocket className="w-7 h-7 text-white" />
+              </div>
+              {/* Feature pills below Byte */}
+              <div className="grid grid-cols-2 gap-3 mt-6 w-full max-w-sm">
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
+                  <Monitor className="w-5 h-5 text-[#7C3AED]" />
+                  <span className="text-sm font-medium text-[#2D2A3D]">Produktivni zaslon</span>
                 </div>
-                <h3 className="font-heading font-bold text-lg mb-2 text-[#2D2A3D]">Priprava na prihodnost</h3>
-                <p className="text-sm text-[#64748B]">AI znanje za jutri</p>
-              </Card>
-
-              <Card className="p-6 bg-white/80 backdrop-blur border-[#E2E8F0] hover:shadow-lg transition-all hover:scale-105 rounded-2xl">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#FF9980] to-[#EF4444] flex items-center justify-center mb-4">
-                  <Shield className="w-7 h-7 text-white" />
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
+                  <Gamepad2 className="w-5 h-5 text-[#6CD4C3]" />
+                  <span className="text-sm font-medium text-[#2D2A3D]">Igre, ki ucijo</span>
                 </div>
-                <h3 className="font-heading font-bold text-lg mb-2 text-[#2D2A3D]">Varno okolje</h3>
-                <p className="text-sm text-[#64748B]">Starševski nadzor</p>
-              </Card>
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
+                  <Rocket className="w-5 h-5 text-[#F59E0B]" />
+                  <span className="text-sm font-medium text-[#2D2A3D]">AI znanje za jutri</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
+                  <Shield className="w-5 h-5 text-[#EF4444]" />
+                  <span className="text-sm font-medium text-[#2D2A3D]">Varno okolje</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -223,6 +230,139 @@ export default function HomePage() {
                 AI-poganjana personalizacija se prilagaja tempu in učnemu slogu vašega otroka za optimalno vključenost.
               </p>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Meet Byte Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] via-[#FAF5FF] to-[#F0FDFA]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 border-[#7C3AED] text-[#7C3AED]">
+              AI Prijatelj
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
+              Spoznaj Byte-a
+            </h2>
+            <p className="text-xl text-[#64748B] max-w-2xl mx-auto">
+              {BYTE_CHARACTER.marketing.description}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Byte character showcase */}
+            <div className="flex justify-center">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-br from-[#7C3AED]/20 to-[#6CD4C3]/20 rounded-[3rem] blur-2xl" />
+                <div className="relative bg-white rounded-[2.5rem] p-8 shadow-xl border border-[#E2E8F0]">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden ring-2 ring-[#7C3AED]/20">
+                      <Image
+                        src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                        alt={BYTE_CHARACTER.fullName}
+                        width={64}
+                        height={64}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-heading font-bold text-[#2D2A3D]">{BYTE_CHARACTER.fullName}</h3>
+                      <p className="text-sm text-[#7C3AED] font-medium">{BYTE_CHARACTER.tagline}</p>
+                    </div>
+                  </div>
+                  {/* Simulated chat conversation */}
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#7C3AED]/20">
+                        <Image
+                          src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                          alt="Byte"
+                          width={32}
+                          height={32}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div className="bg-[#F3E8FF] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[280px]">
+                        <p className="text-sm text-[#2D2A3D]">Zdravo! Jaz sem Byte! Danes bova skupaj raziskovala, kako deluje umetna inteligenca.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 flex-row-reverse">
+                      <div className="w-8 h-8 rounded-full bg-[#6CD4C3] flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">A</div>
+                      <div className="bg-[#E0F2FE] rounded-2xl rounded-tr-sm px-4 py-3 max-w-[280px]">
+                        <p className="text-sm text-[#2D2A3D]">Kaj je AI?</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#7C3AED]/20">
+                        <Image
+                          src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                          alt="Byte"
+                          width={32}
+                          height={32}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div className="bg-[#F3E8FF] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[280px]">
+                        <p className="text-sm text-[#2D2A3D]">Odlicno vprasanje! AI je kot pameten pomocnik, ki se uci iz primerov. Igrajva igro, da ti pokazem!</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Byte features */}
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-6 h-6 text-[#7C3AED]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Osebni AI tutor</h3>
+                  <p className="text-[#64748B]">Byte se pogovarja z vsakim otrokom posebej, odgovarja na vprasanja in razlaga koncepte na zabaven nacin.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F2FE] flex items-center justify-center flex-shrink-0">
+                  <Gamepad2 className="w-6 h-6 text-[#0EA5E9]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Vodic skozi igre</h3>
+                  <p className="text-[#64748B]">Byte otroka vodi skozi vsako igro, daje namige in spodbuja pri ucenju novih stvari.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-6 h-6 text-[#F59E0B]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Spodbuda in nagrade</h3>
+                  <p className="text-[#64748B]">Byte praznuje vsak uspeh, deli znacke in motivira otroka, da nadaljuje z ucenjem.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#ECFDF5] flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-[#10B981]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Varno in nadzorovano</h3>
+                  <p className="text-[#64748B]">Vsi pogovori so moderirani in starosti primerni. Starsi imajo vedno pregled nad vsebino.</p>
+                </div>
+              </div>
+
+              <Link href="/auth/sign-up">
+                <Button
+                  size="lg"
+                  className="mt-4 text-lg px-8 py-6 rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
+                >
+                  Spoznaj Byte-a
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -332,8 +472,16 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#7C3AED]" />
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-[#7C3AED]/30">
+                <Image
+                  src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                  alt={BYTE_CHARACTER.fullName}
+                  width={40}
+                  height={40}
+                  className="object-cover w-full h-full"
+                />
+              </div>
               <span className="font-heading font-bold text-2xl">KidsLearnAI</span>
             </div>
             <p className="text-sm text-gray-400">

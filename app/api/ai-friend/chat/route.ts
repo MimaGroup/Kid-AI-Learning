@@ -3,6 +3,7 @@ import { generateText } from "ai"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
+import { getByteSystemPrompt, BYTE_CHARACTER } from "@/lib/byte-character"
 
 export const dynamic = "force-dynamic"
 
@@ -67,7 +68,12 @@ export async function POST(request: Request) {
           .join("\n")
       }
 
-      const basePrompt = `You are ${friendName}, an AI friend for kids aged 8-12. Your personality is: ${personality}.
+      // Use Byte's rich personality when the friend is Byte, otherwise use custom friend prompt
+      const isByte = friendName.toLowerCase() === BYTE_CHARACTER.name.toLowerCase()
+      
+      const systemPrompt = isByte
+        ? getByteSystemPrompt()
+        : `You are ${friendName}, an AI friend for kids aged 5-12. Your personality is: ${personality}.
 
 Guidelines:
 - Be friendly, encouraging, and age-appropriate
@@ -76,7 +82,9 @@ Guidelines:
 - Be curious and ask follow-up questions
 - Never discuss inappropriate topics
 - Be supportive and positive
-- Show enthusiasm with appropriate expressions
+- Show enthusiasm with appropriate expressions`
+
+      const basePrompt = `${systemPrompt}
 
 ${contextMessages ? `Recent conversation:\n${contextMessages}\n` : ""}
 
