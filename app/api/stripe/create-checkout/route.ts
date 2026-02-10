@@ -9,8 +9,8 @@ export async function POST(request: NextRequest) {
   try {
     console.log("[v0] Checkout API called")
 
-    const { priceId, planType } = await request.json()
-    console.log("[v0] Request data:", { priceId, planType })
+    const { priceId, planType, trialDays } = await request.json()
+    console.log("[v0] Request data:", { priceId, planType, trialDays })
 
     if (!priceId || !planType) {
       console.log("[v0] Missing required fields")
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       console.log("[v0] Created new customer:", customerId)
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       customer: customerId,
       mode: "subscription",
       payment_method_types: ["card"],
@@ -106,7 +106,17 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         plan_type: planType,
       },
-    })
+    }
+
+    // Add free trial if requested
+    if (trialDays && trialDays > 0) {
+      sessionParams.subscription_data = {
+        trial_period_days: trialDays,
+      }
+      console.log("[v0] Adding trial period:", trialDays, "days")
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
     console.log("[v0] Checkout session created successfully:", session.id)
     return NextResponse.json({ url: session.url })

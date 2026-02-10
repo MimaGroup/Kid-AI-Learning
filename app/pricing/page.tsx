@@ -3,9 +3,9 @@ import { createMetadata } from "@/lib/metadata"
 import PricingPageClient from "./_components/PricingPageClient"
 
 export const metadata: Metadata = createMetadata({
-  title: "Pricing - Choose Your Learning Plan | AI Kids Learning",
+  title: "Cenik - Izberite ucni paket | KidsLearnAI",
   description:
-    "Unlock the full potential of AI learning for your child. Choose from our Free, Premium Monthly, or Premium Yearly plans. Save 17% with annual billing.",
+    "Odklenite poln potencial AI ucenja za vasega otroka. 7-dnevni brezplacni preizkus. Izbirajte med Brezplacnim, Premium Mesecnim ali Premium Letnim paketom.",
   path: "/pricing",
 })
 

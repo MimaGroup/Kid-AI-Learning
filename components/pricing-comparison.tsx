@@ -9,16 +9,16 @@ export function PricingComparison() {
   const [mobileView, setMobileView] = useState<"free" | "monthly" | "yearly">("monthly")
 
   const features = [
-    { name: "Number of Games", free: "4 basic games", monthly: "All 7 games", yearly: "All 7 games" },
-    { name: "AI Friend Creator", free: false, monthly: true, yearly: true },
-    { name: "Pattern Training", free: false, monthly: true, yearly: true },
-    { name: "Content Library", free: "Limited", monthly: "Full access", yearly: "Full access" },
-    { name: "Progress Analytics", free: "Basic", monthly: "Advanced", yearly: "Advanced" },
-    { name: "Support", free: "Community", monthly: "Priority", yearly: "Priority" },
-    { name: "New Activities", free: false, monthly: "Monthly", yearly: "Monthly + Early access" },
-    { name: "Offline Mode", free: false, monthly: true, yearly: true },
-    { name: "Family Sharing", free: "1 child", monthly: "1 child", yearly: "Up to 3 kids" },
-    { name: "Exclusive Badges", free: false, monthly: false, yearly: true },
+    { name: "Stevilo iger", free: "4 osnovne igre", monthly: "Vseh 7 iger", yearly: "Vseh 7 iger" },
+    { name: "AI Ustvarjalec Prijateljev", free: false, monthly: true, yearly: true },
+    { name: "Trening Vzorcev", free: false, monthly: true, yearly: true },
+    { name: "Knjiznica vsebin", free: "Omejena", monthly: "Poln dostop", yearly: "Poln dostop" },
+    { name: "Analitika napredka", free: "Osnovna", monthly: "Napredna", yearly: "Napredna" },
+    { name: "Podpora", free: "Skupnost", monthly: "Prednostna", yearly: "Prednostna" },
+    { name: "Nove aktivnosti", free: false, monthly: "Mesecno", yearly: "Mesecno + Zgodnji dostop" },
+    { name: "Nacin brez povezave", free: false, monthly: true, yearly: true },
+    { name: "Druzinska delitev", free: "1 otrok", monthly: "1 otrok", yearly: "Do 3 otroci" },
+    { name: "Ekskluzivne znacke", free: false, monthly: false, yearly: true },
   ]
 
   return (
@@ -31,7 +31,7 @@ export function PricingComparison() {
             onClick={() => setMobileView("free")}
             className="text-xs"
           >
-            Free
+            Brezplacno
           </Button>
           <Button
             variant={mobileView === "monthly" ? "default" : "outline"}
@@ -39,7 +39,7 @@ export function PricingComparison() {
             onClick={() => setMobileView("monthly")}
             className="text-xs"
           >
-            Monthly
+            Mesecno
           </Button>
           <Button
             variant={mobileView === "yearly" ? "default" : "outline"}
@@ -47,7 +47,7 @@ export function PricingComparison() {
             onClick={() => setMobileView("yearly")}
             className="text-xs"
           >
-            Yearly
+            Letno
           </Button>
         </div>
       </div>
@@ -57,10 +57,10 @@ export function PricingComparison() {
         <table className="w-full">
           <thead className="bg-muted">
             <tr>
-              <th className="text-left p-4 font-semibold">Feature</th>
-              <th className="text-center p-4 font-semibold">Free</th>
-              <th className="text-center p-4 font-semibold bg-primary/5">Premium Monthly</th>
-              <th className="text-center p-4 font-semibold bg-primary/10">Premium Yearly</th>
+              <th className="text-left p-4 font-semibold">Funkcija</th>
+              <th className="text-center p-4 font-semibold">Brezplacno</th>
+              <th className="text-center p-4 font-semibold bg-primary/5">Premium Mesecno</th>
+              <th className="text-center p-4 font-semibold bg-primary/10">Premium Letno</th>
             </tr>
           </thead>
           <tbody>

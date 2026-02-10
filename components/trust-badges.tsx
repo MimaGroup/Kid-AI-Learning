@@ -12,23 +12,23 @@ export function TrustBadges({ variant = "default", className = "" }: TrustBadges
   const badges = [
     {
       icon: Shield,
-      title: "COPPA Compliant",
-      description: "Child safety certified",
+      title: "COPPA skladno",
+      description: "Certificirana varnost otrok",
     },
     {
       icon: Lock,
-      title: "Secure Payments",
-      description: "256-bit SSL encryption",
+      title: "Varno placevanje",
+      description: "256-bitno SSL sifriranje",
     },
     {
       icon: Award,
-      title: "Money-Back Guarantee",
-      description: "30-day full refund",
+      title: "Garancija vracila",
+      description: "30-dnevno polno vracilo",
     },
     {
       icon: CheckCircle2,
-      title: "No Commitment",
-      description: "Cancel anytime",
+      title: "Brez obveznosti",
+      description: "Prekliците kadarkoli",
     },
   ]
 
