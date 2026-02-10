@@ -18,13 +18,13 @@ import Link from "next/link"
 export default function PricingPageClient() {
   const productSchemas = [
     generateStructuredData("Product", {
-      name: "AI Kids Learning - Premium Monthly",
-      description: "Full access to all AI learning activities with monthly billing",
+      name: "KidsLearnAI - Premium Mesecno",
+      description: "Poln dostop do vseh AI ucnih aktivnosti z mesecnim obracunom. 7-dnevni brezplacni preizkus.",
       price: "9.99",
     }),
     generateStructuredData("Product", {
-      name: "AI Kids Learning - Premium Yearly",
-      description: "Best value - Save 17% with annual billing. Full access to all AI learning activities.",
+      name: "KidsLearnAI - Premium Letno",
+      description: "Najboljsa vrednost - Prihranite 17% z letnim obracunom. 7-dnevni brezplacni preizkus.",
       price: "99.99",
     }),
   ]
@@ -71,20 +71,21 @@ export default function PricingPageClient() {
     },
     {
       id: "monthly",
-      name: "Premium Mesečno",
+      name: "Premium Mesecno",
       price: { monthly: 9.99, yearly: 0 },
-      description: "Poln dostop do vseh AI učnih aktivnosti",
+      description: "Poln dostop do vseh AI ucnih aktivnosti",
+      trialDays: 7,
       features: [
+        "7 dni brezplacnega preizkusa",
         "Vseh 7 interaktivnih iger",
         "AI Ustvarjalec Prijateljev",
         "Trening Vzorcev",
-        "Poln dostop do knjižnice vsebin",
+        "Poln dostop do knjiznice vsebin",
         "Napredna analitika napredka",
         "Prednostna podpora",
         "Nove aktivnosti vsak mesec",
-        "Način brez povezave",
       ],
-      cta: "Začni mesečno",
+      cta: "Zacni 7-dnevni brezplacni preizkus",
       popular: false,
       priceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
     },
@@ -92,22 +93,24 @@ export default function PricingPageClient() {
       id: "yearly",
       name: "Premium Letno",
       price: { monthly: 0, yearly: 99.99 },
-      description: "Najboljša vrednost - Prihranite 17% z letnim obračunom",
+      description: "Najboljsa vrednost - Prihranite 17% z letnim obracunom",
+      trialDays: 7,
       features: [
-        "Vse iz mesečnega paketa",
-        "Prihranite 20€ na leto",
-        "Ekskluzivne letne značke",
+        "7 dni brezplacnega preizkusa",
+        "Vse iz mesecnega paketa",
+        "Prihranite 20EUR na leto",
+        "Ekskluzivne letne znacke",
         "Zgodnji dostop do novih funkcij",
         "Prednostna podpora",
-        "Družinska delitev (do 3 otroci)",
+        "Druzinska delitev (do 3 otroci)",
       ],
-      cta: "Začni letno",
+      cta: "Zacni 7-dnevni brezplacni preizkus",
       popular: true,
       priceId: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID,
     },
   ]
 
-  const handleSubscribe = async (planId: string, priceId?: string) => {
+  const handleSubscribe = async (planId: string, priceId?: string, trialDays?: number) => {
     if (!priceId) {
       console.error("[v0] Missing price ID for plan:", planId)
       alert("Napaka konfiguracije: Manjka ID cene. Prosimo kontaktirajte podporo.")
@@ -124,8 +127,6 @@ export default function PricingPageClient() {
 
     setLoading(planId)
     try {
-      console.log("[v0] Starting subscription:", { planId, priceId })
-
       trackEvent("subscription_started", {
         plan: planId,
         price_id: priceId,
@@ -134,12 +135,10 @@ export default function PricingPageClient() {
       const response = await fetch("/api/stripe/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId, planType: planId }),
+        body: JSON.stringify({ priceId, planType: planId, trialDays: trialDays || 0 }),
       })
 
-      console.log("[v0] Response status:", response.status)
       const data = await response.json()
-      console.log("[v0] Response data:", data)
 
       if (data.url) {
         trackConversion("checkout_started", planId)
@@ -271,8 +270,16 @@ export default function PricingPageClient() {
                   </div>
                 </div>
 
+                {plan.trialDays && plan.trialDays > 0 && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-3 text-center">
+                    <span className="text-green-700 text-sm font-semibold">
+                      {"7 dni BREZPLACNO - brez obveznosti"}
+                    </span>
+                  </div>
+                )}
+
                 <Button
-                  onClick={() => handleSubscribe(plan.id, plan.priceId)}
+                  onClick={() => handleSubscribe(plan.id, plan.priceId, plan.trialDays)}
                   disabled={plan.disabled || loading === plan.id}
                   className={`w-full mb-6 text-white font-semibold ${
                     plan.disabled
@@ -284,6 +291,12 @@ export default function PricingPageClient() {
                 >
                   {loading === plan.id ? "Obdelovanje..." : plan.cta}
                 </Button>
+
+                {plan.trialDays && plan.trialDays > 0 && (
+                  <p className="text-xs text-center text-gray-500 -mt-4 mb-4">
+                    {"Po preizkusu se zaracuna " + (plan.id === "yearly" ? "99,99EUR/leto" : "9,99EUR/mesec") + ". Prekliците kadarkoli."}
+                  </p>
+                )}
 
                 <div className="space-y-3">
                   <div className="font-semibold text-gray-900 text-sm mb-2">Vključeno:</div>
@@ -378,10 +391,10 @@ export default function PricingPageClient() {
                 </p>
               </Card>
               <Card className="p-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Ali je na voljo brezplačen preizkus?</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">Ali je na voljo brezplacen preizkus?</h4>
                 <p className="text-gray-600">
-                  Začnete lahko z našim brezplačnim paketom za raziskovanje osnovnih funkcij. Nadgradite kadarkoli za
-                  odklepanje premium vsebin.
+                  Da! Ponujamo 7-dnevni brezplacni preizkus za oba Premium paketa. Preizkusite vse funkcije brez obveznosti.
+                  Ce vas ne navdusi, preprosto prekliците pred koncem preizkusnega obdobja in ne boste zaracunani.
                 </p>
               </Card>
               <Card className="p-6">
