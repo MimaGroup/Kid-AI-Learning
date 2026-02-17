@@ -1,6 +1,6 @@
 -- Seed lessons for "Programiranje z AI" (coding-with-ai) - 20 lessons
 -- Module 1: Uvod v programiranje (5 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 0, 0,
   'Kaj je programiranje?',
   'kaj-je-programiranje',
@@ -37,7 +37,7 @@ Prvo programerko v zgodovini je bila ženska - **Ada Lovelace**, ki je živela p
   '[{"type": "quiz", "title": "Osnove programiranja", "description": "Preveri osnovno razumevanje programiranja"}, {"type": "activity", "title": "Recept za računalnik", "description": "Napiši natančna navodila za pripravo sendviča - kot da bi pisal za računalnik"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 0, 1,
   'Koraki in zaporedja',
   'koraki-in-zaporedja',
@@ -79,7 +79,7 @@ Kaj se zgodi, če spremenimo vrstni red? Včasih deluje (lahko najprej oblečeš
   '[{"type": "quiz", "title": "Pravilni vrstni red", "description": "Razvrsti ukaze v pravilno zaporedje"}, {"type": "activity", "title": "Moj algoritem", "description": "Napiši algoritem za svojo najljubšo aktivnost (igro, šport, hobij)"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 0, 2,
   'Pogoji: Če ... potem',
   'pogoji-ce-potem',
@@ -131,7 +131,7 @@ Tvoji možgani obdelujejo tisoče pogojev na dan, ne da bi sploh razmišljal o t
   '[{"type": "quiz", "title": "Pogoji kviz", "description": "Dopolni pogojne stavke s pravilnim rezultatom"}, {"type": "activity", "title": "Pogoji v igri", "description": "Načrtuj igro z vsaj 5 pogoji tipa ČE-POTEM"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 0, 3,
   'Ponavljanje: Zanke',
   'ponavljanje-zanke',
@@ -188,7 +188,7 @@ Kaj se zgodi, če zanka nima konca? Računalnik se "zatakne" in ponavlja za vedn
   '[{"type": "quiz", "title": "Zanke kviz", "description": "Koliko krat se bo ukaz ponovil?"}, {"type": "activity", "title": "Najdi zanke", "description": "Najdi 5 primerov zank v svojem vsakdanjem življenju"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 0, 4,
   'Spremenljivke: Shranjevanje podatkov',
   'spremenljivke',
@@ -240,7 +240,7 @@ Ko zaključiš nivo: `nivo = nivo + 1`',
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
 -- Module 2: Vizualno programiranje (5 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 1, 0,
   'Spoznaj Scratch',
   'spoznaj-scratch',
@@ -286,7 +286,7 @@ Scratch ti pomaga razumeti programiranje BREZ da bi se učil zapletene kode. Ko 
   '[{"type": "quiz", "title": "Scratch osnove", "description": "Preveri razumevanje Scratch vmesnika"}, {"type": "activity", "title": "Razišči Scratch", "description": "Obišči scratch.mit.edu in poglej 3 projekte drugih otrok"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 1, 1,
   'Animacije v Scratch',
   'animacije-scratch',
@@ -341,7 +341,7 @@ Poskusi ustvariti animacijo, kjer se mačka premika po zaslonu in se odziva na t
   '[{"type": "quiz", "title": "Animacija kviz", "description": "Kako delujejo animacije v Scratch?"}, {"type": "activity", "title": "Moja prva animacija", "description": "Ustvari animacijo v Scratch, kjer se figura premika in govori"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 1, 2,
   'Interaktivne zgodbe',
   'interaktivne-zgodbe',
@@ -390,7 +390,7 @@ Najprej nariši svojo zgodbo na papir! Nariši, katere scene potrebuješ in kje 
   '[{"type": "quiz", "title": "Interaktivne zgodbe kviz", "description": "Kako delujejo izbire v interaktivnih zgodbah?"}, {"type": "activity", "title": "Moja zgodba", "description": "Načrtuj interaktivno zgodbo z vsaj 2 izbirama in jo ustvari v Scratch"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 1, 3,
   'Preproste igre',
   'preproste-igre',
@@ -446,7 +446,7 @@ Ko osnovna igra deluje, jo lahko izboljšaš:
   '[{"type": "quiz", "title": "Igre v Scratch", "description": "Kateri elementi so potrebni za igro?"}, {"type": "activity", "title": "Moja igra", "description": "Ustvari igro Ulovi zvezdice v Scratch (ali svojo različico!)"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 1, 4,
   'Kloni in napredne tehnike',
   'kloni-napredne-tehnike',
@@ -500,7 +500,7 @@ Ko obvladaš Scratch, si pripravljen na pravo kodo! V naslednjem modulu bomo za�
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
 -- Module 3: AI projekti (5 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 2, 0,
   'AI prepoznava vzorce',
   'ai-prepoznava-vzorce',
@@ -545,7 +545,7 @@ Več primerov ko daš AI, bolje se nauči! Poskusi dati primere iz različnih ko
   '[{"type": "quiz", "title": "Strojno učenje", "description": "Kako AI prepoznava vzorce na slikah?"}, {"type": "activity", "title": "Moj Teachable Machine", "description": "Uporabi Teachable Machine in nauči AI prepoznati 3 različne predmete"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 2, 1,
   'AI klasifikator slik',
   'ai-klasifikator-slik',
@@ -593,7 +593,7 @@ Takšno AI se že uporablja v resničnem svetu:
   '[{"type": "quiz", "title": "Klasifikacija kviz", "description": "Kaj pomeni klasifikacija in kako deluje?"}, {"type": "activity", "title": "Moj klasifikator", "description": "Ustvari AI klasifikator za 3 vrste predmetov iz svoje sobe"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 2, 2,
   'AI razume besedilo',
   'ai-razume-besedilo',
@@ -635,7 +635,7 @@ Google Translate je NLP AI, ki razume en jezik in ga pretvori v drugega. Zna ve�
   '[{"type": "quiz", "title": "NLP kviz", "description": "Kako AI razume besedilo?"}, {"type": "activity", "title": "Razpoloženje detektor", "description": "Napiši program (v pseudokodi ali Scratch), ki analizira razpoloženje stavkov"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 2, 3,
   'AI ustvarja glasbo',
   'ai-ustvarja-glasbo',
@@ -683,7 +683,7 @@ Nekatere pesmi, ki jih slišiš na radiu, so bile delno ustvarjene z AI! AI poma
   '[{"type": "quiz", "title": "AI glasba kviz", "description": "Kako AI ustvarja glasbo?"}, {"type": "activity", "title": "Moja melodija", "description": "Ustvari kratko melodijo v Scratch ali Chrome Music Lab"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 2, 4,
   'AI in podatki',
   'ai-in-podatki',
@@ -735,7 +735,7 @@ Kdor ima podatke, ima moč. Zato je pomembno, da se o tem pogovarjaš s starši.
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
 -- Module 4: Moj prvi chatbot (5 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 3, 0,
   'Kaj je chatbot?',
   'kaj-je-chatbot',
@@ -779,7 +779,7 @@ V naslednjih lekcijah bomo naredili chatbota, ki:
   '[{"type": "quiz", "title": "Chatbot osnove", "description": "Kako deluje chatbot?"}, {"type": "activity", "title": "Chatbot na papirju", "description": "Napiši 10 pravil za chatbota na temo, ki te zanima"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 3, 1,
   'Načrtujemo chatbota',
   'nacrtujemo-chatbota',
@@ -830,7 +830,7 @@ Uporabnik napiše →
   '[{"type": "quiz", "title": "Načrtovanje chatbota", "description": "Kateri koraki so potrebni za načrtovanje chatbota?"}, {"type": "activity", "title": "Moj chatbot načrt", "description": "Načrtuj chatbota na svojo temo - določi osebnost, kategorije in vsaj 15 pravil"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 3, 2,
   'Gradimo chatbota v Scratch',
   'gradimo-chatbota-scratch',
@@ -881,7 +881,7 @@ Po vsakem odgovoru:
   '[{"type": "quiz", "title": "Scratch chatbot kviz", "description": "Kako deluje chatbot v Scratch?"}, {"type": "activity", "title": "Zgradi AIka", "description": "Sledi navodilom in ustvari AIka v Scratch z vsaj 8 različnimi odgovori"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 3, 3,
   'Pametnejši chatbot z AI',
   'pametnejsi-chatbot',
@@ -926,7 +926,7 @@ Isti vprašanje, dva chatbota:
   '[{"type": "quiz", "title": "AI vs pravila", "description": "Kaj je razlika med pravilnim in AI chatbotom?"}, {"type": "activity", "title": "Primerjava", "description": "Postavi isto vprašanje Scratch chatbotu in AI prijatelju na platformi - primerjaj odgovore"}]'
 FROM courses c WHERE c.slug = 'coding-with-ai';
 
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content_type, content, duration_minutes, key_concepts)
 SELECT c.id, 3, 4,
   'Zaključni projekt',
   'zakljucni-projekt',
