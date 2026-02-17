@@ -1,430 +1,85 @@
 -- Seed lessons for "AI umetniški studio" (ai-art-studio) - 10 lessons
 -- Module 1: Uvod v AI umetnost (3 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 0, 0,
   'Kaj je AI umetnost?',
-  'kaj-je-ai-umetnost',
-  'text',
-  '# Kaj je AI umetnost?
+  E'# Kaj je AI umetnost?\n\nUmetnost + tehnologija = nekaj cudovitega! AI umetnost je nova oblika ustvarjanja, kjer ti in racunalnik sodelujeta.\n\n## Kako AI ustvarja slike?\nAI je videla MILIJONE slik in se naucila:\n- Kaksne barve gredo skupaj\n- Kako izgledajo razlicni stili (akvarel, olje, risanka)\n- Kaj so predmeti na slikah (drevo, hisa, oseba)\n\nKo ji reces "narisi soncen dan na plazi", ona:\n1. Razume besede\n2. Pomisli na vse plaze, ki jih je videla\n3. Ustvari NOVO sliko, ki ne obstaja nikjer drugje!\n\n## Ali je to prava umetnost?\nRazmisli:\n- Umetnik izbere temo, barve, slog - TI izberes, kaj AI narise\n- Umetnik uporabi copic - TI uporabis besede (prompt)\n- Umetnik interpretira svet - TI interpretiras rezultat AI\n\n## Slavni primeri AI umetnosti\n- **DALL-E** - sistem, ki ustvari slike iz besedila\n- **Midjourney** - ustvarja neverjetno realisticne slike\n- **Stable Diffusion** - brezplacno AI orodje za ustvarjanje\n\n## Tvoja vloga\nTI si umetnik. AI je tvoj copic. Brez tvoje ideje AI ne more ustvariti nicesar!',
+  'text', 15,
+  '["AI umetnost", "generativna umetnost", "DALL-E", "kreativnost"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-Umetnost + tehnologija = nekaj čudovitega! AI umetnost je nova oblika ustvarjanja, kjer ti in računalnik sodelujeta.
-
-## Kako AI ustvarja slike?
-AI je videla MILIJONE slik in se naučila:
-- Kakšne barve gredo skupaj
-- Kako izgledajo različni stili (akvarel, olje, risanka)
-- Kaj so predmeti na slikah (drevo, hiša, oseba)
-
-Ko ji rečeš "nariši sončen dan na plaži", ona:
-1. Razume besede
-2. Pomisli na vse plaže, ki jih je videla
-3. Ustvari NOVO sliko, ki ne obstaja nikjer drugje!
-
-## Ali je to prava umetnost?
-To je veliko vprašanje! Razmisli:
-- Umetnik izbere temo, barve, slog → TI izbereš, kaj AI nariše
-- Umetnik uporabi čopič → TI uporabiš besede (prompt)
-- Umetnik interpretira svet → TI interpretiraš rezultat AI
-
-## Slavni primeri AI umetnosti
-- **DALL-E** - Odprt AI sistem, ki ustvari slike iz besedila
-- **Midjourney** - Ustvarja neverjetno realistične slike
-- **Stable Diffusion** - Brezplačno AI orodje za ustvarjanje
-
-## Tvoja vloga
-TI si umetnik. AI je tvoj čopič. Brez tvoje ideje AI ne more ustvariti ničesar!',
-  15,
-  '[{"type": "quiz", "title": "AI umetnost kviz", "description": "Kaj je AI umetnost in kako deluje?"}, {"type": "activity", "title": "Razmisli o umetnosti", "description": "Napiši 5 idej za slike, ki bi jih rad ustvaril z AI"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 0, 1,
   'Pisanje promptov za slike',
-  'pisanje-promptov-slike',
-  'text',
-  '# Pisanje promptov za slike
+  E'# Pisanje promptov za slike\n\nPrompt je opis slike, ki jo zelis ustvariti. Boljsi ko je prompt, boljsa bo slika!\n\n## Anatomija dobrega prompta\nDober prompt ima 4 dele:\n\n### 1. Predmet (KAJ?)\nKaj je na sliki? "Macka", "grad", "vesoljska ladja"\n\n### 2. Podrobnosti (KAKSEN?)\nOpisi predmet: "puhasta oranzna macka z modrimi ocmi"\n\n### 3. Okolje (KJE?)\nKje se nahaja: "na drevesu v carobnem gozdu ponoci"\n\n### 4. Slog (KAKO?)\nKaksna naj bo slika: "v stilu akvarela, svetle barve"\n\n## Primeri\n**Slab prompt:** "Macka" - dobis osnovno sliko macke\n**Dober prompt:** "Puhasta oranzna macka z modrimi ocmi, sedi na drevesu v carobnem gozdu ponoci, svetlece gobe okrog nje, v stilu risanke Miyazaki, topli toni"\n\n## Carobne besede za prompte\n- **"podrobno"** - doda vec detajlov\n- **"svetle barve"** - vesele slike\n- **"dramaticna osvetlitev"** - napete slike\n- **"v stilu [umetnika]"** - posnemaj slog',
+  'text', 20,
+  '["prompt", "opis", "ključne besede", "specifičnost"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-Prompt je opis slike, ki jo želiš ustvariti. Boljši ko je prompt, boljša bo slika!
-
-## Anatomija dobrega prompta
-Dober prompt ima 4 dele:
-
-### 1. Predmet (KAJ?)
-Kaj je na sliki? "Mačka", "grad", "vesoljska ladja"
-
-### 2. Podrobnosti (KAKŠEN?)
-Opisi predmet: "puhasta oranžna mačka z modrimi očmi"
-
-### 3. Okolje (KJE?)
-Kje se nahaja: "na drevesu v čarobnem gozdu ponoči"
-
-### 4. Slog (KAKO?)
-Kakšna naj bo slika: "v stilu akvarela, svetle barve"
-
-## Primeri
-
-### Slab prompt:
-"Mačka" → Dobiš osnovno sliko mačke. Dolgočasno!
-
-### Dober prompt:
-"Puhasta oranžna mačka z modrimi očmi, sedi na drevesu v čarobnem gozdu ponoči, svetleče gobe okrog nje, v stilu risanke Miyazaki, topli toni"
-
-## Čarobne besede za prompte
-Te besede pogosto izboljšajo rezultat:
-- **"podrobno"** - doda več detajlov
-- **"svetle barve"** - vesele slike
-- **"dramatična osvetlitev"** - napete slike
-- **"v stilu [umetnika]"** - posnemaj slog (akvarel, olje, risanka)
-
-## Poskusi!
-Na naši platformi imaš AI orodje za ustvarjanje slik. Začni s preprostim promptom in ga izboljšuj!',
-  20,
-  '[{"type": "quiz", "title": "Prompt kviz", "description": "Kateri prompt bo dal boljšo sliko?"}, {"type": "activity", "title": "Moji prompti", "description": "Napiši 3 prompte (slab, dober, odličen) za isto temo in primerjaj rezultate"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 0, 2,
   'Umetnostni slogi skozi zgodovino',
-  'umetnostni-slogi',
-  'text',
-  '# Umetnostni slogi skozi zgodovino
-
-Da bi ustvarjal boljšo AI umetnost, je dobro poznati različne umetnostne sloge!
-
-## Slog 1: Impresionizem
-- **Kdaj**: 1870-ih
-- **Kako izgleda**: mehke poteze, svetle barve, prizori iz narave
-- **Slavni umetniki**: Claude Monet, Pierre-Auguste Renoir
-- **Za prompt**: "v stilu impresionizma, mehke poteze čopiča"
-
-## Slog 2: Kubizem
-- **Kdaj**: 1900-ih
-- **Kako izgleda**: geometrijske oblike, več zornih kotov hkrati
-- **Slavni umetniki**: Pablo Picasso, Georges Braque
-- **Za prompt**: "v stilu kubizma, geometrijske oblike"
-
-## Slog 3: Pop art
-- **Kdaj**: 1950-ih
-- **Kako izgleda**: žive barve, ponavljajoči vzorci, iz popularne kulture
-- **Slavni umetniki**: Andy Warhol, Roy Lichtenstein
-- **Za prompt**: "pop art slog, žive barve, pike"
-
-## Slog 4: Digitalna umetnost
-- **Kdaj**: danes!
-- **Kako izgleda**: neskončne možnosti - od realističnega do fantazijskega
-- **Za prompt**: "digitalna umetnost, podrobno, svetleče barve"
-
-## Slog 5: Risanka / Anime
-- **Kdaj**: ves 20. in 21. stoletje
-- **Kako izgleda**: velike oči, poenostavljene oblike, izrazite barve
-- **Za prompt**: "anime slog" ali "risanka slog"
-
-## Izziv
-Izberi isti predmet (npr. mačko) in jo ustvari v 5 različnih slogih. Primerjaj rezultate!',
-  20,
-  '[{"type": "quiz", "title": "Umetnostni slogi", "description": "Prepoznaj različne umetnostne sloge"}, {"type": "activity", "title": "5 slogov, 1 predmet", "description": "Ustvari isto stvar v 5 različnih slogih z AI"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
+  E'# Umetnostni slogi skozi zgodovino\n\nDa bi ustvarjal boljso AI umetnost, je dobro poznati razlicne umetnostne sloge!\n\n## Impresionizem (1870)\nMehke poteze, svetle barve, prizori iz narave.\nUmetniki: Claude Monet, Renoir\nPrompt: "v stilu impresionizma, mehke poteze copica"\n\n## Kubizem (1900)\nGeometrijske oblike, vec zornih kotov hkrati.\nUmetniki: Pablo Picasso, Georges Braque\nPrompt: "v stilu kubizma, geometrijske oblike"\n\n## Pop art (1950)\nZive barve, ponavljajoci vzorci, popularna kultura.\nUmetniki: Andy Warhol, Roy Lichtenstein\nPrompt: "pop art slog, zive barve, pike"\n\n## Digitalna umetnost (danes)\nNeskoncne moznosti - od realisticnega do fantazijskega.\nPrompt: "digitalna umetnost, podrobno, svetlece barve"\n\n## Risanka / Anime\nVelike oci, poenostavljene oblike, izrazite barve.\nPrompt: "anime slog" ali "risanka slog"\n\n## Izziv\nIzberi isti predmet in ga ustvari v 5 razlicnih slogih. Primerjaj rezultate!',
+  'text', 20,
+  '["umetnostna zgodovina", "impresionizem", "kubizem", "pop art"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
 -- Module 2: Generiranje slik (3 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 1, 0,
   'Moja prva AI slika',
-  'moja-prva-ai-slika',
-  'text',
-  '# Moja prva AI slika
+  E'# Moja prva AI slika\n\nCas je, da ustvaris svojo prvo AI sliko!\n\n## Korak za korakom\n\n### 1. Izberi temo\nKaj te navdusuje? Zivali? Vesolje? Pravljice?\n\n### 2. Napisi prompt\nUporabi recept:\n- **Predmet**: pav\n- **Podrobnosti**: z zlatim perjem, razprostrt rep\n- **Okolje**: v carobnem vrtu s svetlecimi rozami\n- **Slog**: fantazijski, podrobno, svetle barve\n\nCeloten prompt: "Velicasten pav z zlatim perjem in razprostrtim repom, stoji v carobnem vrtu s svetlecimi rozami, fantazijski slog, podrobno, svetle barve, magicna atmosfera"\n\n### 3. Ustvari!\nUporabi AI orodje za ustvarjanje slik na nasi platformi.\n\n### 4. Oceni in izboljsaj\nPoglej rezultat:\n- Ali je to, kar si si zamislil?\n- Kaj bi spremenil?\n- Dodaj ali odstrani besede iz prompta\n\n## Nasveti\n- Daljsi prompt = bolj specificna slika\n- Poskusi razlicne sloge za isti predmet\n- Ce ti ni vsec, spremeni samo en del',
+  'text', 25,
+  '["generiranje slik", "iteracija", "eksperimentiranje", "shranjanje"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-Čas je, da ustvariš svojo prvo AI sliko!
-
-## Korak za korakom
-
-### 1. Izberi temo
-Kaj te navdušuje? Živali? Vesolje? Pravljice? Izberi nekaj, kar ti je všeč!
-
-### 2. Napiši prompt
-Uporabi recept iz prejšnje lekcije:
-- **Predmet**: pav
-- **Podrobnosti**: z zlatim perjem, razprostrt rep
-- **Okolje**: v čarobnem vrtu s svetlečimi rožami
-- **Slog**: fantazijski, podrobno, svetle barve
-
-Celoten prompt: "Veličasten pav z zlatim perjem in razprostrtim repom, stoji v čarobnem vrtu s svetlečimi rožami, fantazijski slog, podrobno, svetle barve, magična atmosfera"
-
-### 3. Ustvari!
-Uporabi AI orodje za ustvarjanje slik na naši platformi in vnesi svoj prompt.
-
-### 4. Oceni in izboljšaj
-Poglej rezultat:
-- Ali je to, kar si si zamislil?
-- Kaj bi spremenil?
-- Dodaj ali odstrani besede iz prompta
-
-## Nasveti za boljše rezultate
-- Daljši prompt = bolj specifična slika
-- Poskusi različne sloge za isti predmet
-- Če ti ni všeč, ne spremeni vsega - spremenij samo en del
-
-## Tvoja umetniška zbirka
-Shrani svoje najboljše slike! Začni graditi svojo AI umetniško zbirko.',
-  25,
-  '[{"type": "quiz", "title": "Ustvarjanje slik", "description": "Kaj naredi prompt boljši?"}, {"type": "activity", "title": "3 slike", "description": "Ustvari 3 AI slike na različne teme in izberi svojo najljubšo"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 1, 1,
   'Zgodbe s slikami',
-  'zgodbe-s-slikami',
-  'text',
-  '# Zgodbe s slikami
+  E'# Zgodbe s slikami\n\nKaj ce bi ustvaril celotno slikovno zgodbo s pomocjo AI?\n\n## Slikovnica z AI\nSlikovnica je zgodba, ki jo spremlajajo slike. Z AI lahko ustvaris oboje!\n\n## Projekt: Moja AI slikovnica\n\n### Korak 1: Napisi zgodbo (5-8 stavkov)\nPrimer:\n1. Mala robotka Bip se je prebudila v svoji delavnici.\n2. Skozi okno je videla, da je padel sneg.\n3. Nikoli se ni videla snega! Sla je ven.\n4. Naredila je svojega prvega snezaka - sneznega robota!\n5. Od takrat ima Bip najljubsi letni cas - zimo.\n\n### Korak 2: Ustvari slike za vsak stavek\nZa vsak stavek napisi prompt z istim opisom lika!\n\n### Korak 3: Sestavi slikovnico\nZdruzi besedilo in slike v celoto!\n\n## Nasveti za konsistentnost\nProblem: AI lahko narise robota drugace na vsaki sliki!\nResitev: Uporabi cim bolj podoben opis lika v vsakem promptu:\n"Majhna srebrna robotka z modrimi ocmi in rdeco pentljo" - enako v vsakem promptu!',
+  'text', 30,
+  '["slikovnica", "zgodba", "konsistentnost", "liki"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-Kaj če bi ustvaril celotno slikovno zgodbo s pomočjo AI?
-
-## Slikovnica z AI
-Slikovnica je zgodba, ki jo spremlajajo slike. Z AI lahko ustvariš oboje!
-
-## Projekt: Moja AI slikovnica
-
-### Korak 1: Napiši zgodbo (5-8 stavkov)
-Primer:
-1. "Mala robotka Bip se je prebudila v svoji delavnici."
-2. "Skozi okno je videla, da je padel sneg."
-3. "Nikoli še ni videla snega! Šla je ven."
-4. "Naredila je svojega prvega snežaka - snežnega robota!"
-5. "Od takrat ima Bip najljubši letni čas - zimo."
-
-### Korak 2: Ustvari slike za vsak stavek
-Za vsak stavek napiši prompt:
-1. "Majhna simpatična robotka z modrimi očmi, se prebuja v udobni delavnici polni orodij, topla svetloba, stil otroške knjige"
-2. "Pogled skozi okno delavnice na zasneženo pokrajino, čudovit zimski dan, stil otroške knjige"
-...
-
-### Korak 3: Sestavi slikovnico
-Združi besedilo in slike v celoto!
-
-## Nasveti za konsistentnost
-Problem: AI lahko nariše robota drugače na vsaki sliki!
-Rešitev: Uporabi čim bolj podoben opis lika v vsakem promptu:
-"Majhna srebrna robotka z modrimi očmi in rdečo pentljo" - enako v vsakem promptu!',
-  30,
-  '[{"type": "quiz", "title": "Slikovnica kviz", "description": "Kako ustvariš konsistentno AI slikovnico?"}, {"type": "activity", "title": "Moja slikovnica", "description": "Napiši kratko zgodbo (5 stavkov) in ustvari AI sliko za vsak stavek"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 1, 2,
   'Napredne tehnike generiranja',
-  'napredne-tehnike-generiranja',
-  'text',
-  '# Napredne tehnike generiranja
-
-Ko obvladaš osnove, je čas za naprednejše trike!
-
-## Tehnika 1: Negativni prompt
-Povej AI, česa NE želiš:
-- "Brez besedila na sliki"
-- "Brez ljudi"
-- "Brez temnih barv"
-
-## Tehnika 2: Mešanje slogov
-Kombiniraj dva sloga:
-- "V stilu anime + akvarel" → edinstvena kombinacija!
-- "Steampunk + narava" → mehanična narava
-- "Retro + vesolje" → vintage vesoljska pustolovščina
-
-## Tehnika 3: Razpoloženje in atmosfera
-Dodaj čustvene opise:
-- **Veselo**: "svetlo, barvito, sončno, toplo"
-- **Skrivnostno**: "megleno, temno, skrivnostno, luna"
-- **Epsko**: "dramatično, veličastno, zlato, mogočno"
-
-## Tehnika 4: Perspektiva
-Spremeni zorni kot:
-- "Od zgoraj" (ptičja perspektiva)
-- "Od spodaj" (žabja perspektiva)
-- "Bližnji posnetek" (detajl)
-- "Širok pogled" (panorama)
-
-## Tehnika 5: Osvetlitev
-Svetloba spremeni vse!
-- "Zlata ura" - topla svetloba sončnega zahoda
-- "Neonske luči" - futuristična, mestna
-- "Sveča" - intimno, toplo
-- "Severni sij" - magično, barvito
-
-## Izziv
-Ustvari 4 verzije iste scene z različno osvetlitvijo in primerjaj, kako se spremeni razpoloženje!',
-  25,
-  '[{"type": "quiz", "title": "Napredne tehnike", "description": "Katere napredne tehnike izboljšajo AI slike?"}, {"type": "activity", "title": "Eksperiment", "description": "Ustvari 4 verzije iste scene z različnimi tehnikami"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
+  E'# Napredne tehnike generiranja\n\nKo obvladas osnove, je cas za naprednejse trike!\n\n## Tehnika 1: Negativni prompt\nPovej AI, cesa NE zelis:\n- "Brez besedila na sliki"\n- "Brez ljudi"\n- "Brez temnih barv"\n\n## Tehnika 2: Mesanje slogov\nKombiniraj dva sloga:\n- "V stilu anime + akvarel" - edinstvena kombinacija!\n- "Steampunk + narava" - mehanicna narava\n- "Retro + vesolje" - vintage vesoljska pustolovscina\n\n## Tehnika 3: Razpolozenje in atmosfera\nDodaj custvene opise:\n- **Veselo**: svetlo, barvito, soncno, toplo\n- **Skrivnostno**: megleno, temno, skrivnostno, luna\n- **Epsko**: dramaticno, velicastno, zlato, mogocno\n\n## Tehnika 4: Perspektiva\nSpremeni zorni kot:\n- "Od zgoraj" (pticja perspektiva)\n- "Od spodaj" (zabja perspektiva)\n- "Bliznji posnetek" (detajl)\n- "Sirok pogled" (panorama)\n\n## Tehnika 5: Osvetlitev\n- "Zlata ura" - topla svetloba soncnega zahoda\n- "Neonske luci" - futuristicna, mestna\n- "Sveca" - intimno, toplo\n- "Severni sij" - magicno, barvito',
+  'text', 25,
+  '["negativni prompt", "mešanje slogov", "perspektiva", "osvetlitev"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
 -- Module 3: Glasba in AI (2 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 2, 0,
   'Kako AI ustvarja glasbo',
-  'kako-ai-ustvarja-glasbo',
-  'text',
-  '# Kako AI ustvarja glasbo
+  E'# Kako AI ustvarja glasbo\n\nAI ne ustvarja samo slik - ustvarja tudi glasbo!\n\n## Glasba je matematika\nTo je skrivnost glasbe - je polna vzorcev in pravil:\n- **Ritem**: ponavljajoc vzorec udarcev\n- **Melodija**: zaporedje not, ki sledijo pravilom\n- **Harmonija**: kombinacija not, ki zvenijo dobro skupaj\n\nAI se lahko nauci teh pravil!\n\n## Kako AI ustvari pesem?\n1. AI poslusa tisocke pesmi\n2. Najde vzorce: "po akordu C pogosto pride G"\n3. Ustvari novo melodijo, ki sledi tem vzorcem\n4. Rezultat je nova pesem, ki nikoli prej ni obstajala!\n\n## AI glasba orodja\n- **Chrome Music Lab** - brezplacno, zabavno eksperimentiranje\n- **AIVA** - AI komponist za klasicno glasbo\n- **Boomy** - ustvari pesem v sekundah\n\n## Eksperiment z Music Lab\nObisci musiclab.chromeexperiments.com in poskusi:\n- **Song Maker** - ustvari melodijo s kliki\n- **Rhythm** - eksperimentiraj z ritmi\n- **Kandinsky** - pretvori risbo v glasbo!\n\n## Zanimivost\nNekatere AI pesmi so tako dobre, da jih ljudje ne morejo lociti od pesmi, ki jih je napisal clovek!',
+  'text', 20,
+  '["AI glasba", "melodija", "ritem", "Chrome Music Lab"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-AI ne ustvarja samo slik - ustvarja tudi glasbo! Poglejmo, kako.
-
-## Glasba je matematika
-To je skrivnost glasbe - je polna vzorcev in pravil:
-- **Ritem**: ponavljajoč vzorec udarcev
-- **Melodija**: zaporedje not, ki sledijo pravilom
-- **Harmonija**: kombinacija not, ki zvenijo dobro skupaj
-
-AI se lahko nauči teh pravil!
-
-## Kako AI ustvari pesem?
-1. AI posluša tisoče pesmi
-2. Najde vzorce: "po akordu C pogosto pride G"
-3. Ustvari novo melodijo, ki sledi tem vzorcem
-4. Rezultat je nova pesem, ki nikoli prej ni obstajala!
-
-## AI glasba orodja
-- **Chrome Music Lab** - brezplačno, zabavno eksperimentiranje
-- **AIVA** - AI komponist, ki ustvari klasično glasbo
-- **Boomy** - ustvari pesem v sekundah
-
-## Eksperiment z Music Lab
-Obišči musiclab.chromeexperiments.com in poskusi:
-- **Song Maker** - ustvari melodijo s kliki
-- **Rhythm** - eksperimentiraj z ritmi
-- **Kandinsky** - pretvori risbo v glasbo!
-
-## Zanimivost
-Nekatere AI pesmi so tako dobre, da jih ljudje ne morejo ločiti od pesmi, ki jih je napisal človek! Na tekmovanjih v glasbi so AI skladbe že zmagale proti človeškim.',
-  20,
-  '[{"type": "quiz", "title": "AI glasba kviz", "description": "Kako AI ustvarja glasbo?"}, {"type": "activity", "title": "Moja melodija", "description": "Ustvari kratko melodijo v Chrome Music Lab Song Maker"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 2, 1,
   'Zvočna pokrajina',
-  'zvocna-pokrajina',
-  'text',
-  '# Zvočna pokrajina
+  E'# Zvocna pokrajina\n\nZvocna pokrajina je zbirka zvokov, ki ustvarijo atmosfero.\n\n## Kaj je zvocna pokrajina?\n- **Gozd**: pticje petje, selestenje listja, potok\n- **Morje**: valovi, galeb, veter\n- **Mesto**: avtomobili, ljudje, glasba iz lokalov\n- **Vesolje**: tisina... ali sci-fi zvoki!\n\n## AI in zvoki\nAI lahko ustvari zvoke, ki ne obstajajo:\n- Kako zveni planeta iz drugega osoncja?\n- Kako zveni barva modra?\n- Kako zveni vonj po rozah?\n\n## Projekt: Moja zvocna zgodba\nZdruzi slike IN zvoke v multimedijsko izkusnjo:\n1. **Ustvari 3 AI slike** za svojo zgodbo\n2. **Ustvari zvocno pokrajino** za vsako sceno\n3. **Zdruzi** v predstavitev\n\n### Primer:\nScena 1: Gozd - pticje petje, nezna melodija\nScena 2: Nevihta - grmenje, dez, dramaticna glasba\nScena 3: Mavrica - tihi zvonci, vesela melodija\n\n## Sinestezija\nSinestezija je ko en cut sprozi drugega:\n- Slisis barvo\n- Vidis glasbo\n- Okusis obliko\n\nAI nam pomaga izkusiti sinestezijo - pretvori slike v glasbo ali glasbo v slike!',
+  'text', 25,
+  '["zvočna pokrajina", "sinestezija", "multimedija", "atmosfera"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
 
-Zvočna pokrajina je zbirka zvokov, ki ustvarijo atmosfero. Predstavljaj si zvoke gozda, morja ali mesta!
-
-## Kaj je zvočna pokrajina?
-- **Gozd**: ptičje petje, šelestenje listja, potok
-- **Morje**: valovi, galeb, veter
-- **Mesto**: avtomobili, ljudje, glasba iz lokalov
-- **Vesolje**: tišina... ali sci-fi zvoki!
-
-## AI in zvoki
-AI lahko ustvari zvoke, ki ne obstajajo:
-- Kako zveni planeta iz drugega osončja?
-- Kako zveni barva modra?
-- Kako zveni vonj po rožah?
-
-## Projekt: Moja zvočna zgodba
-Združi slike IN zvoke v multimedijsko izkušnjo:
-1. **Ustvari 3 AI slike** za svojo zgodbo
-2. **Ustvari zvočno pokrajino** za vsako sceno
-3. **Združi** v predstavitev
-
-### Primer:
-Scena 1: Gozd - ptičje petje, nežna melodija
-Scena 2: Nevihta - grmenje, dež, dramatična glasba
-Scena 3: Mavrica - tihi zvonci, vesela melodija
-
-## Sinestezija
-Sinestezija je ko en čut sproži drugega:
-- Slišiš barvo
-- Vidiš glasbo
-- Okušaš obliko
-
-AI nam pomaga izkusiti sinestezijo - pretvori slike v glasbo ali glasbo v slike!',
-  25,
-  '[{"type": "quiz", "title": "Zvočna pokrajina kviz", "description": "Kaj je zvočna pokrajina?"}, {"type": "activity", "title": "Moja zvočna scena", "description": "Ustvari AI sliko in opiši, kakšna zvočna pokrajina bi jo spremljala"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
--- Module 4: Moj AI portfolio (2 lessons)
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
+-- Module 4: Moj AI portfolio (1 lesson - zaključni projekt)
+INSERT INTO course_lessons (course_id, module_index, lesson_index, title, content, content_type, duration_minutes, key_concepts)
 SELECT c.id, 3, 0,
-  'Ustvarjam svoj portfolio',
-  'ustvarjam-portfolio',
-  'text',
-  '# Ustvarjam svoj portfolio
-
-Portfolio je zbirka tvojih najboljših del. Čas je, da ustvariš svojega!
-
-## Kaj je umetniški portfolio?
-Portfolio je kot muzej tvojih najboljših stvaritev. Pravi umetniki imajo portfolie, da pokažejo svoje delo drugim.
-
-## Tvoj AI portfolio
-Zberi svoja najboljša dela iz tečaja:
-
-### Kategorija 1: Slike
-- Najboljša slika iz "Moja prva AI slika"
-- Najboljša slika iz eksperimentov s slogi
-- Najboljša slika iz naprednih tehnik
-
-### Kategorija 2: Zgodbe
-- Tvoja AI slikovnica
-- Besedilo zgodbe
-
-### Kategorija 3: Glasba
-- Tvoja melodija iz Music Lab
-- Opis zvočne pokrajine
-
-## Kako predstaviti portfolio
-Za vsako delo napiši:
-1. **Naslov** - ime tvojega dela
-2. **Prompt** - kaj si napisal AI
-3. **Razmišljanje** - zakaj si izbral to temo/slog
-4. **Kaj sem se naučil** - kaj si se naučil pri ustvarjanju
-
-## Primer:
-**Naslov**: "Čarobni gozd"
-**Prompt**: "Gost čarobni gozd s svetlečimi gobami in svetluškami, megla med drevesi, fantazijski slog, topli toni, magična atmosfera"
-**Razmišljanje**: "Rad imam gozd in rad si predstavljam, da je čaroben"
-**Naučil sem se**: "Da z dodajanjem podrobnosti o osvetlitvi in atmosferi dobimo veliko boljšo sliko"',
-  25,
-  '[{"type": "quiz", "title": "Portfolio kviz", "description": "Kaj mora vsebovati dober portfolio?"}, {"type": "activity", "title": "Moj portfolio", "description": "Zberi svoja 3 najboljša dela in za vsako napiši opis"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
-
-INSERT INTO course_lessons (course_id, module_index, lesson_index, title, slug, content_type, content, duration_minutes, activities)
-SELECT c.id, 3, 1,
-  'Zaključna razstava',
-  'zakljucna-razstava',
-  'text',
-  '# Zaključna razstava
-
-Čestitke! Si na zadnji lekciji AI umetniškega studia! Čas je za tvojo zaključno razstavo.
-
-## Zaključni projekt: AI razstava
-Ustvari mini umetniško razstavo s 5 deli:
-
-### 1. Portret (oseba ali žival)
-Ustvari podroben portret v izbranem slogu.
-
-### 2. Pokrajina (narava ali mesto)
-Ustvari čudovito pokrajino z naprednimi tehnikami osvetlitve.
-
-### 3. Fantazija (izmišljeni svet)
-Pusti domišljiji prosto pot in ustvari svet, ki ne obstaja!
-
-### 4. Zgodba v sliki
-Ena sama slika, ki pripoveduje celotno zgodbo.
-
-### 5. Tvoja izbira
-Karkoli želiš - to je tvoj prosti prostor za ustvarjanje!
-
-## Umetnik si TI
-Skozi ta tečaj si spoznal:
-- AI je orodje, tako kot čopič ali svinčnik
-- TVOJA kreativnost je tista, ki naredi umetnost posebno
-- Dober prompt je umetnost sam po sebi
-- Različni slogi in tehnike dajejo različne rezultate
-
-## Kaj naprej?
-- Nadaljuj z ustvarjanjem! Več ko vadiš, boljši boš
-- Eksperimentiraj z novimi slogi
-- Deli svoja dela s prijatelji in družino
-- Poskusi naše druge tečaje za več znanja
-
-Hvala, da si bil del AI umetniškega studia! Tvoja kreativnost nima meja.',
-  30,
-  '[{"type": "quiz", "title": "Veliki končni kviz", "description": "Preveri vse znanje iz tečaja AI umetnosti!"}, {"type": "activity", "title": "Moja razstava", "description": "Ustvari 5 AI slik za svojo razstavo in jih predstavi družini"}]'
-FROM courses c WHERE c.slug = 'ai-art-studio';
+  'Zaključna razstava - moj AI portfolio',
+  E'# Zakljucna razstava - moj AI portfolio\n\nCestitke! Si na zadnji lekciji AI umetnisskega studia! Cas je za tvojo zakljucno razstavo.\n\n## Zakljucni projekt: AI razstava\nUstvari mini umetniisko razstavo s 5 deli:\n\n### 1. Portret (oseba ali zival)\nUstvari podroben portret v izbranem slogu.\n\n### 2. Pokrajina (narava ali mesto)\nUstvari cudovito pokrajino z naprednimi tehnikami osvetlitve.\n\n### 3. Fantazija (izmisljeni svet)\nPusti domisljiji prosto pot in ustvari svet, ki ne obstaja!\n\n### 4. Zgodba v sliki\nEna sama slika, ki pripoveduje celotno zgodbo.\n\n### 5. Tvoja izbira\nKarkoli zelis - to je tvoj prosti prostor za ustvarjanje!\n\n## Za vsako delo napisi:\n1. **Naslov** - ime tvojega dela\n2. **Prompt** - kaj si napisal AI\n3. **Razmisljanje** - zakaj si izbral to temo/slog\n4. **Kaj sem se naucil** - kaj si se naucil pri ustvarjanju\n\n## Umetnik si TI\nSkozi ta tecaj si spoznal:\n- AI je orodje, tako kot copic ali svincnik\n- TVOJA kreativnost je tista, ki naredi umetnost posebno\n- Dober prompt je umetnost sam po sebi\n- Razlicni slogi in tehnike dajejo razlicne rezultate\n\nHvala, da si bil del AI umetnisskega studia! Tvoja kreativnost nima meja.',
+  'text', 30,
+  '["portfolio", "razstava", "predstavitev", "kreativnost"]'
+FROM courses c WHERE c.slug = 'ai-art-studio'
+ON CONFLICT (course_id, module_index, lesson_index) DO NOTHING;
