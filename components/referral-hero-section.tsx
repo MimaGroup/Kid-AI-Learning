@@ -18,9 +18,12 @@ export function ReferralHeroSection() {
             <Gift className="w-5 h-5" />
             Priporočilni program
           </div>
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">Deli in Zaslužij</h2>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            Povabi prijatelje in dobite oba nagrade - oni 7 dni brezplačno, ti pa mesec premium!
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2">{'Deli. Povabi. Zasluži.'}</h2>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto mb-2">
+            {'Povabi prijatelje in oba prejmeta nagrado!'}
+          </p>
+          <p className="text-base text-white/80 max-w-2xl mx-auto">
+            {'Prijatelj dobi 7 dni brezplačnega premium dostopa, ti pa kar 1 mesec premium članstva brezplačno.'}
           </p>
         </div>
 
@@ -30,7 +33,7 @@ export function ReferralHeroSection() {
               <Users className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold mb-2">1. Deli svojo kodo</h3>
-            <p className="text-white/80">Dobite unikatno priporočilno kodo takoj po registraciji</p>
+            <p className="text-white/80">{'Po registraciji prejmeš svojo unikatno priporočilno kodo. Deli jo s prijatelji.'}</p>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur border-white/20 p-6 text-white hover:scale-105 transition-transform">
@@ -38,15 +41,15 @@ export function ReferralHeroSection() {
               <Gift className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold mb-2">2. Prijatelj se prijavi</h3>
-            <p className="text-white/80">Tvoj prijatelj dobi 7 dni brezplačnega premium dostopa</p>
+            <p className="text-white/80">{'Ob prijavi s tvojo kodo prejme 7 dni brezplačnega premium dostopa.'}</p>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur border-white/20 p-6 text-white hover:scale-105 transition-transform">
             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-4">
               <TrendingUp className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold mb-2">3. Oba zaslužita</h3>
-            <p className="text-white/80">Ko se prijatelj naroči, ti dobiš 1 mesec brezplačno!</p>
+            <h3 className="text-xl font-bold mb-2">3. Prejmi nagrado</h3>
+            <p className="text-white/80">{'Ko se prijatelj naroči, ti podarimo 1 mesec premium članstva.'}</p>
           </Card>
         </div>
 
@@ -56,7 +59,7 @@ export function ReferralHeroSection() {
               Začni deliti zdaj
             </Button>
           </Link>
-          <p className="text-white/80 mt-4 text-sm">Neomejeno število priporočil • Neomejeni brezplačni meseci</p>
+          <p className="text-white/90 mt-4 text-base font-medium">{'Več prijateljev kot povabiš, več nagrad lahko prejmeš!'}</p>
         </div>
       </div>
     </section>
