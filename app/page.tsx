@@ -375,15 +375,17 @@ export default function HomePage() {
 
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] to-[#F0FDFA]">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <Badge className="mb-6 bg-[#7C3AED]/10 text-[#7C3AED] border-[#7C3AED]/20 px-6 py-3 rounded-full font-semibold">
-            Omejena ponudba
-          </Badge>
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-[#2D2A3D]">
-            Pripravljeni začeti AI potovanje vašega otroka?
+            {'Ste pripravljeni odpreti vrata prihodnosti svojemu otroku?'}
           </h2>
-          <p className="text-xl mb-10 text-[#64748B] max-w-2xl mx-auto">
-            Pridružite se tisočim družinam, ki svojim otrokom dajejo prednost v dobi umetne inteligence. Začnite
-            brezplačno preizkusno obdobje še danes — brez kreditne kartice.
+          <p className="text-xl mb-4 text-[#64748B] max-w-2xl mx-auto">
+            {'Svet se hitro spreminja. Otrokom, ki razumejo umetno inteligenco, pripada samozavestnejša in uspešnejša prihodnost.'}
+          </p>
+          <p className="text-lg mb-4 text-[#64748B] max-w-2xl mx-auto">
+            {'Pridružite se družinam, ki svojim otrokom že danes omogočajo varno in spodbudno AI-izkušnjo.'}
+          </p>
+          <p className="text-base mb-10 text-[#7C3AED] font-semibold max-w-2xl mx-auto">
+            {'Začnite brezplačno – brez kreditne kartice.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/sign-up">
@@ -391,16 +393,16 @@ export default function HomePage() {
                 size="lg"
                 className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
               >
-                Začni brezplačno
-                <span className="ml-2">→</span>
-              </Button>
-            </Link>
-            <Link href="/pricing">
-              <Button
-                size="lg"
-                className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED] font-semibold"
-              >
-                Poglej pakete
+              {'Začni brezplačno'}
+              <span className="ml-2">→</span>
+            </Button>
+          </Link>
+          <Link href="/pricing">
+            <Button
+              size="lg"
+              className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED] font-semibold"
+            >
+              {'Razišči možnosti'}
               </Button>
             </Link>
           </div>
