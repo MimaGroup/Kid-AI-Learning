@@ -24,6 +24,13 @@ export function MobileNav() {
             <span className="font-bold text-xl">AI Kids Learning</span>
           </Link>
           <Link
+            href="/courses"
+            className="text-lg font-medium hover:text-primary transition-colors py-2"
+            onClick={() => setOpen(false)}
+          >
+            {"Tečaji"}
+          </Link>
+          <Link
             href="/pricing"
             className="text-lg font-medium hover:text-primary transition-colors py-2"
             onClick={() => setOpen(false)}

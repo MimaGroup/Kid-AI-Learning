@@ -11,6 +11,11 @@ export function Footer() {
             <h4 className="font-semibold mb-3 text-gray-900">Izdelek</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link href="/courses" className="text-gray-600 hover:text-gray-900">
+                  {"Tečaji"}
+                </Link>
+              </li>
+              <li>
                 <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
                   Cenik
                 </Link>
