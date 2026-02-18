@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { generateText } from "ai"
+import { createGroq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 export const dynamic = "force-dynamic"
+
+const groq = createGroq({
+  apiKey: process.env.GROQ_API_KEY,
+})
 
 const FALLBACK_QUESTIONS = [
   {
@@ -60,7 +65,7 @@ async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const { text } = await generateText({
-        model: "groq/llama-3.1-8b-instant",
+        model: groq("llama-3.3-70b-versatile"),
         prompt,
       })
       return text

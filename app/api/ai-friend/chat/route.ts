@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server"
 import { generateText } from "ai"
+import { createGroq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 import { getByteSystemPrompt, BYTE_CHARACTER } from "@/lib/byte-character"
 
 export const dynamic = "force-dynamic"
+
+const groq = createGroq({
+  apiKey: process.env.GROQ_API_KEY,
+})
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT_WINDOW = 60000 // 1 minute
@@ -95,7 +100,7 @@ Respond as ${friendName} with a ${personality.toLowerCase()} personality:`
       const safePrompt = createSafePrompt(basePrompt)
 
       const { text } = await generateText({
-        model: "groq/llama-3.1-8b-instant",
+        model: groq("llama-3.3-70b-versatile"),
         prompt: safePrompt,
       })
 

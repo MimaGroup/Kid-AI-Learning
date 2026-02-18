@@ -1,15 +1,20 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
 import { generateText } from "ai"
+import { createGroq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, createSafePrompt } from "@/lib/content-moderation"
+
+const groq = createGroq({
+  apiKey: process.env.GROQ_API_KEY,
+})
 
 async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string> {
   let lastError: Error | null = null
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const { text } = await generateText({
-        model: "groq/llama-3.1-8b-instant",
+        model: groq("llama-3.3-70b-versatile"),
         prompt,
       })
       return text

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server"
 import { generateText } from "ai"
+import { createGroq } from "@ai-sdk/groq"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 export const dynamic = "force-dynamic"
+
+const groq = createGroq({
+  apiKey: process.env.GROQ_API_KEY,
+})
 
 const FALLBACK_MYSTERIES = [
   {
@@ -110,7 +115,7 @@ Return ONLY the JSON object, no additional text.`
         const safePrompt = createSafePrompt(basePrompt)
 
         const { text } = await generateText({
-          model: "groq/llama-3.1-8b-instant",
+          model: groq("llama-3.3-70b-versatile"),
           prompt: safePrompt,
           maxRetries: 0,
         })
