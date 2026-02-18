@@ -53,6 +53,16 @@ export async function POST(
       .eq("slug", slug)
       .single()
 
+    // Check for predefined explanation in key_concepts
+    if (lesson?.key_concepts && Array.isArray(lesson.key_concepts)) {
+      const conceptObj = lesson.key_concepts.find(
+        (c: any) => typeof c === "object" && c.name === sanitizedConcept && c.explanation
+      )
+      if (conceptObj) {
+        return NextResponse.json({ explanation: conceptObj.explanation })
+      }
+    }
+
     const ageRange = course ? `${course.age_min}-${course.age_max}` : "8-12"
 
     try {
