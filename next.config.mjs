@@ -21,7 +21,6 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  swcMinify: true,
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],

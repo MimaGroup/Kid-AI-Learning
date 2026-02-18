@@ -9,23 +9,23 @@
   --font-sans: var(--font-poppins), system-ui, sans-serif;
   --font-heading: var(--font-fredoka), system-ui, sans-serif;
 
-  /* Primary colors - Playful rainbow theme */
-  --background: #f8f6f3;
-  --foreground: #2d2a3d;
-  --card: #ffffff;
-  --card-foreground: #2d2a3d;
+  /* Primary colors - Playful rainbow theme (HSL values for tailwind hsl() wrapper) */
+  --background: 30 25% 96%;
+  --foreground: 252 20% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 252 20% 20%;
 
   /* Brand colors - Purple to teal gradient theme */
-  --primary: #7c3aed;
-  --primary-foreground: #ffffff;
-  --secondary: #ff9980;
-  --secondary-foreground: #ffffff;
+  --primary: 263 84% 58%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 14 100% 75%;
+  --secondary-foreground: 0 0% 100%;
 
   /* Accent colors */
-  --accent: #6cd4c3;
-  --accent-foreground: #ffffff;
+  --accent: 170 48% 63%;
+  --accent-foreground: 0 0% 100%;
 
-  /* Fun playroom palette */
+  /* Fun playroom palette (kept as hex for custom utilities) */
   --fun-purple: #a78bfa;
   --fun-pink: #ffb5da;
   --fun-coral: #ff9980;
@@ -37,21 +37,28 @@
   --fun-cream: #fff8f0;
 
   /* Muted tones */
-  --muted: #f3efe9;
-  --muted-foreground: #7a7585;
+  --muted: 30 18% 93%;
+  --muted-foreground: 268 8% 50%;
 
   /* UI elements */
-  --border: #e8e3db;
-  --input: #f3efe9;
-  --ring: #7c3aed;
+  --border: 30 16% 88%;
+  --input: 30 18% 93%;
+  --ring: 263 84% 58%;
 
   /* Destructive */
-  --destructive: #ff7a7a;
-  --destructive-foreground: #ffffff;
+  --destructive: 0 100% 74%;
+  --destructive-foreground: 0 0% 100%;
 
   /* Popover */
-  --popover: #ffffff;
-  --popover-foreground: #2d2a3d;
+  --popover: 0 0% 100%;
+  --popover-foreground: 252 20% 20%;
+
+  /* Chart colors */
+  --chart-1: 263 84% 58%;
+  --chart-2: 170 48% 63%;
+  --chart-3: 14 100% 75%;
+  --chart-4: 45 93% 58%;
+  --chart-5: 340 100% 86%;
 
   /* Rounded corners for playful feel */
   --radius: 1rem;
