@@ -212,7 +212,7 @@ export default function LessonViewerPage() {
 
         {/* Lesson content */}
         <Card className="border-2 border-gray-100 mb-8">
-          <CardContent className="p-6 md:p-8 prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-[#2D2A3D] prose-p:text-foreground/80 prose-p:leading-relaxed prose-li:text-foreground/80 prose-strong:text-[#2D2A3D]">
+          <CardContent className="p-6 md:p-10 prose prose-base max-w-none prose-headings:font-heading prose-headings:text-[#2D2A3D] prose-h1:text-2xl prose-h1:mb-4 prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-p:text-foreground/80 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-foreground/80 prose-li:leading-relaxed prose-strong:text-[#2D2A3D] prose-hr:my-8 prose-hr:border-gray-200 prose-ul:my-4 prose-ol:my-4 prose-pre:my-4 prose-pre:rounded-xl prose-pre:bg-gray-50 prose-table:my-4 prose-blockquote:border-[#7C3AED]/30 prose-blockquote:bg-[#F5F3FF]/50 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-code:text-[#7C3AED] prose-code:bg-[#F5F3FF] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
             <ReactMarkdown>{lesson.content}</ReactMarkdown>
           </CardContent>
         </Card>

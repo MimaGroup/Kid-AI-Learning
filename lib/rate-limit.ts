@@ -83,7 +83,7 @@ export async function checkRateLimit(key: string, config: RateLimitConfig): Prom
  */
 export const RATE_LIMITS = {
   // General API endpoints
-  api: { requests: 100, window: 60000 }, // 100 requests per minute
+  api: { requests: 300, window: 60000 }, // 300 requests per minute
 
   // Authentication endpoints (stricter)
   auth: { requests: 5, window: 300000 }, // 5 requests per 5 minutes
