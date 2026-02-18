@@ -9,41 +9,56 @@ export async function GET(
     const { slug } = await params
     const supabase = await createServiceRoleClient()
 
-    // Get the course
-    const { data: course, error: courseError } = await supabase
-      .from("courses")
-      .select("id, title, slug, price, curriculum")
-      .eq("slug", slug)
-      .eq("is_published", true)
-      .single()
-
-    if (courseError || !course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 })
-    }
-
-    // Check purchase status
+    // Check auth and admin status
     let userId: string | null = null
-    let purchased = false
+    let isAdmin = false
     try {
       const userSupabase = await createServerClient()
       const { data: { user } } = await userSupabase.auth.getUser()
       if (user) {
         userId = user.id
-        if (course.price === 0) {
-          purchased = true
-        } else {
-          const { data: purchase } = await supabase
-            .from("course_purchases")
-            .select("id")
-            .eq("user_id", user.id)
-            .eq("course_id", course.id)
-            .eq("status", "completed")
-            .single()
-          purchased = !!purchase
-        }
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single()
+        isAdmin = profile?.role === "admin"
       }
     } catch {
       // Not authenticated
+    }
+
+    // Get the course (admins can see unpublished courses)
+    let courseQuery = supabase
+      .from("courses")
+      .select("id, title, slug, price, curriculum")
+      .eq("slug", slug)
+
+    if (!isAdmin) {
+      courseQuery = courseQuery.eq("is_published", true)
+    }
+
+    const { data: course, error: courseError } = await courseQuery.single()
+
+    if (courseError || !course) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 })
+    }
+
+    // Check purchase status (admins bypass purchase check)
+    let purchased = isAdmin
+    if (!isAdmin && userId) {
+      if (course.price === 0) {
+        purchased = true
+      } else {
+        const { data: purchase } = await supabase
+          .from("course_purchases")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("course_id", course.id)
+          .eq("status", "completed")
+          .single()
+        purchased = !!purchase
+      }
     }
 
     if (!purchased) {

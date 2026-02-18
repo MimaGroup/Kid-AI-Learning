@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { CourseCertificate } from "@/components/course-certificate"
 import {
   ArrowLeft,
   Loader2,
@@ -174,6 +175,13 @@ export default function LearnDashboardPage() {
           </div>
           <p className="text-sm font-semibold text-[#7C3AED]">{data.progressPercent}% dokončano</p>
         </div>
+
+        {/* Certificate - shown when course is 100% complete */}
+        {data.progressPercent === 100 && (
+          <div className="mb-8">
+            <CourseCertificate slug={slug} />
+          </div>
+        )}
 
         {/* Continue button */}
         {nextLesson && data.progressPercent < 100 && (

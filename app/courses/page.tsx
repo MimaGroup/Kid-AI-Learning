@@ -24,6 +24,7 @@ interface Course {
   lessons_count: number
   thumbnail_url: string | null
   is_free: boolean
+  is_published?: boolean
   category: string
   curriculum: any[]
   learning_outcomes: string[]
@@ -180,14 +181,21 @@ export default function CoursesPage() {
               ))}
             </div>
           ) : filteredCourses.length === 0 ? (
-            <div className="text-center py-16">
-              <GraduationCap className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-heading font-bold text-[#2D2A3D] mb-2">
-                {'Ni najdenih tečajev'}
+            <div className="text-center py-20">
+              <div className="w-20 h-20 rounded-full bg-[#7C3AED]/10 flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-10 h-10 text-[#7C3AED]" />
+              </div>
+              <h3 className="text-2xl font-heading font-bold text-[#2D2A3D] mb-3">
+                {"Tečaji prihajajo kmalu!"}
               </h3>
-              <p className="text-[#64748B]">
-                {'V tej kategoriji trenutno ni tečajev. Preverite kmalu!'}
+              <p className="text-[#64748B] max-w-md mx-auto mb-6 leading-relaxed">
+                {"Pridno pripravljamo interaktivne tečaje o umetni inteligenci, programiranju in digitalnih veščinah. Prijavite se, da vas obvestimo, ko bodo na voljo!"}
               </p>
+              <Link href="/auth/sign-up">
+                <Button className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full px-8 py-3">
+                  {"Obvestite me"}
+                </Button>
+              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

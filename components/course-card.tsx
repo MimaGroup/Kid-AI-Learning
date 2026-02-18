@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Clock, BookOpen, Users } from "lucide-react"
+import { Clock, BookOpen, Users, EyeOff } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -20,6 +20,7 @@ interface Course {
   lessons_count: number
   thumbnail_url: string | null
   is_free: boolean
+  is_published?: boolean
   category: string
 }
 
@@ -63,7 +64,15 @@ export function CourseCard({ course }: { course: Course }) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          {course.is_free && (
+          {course.is_published === false && (
+            <div className="absolute inset-0 bg-black/5 z-10 flex items-start justify-start p-3">
+              <Badge className="bg-amber-500 text-white border-0 px-3 py-1 text-xs font-semibold shadow-md flex items-center gap-1">
+                <EyeOff className="w-3 h-3" />
+                Osnutek
+              </Badge>
+            </div>
+          )}
+          {course.is_free && course.is_published !== false && (
             <div className="absolute top-3 left-3">
               <Badge className="bg-emerald-500 text-white border-0 px-3 py-1 text-xs font-semibold shadow-md">
                 Brezplačno
