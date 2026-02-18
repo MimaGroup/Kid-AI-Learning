@@ -46,6 +46,84 @@ interface LessonData {
   course: { id: string; title: string; slug: string; ageMin: number; ageMax: number }
 }
 
+function ExplanationContent({ text }: { text: string }) {
+  // Clean up the text: remove "AI razlaga: ..." header line if present
+  let cleaned = text.replace(/^AI razlaga:.*\n?/i, "").trim()
+  // Convert double dashes to proper em-dashes
+  cleaned = cleaned.replace(/\s--\s/g, " \u2014 ")
+
+  // Split into paragraphs by double newlines or single newlines
+  const paragraphs = cleaned.split(/\n\n+/).map(p => p.trim()).filter(Boolean)
+
+  // If no double-newline splits found, try single newlines
+  const blocks = paragraphs.length <= 1
+    ? cleaned.split(/\n/).map(p => p.trim()).filter(Boolean)
+    : paragraphs.flatMap(p => {
+        // Within a paragraph, check if there are sub-lines
+        const lines = p.split(/\n/).map(l => l.trim()).filter(Boolean)
+        return lines
+      })
+
+  // Group consecutive lines into paragraphs and lists
+  const elements: Array<{ type: "heading" | "paragraph" | "list"; content: string; items?: string[] }> = []
+  let currentListItems: string[] = []
+
+  const flushList = () => {
+    if (currentListItems.length > 0) {
+      elements.push({ type: "list", content: "", items: [...currentListItems] })
+      currentListItems = []
+    }
+  }
+
+  for (const block of blocks) {
+    const isListItem = /^[-–•]\s/.test(block) || /^\d+[.)]\s/.test(block)
+    const isHeading = block.endsWith("?") || block.endsWith("!") || (block.endsWith(":") && block.length < 60)
+
+    if (isListItem) {
+      currentListItems.push(block.replace(/^[-–•]\s*/, "").replace(/^\d+[.)]\s*/, ""))
+    } else {
+      flushList()
+      if (isHeading && elements.length === 0) {
+        elements.push({ type: "heading", content: block })
+      } else {
+        elements.push({ type: "paragraph", content: block })
+      }
+    }
+  }
+  flushList()
+
+  return (
+    <div className="pl-[42px] flex flex-col gap-3">
+      {elements.map((el, i) => {
+        if (el.type === "heading") {
+          return (
+            <p key={i} className="text-sm font-semibold text-[#2D2A3D]">
+              {el.content}
+            </p>
+          )
+        }
+        if (el.type === "list" && el.items) {
+          return (
+            <ul key={i} className="flex flex-col gap-1.5 pl-1">
+              {el.items.map((item, j) => (
+                <li key={j} className="text-sm text-[#2D2A3D]/80 leading-relaxed flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED] mt-1.5 flex-shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        return (
+          <p key={i} className="text-sm text-[#2D2A3D]/80 leading-relaxed">
+            {el.content}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function LessonViewerPage() {
   const params = useParams()
   const router = useRouter()
@@ -256,33 +334,31 @@ export default function LessonViewerPage() {
             {/* AI explanation */}
             {explainConcept && (
               <Card className="mt-4 border-2 border-[#7C3AED]/20 bg-[#F5F3FF]">
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#7C3AED] flex items-center justify-center flex-shrink-0">
-                      <Brain className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-[#7C3AED] mb-1">
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#7C3AED] flex items-center justify-center flex-shrink-0">
+                        <Brain className="w-4 h-4 text-white" />
+                      </div>
+                      <p className="text-sm font-semibold text-[#7C3AED]">
                         AI razlaga: {explainConcept}
                       </p>
-                      {explaining ? (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          {"Razmišljam..."}
-                        </div>
-                      ) : (
-                        <div className="text-sm text-[#2D2A3D] leading-relaxed whitespace-pre-line">
-                          {explanation?.replace(/^AI razlaga:.*\n/, "").trim()}
-                        </div>
-                      )}
                     </div>
                     <button
                       onClick={() => { setExplainConcept(null); setExplanation(null) }}
-                      className="text-muted-foreground hover:text-foreground"
+                      className="text-muted-foreground hover:text-foreground p-1 rounded-md hover:bg-white/50 transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
+                  {explaining ? (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground pl-[42px]">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      {"Razmišljam..."}
+                    </div>
+                  ) : (
+                    <ExplanationContent text={explanation || ""} />
+                  )}
                 </CardContent>
               </Card>
             )}
