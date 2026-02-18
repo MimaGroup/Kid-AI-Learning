@@ -53,22 +53,37 @@ export async function POST(
       .eq("slug", slug)
       .single()
 
+    // Check for predefined explanation in key_concepts
+    if (lesson?.key_concepts && Array.isArray(lesson.key_concepts)) {
+      const conceptObj = lesson.key_concepts.find(
+        (c: any) => typeof c === "object" && c.name === sanitizedConcept && c.explanation
+      )
+      if (conceptObj) {
+        return NextResponse.json({ explanation: conceptObj.explanation })
+      }
+    }
+
     const ageRange = course ? `${course.age_min}-${course.age_max}` : "8-12"
 
     try {
-      const basePrompt = `Explain the concept "${sanitizedConcept}" to a child aged ${ageRange} in Slovenian language.
+      const basePrompt = `Razloži pojem "${sanitizedConcept}" otroku staremu ${ageRange} let v slovenščini.
 
-Context: This is from a lesson called "${lesson?.title || "AI lesson"}".
+Kontekst: To je iz lekcije z naslovom "${lesson?.title || "AI lekcija"}".
 
-Requirements:
-- Write in SLOVENIAN language
-- Use very simple words a child aged ${ageRange} would understand
-- Use a fun analogy or real-world example
-- Keep it to 3-4 short sentences maximum
-- Be encouraging and positive
-- Do not use any technical jargon without explaining it
+Zahteve:
+- Piši v pravilni SLOVENŠČINI z vsemi diakritičnimi znaki (č, š, ž).
+- Uporabi zelo preproste besede, ki jih razume otrok star ${ageRange} let.
+- Uporabi zabavno primerjavo ali primer iz resničnega življenja.
+- Napiši 3--4 kratke stavke.
+- Bodi vzpodbuden/a in pozitiven/a.
+- Ne uporabljaj strokovnih izrazov brez razlage.
+- KRITIČNA slovnična pravila:
+  - Pravilne sklanjatve: "stvar" (ne "stvarico"), "žival" (ne "živalo"), "očala" (ne "očarlja").
+  - Pravilne glagolske oblike: "zdijo" (ne "zdelajo"), "igralec" (ne "igranec").
+  - Spolno nevtralne oblike: uporabi "naučil/a", "vedel/a" ipd.
+  - Ne izmišljuj besed -- uporabi samo obstoječe slovenske besede.
 
-Return ONLY the explanation text, nothing else.`
+Vrni SAMO razlago, brez ničesar drugega.`
 
       const safePrompt = createSafePrompt(basePrompt, ageRange)
 
@@ -81,7 +96,7 @@ Return ONLY the explanation text, nothing else.`
       const moderation = await validateAIResponse(text, "lesson-explain")
       if (!moderation.isAppropriate) {
         return NextResponse.json({
-          explanation: `"${sanitizedConcept}" je pomemben pojem v svetu umetne inteligence. Pomeni, da se računalnik nauči nečesa novega iz podatkov, podobno kot se ti učiš iz knjig in izkušenj!`,
+          explanation: `"${sanitizedConcept}" je pomemben pojem v svetu umetne inteligence. Pomeni, da se računalnik nauči nečesa novega iz podatkov, podobno kot se ti učiš iz knjig in izkušenj.`,
         })
       }
 

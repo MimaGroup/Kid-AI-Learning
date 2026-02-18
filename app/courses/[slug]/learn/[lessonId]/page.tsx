@@ -23,6 +23,7 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Trophy,
 } from "lucide-react"
 
 interface LessonData {
@@ -34,7 +35,7 @@ interface LessonData {
     duration_minutes: number
     module_index: number
     lesson_index: number
-    key_concepts: string[]
+    key_concepts: Array<string | { name: string; explanation?: string }>
     moduleName: string
   }
   progress: { status: string; quiz_score: number | null }
@@ -116,15 +117,23 @@ export default function LessonViewerPage() {
     }
   }
 
-  const handleExplain = async (concept: string) => {
-    setExplainConcept(concept)
+  const handleExplain = async (conceptName: string) => {
+    setExplainConcept(conceptName)
     setExplanation(null)
+
+    // Check for predefined explanation first
+    const conceptObj = keyConcepts.find((c) => c.name === conceptName)
+    if (conceptObj?.explanation) {
+      setExplanation(conceptObj.explanation)
+      return
+    }
+
     setExplaining(true)
     try {
       const res = await fetch(`/api/courses/${slug}/lessons/${lessonId}/explain`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ concept }),
+        body: JSON.stringify({ concept: conceptName }),
       })
       const json = await res.json()
       setExplanation(json.explanation)
@@ -146,7 +155,10 @@ export default function LessonViewerPage() {
   if (!data) return null
 
   const { lesson, navigation, course } = data
-  const keyConcepts = Array.isArray(lesson.key_concepts) ? lesson.key_concepts : []
+  const rawKeyConcepts = Array.isArray(lesson.key_concepts) ? lesson.key_concepts : []
+  const keyConcepts = rawKeyConcepts.map((c) =>
+    typeof c === "string" ? { name: c } : c
+  ) as Array<{ name: string; explanation?: string }>
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAFBFF] to-white">
@@ -228,15 +240,15 @@ export default function LessonViewerPage() {
               {keyConcepts.map((concept, i) => (
                 <button
                   key={i}
-                  onClick={() => handleExplain(concept)}
+                  onClick={() => handleExplain(concept.name)}
                   className={cn(
                     "px-3 py-1.5 rounded-full text-sm font-medium transition-all border",
-                    explainConcept === concept
+                    explainConcept === concept.name
                       ? "bg-[#7C3AED] text-white border-[#7C3AED]"
                       : "bg-[#F5F3FF] text-[#7C3AED] border-[#7C3AED]/20 hover:bg-[#7C3AED]/10"
                   )}
                 >
-                  {concept}
+                  {concept.name}
                 </button>
               ))}
             </div>
@@ -259,7 +271,9 @@ export default function LessonViewerPage() {
                           {"Razmišljam..."}
                         </div>
                       ) : (
-                        <p className="text-sm text-[#2D2A3D] leading-relaxed">{explanation}</p>
+                        <div className="text-sm text-[#2D2A3D] leading-relaxed whitespace-pre-line">
+                          {explanation?.replace(/^AI razlaga:.*\n/, "").trim()}
+                        </div>
                       )}
                     </div>
                     <button

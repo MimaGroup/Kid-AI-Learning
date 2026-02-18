@@ -96,12 +96,20 @@ Format the response as a JSON array with this exact structure:
 ]
 
 Requirements:
-- ALL questions and answers MUST be in SLOVENIAN language
-- Questions should be appropriate for children aged ${ageRange}
-- Test understanding of the key concepts from this specific lesson
-- Use simple, encouraging language
-- Include fun facts in explanations
-- Make sure the correct answer index (0-3) matches the options array
+- ALL questions and answers MUST be in grammatically correct SLOVENIAN language.
+- Use gender-neutral phrasing where possible (e.g. "naučil/a" instead of just "naučil" or "naučila").
+- CRITICAL Slovenian grammar rules you MUST follow:
+  - Always use correct declension: "stvar" (not "stvarico"), "žival" (not "živalo"), "očala" (not "očarlja").
+  - Always use correct verb forms: "zdijo" (not "zdelajo"), "igralec" (not "igranec").
+  - Always use proper diacritics: č, š, ž, where needed. For example: "računalnik" (not "racunalnik"), "učenje" (not "ucenje"), "različen" (not "razlicen").
+  - Use correct prepositions and cases: "s pomočjo" (instrumental), "brez" + genitive, etc.
+  - Do not invent words. Use only real Slovenian words.
+- Questions should be appropriate for children aged ${ageRange}.
+- Test understanding of the key concepts from this specific lesson.
+- Use simple, encouraging language.
+- Include fun facts in explanations.
+- Make sure the correct answer index (0-3) matches the options array.
+- Double-check every word is a real Slovenian word before outputting.
 
 Return ONLY the JSON array, no additional text.`
 
@@ -148,21 +156,21 @@ function getFallbackQuestions() {
     {
       question: "Kaj je umetna inteligenca (AI)?",
       options: [
-        "Računalniški sistem, ki se lahko uči",
-        "Vrsta video igre",
-        "Nova socialna mreža",
+        "Računalniški program, ki se lahko uči",
+        "Vrsta videoigre",
+        "Novo družbeno omrežje",
         "Aplikacija za risanje",
       ],
       correct: 0,
-      explanation: "Umetna inteligenca je računalniški sistem, ki se lahko uči iz podatkov in opravlja naloge, ki običajno zahtevajo človeško inteligenco!",
+      explanation: "Umetna inteligenca je računalniški program, ki se lahko uči iz podatkov in opravlja naloge, ki običajno zahtevajo človeško razmišljanje!",
     },
     {
       question: "Kako se AI uči novih stvari?",
       options: [
         "Z gledanjem televizije",
-        "Z analiziranjem veliko primerov in podatkov",
-        "Z branjem knjig kot ljudje",
-        "Ne more se učiti",
+        "Z analiziranjem velikega števila primerov in podatkov",
+        "Z branjem knjig tako kot ljudje",
+        "AI se ne more učiti",
       ],
       correct: 1,
       explanation: "AI se uči z analiziranjem velikih količin podatkov in iskanjem vzorcev. Več primerov kot vidi, boljša postane!",
@@ -170,13 +178,13 @@ function getFallbackQuestions() {
     {
       question: "Kateri je primer AI v vsakdanjem življenju?",
       options: [
-        "Običajen kalkulator",
+        "Navaden kalkulator",
         "Papirna knjiga",
-        "Glasovni pomočniki kot Siri ali Alexa",
+        "Glasovni pomočniki, kot sta Siri ali Alexa",
         "Kolo",
       ],
       correct: 2,
-      explanation: "Glasovni pomočniki uporabljajo AI za razumevanje govora in odgovarjanje na vaša vprašanja!",
+      explanation: "Glasovni pomočniki uporabljajo AI za razumevanje govora in odgovarjanje na vprašanja!",
     },
     {
       question: "Kaj je najpomembnejše pri uporabi AI?",
