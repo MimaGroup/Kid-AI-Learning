@@ -23,6 +23,7 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Trophy,
 } from "lucide-react"
 
 interface LessonData {
