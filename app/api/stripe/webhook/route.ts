@@ -82,6 +82,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   console.log("[v0] Session customer:", session.customer)
   console.log("[v0] Session subscription:", session.subscription)
 
+  // Handle course purchases (one-time payments)
+  if (session.metadata?.type === "course_purchase") {
+    await handleCoursePurchase(session)
+    return
+  }
+
   const userId = session.metadata?.user_id
   const planType = session.metadata?.plan_type
 
@@ -162,6 +168,78 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
   } catch (error) {
     console.error("[v0] Error sending subscription confirmation email:", error)
+  }
+}
+
+async function handleCoursePurchase(session: Stripe.Checkout.Session) {
+  const userId = session.metadata?.user_id
+  const courseId = session.metadata?.course_id
+
+  if (!userId || !courseId) {
+    console.error("[v0] Missing course purchase metadata:", { userId, courseId })
+    return
+  }
+
+  try {
+    const { error } = await supabaseAdmin.from("course_purchases").upsert(
+      {
+        user_id: userId,
+        course_id: courseId,
+        stripe_session_id: session.id,
+        stripe_payment_intent_id: session.payment_intent as string,
+        amount: session.amount_total || 0,
+        currency: session.currency || "eur",
+        status: "completed",
+      },
+      {
+        onConflict: "user_id,course_id",
+      },
+    )
+
+    if (error) {
+      console.error("[v0] Error recording course purchase:", error)
+      throw error
+    }
+
+    console.log(`[v0] Course purchase recorded - User: ${userId}, Course: ${courseId}`)
+
+    // Send confirmation email
+    try {
+      const { data: userData } = await supabaseAdmin
+        .from("profiles")
+        .select("email, display_name")
+        .eq("id", userId)
+        .single()
+
+      const { data: courseData } = await supabaseAdmin
+        .from("courses")
+        .select("title, slug")
+        .eq("id", courseId)
+        .single()
+
+      if (userData?.email && courseData) {
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://v0-ai-for-kids-inky.vercel.app"
+        await sendEmail({
+          to: userData.email,
+          subject: `Potrditev nakupa: ${courseData.title}`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+              <h1 style="color: #7C3AED;">Hvala za nakup!</h1>
+              <p>Pozdravljeni ${userData.display_name || ""},</p>
+              <p>Uspešno ste kupili tečaj <strong>${courseData.title}</strong>.</p>
+              <p>Zdaj imate neomejen dostop do vseh lekcij in materialov.</p>
+              <a href="${siteUrl}/courses/${courseData.slug}" style="display: inline-block; background: #7C3AED; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 16px;">Začni z učenjem</a>
+            </div>
+          `,
+        })
+        console.log(`[v0] Course purchase confirmation email sent to ${userData.email}`)
+      }
+    } catch (emailError) {
+      console.error("[v0] Error sending course purchase email:", emailError)
+    }
+  } catch (error) {
+    console.error("[v0] Error in handleCoursePurchase:", error)
+    throw error
   }
 }
 

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut, Users } from "lucide-react"
+import { Sparkles, Home, Gamepad2, LayoutDashboard, Settings, User, LogOut, Users, GraduationCap } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 
@@ -38,6 +38,13 @@ export function AppNavigation() {
       href: "/kids/activities",
       icon: Gamepad2,
       active: pathname === "/kids/activities",
+    },
+    {
+      label: "Courses",
+      mobileLabel: "Courses",
+      href: "/courses",
+      icon: GraduationCap,
+      active: pathname?.startsWith("/courses"),
     },
     {
       label: "My Friends",

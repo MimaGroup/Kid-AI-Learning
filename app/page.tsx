@@ -36,6 +36,12 @@ export default function HomePage() {
             </Link>
             <div className="hidden md:flex items-center gap-8">
               <Link
+                href="/courses"
+                className="text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
+              >
+                {"Tečaji"}
+              </Link>
+              <Link
                 href="/pricing"
                 className="text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
               >
@@ -415,6 +421,11 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Produkt</h4>
               <ul className="space-y-3 text-sm">
+                <li>
+                  <Link href="/courses" className="text-gray-400 hover:text-white transition-colors">
+                    {"Tečaji"}
+                  </Link>
+                </li>
                 <li>
                   <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">
                     Cene
