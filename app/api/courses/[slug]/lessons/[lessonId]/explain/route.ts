@@ -91,7 +91,7 @@ Return ONLY the explanation text, nothing else.`
       const moderation = await validateAIResponse(text, "lesson-explain")
       if (!moderation.isAppropriate) {
         return NextResponse.json({
-          explanation: `"${sanitizedConcept}" je pomemben pojem v svetu umetne inteligence. Pomeni, da se računalnik nauči nečesa novega iz podatkov, podobno kot se ti učiš iz knjig in izkušenj!`,
+          explanation: `"${sanitizedConcept}" je pomemben pojem v svetu umetne inteligence. Pomeni, da se računalnik nauči nečesa novega iz podatkov, podobno kot se ti učiš iz knjig in izkušenj.`,
         })
       }
 
