@@ -24,6 +24,7 @@ interface Course {
   lessons_count: number
   thumbnail_url: string | null
   is_free: boolean
+  is_published?: boolean
   category: string
   curriculum: any[]
   learning_outcomes: string[]

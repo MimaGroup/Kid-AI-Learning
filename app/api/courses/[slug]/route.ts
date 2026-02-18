@@ -9,12 +9,35 @@ export async function GET(
     const { slug } = await params
     const supabase = await createServiceRoleClient()
 
-    const { data: course, error } = await supabase
+    // Check if current user is admin
+    let isAdmin = false
+    let currentUser: any = null
+    try {
+      const userSupabase = await createServerClient()
+      const { data: { user } } = await userSupabase.auth.getUser()
+      currentUser = user
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single()
+        isAdmin = profile?.role === "admin"
+      }
+    } catch {
+      // Not authenticated
+    }
+
+    let query = supabase
       .from("courses")
       .select("*")
       .eq("slug", slug)
-      .eq("is_published", true)
-      .single()
+
+    if (!isAdmin) {
+      query = query.eq("is_published", true)
+    }
+
+    const { data: course, error } = await query.single()
 
     if (error || !course) {
       return NextResponse.json({ error: "Course not found" }, { status: 404 })
@@ -23,8 +46,7 @@ export async function GET(
     // Check if user has purchased this course
     let purchased = false
     try {
-      const userSupabase = await createServerClient()
-      const { data: { user } } = await userSupabase.auth.getUser()
+      const user = currentUser
 
       if (user) {
         const { data: purchase } = await supabase

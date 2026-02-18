@@ -9,25 +9,20 @@ export async function GET(
     const { slug, lessonId } = await params
     const supabase = await createServiceRoleClient()
 
-    // Get the course
-    const { data: course, error: courseError } = await supabase
-      .from("courses")
-      .select("id, title, slug, price, age_min, age_max, curriculum")
-      .eq("slug", slug)
-      .eq("is_published", true)
-      .single()
-
-    if (courseError || !course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 })
-    }
-
-    // Check auth and purchase
+    // Check auth and admin status
     let userId: string | null = null
+    let isAdmin = false
     try {
       const userSupabase = await createServerClient()
       const { data: { user } } = await userSupabase.auth.getUser()
       if (user) {
         userId = user.id
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single()
+        isAdmin = profile?.role === "admin"
       }
     } catch {
       // Not authenticated
@@ -37,8 +32,24 @@ export async function GET(
       return NextResponse.json({ error: "Authentication required" }, { status: 401 })
     }
 
-    // Check purchase
-    if (course.price > 0) {
+    // Get the course (admins can see unpublished)
+    let courseQuery = supabase
+      .from("courses")
+      .select("id, title, slug, price, age_min, age_max, curriculum")
+      .eq("slug", slug)
+
+    if (!isAdmin) {
+      courseQuery = courseQuery.eq("is_published", true)
+    }
+
+    const { data: course, error: courseError } = await courseQuery.single()
+
+    if (courseError || !course) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 })
+    }
+
+    // Check purchase (admins bypass)
+    if (!isAdmin && course.price > 0) {
       const { data: purchase } = await supabase
         .from("course_purchases")
         .select("id")

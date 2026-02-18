@@ -1,15 +1,37 @@
 import { NextResponse } from "next/server"
-import { createServiceRoleClient } from "@/lib/supabase/server"
+import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
+
+async function isAdmin(): Promise<boolean> {
+  try {
+    const supabase = await createServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+    return profile?.role === "admin"
+  } catch {
+    return false
+  }
+}
 
 export async function GET() {
   try {
     const supabase = await createServiceRoleClient()
+    const adminUser = await isAdmin()
 
-    const { data: courses, error } = await supabase
+    let query = supabase
       .from("courses")
       .select("*")
-      .eq("is_published", true)
       .order("price", { ascending: true })
+
+    if (!adminUser) {
+      query = query.eq("is_published", true)
+    }
+
+    const { data: courses, error } = await query
 
     if (error) {
       console.error("Error fetching courses:", error)

@@ -17,13 +17,26 @@ export async function GET(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
 
-    // Get the course
-    const { data: course, error: courseError } = await supabase
+    // Check admin status
+    let isAdmin = false
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+    isAdmin = profile?.role === "admin"
+
+    // Get the course (admins can see unpublished)
+    let courseQuery = supabase
       .from("courses")
       .select("id, title, slug, curriculum")
       .eq("slug", slug)
-      .eq("is_published", true)
-      .single()
+
+    if (!isAdmin) {
+      courseQuery = courseQuery.eq("is_published", true)
+    }
+
+    const { data: course, error: courseError } = await courseQuery.single()
 
     if (courseError || !course) {
       return NextResponse.json({ error: "Course not found" }, { status: 404 })
