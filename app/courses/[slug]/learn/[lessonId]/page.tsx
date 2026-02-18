@@ -1,0 +1,340 @@
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Link from "next/link"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { LessonQuiz } from "@/components/lesson-quiz"
+import { cn } from "@/lib/utils"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import ReactMarkdown from "react-markdown"
+import {
+  ArrowLeft,
+  ArrowRight,
+  Loader2,
+  CheckCircle2,
+  Clock,
+  BookOpen,
+  Brain,
+  Lightbulb,
+  Menu,
+  X,
+  ChevronLeft,
+} from "lucide-react"
+
+interface LessonData {
+  lesson: {
+    id: string
+    title: string
+    content: string
+    content_type: string
+    duration_minutes: number
+    module_index: number
+    lesson_index: number
+    key_concepts: string[]
+    moduleName: string
+  }
+  progress: { status: string; quiz_score: number | null }
+  navigation: {
+    prevLesson: { id: string; title: string } | null
+    nextLesson: { id: string; title: string } | null
+  }
+  course: { id: string; title: string; slug: string; ageMin: number; ageMax: number }
+}
+
+export default function LessonViewerPage() {
+  const params = useParams()
+  const router = useRouter()
+  const slug = params.slug as string
+  const lessonId = params.lessonId as string
+
+  const [data, setData] = useState<LessonData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [completed, setCompleted] = useState(false)
+  const [markingComplete, setMarkingComplete] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
+  const [explainConcept, setExplainConcept] = useState<string | null>(null)
+  const [explanation, setExplanation] = useState<string | null>(null)
+  const [explaining, setExplaining] = useState(false)
+
+  useEffect(() => {
+    async function fetchLesson() {
+      setLoading(true)
+      try {
+        const res = await fetch(`/api/courses/${slug}/lessons/${lessonId}`)
+        if (res.status === 401) {
+          router.push(`/auth/sign-in?redirect=/courses/${slug}/learn/${lessonId}`)
+          return
+        }
+        if (res.status === 403) {
+          router.push(`/courses/${slug}`)
+          return
+        }
+        if (!res.ok) throw new Error("Failed to load")
+        const json = await res.json()
+        setData(json)
+        setCompleted(json.progress?.status === "completed")
+      } catch {
+        router.push(`/courses/${slug}/learn`)
+      } finally {
+        setLoading(false)
+      }
+    }
+    if (slug && lessonId) fetchLesson()
+  }, [slug, lessonId, router])
+
+  const markAsComplete = useCallback(async () => {
+    if (!data || markingComplete) return
+    setMarkingComplete(true)
+    try {
+      await fetch(`/api/courses/${slug}/lessons/${lessonId}/progress`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "completed" }),
+      })
+      setCompleted(true)
+    } catch {
+      // silent fail
+    } finally {
+      setMarkingComplete(false)
+    }
+  }, [data, slug, lessonId, markingComplete])
+
+  const handleQuizComplete = async (score: number) => {
+    try {
+      await fetch(`/api/courses/${slug}/lessons/${lessonId}/progress`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "completed", quiz_score: score }),
+      })
+      setCompleted(true)
+    } catch {
+      // silent fail
+    }
+  }
+
+  const handleExplain = async (concept: string) => {
+    setExplainConcept(concept)
+    setExplanation(null)
+    setExplaining(true)
+    try {
+      const res = await fetch(`/api/courses/${slug}/lessons/${lessonId}/explain`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ concept }),
+      })
+      const json = await res.json()
+      setExplanation(json.explanation)
+    } catch {
+      setExplanation("Poskusi znova pozneje.")
+    } finally {
+      setExplaining(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#FAFBFF] to-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#7C3AED]" />
+      </div>
+    )
+  }
+
+  if (!data) return null
+
+  const { lesson, navigation, course } = data
+  const keyConcepts = Array.isArray(lesson.key_concepts) ? lesson.key_concepts : []
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#FAFBFF] to-white">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-7 h-7 rounded-lg overflow-hidden ring-2 ring-[#7C3AED]/20">
+                <Image
+                  src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                  alt="KidsLearnAI"
+                  width={28}
+                  height={28}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </Link>
+            <span className="text-muted-foreground">/</span>
+            <Link href={`/courses/${slug}/learn`} className="text-sm text-muted-foreground hover:text-foreground transition-colors line-clamp-1">
+              {course.title}
+            </Link>
+          </div>
+          <div className="flex items-center gap-2">
+            {completed && (
+              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+                <CheckCircle2 className="w-3 h-3 mr-1" />
+                {"Zaključeno"}
+              </Badge>
+            )}
+            <Link href={`/courses/${slug}/learn`}>
+              <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">{"Vse lekcije"}</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Module / Lesson breadcrumb */}
+        <div className="mb-6">
+          <p className="text-xs text-[#7C3AED] font-semibold mb-1">
+            Modul {lesson.module_index + 1}: {lesson.moduleName}
+          </p>
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-[#2D2A3D] text-balance">
+            {lesson.title}
+          </h1>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5" />
+              {lesson.duration_minutes} min
+            </span>
+            {lesson.content_type === "activity" && (
+              <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs">Aktivnost</Badge>
+            )}
+            {lesson.content_type === "project" && (
+              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">Projekt</Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Lesson content */}
+        <Card className="border-2 border-gray-100 mb-8">
+          <CardContent className="p-6 md:p-8 prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-[#2D2A3D] prose-p:text-foreground/80 prose-p:leading-relaxed prose-li:text-foreground/80 prose-strong:text-[#2D2A3D]">
+            <ReactMarkdown>{lesson.content}</ReactMarkdown>
+          </CardContent>
+        </Card>
+
+        {/* Key concepts - clickable for AI explanation */}
+        {keyConcepts.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-sm font-semibold text-[#2D2A3D] mb-3 flex items-center gap-2">
+              <Lightbulb className="w-4 h-4 text-[#7C3AED]" />
+              {"Ključni pojmi"} <span className="text-xs text-muted-foreground font-normal">{"(klikni za razlago)"}</span>
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {keyConcepts.map((concept, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleExplain(concept)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-sm font-medium transition-all border",
+                    explainConcept === concept
+                      ? "bg-[#7C3AED] text-white border-[#7C3AED]"
+                      : "bg-[#F5F3FF] text-[#7C3AED] border-[#7C3AED]/20 hover:bg-[#7C3AED]/10"
+                  )}
+                >
+                  {concept}
+                </button>
+              ))}
+            </div>
+
+            {/* AI explanation */}
+            {explainConcept && (
+              <Card className="mt-4 border-2 border-[#7C3AED]/20 bg-[#F5F3FF]">
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#7C3AED] flex items-center justify-center flex-shrink-0">
+                      <Brain className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-[#7C3AED] mb-1">
+                        AI razlaga: {explainConcept}
+                      </p>
+                      {explaining ? (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          {"Razmišljam..."}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-[#2D2A3D] leading-relaxed">{explanation}</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => { setExplainConcept(null); setExplanation(null) }}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* Quiz section */}
+        <div className="mb-8">
+          <LessonQuiz
+            courseSlug={slug}
+            lessonId={lessonId}
+            onQuizComplete={handleQuizComplete}
+          />
+        </div>
+
+        {/* Mark as complete */}
+        {!completed && (
+          <div className="flex justify-center mb-8">
+            <Button
+              onClick={markAsComplete}
+              disabled={markingComplete}
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full gap-2 px-8"
+            >
+              {markingComplete ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="w-5 h-5" />
+              )}
+              {"Označi kot zaključeno"}
+            </Button>
+          </div>
+        )}
+
+        {/* Navigation */}
+        <div className="flex items-center justify-between py-6 border-t border-border">
+          {navigation.prevLesson ? (
+            <Link href={`/courses/${slug}/learn/${navigation.prevLesson.id}`}>
+              <Button variant="outline" className="rounded-full gap-2">
+                <ChevronLeft className="w-4 h-4" />
+                <span className="hidden sm:inline line-clamp-1 max-w-[180px]">{navigation.prevLesson.title}</span>
+                <span className="sm:hidden">{"Prejšnja"}</span>
+              </Button>
+            </Link>
+          ) : (
+            <div />
+          )}
+
+          {navigation.nextLesson ? (
+            <Link href={`/courses/${slug}/learn/${navigation.nextLesson.id}`}>
+              <Button className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full gap-2">
+                <span className="hidden sm:inline line-clamp-1 max-w-[180px]">{navigation.nextLesson.title}</span>
+                <span className="sm:hidden">{"Naslednja"}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          ) : (
+            <Link href={`/courses/${slug}/learn`}>
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full gap-2">
+                <Trophy className="w-4 h-4" />
+                {"Nazaj na pregled"}
+              </Button>
+            </Link>
+          )}
+        </div>
+      </main>
+    </div>
+  )
+}

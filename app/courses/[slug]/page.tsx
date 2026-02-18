@@ -274,13 +274,15 @@ export default function CourseDetailPage() {
                   </div>
 
                   {purchased ? (
-                    <Button
-                      size="lg"
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg gap-2"
-                    >
-                      <Play className="w-5 h-5" />
-                      {"Začni z učenjem"}
-                    </Button>
+                    <Link href={`/courses/${course.slug}/learn`}>
+                      <Button
+                        size="lg"
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg gap-2"
+                      >
+                        <Play className="w-5 h-5" />
+                        {"Začni z učenjem"}
+                      </Button>
+                    </Link>
                   ) : (
                     <Button
                       size="lg"
