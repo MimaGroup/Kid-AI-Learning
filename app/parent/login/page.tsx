@@ -47,14 +47,14 @@ function ParentLoginContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your AI Kids Learning account</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dobrodosli nazaj</h1>
+          <p className="text-gray-600">Prijavite se v svoj KidsLearnAI racun</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+              E-posta
             </label>
             <input
               id="email"
@@ -62,14 +62,14 @@ function ParentLoginContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter your email"
+              placeholder="Vnesite svojo e-posto"
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+              Geslo
             </label>
             <input
               id="password"
@@ -77,7 +77,7 @@ function ParentLoginContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              placeholder="Enter your password"
+              placeholder="Vnesite svoje geslo"
               required
             />
           </div>
@@ -91,15 +91,15 @@ function ParentLoginContent() {
             disabled={isLoading}
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
-            {isLoading ? "Signing In..." : "Sign In"}
+            {isLoading ? "Prijava..." : "Prijava"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
-            Don't have an account?{" "}
+            {"Nimate racuna? "}
             <Link href="/auth/sign-up" className="text-blue-600 hover:underline font-medium">
-              Sign up
+              Registrirajte se
             </Link>
           </p>
         </div>

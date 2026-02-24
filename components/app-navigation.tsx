@@ -28,33 +28,33 @@ export function AppNavigation() {
 
   const navItems = [
     {
-      label: "Kids Learning",
+      label: "Domov",
       href: "/kids/home",
       icon: Home,
       active: pathname?.startsWith("/kids"),
     },
     {
-      label: "AI Activities",
+      label: "AI Aktivnosti",
+      mobileLabel: "Aktivnosti",
       href: "/kids/activities",
       icon: Gamepad2,
       active: pathname === "/kids/activities",
     },
     {
-      label: "Courses",
-      mobileLabel: "Courses",
+      label: "Tecaji",
       href: "/courses",
       icon: GraduationCap,
       active: pathname?.startsWith("/courses"),
     },
     {
-      label: "My Friends",
+      label: "Prijatelji",
       href: "/friends",
       icon: Users,
       active: pathname === "/friends",
     },
     {
-      label: "Parent Dashboard",
-      mobileLabel: "Parent",
+      label: "Starsevska plosca",
+      mobileLabel: "Starsi",
       href: "/parent/dashboard",
       icon: LayoutDashboard,
       active: pathname?.startsWith("/parent"),
@@ -70,7 +70,7 @@ export function AppNavigation() {
           {/* Logo */}
           <Link href="/kids/home" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Sparkles className="w-6 h-6 text-primary" />
-            <span className="font-bold text-lg hidden sm:inline">AI Kids Learning</span>
+            <span className="font-bold text-lg hidden sm:inline">KidsLearnAI</span>
           </Link>
 
           {/* Main Navigation */}
@@ -111,7 +111,7 @@ export function AppNavigation() {
               >
                 <DropdownMenuLabel className="pb-3 bg-white">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-semibold text-gray-900">My Account</p>
+                    <p className="text-sm font-semibold text-gray-900">Moj racun</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>
@@ -119,7 +119,7 @@ export function AppNavigation() {
                 <DropdownMenuItem asChild className="cursor-pointer py-2.5 bg-white hover:bg-gray-100">
                   <Link href="/parent/settings" className="flex items-center">
                     <Settings className="w-4 h-4 mr-3 text-gray-600" />
-                    <span className="font-medium text-gray-900">Settings</span>
+                    <span className="font-medium text-gray-900">Nastavitve</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-200" />
@@ -128,7 +128,7 @@ export function AppNavigation() {
                   className="cursor-pointer py-2.5 bg-white hover:bg-red-50 text-red-600 focus:text-red-600 focus:bg-red-50"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
-                  <span className="font-medium">Sign Out</span>
+                  <span className="font-medium">Odjava</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
