@@ -8,10 +8,10 @@ import { lazy, Suspense } from "react"
 import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket, MessageCircle } from "lucide-react"
 import { SocialProofCounter } from "@/components/social-proof-counter"
 import { ConversionTracker } from "@/components/conversion-tracker"
-import { ReferralHeroSection } from "@/components/referral-hero-section"
-import { TestimonialsSection } from "@/components/testimonials-section"
+import { LearningOutcomesSection } from "@/components/learning-outcomes-section"
 import { DemoVideoSection } from "@/components/demo-video-section"
 import { StatsSection } from "@/components/stats-section"
+import { LandingDemoGame } from "@/components/landing-demo-game"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
@@ -23,6 +23,7 @@ export default function HomePage() {
         <ConversionTracker />
       </Suspense>
 
+      {/* Nav - fully localized to Slovenian */}
       <nav className="border-b border-border/40 bg-white/95 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -31,7 +32,7 @@ export default function HomePage() {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <span className="font-heading font-bold text-2xl bg-gradient-to-r from-[#7C3AED] to-[#6CD4C3] bg-clip-text text-transparent">
-                AI Kids Learning
+                KidsLearnAI
               </span>
             </Link>
             <div className="hidden md:flex items-center gap-8">
@@ -45,23 +46,23 @@ export default function HomePage() {
                 href="/pricing"
                 className="text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
               >
-                Pricing
+                Cene
               </Link>
               <Link
                 href="/about"
                 className="text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
               >
-                About
+                O nas
               </Link>
               <Link
                 href="/faq"
                 className="text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
               >
-                FAQ
+                {"Pogosta vprašanja"}
               </Link>
               <Link href="/auth/login">
                 <Button variant="ghost" size="lg" className="rounded-full font-medium">
-                  Log in
+                  Prijava
                 </Button>
               </Link>
               <Link href="/auth/sign-up">
@@ -69,7 +70,7 @@ export default function HomePage() {
                   size="lg"
                   className="rounded-full font-medium soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
                 >
-                  Start Free
+                  {"Začni brezplačno"}
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -79,18 +80,17 @@ export default function HomePage() {
         </div>
       </nav>
 
+      {/* Hero Section */}
       <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-[#F5F3FF] via-white to-[#F0FDFA] min-h-[90vh]">
-        {/* Decorative background circles */}
         <div className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-gradient-to-br from-[#7C3AED]/10 to-[#6CD4C3]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-[10%] w-[600px] h-[600px] bg-gradient-to-br from-[#FFB5DA]/10 to-[#FCD34D]/10 rounded-full blur-3xl" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left column - Hero content */}
             <div className="space-y-8">
               <Badge className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full bg-[#FCD34D] text-[#8B6914] border-0 hover:scale-105 transition-transform">
                 <Sparkles className="w-4 h-4" />
-                AI učna platforma za otroke 5-12 let
+                {"AI učna platforma za otroke 5-12 let"}
               </Badge>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-balance leading-[1.1] tracking-tight">
@@ -102,8 +102,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed text-[#64748B] max-w-xl">
-                KidsLearnAI je zabavna in pametna AI učna platforma, ki otrokom od 5–12 let pomaga hitreje in lažje
-                učiti — preko iger, izzivov in osebnega AI tutorja.
+                {"KidsLearnAI je zabavna AI učna platforma, ki otrokom od 5–12 let pomaga spoznati umetno inteligenco — preko iger, izzivov in osebnega AI tutorja Byte-a."}
               </p>
 
               <div className="pt-2">
@@ -116,20 +115,19 @@ export default function HomePage() {
                     size="lg"
                     className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
                   >
-                    Začni brezplačno →
+                    {"Začni brezplačno →"}
                   </Button>
                 </Link>
-                <Link href="/pricing">
+                <Link href="#demo-game">
                   <Button
                     size="lg"
-                    className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED] font-semibold"
+                    className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-[#F5F3FF] text-[#7C3AED] font-semibold border border-[#E2E8F0]"
                   >
-                    Poglej cene
+                    {"Preizkusi brezplačno igro"}
                   </Button>
                 </Link>
               </div>
 
-              {/* Trust badges */}
               <div className="flex flex-wrap items-center gap-6 pt-4">
                 <div className="flex items-center gap-2 text-sm text-[#64748B]">
                   <Check className="w-5 h-5 text-[#7C3AED]" />
@@ -141,7 +139,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-[#64748B]">
                   <Check className="w-5 h-5 text-[#7C3AED]" />
-                  <span>Prekliči kadarkoli</span>
+                  <span>{"Prekliči kadarkoli"}</span>
                 </div>
               </div>
             </div>
@@ -149,12 +147,10 @@ export default function HomePage() {
             {/* Byte Hero Image with speech bubble */}
             <div className="flex flex-col items-center justify-center relative">
               <div className="relative">
-                {/* Speech bubble */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white rounded-2xl px-6 py-3 shadow-lg border border-[#E2E8F0] z-10 whitespace-nowrap">
                   <p className="text-base font-semibold text-[#7C3AED]">{BYTE_CHARACTER.phrases.greeting}</p>
                   <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-[#E2E8F0] rotate-45" />
                 </div>
-                {/* Byte image */}
                 <div className="mt-8 relative w-[280px] h-[280px] md:w-[360px] md:h-[360px]">
                   <Image
                     src={BYTE_CHARACTER.images.hero || "/placeholder.svg"}
@@ -165,7 +161,6 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              {/* Feature pills below Byte */}
               <div className="grid grid-cols-2 gap-3 mt-6 w-full max-w-sm">
                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
                   <Monitor className="w-5 h-5 text-[#7C3AED]" />
@@ -173,7 +168,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
                   <Gamepad2 className="w-5 h-5 text-[#6CD4C3]" />
-                  <span className="text-sm font-medium text-[#2D2A3D]">Igre, ki ucijo</span>
+                  <span className="text-sm font-medium text-[#2D2A3D]">{"Igre, ki učijo"}</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full px-4 py-2.5 shadow-sm border border-[#E2E8F0]">
                   <Rocket className="w-5 h-5 text-[#F59E0B]" />
@@ -189,19 +184,21 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Stats - real feature counts */}
       <StatsSection />
 
+      {/* Features section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 border-[#7C3AED] text-[#7C3AED]">
-              Značilnosti
+              {"Značilnosti"}
             </Badge>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
-              Zakaj starši izberejo nas
+              {"Zakaj starši izberejo nas"}
             </h2>
             <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
-              Celovita platforma, zasnovana z mislijo na izobraževanje in varnost
+              {"Celovita platforma, zasnovana z mislijo na izobraževanje in varnost"}
             </p>
           </div>
 
@@ -210,9 +207,9 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-2xl bg-[#F3E8FF] flex items-center justify-center mb-6">
                 <BookOpen className="w-8 h-8 text-[#7C3AED]" />
               </div>
-              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">Izobraževalne vsebine</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Izobraževalne vsebine"}</h3>
               <p className="text-[#64748B] leading-relaxed">
-                Lekcije, ki uvajajo koncepte umetne inteligence skozi privlačne, starosti primerne aktivnosti in zgodbe.
+                {"Lekcije, ki uvajajo koncepte umetne inteligence skozi privlačne, starosti primerne aktivnosti in zgodbe."}
               </p>
             </Card>
 
@@ -222,8 +219,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">Varno okolje</h3>
               <p className="text-[#64748B] leading-relaxed">
-                Skladno s COPPA z robustnimi starševskimi kontrolami, filtririranjem vsebine in spremljanjem v realnem
-                času.
+                {"Skladno s COPPA z robustnimi starševskimi kontrolami, filtriranjem vsebine in spremljanjem v realnem času."}
               </p>
             </Card>
 
@@ -231,14 +227,19 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-2xl bg-[#FEF3C7] flex items-center justify-center mb-6">
                 <Zap className="w-8 h-8 text-[#F59E0B]" />
               </div>
-              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">Prilagodljivo učenje</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Prilagodljivo učenje"}</h3>
               <p className="text-[#64748B] leading-relaxed">
-                AI-poganjana personalizacija se prilagaja tempu in učnemu slogu vašega otroka za optimalno vključenost.
+                {"AI-poganjana personalizacija se prilagaja tempu in učnemu slogu vašega otroka za optimalno vključenost."}
               </p>
             </Card>
           </div>
         </div>
       </section>
+
+      {/* Inline demo game - try before signup */}
+      <div id="demo-game">
+        <LandingDemoGame />
+      </div>
 
       {/* Meet Byte Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] via-[#FAF5FF] to-[#F0FDFA]">
@@ -256,7 +257,6 @@ export default function HomePage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Byte character showcase */}
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-[#7C3AED]/20 to-[#6CD4C3]/20 rounded-[3rem] blur-2xl" />
@@ -276,7 +276,6 @@ export default function HomePage() {
                       <p className="text-sm text-[#7C3AED] font-medium">{BYTE_CHARACTER.tagline}</p>
                     </div>
                   </div>
-                  {/* Simulated chat conversation */}
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#7C3AED]/20">
@@ -289,7 +288,7 @@ export default function HomePage() {
                         />
                       </div>
                       <div className="bg-[#F3E8FF] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[280px]">
-                        <p className="text-sm text-[#2D2A3D]">Zdravo! Jaz sem Byte! Danes bova skupaj raziskovala, kako deluje umetna inteligenca.</p>
+                        <p className="text-sm text-[#2D2A3D]">{"Zdravo! Jaz sem Byte! Danes bova skupaj raziskovala, kako deluje umetna inteligenca."}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 flex-row-reverse">
@@ -309,7 +308,7 @@ export default function HomePage() {
                         />
                       </div>
                       <div className="bg-[#F3E8FF] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[280px]">
-                        <p className="text-sm text-[#2D2A3D]">Odlicno vprasanje! AI je kot pameten pomocnik, ki se uci iz primerov. Igrajva igro, da ti pokazem!</p>
+                        <p className="text-sm text-[#2D2A3D]">{"Odlično vprašanje! AI je kot pameten pomočnik, ki se uči iz primerov. Igrajva igro, da ti pokažem!"}</p>
                       </div>
                     </div>
                   </div>
@@ -317,7 +316,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Byte features */}
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
@@ -325,7 +323,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Osebni AI tutor</h3>
-                  <p className="text-[#64748B]">Byte se pogovarja z vsakim otrokom posebej, odgovarja na vprasanja in razlaga koncepte na zabaven nacin.</p>
+                  <p className="text-[#64748B]">{"Byte se pogovarja z vsakim otrokom posebej, odgovarja na vprašanja in razlaga koncepte na zabaven način."}</p>
                 </div>
               </div>
 
@@ -334,8 +332,8 @@ export default function HomePage() {
                   <Gamepad2 className="w-6 h-6 text-[#0EA5E9]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Vodic skozi igre</h3>
-                  <p className="text-[#64748B]">Byte otroka vodi skozi vsako igro, daje namige in spodbuja pri ucenju novih stvari.</p>
+                  <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">{"Vodič skozi igre"}</h3>
+                  <p className="text-[#64748B]">{"Byte otroka vodi skozi vsako igro, daje namige in spodbuja pri učenju novih stvari."}</p>
                 </div>
               </div>
 
@@ -345,7 +343,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Spodbuda in nagrade</h3>
-                  <p className="text-[#64748B]">Byte praznuje vsak uspeh, deli znacke in motivira otroka, da nadaljuje z ucenjem.</p>
+                  <p className="text-[#64748B]">{"Byte praznuje vsak uspeh, deli značke in motivira otroka, da nadaljuje z učenjem."}</p>
                 </div>
               </div>
 
@@ -355,7 +353,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-1">Varno in nadzorovano</h3>
-                  <p className="text-[#64748B]">Vsi pogovori so moderirani in starosti primerni. Starsi imajo vedno pregled nad vsebino.</p>
+                  <p className="text-[#64748B]">{"Vsi pogovori so moderirani in starosti primerni. Starši imajo vedno pregled nad vsebino."}</p>
                 </div>
               </div>
 
@@ -373,48 +371,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      <TestimonialsSection />
+      {/* Learning outcomes - replaces fake testimonials */}
+      <LearningOutcomesSection />
 
+      {/* How it works */}
       <DemoVideoSection />
 
-      <ReferralHeroSection />
-
+      {/* Final CTA - simplified, single button */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] to-[#F0FDFA]">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-[#2D2A3D]">
-            {'Ste pripravljeni odpreti vrata prihodnosti svojemu otroku?'}
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-[#2D2A3D] text-balance">
+            {"Ste pripravljeni odpreti vrata prihodnosti svojemu otroku?"}
           </h2>
-          <p className="text-xl mb-4 text-[#64748B] max-w-2xl mx-auto">
-            {'Svet se hitro spreminja. Otrokom, ki razumejo umetno inteligenco, pripada samozavestnejša in uspešnejša prihodnost.'}
+          <p className="text-xl mb-10 text-[#64748B] max-w-2xl mx-auto">
+            {"Pridružite se in omogočite svojemu otroku varno ter spodbudno AI-izkušnjo."}
           </p>
-          <p className="text-lg mb-4 text-[#64748B] max-w-2xl mx-auto">
-            {'Pridružite se družinam, ki svojim otrokom že danes omogočajo varno in spodbudno AI-izkušnjo.'}
-          </p>
-          <p className="text-base mb-10 text-[#7C3AED] font-semibold max-w-2xl mx-auto">
-            {'Začnite brezplačno – brez kreditne kartice.'}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/sign-up">
-              <Button
-                size="lg"
-                className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
-              >
-              {'Začni brezplačno'}
-              <span className="ml-2">→</span>
-            </Button>
-          </Link>
-          <Link href="/pricing">
+          <Link href="/auth/sign-up">
             <Button
               size="lg"
-              className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-white hover:bg-gray-50 text-[#7C3AED] font-semibold"
+              className="text-lg px-12 py-7 rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
             >
-              {'Razišči možnosti'}
-              </Button>
-            </Link>
-          </div>
+              {"Začni brezplačno →"}
+            </Button>
+          </Link>
+          <p className="text-sm text-[#64748B] mt-4">
+            {"Brez kreditne kartice. Brez obveznosti."}
+          </p>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-[#2D2A3D] text-white py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
@@ -438,7 +424,7 @@ export default function HomePage() {
                 </li>
                 <li>
                   <Link href="/faq" className="text-gray-400 hover:text-white transition-colors">
-                    Pogosta vprašanja
+                    {"Pogosta vprašanja"}
                   </Link>
                 </li>
               </ul>
@@ -453,7 +439,7 @@ export default function HomePage() {
                 </li>
                 <li>
                   <Link href="/getting-started" className="text-gray-400 hover:text-white transition-colors">
-                    Začetek uporabe
+                    {"Začetek uporabe"}
                   </Link>
                 </li>
               </ul>
@@ -474,11 +460,11 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Poveži se</h4>
+              <h4 className="font-semibold mb-4">{"Poveži se"}</h4>
               <ul className="space-y-3 text-sm">
                 <li>
                   <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                    Pošlji email
+                    {"Pošlji email"}
                   </Link>
                 </li>
               </ul>
@@ -498,7 +484,7 @@ export default function HomePage() {
               <span className="font-heading font-bold text-2xl">KidsLearnAI</span>
             </div>
             <p className="text-sm text-gray-400">
-              &copy; {new Date().getFullYear()} KidsLearnAI. Vse pravice pridržane.
+              &copy; {new Date().getFullYear()} KidsLearnAI. Vse pravice {"pridržane"}.
             </p>
           </div>
         </div>

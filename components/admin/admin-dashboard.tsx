@@ -10,15 +10,14 @@ import { SupportTickets } from "./support-tickets"
 import { MonitoringDashboard } from "./monitoring-dashboard"
 import { ContentValidationDashboard } from "./content-validation-dashboard"
 import { RecentActivity } from "./recent-activity"
-import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle } from 'lucide-react'
+import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle, Megaphone } from 'lucide-react'
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("recent")
 
-  useEffect(() => {
-    console.log("[v0] AdminDashboard mounted with 8 tabs")
-    console.log("[v0] Active tab:", activeTab)
-  }, [activeTab])
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
@@ -28,8 +27,18 @@ export function AdminDashboard() {
       
       <div className="container mx-auto py-6 px-4 max-w-7xl relative z-10">
         <div className="mb-6 bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-purple-200">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage your AI Kids Learning platform</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Admin Dashboard</h1>
+              <p className="text-muted-foreground">Manage your AI Kids Learning platform</p>
+            </div>
+            <Button asChild variant="outline" className="gap-2">
+              <Link href="/admin/marketing">
+                <Megaphone className="h-4 w-4" />
+                Marketing
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

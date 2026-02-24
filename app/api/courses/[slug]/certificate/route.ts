@@ -64,7 +64,7 @@ export async function GET(
     }
 
     // Get user profile for the name
-    const { data: profile } = await supabase
+    const { data: userProfile } = await supabase
       .from("profiles")
       .select("display_name, email")
       .eq("id", user.id)
@@ -98,7 +98,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      studentName: profile?.display_name || profile?.email?.split("@")[0] || "Učenec",
+      studentName: userProfile?.display_name || userProfile?.email?.split("@")[0] || "Učenec",
       courseTitle: course.title,
       completionDate,
       totalLessons,

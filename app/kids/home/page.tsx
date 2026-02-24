@@ -1,4 +1,6 @@
 "use client"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { RecommendedActivities } from "@/components/recommended-activities"
 import { GamificationDisplay } from "@/components/gamification-display"
@@ -11,6 +13,14 @@ import { BYTE_CHARACTER } from "@/lib/byte-character"
 import Image from "next/image"
 
 export default function KidsHome() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const onboardingCompleted = localStorage.getItem("onboarding_completed")
+    if (!onboardingCompleted) {
+      router.replace("/kids/welcome")
+    }
+  }, [router])
   const kidsTourSteps = [
     {
       target: ".gamification-display",
