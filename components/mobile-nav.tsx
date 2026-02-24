@@ -14,14 +14,14 @@ export function MobileNav() {
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
           <Menu className="w-6 h-6" />
-          <span className="sr-only">Toggle menu</span>
+          <span className="sr-only">Odpri meni</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] sm:w-[400px]">
         <nav className="flex flex-col gap-4 mt-8">
           <Link href="/" className="flex items-center gap-2 mb-4" onClick={() => setOpen(false)}>
             <Sparkles className="w-6 h-6 text-primary" />
-            <span className="font-bold text-xl">AI Kids Learning</span>
+            <span className="font-bold text-xl">KidsLearnAI</span>
           </Link>
           <Link
             href="/courses"
@@ -35,37 +35,37 @@ export function MobileNav() {
             className="text-lg font-medium hover:text-primary transition-colors py-2"
             onClick={() => setOpen(false)}
           >
-            Pricing
+            Cene
           </Link>
           <Link
             href="/about"
             className="text-lg font-medium hover:text-primary transition-colors py-2"
             onClick={() => setOpen(false)}
           >
-            About
+            O nas
           </Link>
           <Link
             href="/faq"
             className="text-lg font-medium hover:text-primary transition-colors py-2"
             onClick={() => setOpen(false)}
           >
-            FAQ
+            {"Pogosta vprašanja"}
           </Link>
           <Link
             href="/contact"
             className="text-lg font-medium hover:text-primary transition-colors py-2"
             onClick={() => setOpen(false)}
           >
-            Contact
+            Kontakt
           </Link>
           <div className="border-t pt-4 mt-4 space-y-3">
             <Link href="/auth/login" onClick={() => setOpen(false)}>
               <Button variant="outline" className="w-full bg-transparent">
-                Log in
+                Prijava
               </Button>
             </Link>
             <Link href="/getting-started" onClick={() => setOpen(false)}>
-              <Button className="w-full">Get Started</Button>
+              <Button className="w-full">{"Začni brezplačno"}</Button>
             </Link>
           </div>
         </nav>

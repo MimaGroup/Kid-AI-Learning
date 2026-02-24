@@ -1,46 +1,37 @@
-interface Stats {
-  userCount: number
-  activityCount: number
-  satisfactionRate: number
-}
+import { Gamepad2, BookOpen, Clock, Gift } from "lucide-react"
 
 export function StatsSection() {
-  // Hardcoded stats for now - update to dynamic when more traction
-  const stats: Stats = {
-    userCount: 159,
-    activityCount: 50,
-    satisfactionRate: 98,
-  }
-
-  // Format number with appropriate suffix
-  const formatNumber = (num: number): string => {
-    if (num >= 1000) {
-      return `${Math.floor(num / 1000)}K+`
-    }
-    return `${num}+`
-  }
-
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#7C3AED]">
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#7C3AED]">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-          <div className="space-y-2">
-            <div className="text-5xl md:text-6xl font-heading font-bold">
-              {formatNumber(stats.userCount)}
+          <div className="space-y-3">
+            <div className="flex items-center justify-center">
+              <Gamepad2 className="w-10 h-10 opacity-90" />
             </div>
-            <div className="text-lg font-medium opacity-90">Aktivnih učencev</div>
+            <div className="text-4xl md:text-5xl font-heading font-bold">8</div>
+            <div className="text-base font-medium opacity-90">AI iger</div>
           </div>
-          <div className="space-y-2">
-            <div className="text-5xl md:text-6xl font-heading font-bold">{stats.activityCount}+</div>
-            <div className="text-lg font-medium opacity-90">Učnih aktivnosti</div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-center">
+              <BookOpen className="w-10 h-10 opacity-90" />
+            </div>
+            <div className="text-4xl md:text-5xl font-heading font-bold">5</div>
+            <div className="text-base font-medium opacity-90">{"Tečajev"}</div>
           </div>
-          <div className="space-y-2">
-            <div className="text-5xl md:text-6xl font-heading font-bold">{stats.satisfactionRate}%</div>
-            <div className="text-lg font-medium opacity-90">Zadovoljnih staršev</div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-center">
+              <Clock className="w-10 h-10 opacity-90" />
+            </div>
+            <div className="text-4xl md:text-5xl font-heading font-bold">24/7</div>
+            <div className="text-base font-medium opacity-90">Dostop do učenja</div>
           </div>
-          <div className="space-y-2">
-            <div className="text-5xl md:text-6xl font-heading font-bold">24/7</div>
-            <div className="text-lg font-medium opacity-90">Dostop do učenja</div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-center">
+              <Gift className="w-10 h-10 opacity-90" />
+            </div>
+            <div className="text-4xl md:text-5xl font-heading font-bold">0 {"€"}</div>
+            <div className="text-base font-medium opacity-90">{"Brezplačno za začetek"}</div>
           </div>
         </div>
       </div>

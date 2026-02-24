@@ -4,18 +4,15 @@ import { createServiceRoleClient, createServerClient } from "@/lib/supabase/serv
 async function isAdmin(): Promise<boolean> {
   try {
     const supabase = await createServerClient()
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-    console.log("[v0] isAdmin check - user:", user?.id, "error:", userError?.message)
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) return false
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single()
-    console.log("[v0] isAdmin check - profile role:", profile?.role, "error:", profileError?.message)
     return profile?.role === "admin"
-  } catch (e) {
-    console.log("[v0] isAdmin check - exception:", e)
+  } catch {
     return false
   }
 }
@@ -24,7 +21,6 @@ export async function GET() {
   try {
     const supabase = await createServiceRoleClient()
     const adminUser = await isAdmin()
-    console.log("[v0] GET /api/courses - adminUser:", adminUser)
 
     let query = supabase
       .from("courses")
@@ -36,7 +32,6 @@ export async function GET() {
     }
 
     const { data: courses, error } = await query
-    console.log("[v0] GET /api/courses - courses count:", courses?.length, "error:", error?.message)
 
     if (error) {
       console.error("Error fetching courses:", error)
