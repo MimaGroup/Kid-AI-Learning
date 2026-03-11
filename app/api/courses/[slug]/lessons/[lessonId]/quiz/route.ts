@@ -56,8 +56,9 @@ export async function POST(
     const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
     if (!rateLimitResult.allowed) {
       return NextResponse.json({
-        questions: getFallbackQuestions(),
+        questions: getLessonFallbackQuestions(),
         fallback: true,
+        lessonTitle: lesson.title,
         message: `Preveč zahtev! Počakajte ${rateLimitResult.resetIn} sekund. Medtem uživajte v teh vprašanjih!`,
       })
     }
@@ -65,12 +66,22 @@ export async function POST(
     // Get the lesson and course
     const { data: lesson } = await supabase
       .from("course_lessons")
-      .select("title, key_concepts, content, module_index")
+      .select("title, key_concepts, content, module_index, quiz_questions")
       .eq("id", lessonId)
       .single()
 
     if (!lesson) {
       return NextResponse.json({ error: "Lesson not found" }, { status: 404 })
+    }
+    
+    // Helper function to get lesson-specific fallback questions
+    const getLessonFallbackQuestions = () => {
+      // First try to use stored quiz_questions from the lesson
+      if (lesson.quiz_questions && Array.isArray(lesson.quiz_questions) && lesson.quiz_questions.length > 0) {
+        return lesson.quiz_questions
+      }
+      // Fall back to generic questions only if no lesson-specific ones exist
+      return getFallbackQuestions()
     }
 
     const { data: course } = await supabase
@@ -134,8 +145,9 @@ Return ONLY the JSON array, no additional text.`
         const moderation = await validateAIResponse(contentToCheck, "lesson-quiz")
         if (!moderation.isAppropriate) {
           return NextResponse.json({
-            questions: getFallbackQuestions(),
+            questions: getLessonFallbackQuestions(),
             fallback: true,
+            lessonTitle: lesson.title,
             message: "Uporabljamo vnaprej pripravljena vprašanja za varnost vsebine!",
           })
         }
@@ -145,8 +157,9 @@ Return ONLY the JSON array, no additional text.`
     } catch (error: any) {
       console.error("Error generating lesson quiz:", error.message)
       return NextResponse.json({
-        questions: getFallbackQuestions(),
+        questions: getLessonFallbackQuestions(),
         fallback: true,
+        lessonTitle: lesson.title,
         message: "Uporabljamo vnaprej pripravljena vprašanja. Poskusite znova čez minuto za AI vprašanja!",
       })
     }
