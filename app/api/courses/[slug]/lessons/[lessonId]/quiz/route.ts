@@ -51,19 +51,7 @@ export async function POST(
       // anonymous
     }
 
-    // Rate limit
-    const rateLimitKey = getRateLimitKey(userId, "lesson-quiz")
-    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
-    if (!rateLimitResult.allowed) {
-      return NextResponse.json({
-        questions: getLessonFallbackQuestions(),
-        fallback: true,
-        lessonTitle: lesson.title,
-        message: `Preveč zahtev! Počakajte ${rateLimitResult.resetIn} sekund. Medtem uživajte v teh vprašanjih!`,
-      })
-    }
-
-    // Get the lesson and course
+    // Get the lesson and course first (needed for fallback questions)
     const { data: lesson } = await supabase
       .from("course_lessons")
       .select("title, key_concepts, content, module_index, quiz_questions")
@@ -82,6 +70,18 @@ export async function POST(
       }
       // Fall back to generic questions only if no lesson-specific ones exist
       return getFallbackQuestions()
+    }
+
+    // Rate limit
+    const rateLimitKey = getRateLimitKey(userId, "lesson-quiz")
+    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json({
+        questions: getLessonFallbackQuestions(),
+        fallback: true,
+        lessonTitle: lesson.title,
+        message: `Preveč zahtev! Počakajte ${rateLimitResult.resetIn} sekund. Medtem uživajte v teh vprašanjih!`,
+      })
     }
 
     const { data: course } = await supabase
