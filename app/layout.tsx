@@ -11,6 +11,8 @@ import Script from "next/script"
 import { Analytics } from "@vercel/analytics/react"
 import { generateStructuredData } from "@/lib/metadata"
 import { StructuredData } from "@/components/structured-data"
+import { Suspense } from "react"
+import { FacebookPixelPageView } from "@/components/facebook-pixel"
 
 const fredoka = Fredoka({
   subsets: ["latin"],
@@ -132,6 +134,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </AuthProvider>
         </ErrorBoundary>
         <Analytics />
+        <Suspense fallback={null}>
+          <FacebookPixelPageView />
+        </Suspense>
 
         {/* Facebook Pixel */}
         <Script
