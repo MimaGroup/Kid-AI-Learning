@@ -224,18 +224,6 @@ export default function LearnDashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2 className="font-heading font-bold text-[#2D2A3D]">{mod.title}</h2>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                      <span className="flex items-center gap-1">
-                        <BookOpen className="w-3 h-3" />
-                        {mod.totalLessons} {mod.totalLessons === 1 ? "lekcija" : mod.totalLessons < 5 ? "lekcije" : "lekcij"}
-                      </span>
-                      <span className={cn(
-                        "px-1.5 py-0.5 rounded-full text-[10px] font-semibold",
-                        isModComplete ? "bg-emerald-100 text-emerald-700" : "bg-[#7C3AED]/10 text-[#7C3AED]"
-                      )}>
-                        {modProgress}%
-                      </span>
-                    </div>
                   </div>
                 </div>
 

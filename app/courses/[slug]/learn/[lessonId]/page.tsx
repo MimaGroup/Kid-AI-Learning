@@ -277,59 +277,150 @@ export default function LessonViewerPage() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Module / Lesson breadcrumb */}
-        <div className="mb-6">
-          <p className="text-xs text-[#7C3AED] font-semibold mb-1">
-            Modul {lesson.module_index + 1}: {lesson.moduleName}
-          </p>
-          <h1 className="text-2xl md:text-3xl font-heading font-bold text-[#2D2A3D] text-balance">
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F5F3FF] rounded-full mb-4">
+            <BookOpen className="w-4 h-4 text-[#7C3AED]" />
+            <span className="text-sm font-medium text-[#7C3AED]">
+              Modul {lesson.module_index + 1}: {lesson.moduleName}
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#2D2A3D] text-balance leading-tight">
             {lesson.title}
           </h1>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {lesson.duration_minutes} min
+          <div className="flex items-center gap-4 mt-4">
+            <span className="flex items-center gap-2 text-muted-foreground bg-gray-100 px-3 py-1.5 rounded-full">
+              <Clock className="w-4 h-4" />
+              <span className="text-sm font-medium">{lesson.duration_minutes} min</span>
             </span>
             {lesson.content_type === "activity" && (
-              <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs">Aktivnost</Badge>
+              <Badge className="bg-amber-100 text-amber-700 border-amber-200 px-3 py-1">Aktivnost</Badge>
             )}
             {lesson.content_type === "project" && (
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">Projekt</Badge>
+              <Badge className="bg-blue-100 text-blue-700 border-blue-200 px-3 py-1">Projekt</Badge>
             )}
           </div>
         </div>
 
-        {/* Lesson content */}
-        <Card className="border-2 border-gray-100 mb-8">
-          <CardContent className="p-6 md:p-10 prose prose-base max-w-none prose-headings:font-heading prose-headings:text-[#2D2A3D] prose-h1:text-2xl prose-h1:mb-4 prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-p:text-foreground/80 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-foreground/80 prose-li:leading-relaxed prose-strong:text-[#2D2A3D] prose-hr:my-8 prose-hr:border-gray-200 prose-ul:my-4 prose-ol:my-4 prose-pre:my-4 prose-pre:rounded-xl prose-pre:bg-gray-50 prose-table:my-4 prose-blockquote:border-[#7C3AED]/30 prose-blockquote:bg-[#F5F3FF]/50 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-code:text-[#7C3AED] prose-code:bg-[#F5F3FF] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
-            <ReactMarkdown>{lesson.content}</ReactMarkdown>
+        {/* Lesson content - Kid-friendly styling */}
+        <Card className="border-2 border-gray-100 mb-8 shadow-sm">
+          <CardContent className="p-6 md:p-10 lg:p-12">
+            <div className="lesson-content space-y-6">
+              <ReactMarkdown
+                components={{
+                  // Style paragraphs - check if they contain only a strong tag (section heading)
+                  p: ({ children, ...props }) => {
+                    // Check if this paragraph is just a bold heading (contains only strong with emoji)
+                    const childArray = Array.isArray(children) ? children : [children]
+                    const firstChild = childArray[0]
+                    const isSectionHeading = 
+                      childArray.length <= 2 && 
+                      typeof firstChild === 'object' && 
+                      firstChild !== null &&
+                      'type' in firstChild &&
+                      (firstChild as { type?: { name?: string } }).type?.name === 'strong'
+                    
+                    if (isSectionHeading) {
+                      return (
+                        <div className="mt-10 mb-5 pb-3 border-b-2 border-[#7C3AED]/20 first:mt-0">
+                          <h2 className="text-xl md:text-2xl font-heading font-bold text-[#2D2A3D] flex items-center gap-2">
+                            {children}
+                          </h2>
+                        </div>
+                      )
+                    }
+                    
+                    return (
+                      <p className="text-base md:text-lg text-[#2D2A3D]/80 leading-[1.8] mb-4" {...props}>
+                        {children}
+                      </p>
+                    )
+                  },
+                  // Style bold/strong text
+                  strong: ({ children }) => (
+                    <strong className="font-semibold text-[#2D2A3D]">{children}</strong>
+                  ),
+                  // Style headings
+                  h1: ({ children }) => (
+                    <h1 className="text-2xl md:text-3xl font-heading font-bold text-[#2D2A3D] mb-6 mt-8 first:mt-0">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <div className="mt-10 mb-5 pb-3 border-b-2 border-[#7C3AED]/20 first:mt-0">
+                      <h2 className="text-xl md:text-2xl font-heading font-bold text-[#2D2A3D]">{children}</h2>
+                    </div>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-lg md:text-xl font-heading font-bold text-[#7C3AED] mt-8 mb-4">{children}</h3>
+                  ),
+                  // Style lists
+                  ul: ({ children }) => (
+                    <ul className="my-6 pl-2 space-y-3">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="my-6 pl-2 space-y-3 list-decimal list-inside marker:text-[#7C3AED] marker:font-semibold">{children}</ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="text-base md:text-lg text-[#2D2A3D]/80 leading-[1.8] flex items-start gap-3">
+                      <span className="w-2 h-2 rounded-full bg-[#7C3AED] mt-2.5 flex-shrink-0" />
+                      <span>{children}</span>
+                    </li>
+                  ),
+                  // Style blockquotes as callout boxes
+                  blockquote: ({ children }) => (
+                    <div className="my-6 p-5 md:p-6 bg-[#F5F3FF] border-l-4 border-[#7C3AED] rounded-r-xl">
+                      <div className="text-base md:text-lg text-[#2D2A3D]/90 leading-relaxed">{children}</div>
+                    </div>
+                  ),
+                  // Style horizontal rules
+                  hr: () => (
+                    <hr className="my-10 border-gray-200" />
+                  ),
+                  // Style links
+                  a: ({ children, href }) => (
+                    <a href={href} className="text-[#7C3AED] font-medium underline underline-offset-2 hover:text-[#6B2FD6] transition-colors">
+                      {children}
+                    </a>
+                  ),
+                  // Style code
+                  code: ({ children }) => (
+                    <code className="text-[#7C3AED] bg-[#F5F3FF] px-2 py-1 rounded-md font-medium text-sm">{children}</code>
+                  ),
+                }}
+              >
+                {lesson.content}
+              </ReactMarkdown>
+            </div>
           </CardContent>
         </Card>
 
         {/* Key concepts - clickable for AI explanation */}
         {keyConcepts.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-[#2D2A3D] mb-3 flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-[#7C3AED]" />
-              {"Ključni pojmi"} <span className="text-xs text-muted-foreground font-normal">{"(klikni za razlago)"}</span>
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {keyConcepts.map((concept, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleExplain(concept.name)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-sm font-medium transition-all border",
-                    explainConcept === concept.name
-                      ? "bg-[#7C3AED] text-white border-[#7C3AED]"
-                      : "bg-[#F5F3FF] text-[#7C3AED] border-[#7C3AED]/20 hover:bg-[#7C3AED]/10"
-                  )}
-                >
-                  {concept.name}
-                </button>
-              ))}
-            </div>
+          <Card className="mb-8 border-2 border-[#7C3AED]/10 bg-gradient-to-br from-[#F5F3FF]/50 to-white">
+            <CardContent className="p-6 md:p-8">
+              <h3 className="text-lg md:text-xl font-heading font-bold text-[#2D2A3D] mb-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/10 flex items-center justify-center">
+                  <Lightbulb className="w-5 h-5 text-[#7C3AED]" />
+                </div>
+                {"Ključni pojmi"}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">{"Klikni na pojem, da izveš več!"}</p>
+              <div className="flex flex-wrap gap-3">
+                {keyConcepts.map((concept, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleExplain(concept.name)}
+                    className={cn(
+                      "px-4 py-2 rounded-xl text-sm md:text-base font-medium transition-all border-2 shadow-sm hover:shadow-md",
+                      explainConcept === concept.name
+                        ? "bg-[#7C3AED] text-white border-[#7C3AED] shadow-[#7C3AED]/25"
+                        : "bg-white text-[#7C3AED] border-[#7C3AED]/20 hover:border-[#7C3AED]/40 hover:bg-[#7C3AED]/5"
+                    )}
+                  >
+                    {concept.name}
+                  </button>
+                ))}
+              </div>
 
             {/* AI explanation */}
             {explainConcept && (
@@ -362,7 +453,8 @@ export default function LessonViewerPage() {
                 </CardContent>
               </Card>
             )}
-          </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Quiz section */}
@@ -376,54 +468,69 @@ export default function LessonViewerPage() {
 
         {/* Mark as complete */}
         {!completed && (
-          <div className="flex justify-center mb-8">
-            <Button
-              onClick={markAsComplete}
-              disabled={markingComplete}
-              size="lg"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full gap-2 px-8"
-            >
-              {markingComplete ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="w-5 h-5" />
-              )}
-              {"Označi kot zaključeno"}
-            </Button>
-          </div>
+          <Card className="mb-8 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
+            <CardContent className="p-6 md:p-8 flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+              </div>
+              <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-2">{"Si prebral/-a lekcijo?"}</h3>
+              <p className="text-sm text-muted-foreground mb-5">{"Označi kot zaključeno in nadaljuj z učenjem!"}</p>
+              <Button
+                onClick={markAsComplete}
+                disabled={markingComplete}
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl gap-2 px-8 h-12 text-base shadow-md hover:shadow-lg transition-all"
+              >
+                {markingComplete ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-5 h-5" />
+                )}
+                {"Zaključi lekcijo"}
+              </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Navigation */}
-        <div className="flex items-center justify-between py-6 border-t border-border">
-          {navigation.prevLesson ? (
-            <Link href={`/courses/${slug}/learn/${navigation.prevLesson.id}`}>
-              <Button variant="outline" className="rounded-full gap-2">
-                <ChevronLeft className="w-4 h-4" />
-                <span className="hidden sm:inline line-clamp-1 max-w-[180px]">{navigation.prevLesson.title}</span>
-                <span className="sm:hidden">{"Prejšnja"}</span>
-              </Button>
-            </Link>
-          ) : (
-            <div />
-          )}
+        <Card className="border-2 border-gray-100 bg-gray-50/50">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center justify-between gap-4">
+              {navigation.prevLesson ? (
+                <Link href={`/courses/${slug}/learn/${navigation.prevLesson.id}`} className="flex-1 max-w-[45%]">
+                  <Button variant="outline" className="w-full rounded-xl gap-2 h-auto py-3 px-4 justify-start hover:bg-white hover:border-[#7C3AED]/30 transition-all">
+                    <ChevronLeft className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
+                    <div className="flex flex-col items-start text-left min-w-0">
+                      <span className="text-xs text-muted-foreground">{"Prejšnja lekcija"}</span>
+                      <span className="text-sm font-medium text-[#2D2A3D] line-clamp-1">{navigation.prevLesson.title}</span>
+                    </div>
+                  </Button>
+                </Link>
+              ) : (
+                <div className="flex-1" />
+              )}
 
-          {navigation.nextLesson ? (
-            <Link href={`/courses/${slug}/learn/${navigation.nextLesson.id}`}>
-              <Button className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full gap-2">
-                <span className="hidden sm:inline line-clamp-1 max-w-[180px]">{navigation.nextLesson.title}</span>
-                <span className="sm:hidden">{"Naslednja"}</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          ) : (
-            <Link href={`/courses/${slug}/learn`}>
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full gap-2">
-                <Trophy className="w-4 h-4" />
-                {"Nazaj na pregled"}
-              </Button>
-            </Link>
-          )}
-        </div>
+              {navigation.nextLesson ? (
+                <Link href={`/courses/${slug}/learn/${navigation.nextLesson.id}`} className="flex-1 max-w-[45%]">
+                  <Button className="w-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-xl gap-2 h-auto py-3 px-4 justify-end transition-all shadow-md hover:shadow-lg">
+                    <div className="flex flex-col items-end text-right min-w-0">
+                      <span className="text-xs text-white/80">{"Naslednja lekcija"}</span>
+                      <span className="text-sm font-medium line-clamp-1">{navigation.nextLesson.title}</span>
+                    </div>
+                    <ArrowRight className="w-5 h-5 flex-shrink-0" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link href={`/courses/${slug}/learn`} className="flex-1 max-w-[45%]">
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl gap-2 h-auto py-3 px-4 justify-center transition-all shadow-md hover:shadow-lg">
+                    <Trophy className="w-5 h-5" />
+                    <span className="font-medium">{"Nazaj na pregled"}</span>
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </main>
     </div>
   )
