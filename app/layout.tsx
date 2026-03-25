@@ -122,6 +122,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AI Kids Learning" />
+        <meta name="facebook-domain-verification" content="v077xiu3yrtnmim6nz97d791fnuf3v" />
         <StructuredData data={organizationSchema} />
       </head>
       <body className={`${fredoka.variable} ${poppins.variable}`}>
