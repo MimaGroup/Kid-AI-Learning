@@ -93,7 +93,7 @@ export default function HomePage() {
             <div className="space-y-8">
               <Badge className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full bg-[#FCD34D] text-[#8B6914] border-0 hover:scale-105 transition-transform">
                 <Sparkles className="w-4 h-4" />
-                {"AI učna platforma za otroke 5-12 let"}
+                {"AI učna platforma za otroke 5–12 let"}
               </Badge>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-balance leading-[1.1] tracking-tight">
@@ -105,7 +105,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed text-[#64748B] max-w-xl">
-                {"KidsLearnAI je zabavna AI učna platforma, ki otrokom od 5–12 let pomaga spoznati umetno inteligenco — preko iger, izzivov in osebnega AI tutorja Byte-a."}
+                {"KidsLearnAI je prva slovenska AI učna platforma, ki otrokom od 5 do 12 let pomaga razumeti umetno inteligenco — skozi igro, izzive in osebnega AI tutorja Byte-a. Brez dolgočasnih predavanj. Samo učenje, ki otroke res navdušuje."}
               </p>
 
               <div className="pt-2">
@@ -118,7 +118,7 @@ export default function HomePage() {
                     size="lg"
                     className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
                   >
-                    {"Začni brezplačno →"}
+{"Začni brezplačno — 7 dni"}
                   </Button>
                 </Link>
                 <Link href="#demo-game">
@@ -198,7 +198,7 @@ export default function HomePage() {
               {"Značilnosti"}
             </Badge>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
-              {"Zakaj starši izberejo nas"}
+              {"Zakaj starši izbirajo KidsLearnAI?"}
             </h2>
             <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
               {"Celovita platforma, zasnovana z mislijo na izobraževanje in varnost"}
@@ -210,9 +210,9 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-2xl bg-[#F3E8FF] flex items-center justify-center mb-6">
                 <BookOpen className="w-8 h-8 text-[#7C3AED]" />
               </div>
-              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Izobraževalne vsebine"}</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Učenje skozi igro"}</h3>
               <p className="text-[#64748B] leading-relaxed">
-                {"Lekcije, ki uvajajo koncepte umetne inteligence skozi privlačne, starosti primerne aktivnosti in zgodbe."}
+                {"Byte, osebni AI tutor, vodi otroka skozi lekcije na zabaven način. Otroci se učijo, ne da bi sploh vedeli, da se učijo."}
               </p>
             </Card>
 
@@ -220,9 +220,9 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-2xl bg-[#E0F2FE] flex items-center justify-center mb-6">
                 <Shield className="w-8 h-8 text-[#0EA5E9]" />
               </div>
-              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">Varno okolje</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Varno in primerno za otroke"}</h3>
               <p className="text-[#64748B] leading-relaxed">
-                {"Skladno s COPPA z robustnimi starševskimi kontrolami, filtriranjem vsebine in spremljanjem v realnem času."}
+                {"Platforma je zasnovana posebej za otroke. Brez oglasov, brez neprimernih vsebin — samo čisto učenje."}
               </p>
             </Card>
 
@@ -230,9 +230,9 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-2xl bg-[#FEF3C7] flex items-center justify-center mb-6">
                 <Zap className="w-8 h-8 text-[#F59E0B]" />
               </div>
-              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Prilagodljivo učenje"}</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Starši so vedno v sliki"}</h3>
               <p className="text-[#64748B] leading-relaxed">
-                {"AI-poganjana personalizacija se prilagaja tempu in učnemu slogu vašega otroka za optimalno vključenost."}
+                {"Tedenska poročila o napredku, ki jih prejmete direktno na email. Vedno veste, kaj se je vaš otrok naučil."}
               </p>
             </Card>
           </div>
@@ -384,17 +384,17 @@ export default function HomePage() {
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] to-[#F0FDFA]">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-[#2D2A3D] text-balance">
-            {"Ste pripravljeni odpreti vrata prihodnosti svojemu otroku?"}
+            {"Dajte svojemu otroku znanje prihodnosti — še danes."}
           </h2>
           <p className="text-xl mb-10 text-[#64748B] max-w-2xl mx-auto">
-            {"Pridružite se in omogočite svojemu otroku varno ter spodbudno AI-izkušnjo."}
+            {"Pridružite se prvim slovenskim družinam na KidsLearnAI. Prvih 7 dni je popolnoma brezplačnih. Nobene kreditne kartice ni potrebno."}
           </p>
           <Link href="/auth/sign-up">
             <Button
               size="lg"
               className="text-lg px-12 py-7 rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
             >
-              {"Začni brezplačno →"}
+              {"Začni brezplačno zdaj"}
             </Button>
           </Link>
           <p className="text-sm text-[#64748B] mt-4">
