@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { trackEvent, trackPayment } from "@/lib/analytics"
+import { trackStartTrial } from "@/lib/fbpixel"
 
 function PaymentSuccessContent() {
   const router = useRouter()
@@ -24,6 +25,7 @@ function PaymentSuccessContent() {
               plan: data.plan_type || "unknown",
               session_id: sessionId,
             })
+            trackStartTrial()
             setLoading(false)
           } else {
             setError(data.error || "Payment verification failed")

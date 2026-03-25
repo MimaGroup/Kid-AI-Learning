@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Sparkles } from "lucide-react"
+import { trackLead } from "@/lib/fbpixel"
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
@@ -64,7 +65,7 @@ export function MobileNav() {
                 Prijava
               </Button>
             </Link>
-            <Link href="/getting-started" onClick={() => setOpen(false)}>
+            <Link href="/getting-started" onClick={() => { setOpen(false); trackLead(); }}>
               <Button className="w-full">{"Začni brezplačno"}</Button>
             </Link>
           </div>

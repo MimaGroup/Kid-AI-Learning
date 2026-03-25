@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -13,6 +15,7 @@ import { DemoVideoSection } from "@/components/demo-video-section"
 import { StatsSection } from "@/components/stats-section"
 import { LandingDemoGame } from "@/components/landing-demo-game"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { trackLead } from "@/lib/fbpixel"
 
 const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) => ({ default: mod.TrustBadges })))
 
@@ -65,7 +68,7 @@ export default function HomePage() {
                   Prijava
                 </Button>
               </Link>
-              <Link href="/auth/sign-up">
+              <Link href="/auth/sign-up" onClick={() => trackLead()}>
                 <Button
                   size="lg"
                   className="rounded-full font-medium soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
@@ -110,7 +113,7 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/auth/sign-up">
+                <Link href="/auth/sign-up" onClick={() => trackLead()}>
                   <Button
                     size="lg"
                     className="text-lg px-10 py-7 w-full sm:w-auto rounded-full soft-shadow-lg hover:scale-105 transition-all bg-[#7C3AED] hover:bg-[#6B2FD6] text-white"
