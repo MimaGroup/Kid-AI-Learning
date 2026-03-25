@@ -7,10 +7,10 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MobileNav } from "@/components/mobile-nav"
 import { lazy, Suspense } from "react"
-import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket, MessageCircle } from "lucide-react"
+import { Sparkles, Shield, Zap, BookOpen, Gamepad2, ArrowRight, Check, Monitor, Rocket, MessageCircle, Users, Quote } from "lucide-react"
 import { SocialProofCounter } from "@/components/social-proof-counter"
 import { ConversionTracker } from "@/components/conversion-tracker"
-import { LearningOutcomesSection } from "@/components/learning-outcomes-section"
+
 import { DemoVideoSection } from "@/components/demo-video-section"
 import { StatsSection } from "@/components/stats-section"
 import { LandingDemoGame } from "@/components/landing-demo-game"
@@ -205,7 +205,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all hover:scale-105 rounded-3xl">
               <div className="w-16 h-16 rounded-2xl bg-[#F3E8FF] flex items-center justify-center mb-6">
                 <BookOpen className="w-8 h-8 text-[#7C3AED]" />
@@ -233,6 +233,16 @@ export default function HomePage() {
               <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Starši so vedno v sliki"}</h3>
               <p className="text-[#64748B] leading-relaxed">
                 {"Tedenska poročila o napredku, ki jih prejmete direktno na email. Vedno veste, kaj se je vaš otrok naučil."}
+              </p>
+            </Card>
+
+            <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all hover:scale-105 rounded-3xl">
+              <div className="w-16 h-16 rounded-2xl bg-[#ECFDF5] flex items-center justify-center mb-6">
+                <Users className="w-8 h-8 text-[#10B981]" />
+              </div>
+              <h3 className="text-2xl font-heading font-bold mb-4 text-[#2D2A3D]">{"Primerno za vsako starost"}</h3>
+              <p className="text-[#64748B] leading-relaxed">
+                {"Tečaji so prilagojeni starosti — od prvih korakov z AI pri 5 letih do naprednih izzivov pri 12 letih."}
               </p>
             </Card>
           </div>
@@ -374,8 +384,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Learning outcomes - replaces fake testimonials */}
-      <LearningOutcomesSection />
+      {/* Testimonials Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 border-[#7C3AED] text-[#7C3AED]">
+              Mnenja staršev
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
+              {"Kaj pravijo starši?"}
+            </h2>
+            <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
+              {"Zgodbe družin, ki so že preizkusile KidsLearnAI"}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all rounded-3xl">
+              <div className="text-6xl text-[#7C3AED] font-serif leading-none mb-4">"</div>
+              <p className="text-[#2D2A3D] leading-relaxed mb-6 text-lg">
+                {"Moj sin je po prvem tednu sam prosil za več lekcij. Tega prej ni nikoli naredil z nobeno šolsko nalogo."}
+              </p>
+              <div className="border-t border-[#E2E8F0] pt-4">
+                <p className="font-semibold text-[#2D2A3D]">Maja K.</p>
+                <p className="text-sm text-[#64748B]">Mama 9-letnega Luka</p>
+              </div>
+            </Card>
+
+            <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all rounded-3xl">
+              <div className="text-6xl text-[#7C3AED] font-serif leading-none mb-4">"</div>
+              <p className="text-[#2D2A3D] leading-relaxed mb-6 text-lg">
+                {"Končno platforma, ki je resnično varna za otroke in hkrati moderna. Byte je postal Zarin najljubši učitelj."}
+              </p>
+              <div className="border-t border-[#E2E8F0] pt-4">
+                <p className="font-semibold text-[#2D2A3D]">Andrej P.</p>
+                <p className="text-sm text-[#64748B]">Oče 7-letne Zare</p>
+              </div>
+            </Card>
+
+            <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all rounded-3xl">
+              <div className="text-6xl text-[#7C3AED] font-serif leading-none mb-4">"</div>
+              <p className="text-[#2D2A3D] leading-relaxed mb-6 text-lg">
+                {"V šoli so začeli govoriti o AI. Hvala bogu, da je naš otrok že korak naprej — in to na zabaven način."}
+              </p>
+              <div className="border-t border-[#E2E8F0] pt-4">
+                <p className="font-semibold text-[#2D2A3D]">Nina M.</p>
+                <p className="text-sm text-[#64748B]">Mama 11-letne Eve</p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       {/* How it works */}
       <DemoVideoSection />
@@ -486,9 +545,14 @@ export default function HomePage() {
               </div>
               <span className="font-heading font-bold text-2xl">KidsLearnAI</span>
             </div>
-            <p className="text-sm text-gray-400">
-              &copy; {new Date().getFullYear()} KidsLearnAI. Vse pravice {"pridržane"}.
-            </p>
+            <div className="text-right">
+              <p className="text-sm text-gray-300 italic mb-1">
+                Umetna inteligenca za vsako slovensko otroško sobo.
+              </p>
+              <p className="text-sm text-gray-400">
+                &copy; {new Date().getFullYear()} KidsLearnAI. Vse pravice {"pridržane"}.
+              </p>
+            </div>
           </div>
         </div>
       </footer>

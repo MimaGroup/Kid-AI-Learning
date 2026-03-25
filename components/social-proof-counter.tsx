@@ -8,10 +8,10 @@ export function SocialProofCounter() {
       </div>
       <div className="flex flex-col">
         <div className="text-sm font-bold text-[#2D2A3D]">
-          Nova platforma
+          Prva AI učna platforma v Sloveniji
         </div>
         <div className="text-xs text-[#64748B]">
-          Bodi med prvimi, ki se pridružijo!
+          Bodi med prvimi starši, ki dajo svojemu otroku prednost pred ostalimi
         </div>
       </div>
     </div>
