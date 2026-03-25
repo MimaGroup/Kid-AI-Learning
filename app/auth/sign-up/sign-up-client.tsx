@@ -6,6 +6,7 @@ import { useAuth } from "../../../hooks/use-auth"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { trackEvent, trackError } from "@/lib/analytics"
+import { trackCompleteRegistration } from "@/lib/fbpixel"
 import { LoadingOverlay } from "@/components/loading-overlay"
 import { Gift, Check } from "lucide-react"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
@@ -72,6 +73,7 @@ function SignUpPageClient() {
       }
 
       setSuccess(true)
+      trackCompleteRegistration()
       setIsLoading(false)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Registracija ni uspela"
