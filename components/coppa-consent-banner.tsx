@@ -7,14 +7,52 @@ import Link from "next/link"
 
 export function CoppaConsentBanner() {
   const [isVisible, setIsVisible] = useState(false)
+  const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
     // Check if user has already accepted
     const hasAccepted = localStorage.getItem("coppa-consent-accepted")
-    if (!hasAccepted) {
-      setIsVisible(true)
+    if (hasAccepted) {
+      return // Don't set up triggers if already accepted
+    }
+
+    let hasTriggered = false
+
+    const triggerBanner = () => {
+      if (hasTriggered) return
+      hasTriggered = true
+      setShouldShow(true)
+      // Clean up listeners once triggered
+      window.removeEventListener("scroll", handleScroll)
+      clearTimeout(timeoutId)
+    }
+
+    // Trigger 1: Scroll past hero section (~600px)
+    const handleScroll = () => {
+      if (window.scrollY >= 600) {
+        triggerBanner()
+      }
+    }
+
+    // Trigger 2: 5-second delay
+    const timeoutId = setTimeout(() => {
+      triggerBanner()
+    }, 5000)
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      clearTimeout(timeoutId)
     }
   }, [])
+
+  // Show banner when trigger condition is met
+  useEffect(() => {
+    if (shouldShow) {
+      setIsVisible(true)
+    }
+  }, [shouldShow])
 
   const handleAccept = () => {
     localStorage.setItem("coppa-consent-accepted", "true")
