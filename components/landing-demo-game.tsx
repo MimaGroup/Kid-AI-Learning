@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, CheckCircle2, XCircle, Sparkles } from "lucide-react"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { trackLead } from "@/lib/fbpixel"
 
 interface Question {
   question: string
@@ -119,7 +120,7 @@ export function LandingDemoGame() {
               To je bil samo mali predokus! Registriraj se in odkleni vse igre, {"tečaje"} in izzive z Byte-om.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/auth/sign-up">
+              <Link href="/auth/sign-up" onClick={() => trackLead()}>
                 <Button
                   size="lg"
                   className="text-lg px-8 py-6 rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white hover:scale-105 transition-all"

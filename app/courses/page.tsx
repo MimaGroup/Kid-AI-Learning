@@ -8,6 +8,7 @@ import { CourseCard } from "@/components/course-card"
 import { Footer } from "@/components/footer"
 import { Sparkles, GraduationCap, ShieldCheck, Zap, ArrowLeft } from "lucide-react"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { trackLead } from "@/lib/fbpixel"
 
 interface Course {
   id: string
@@ -87,7 +88,7 @@ export default function CoursesPage() {
                 <span className="hidden sm:inline">Domov</span>
               </Button>
             </Link>
-            <Link href="/auth/sign-up">
+            <Link href="/auth/sign-up" onClick={() => trackLead()}>
               <Button size="sm" className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full px-6">
                 {'Začni brezplačno'}
               </Button>
