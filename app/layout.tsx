@@ -139,10 +139,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FacebookPixelPageView />
         </Suspense>
 
-        {/* Facebook Pixel */}
+        {/* Facebook Pixel - Base Code */}
         <Script
-          id="fb-pixel"
-          strategy="afterInteractive"
+          id="fb-pixel-base"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
@@ -154,7 +154,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '2608175668814186');
-              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        {/* Facebook Pixel - PageView Event */}
+        <Script
+          id="fb-pixel-pageview"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof fbq === 'function') {
+                fbq('track', 'PageView');
+              } else {
+                window.addEventListener('load', function() {
+                  if (typeof fbq === 'function') {
+                    fbq('track', 'PageView');
+                  }
+                });
+              }
             `,
           }}
         />
