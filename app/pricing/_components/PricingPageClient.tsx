@@ -18,9 +18,16 @@ import {
 import { Home, GraduationCap, Bot, Trophy, BarChart3, Shield, Rocket } from "lucide-react"
 import Link from "next/link"
 
+// Stripe Price IDs
+const STRIPE_PRICE_IDS = {
+  monthly: "price_1TGcA4L7QSfL4ZRXxh55RJoZ",
+  yearly: "price_1TGcBeL7QSfL4ZRXyJIr7pqT",
+}
+
 export default function PricingPageClient() {
   const [user, setUser] = useState<any>(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createBrowserClient()
 
@@ -42,6 +49,40 @@ export default function PricingPageClient() {
   const handleCTAClick = (planType: string) => {
     trackEvent("pricing_cta_clicked", { plan: planType })
     router.push("/auth/sign-up")
+  }
+
+  const handleCheckout = async (priceId: string, planType: "monthly" | "yearly") => {
+    // If user is not logged in, redirect to sign-up first
+    if (!user) {
+      trackEvent("pricing_cta_clicked", { plan: planType, action: "redirect_to_signup" })
+      router.push("/auth/sign-up")
+      return
+    }
+
+    setCheckoutLoading(planType)
+    trackEvent("pricing_cta_clicked", { plan: planType, action: "checkout" })
+
+    try {
+      const res = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId, planType }),
+      })
+
+      const data = await res.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        console.error("Checkout error:", data.error)
+        alert("Prišlo je do napake. Prosimo, poskusite znova.")
+      }
+    } catch (error) {
+      console.error("Checkout error:", error)
+      alert("Prišlo je do napake. Prosimo, poskusite znova.")
+    } finally {
+      setCheckoutLoading(null)
+    }
   }
 
   if (authLoading) {
@@ -229,9 +270,10 @@ export default function PricingPageClient() {
 
               <Button
                 className="w-full mb-6 bg-[#534AB7] hover:bg-[#4339a6] text-white font-semibold"
-                onClick={() => handleCTAClick("monthly")}
+                onClick={() => handleCheckout(STRIPE_PRICE_IDS.monthly, "monthly")}
+                disabled={checkoutLoading === "monthly"}
               >
-                Začni Pro
+                {checkoutLoading === "monthly" ? "Nalaganje..." : "Začni Pro"}
               </Button>
 
               <div className="space-y-3">
@@ -262,9 +304,10 @@ export default function PricingPageClient() {
 
               <Button
                 className="w-full mb-6 bg-[#534AB7] hover:bg-[#4339a6] text-white font-semibold"
-                onClick={() => handleCTAClick("yearly")}
+                onClick={() => handleCheckout(STRIPE_PRICE_IDS.yearly, "yearly")}
+                disabled={checkoutLoading === "yearly"}
               >
-                Začni letni Pro
+                {checkoutLoading === "yearly" ? "Nalaganje..." : "Začni letni Pro"}
               </Button>
 
               <p className="text-xs text-center text-gray-500 -mt-4 mb-6">
