@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://v0-ai-for-kids-inky.vercel.app"
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kids-learning-ai.com"
     console.log("[v0] Creating checkout session for user:", user.email)
 
     let customerId: string
@@ -102,6 +102,7 @@ export async function POST(request: NextRequest) {
       ],
       success_url: `${siteUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/pricing`,
+      locale: "sl",
       metadata: {
         user_id: user.id,
         plan_type: planType,
