@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { useSubscription } from "@/hooks/use-subscription"
 import {
   ArrowLeft,
   Clock,
@@ -20,6 +21,7 @@ import {
   Loader2,
   Lock,
   Play,
+  Sparkles,
 } from "lucide-react"
 
 interface Course {
@@ -83,6 +85,7 @@ export default function CourseDetailPage() {
   const [purchased, setPurchased] = useState(false)
   const [loading, setLoading] = useState(true)
   const [purchasing, setPurchasing] = useState(false)
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
 
   useEffect(() => {
     async function fetchCourse() {
@@ -244,7 +247,7 @@ export default function CourseDetailPage() {
               </div>
             </div>
 
-            {/* Right: Purchase card */}
+            {/* Right: Subscription/Purchase card */}
             <div className="lg:col-span-2 order-1 lg:order-2">
               <Card className="overflow-hidden border-2 border-gray-100 shadow-lg sticky top-24">
                 <div className="relative aspect-video overflow-hidden">
@@ -254,72 +257,138 @@ export default function CourseDetailPage() {
                     fill
                     className="object-cover"
                   />
-                  {purchased && (
+                  {(purchased || hasPremium) && !course.is_free && (
                     <div className="absolute inset-0 bg-emerald-600/80 flex items-center justify-center">
                       <div className="text-center text-white">
                         <CheckCircle2 className="w-12 h-12 mx-auto mb-2" />
-                        <p className="font-bold text-lg">{"Že kupljeno"}</p>
+                        <p className="font-bold text-lg">{hasPremium ? "Pro dostop" : "Že kupljeno"}</p>
                       </div>
                     </div>
                   )}
                 </div>
                 <CardContent className="p-6">
-                  <div className="flex items-baseline gap-2 mb-6">
-                    <span className={`text-3xl font-bold ${course.is_free ? "text-emerald-600" : "text-[#2D2A3D]"}`}>
-                      {formatPrice(course.price)}
-                    </span>
-                    {!course.is_free && (
-                      <span className="text-sm text-[#94A3B8]">enkratno plačilo</span>
-                    )}
-                  </div>
-
-                  {purchased ? (
-                    <Link href={`/courses/${course.slug}/learn`}>
+                  {/* Show different UI based on subscription status */}
+                  {purchased || hasPremium ? (
+                    /* User has access - show start learning button */
+                    <>
+                      <Link href={`/courses/${course.slug}/learn`}>
+                        <Button
+                          size="lg"
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg gap-2"
+                        >
+                          <Play className="w-5 h-5" />
+                          {"Začni z učenjem"}
+                        </Button>
+                      </Link>
+                      <div className="mt-6 space-y-3">
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Dostop za vedno</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Certifikat ob zaključku</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Varno plačilo s Stripe</span>
+                        </div>
+                      </div>
+                    </>
+                  ) : course.is_free ? (
+                    /* Free course - show get free button */
+                    <>
                       <Button
                         size="lg"
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full py-6 text-lg gap-2"
+                        onClick={handlePurchase}
+                        disabled={purchasing}
+                        className="w-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full py-6 text-lg gap-2"
                       >
-                        <Play className="w-5 h-5" />
-                        {"Začni z učenjem"}
+                        {purchasing ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            <GraduationCap className="w-5 h-5" />
+                            {"Pridobi brezplačno"}
+                          </>
+                        )}
                       </Button>
-                    </Link>
+                      <div className="mt-6 space-y-3">
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Dostop za vedno</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Certifikat ob zaključku</span>
+                        </div>
+                      </div>
+                    </>
                   ) : (
-                    <Button
-                      size="lg"
-                      onClick={handlePurchase}
-                      disabled={purchasing}
-                      className="w-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full py-6 text-lg gap-2"
-                    >
-                      {purchasing ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : course.is_free ? (
-                        <>
-                          <GraduationCap className="w-5 h-5" />
-                          {"Pridobi brezplačno"}
-                        </>
-                      ) : (
-                        <>
-                          <Lock className="w-5 h-5" />
-                          {"Kupi tečaj"}
-                        </>
-                      )}
-                    </Button>
-                  )}
+                    /* Not subscribed - show subscription options */
+                    <>
+                      <h3 className="text-lg font-heading font-bold text-[#2D2A3D] mb-4">
+                        {"Dostop do vseh tečajev"}
+                      </h3>
+                      
+                      {/* Plan options */}
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <Link href="/pricing" className="block">
+                          <div className="border-2 border-gray-200 rounded-xl p-4 text-center hover:border-[#7C3AED]/50 transition-colors">
+                            <p className="text-sm text-[#64748B] mb-1">Mesečno</p>
+                            <p className="text-xl font-bold text-[#2D2A3D]">7,90 EUR</p>
+                            <p className="text-xs text-[#94A3B8]">/mesec</p>
+                          </div>
+                        </Link>
+                        <Link href="/pricing" className="block">
+                          <div className="border-2 border-[#7C3AED] rounded-xl p-4 text-center relative">
+                            <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+                              <Badge className="bg-[#7C3AED] text-white text-[10px] px-2 py-0.5">
+                                Prihranite 35 EUR
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-[#64748B] mb-1">Letno</p>
+                            <p className="text-xl font-bold text-[#7C3AED]">59 EUR</p>
+                            <p className="text-xs text-[#94A3B8]">/leto</p>
+                          </div>
+                        </Link>
+                      </div>
 
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                      <span>Dostop za vedno</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                      <span>Certifikat ob zaključku</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                      <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                      <span>Varno plačilo s Stripe</span>
-                    </div>
-                  </div>
+                      <Link href="/pricing">
+                        <Button
+                          size="lg"
+                          className="w-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full py-6 text-lg gap-2"
+                        >
+                          <Sparkles className="w-5 h-5" />
+                          {"Začni Pro — 7 dni brezplačno"}
+                        </Button>
+                      </Link>
+
+                      <div className="text-center mt-3">
+                        <Link 
+                          href="/auth/sign-up" 
+                          className="text-sm text-[#7C3AED] hover:underline font-medium"
+                        >
+                          {"Ali začni brezplačno →"}
+                        </Link>
+                      </div>
+
+                      <div className="mt-6 space-y-3">
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Dostop za vedno</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Certifikat ob zaključku</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                          <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          <span>Varno plačilo s Stripe</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -378,7 +447,7 @@ export default function CourseDetailPage() {
       )}
 
       {/* Bottom CTA */}
-      {!purchased && (
+      {!purchased && !hasPremium && !course.is_free && (
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] to-[#F0FDFA]">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-heading font-bold text-[#2D2A3D] mb-4">
@@ -387,17 +456,15 @@ export default function CourseDetailPage() {
             <p className="text-[#64748B] mb-8">
               {"Vlagajte v prihodnost svojega otroka z znanjem, ki bo relevantno še desetletja."}
             </p>
-            <Button
-              size="lg"
-              onClick={handlePurchase}
-              disabled={purchasing}
-              className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full px-10 py-6 text-lg"
-            >
-              {purchasing ? (
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
-              ) : null}
-              {course.is_free ? "Pridobi brezplačno" : `Kupi za ${formatPrice(course.price)}`}
-            </Button>
+            <Link href="/pricing">
+              <Button
+                size="lg"
+                className="bg-[#7C3AED] hover:bg-[#6B2FD6] text-white rounded-full px-10 py-6 text-lg gap-2"
+              >
+                <Sparkles className="w-5 h-5" />
+                {"Začni Pro — 7 dni brezplačno"}
+              </Button>
+            </Link>
           </div>
         </section>
       )}

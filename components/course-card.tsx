@@ -107,11 +107,15 @@ export function CourseCard({ course }: { course: Course }) {
             </span>
           </div>
           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-            <span className={`font-bold text-lg ${course.is_free ? "text-emerald-600" : "text-[#7C3AED]"}`}>
-              {formatPrice(course.price)}
-            </span>
+            {course.is_free ? (
+              <span className="font-bold text-lg text-emerald-600">Brezplačno</span>
+            ) : (
+              <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
+                Pro tečaj
+              </Badge>
+            )}
             <span className="text-sm font-medium text-[#7C3AED] group-hover:translate-x-1 transition-transform">
-              {'Poglej več →'}
+              {"Poglej več →"}
             </span>
           </div>
         </CardContent>
