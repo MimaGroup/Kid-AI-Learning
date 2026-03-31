@@ -74,6 +74,22 @@ function SignUpPageClient() {
 
       setSuccess(true)
       trackCompleteRegistration()
+
+      // Trigger welcome email sequence
+      try {
+        await fetch("/api/email/welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email,
+            firstName: "starš",
+          }),
+        })
+      } catch (emailError) {
+        // Don't block registration if email fails
+        console.error("Failed to send welcome email:", emailError)
+      }
+
       setIsLoading(false)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Registracija ni uspela"
