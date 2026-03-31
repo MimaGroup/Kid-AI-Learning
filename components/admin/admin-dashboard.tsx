@@ -10,7 +10,7 @@ import { SupportTickets } from "./support-tickets"
 import { MonitoringDashboard } from "./monitoring-dashboard"
 import { ContentValidationDashboard } from "./content-validation-dashboard"
 import { RecentActivity } from "./recent-activity"
-import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle, Megaphone } from 'lucide-react'
+import { Users, CreditCard, BarChart3, Activity, Headphones, Shield, CheckCircle, Megaphone, LayoutGrid } from 'lucide-react'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
@@ -32,12 +32,20 @@ export function AdminDashboard() {
               <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Admin Dashboard</h1>
               <p className="text-muted-foreground">Manage your AI Kids Learning platform</p>
             </div>
-            <Button asChild variant="outline" className="gap-2">
-              <Link href="/admin/marketing">
-                <Megaphone className="h-4 w-4" />
-                Marketing
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline" className="gap-2">
+                <Link href="/admin/canvas">
+                  <LayoutGrid className="h-4 w-4" />
+                  Canvas
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="gap-2">
+                <Link href="/admin/marketing">
+                  <Megaphone className="h-4 w-4" />
+                  Marketing
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
 
