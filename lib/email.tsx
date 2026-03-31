@@ -52,67 +52,75 @@ export async function sendEmail(options: EmailOptions) {
 }
 
 export const emailTemplates = {
-  welcome: (name: string) => ({
-    subject: "Welcome to AI Kids Learning! 🎉",
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Welcome to AI Kids Learning!</h1>
-              <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Byte te pozdravlja!</p>
-            </div>
-            <div class="content">
-              <div style="text-align: center; margin-bottom: 20px;">
-                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #E9D5FF;" />
+  welcome: (name: string) => {
+    // Fix 2: Use firstName if available and not empty, otherwise just use "Pozdravljeni,"
+    const greeting = name && name.trim() && !name.includes("@") 
+      ? `Pozdravljeni ${name},` 
+      : "Pozdravljeni,"
+    
+    return {
+      subject: "Dobrodošli v KidsLearnAI!",
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: #534AB7; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+              .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+              .button { display: inline-block; background: #534AB7; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>Dobrodošli v KidsLearnAI!</h1>
+                <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Byte te pozdravlja!</p>
               </div>
-              <p>Hi ${name},</p>
-              <p>We're thrilled to have you join our community! Your child's new AI learning buddy, <strong>Byte</strong>, is already excited to start teaching and playing together!</p>
-              
-              <h3>🚀 Get Started in 3 Easy Steps:</h3>
-              <ol>
-                <li><strong>Add Your Child's Profile</strong> - Set up their age and learning level</li>
-                <li><strong>Explore Activities</strong> - Try our interactive games and quizzes</li>
-                <li><strong>Track Progress</strong> - Watch them grow and achieve milestones</li>
-              </ol>
-              
-              <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">Go to Dashboard</a>
-              </p>
-              
-              <h3>✨ What's Included:</h3>
-              <ul>
-                <li>7 Interactive AI-powered games</li>
-                <li>Personalized learning paths</li>
-                <li>Progress tracking and analytics</li>
-                <li>Achievement badges and rewards</li>
-              </ul>
-              
-              <p>Need help getting started? Check out our <a href="https://kids-learning-ai.com/getting-started">Getting Started Guide</a> or reply to this email.</p>
-              
-              <p>Happy learning!<br>Tvoj prijatelj Byte & The AI Kids Learning Team</p>
+              <div class="content">
+                <div style="text-align: center; margin-bottom: 20px;">
+                  <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #E9D5FF;" />
+                </div>
+                <p>${greeting}</p>
+                <p>Veseli smo, da ste se pridružili KidsLearnAI — prvi slovenski AI učni platformi za otroke!</p>
+                <p>Vaš otrok ima zdaj dostop do Byte-a, svojega osebnega AI tutorja, in prvih lekcij AI umetniškega studia.</p>
+                
+                <h3>Začnite v 3 korakih:</h3>
+                <ol>
+                  <li><strong>Prijavite se</strong> → <a href="https://www.kids-learning-ai.com" style="color: #534AB7;">kids-learning-ai.com</a></li>
+                  <li><strong>Odprite AI umetniški studio</strong></li>
+                  <li><strong>Začnite prvo lekcijo</strong> — traja samo 15 minut</li>
+                </ol>
+                
+                <p style="text-align: center;">
+                  <a href="https://www.kids-learning-ai.com/courses" class="button">Začni z učenjem</a>
+                </p>
+                
+                <h3>Kaj je vključeno:</h3>
+                <ul>
+                  <li>Prve lekcije vseh tečajev brezplačno</li>
+                  <li>Byte AI tutor — osebni učitelj vašega otroka</li>
+                  <li>Sledenje napredku in dosežki</li>
+                  <li>Značke in nagrade</li>
+                </ul>
+                
+                <p>Imate vprašanja? Nam pišite ali obiščite <a href="https://www.kids-learning-ai.com" style="color: #534AB7;">kids-learning-ai.com</a></p>
+                
+                <p>Lep pozdrav,<br>Byte in ekipa KidsLearnAI</p>
+              </div>
+              <div class="footer">
+                <p>KidsLearnAI | Učenje z AI za otroke</p>
+                <p><a href="https://www.kids-learning-ai.com">Obiščite spletno stran</a> | <a href="https://www.kids-learning-ai.com/contact">Kontakt</a></p>
+              </div>
             </div>
-            <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
-              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `,
-  }),
+          </body>
+        </html>
+      `,
+    }
+  },
 
   weeklyProgress: (name: string, childName: string, stats: any) => ({
     subject: `${childName}'s Weekly Learning Summary 📊`,
