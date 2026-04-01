@@ -3,10 +3,21 @@ import Stripe from "stripe"
 import { createServerClient as createSupabaseServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const getStripe = () => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured")
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
+}
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json({ error: "Payment system not configured" }, { status: 500 })
+    }
+
+    const stripe = getStripe()
+
     const { courseId, courseSlug, courseTitle, priceInCents } = await request.json()
 
     if (!courseId || !courseSlug || !courseTitle || priceInCents === undefined) {
