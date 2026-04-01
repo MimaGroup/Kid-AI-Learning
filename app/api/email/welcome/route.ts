@@ -4,13 +4,30 @@ import { Redis } from "@upstash/redis"
 import { getWelcomeEmail } from "@/lib/emails/welcome-sequence"
 import { getScheduledTime, type WelcomeEmailStep, type EmailSequenceJob } from "@/lib/email-sequences"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid build-time errors when env vars aren't available
+let resendInstance: Resend | null = null
+function getResend() {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY environment variable is not set")
+    }
+    resendInstance = new Resend(apiKey)
+  }
+  return resendInstance
+}
 
-// Initialize Redis for scheduling emails
-const redis = new Redis({
-  url: process.env["UPSTASH-KV_KV_REST_API_URL"] || "",
-  token: process.env["UPSTASH-KV_KV_REST_API_TOKEN"] || "",
-})
+// Lazy initialization for Redis
+let redisInstance: Redis | null = null
+function getRedis() {
+  if (!redisInstance) {
+    redisInstance = new Redis({
+      url: process.env["UPSTASH-KV_KV_REST_API_URL"] || "",
+      token: process.env["UPSTASH-KV_KV_REST_API_TOKEN"] || "",
+    })
+  }
+  return redisInstance
+}
 
 const EMAIL_QUEUE_KEY = "email:welcome:queue"
 const FROM_EMAIL = "KidsLearnAI <hello@kids-learning-ai.com>"
@@ -28,6 +45,7 @@ export async function POST(request: Request) {
 
     // Send Email 1 immediately
     const email1 = getWelcomeEmail(1)
+    const resend = getResend()
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [email],
@@ -44,6 +62,7 @@ export async function POST(request: Request) {
 
     // Schedule emails 2-5 in Redis
     const emailSteps: WelcomeEmailStep[] = [2, 3, 4, 5]
+    const redis = getRedis()
     
     for (const step of emailSteps) {
       const scheduledFor = getScheduledTime(step, registrationTime)
@@ -88,6 +107,8 @@ export async function GET(request: Request) {
 
   try {
     const now = Date.now()
+    const redis = getRedis()
+    const resend = getResend()
     
     // Get all emails that should be sent now (score <= now)
     const jobs = await redis.zrangebyscore(EMAIL_QUEUE_KEY, 0, now) as string[]
