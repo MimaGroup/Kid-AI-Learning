@@ -50,8 +50,8 @@ export function AdminDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="w-full overflow-x-auto p-2 shadow-lg" style={{ background: 'var(--color-background-secondary)', border: '0.5px solid var(--color-border-tertiary)', borderRadius: '12px' }}>
-            <TabsList className="inline-flex w-auto min-w-full bg-secondary rounded-2xl">
+          <div className="w-full overflow-x-auto p-2 shadow-lg" style={{ background: 'hsl(0 0% 96%)', border: '0.5px solid hsl(0 0% 85%)', borderRadius: '12px' }}>
+            <TabsList className="inline-flex w-auto min-w-full rounded-2xl" style={{ background: 'hsl(0 0% 94%)' }}>
               <TabsTrigger value="recent" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Activity className="h-4 w-4" />
                 <span>Nedavna aktivnost</span>
