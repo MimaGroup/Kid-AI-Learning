@@ -95,12 +95,12 @@ export function RecentActivity() {
     <Tabs defaultValue="activities" className="space-y-4">
       <div className="flex items-center justify-between">
         <TabsList>
-          <TabsTrigger value="activities">Recent Activities</TabsTrigger>
-          <TabsTrigger value="users">New Users</TabsTrigger>
+          <TabsTrigger value="activities">Nedavna aktivnost</TabsTrigger>
+          <TabsTrigger value="users">Novi uporabniki</TabsTrigger>
         </TabsList>
         <Button onClick={handleRefresh} disabled={refreshing} variant="outline" size="sm">
           <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
-          Refresh
+          Osveži
         </Button>
       </div>
 
