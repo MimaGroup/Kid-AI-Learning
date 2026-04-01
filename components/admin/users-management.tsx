@@ -178,8 +178,8 @@ export function UsersManagement() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>User Management</CardTitle>
-        <CardDescription>View and manage all registered users</CardDescription>
+        <CardTitle>Upravljanje uporabnikov</CardTitle>
+        <CardDescription>Pregled in upravljanje vseh registriranih uporabnikov</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-4">
@@ -187,7 +187,7 @@ export function UsersManagement() {
             <div className="flex items-center gap-2 flex-1 min-w-[250px]">
               <Search className="h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by email or name..."
+                placeholder="Isci po e-posti ali imenu..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="max-w-sm"
@@ -296,25 +296,25 @@ export function UsersManagement() {
                 <SelectItem value="created_at" className="font-bold text-base py-3 hover:bg-purple-50">
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-[#7c3aed]" />
-                    Joined Date
+                    Datum vpisa
                   </div>
                 </SelectItem>
                 <SelectItem value="last_activity_date" className="font-bold text-base py-3 hover:bg-teal-50">
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-[#6cd4c3]" />
-                    Last Activity
+                    Zadnja aktivnost
                   </div>
                 </SelectItem>
                 <SelectItem value="email" className="font-bold text-base py-3 hover:bg-orange-50">
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-orange-500" />
-                    Email
+                    E-posta
                   </div>
                 </SelectItem>
                 <SelectItem value="display_name" className="font-bold text-base py-3 hover:bg-slate-50">
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-slate-600" />
-                    Name
+                    Ime
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -361,12 +361,12 @@ export function UsersManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead>Uporabnik</TableHead>
+                <TableHead>E-posta</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead>Last Active</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Vpisan</TableHead>
+                <TableHead>Zadnja aktivnost</TableHead>
+                <TableHead className="text-right">Dejanja</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -402,7 +402,7 @@ export function UsersManagement() {
                       {user.subscription_status === "active" ? (
                         <Badge variant="default">Premium</Badge>
                       ) : (
-                        <Badge variant="outline">Free</Badge>
+                        <Badge variant="outline">Brezplacno</Badge>
                       )}
                     </TableCell>
                     <TableCell>
@@ -412,7 +412,7 @@ export function UsersManagement() {
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {user.last_activity_date ? new Date(user.last_activity_date).toLocaleDateString() : "Never"}
+                      {user.last_activity_date ? new Date(user.last_activity_date).toLocaleDateString() : "Nikoli"}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -435,12 +435,12 @@ export function UsersManagement() {
                             ) : (
                               <Send className="h-3 w-3" />
                             )}
-                            {nudgeSent[user.id] ? "Sent" : "Nudge"}
+                            {nudgeSent[user.id] ? "Poslano" : "Opomni"}
                           </Button>
                         )}
                         <Button variant="ghost" size="sm" onClick={() => handlePermissionsClick(user.id, user.email)}>
                           <Settings className="h-4 w-4 mr-2" />
-                          Permissions
+                          Dovoljenja
                         </Button>
                       </div>
                     </TableCell>
