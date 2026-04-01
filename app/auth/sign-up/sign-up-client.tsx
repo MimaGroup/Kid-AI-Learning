@@ -122,10 +122,10 @@ function SignUpPageClient() {
             </div>
           )}
           <Link
-            href="/auth/login"
+            href="/parent/dashboard"
             className="inline-block bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
           >
-            Nazaj na prijavo
+            Pojdi na nadzorno plosco
           </Link>
         </div>
       </div>
