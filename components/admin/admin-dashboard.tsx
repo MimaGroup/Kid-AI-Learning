@@ -29,7 +29,7 @@ export function AdminDashboard() {
         <div className="mb-6 bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-purple-200">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Admin Dashboard</h1>
+              <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
               <p className="text-muted-foreground">Manage your AI Kids Learning platform</p>
             </div>
             <div className="flex gap-2">
@@ -51,38 +51,38 @@ export function AdminDashboard() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="w-full overflow-x-auto bg-white/80 backdrop-blur-md rounded-3xl p-2 shadow-lg border-2 border-purple-100">
-            <TabsList className="inline-flex w-auto min-w-full bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 rounded-2xl">
+            <TabsList className="inline-flex w-auto min-w-full bg-secondary rounded-2xl">
               <TabsTrigger value="recent" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Activity className="h-4 w-4" />
-                <span>Recent Activity</span>
+                <span>Nedavna aktivnost</span>
               </TabsTrigger>
               <TabsTrigger value="analytics" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <BarChart3 className="h-4 w-4" />
-                <span>Analytics</span>
+                <span>Analitika</span>
               </TabsTrigger>
               <TabsTrigger value="users" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Users className="h-4 w-4" />
-                <span>Users</span>
+                <span>Uporabniki</span>
               </TabsTrigger>
               <TabsTrigger value="subscriptions" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <CreditCard className="h-4 w-4" />
-                <span>Subscriptions</span>
+                <span>Narocnine</span>
               </TabsTrigger>
               <TabsTrigger value="system" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Activity className="h-4 w-4" />
-                <span>System</span>
+                <span>Sistem</span>
               </TabsTrigger>
               <TabsTrigger value="support" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Headphones className="h-4 w-4" />
-                <span>Support</span>
+                <span>Podpora</span>
               </TabsTrigger>
               <TabsTrigger value="monitoring" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Shield className="h-4 w-4" />
-                <span>Monitoring</span>
+                <span>Nadzor</span>
               </TabsTrigger>
               <TabsTrigger value="content" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <CheckCircle className="h-4 w-4" />
-                <span>Content</span>
+                <span>Vsebina</span>
               </TabsTrigger>
             </TabsList>
           </div>

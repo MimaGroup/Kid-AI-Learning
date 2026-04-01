@@ -247,65 +247,66 @@ export const emailTemplates = {
     `,
   }),
 
-  reEngagement: (name: string, childName: string) => ({
-    subject: `We miss ${childName}! Come back and learn 🌟`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; background: #8B5CF6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
-            .highlight-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #EC4899; }
-            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>We Miss You! 🌟</h1>
-            </div>
-            <div class="content">
-              <div style="text-align: center; margin-bottom: 20px;">
-                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #E9D5FF;" />
-                <p style="font-weight: bold; color: #8B5CF6; margin-top: 8px;">Byte te pogreSa!</p>
+  reEngagement: (name: string, childName: string) => {
+    // Fix: Use name if available and not empty and doesn't contain @, otherwise just use "Pozdravljeni,"
+    const greeting = name && name.trim() && !name.includes("@") 
+      ? `Pozdravljeni ${name},` 
+      : "Pozdravljeni,"
+    
+    return {
+      subject: `Potrebujete pomoc? Byte vas caka!`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: #534AB7; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+              .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+              .button { display: inline-block; background: #534AB7; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
+              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>Potrebujete pomoc?</h1>
+                <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Opazili smo, da se niste zaceli z ucenjem</p>
               </div>
-              <p>Hi ${name},</p>
-              <p>Byte and the whole team noticed ${childName} hasn't been learning with us lately. Byte has been practicing new tricks and can't wait to show them!</p>
-              
-              <div class="highlight-box">
-                <h3>🎮 New Activities Added!</h3>
-                <p>We've added exciting new games and challenges that ${childName} will love:</p>
-                <ul>
-                  <li>Interactive storytelling adventures</li>
-                  <li>New math puzzles</li>
-                  <li>Creative AI art projects</li>
-                </ul>
+              <div class="content">
+                <div style="text-align: center; margin-bottom: 20px;">
+                  <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #E9D5FF;" />
+                </div>
+                <p>${greeting}</p>
+                <p>Veseli smo, da ste se pridruzili KidsLearnAI. Opazili smo, da vas otrok se ni preizkusil nobene aktivnosti — in razumemo, da je zacetek vcasih najtezji korak.</p>
+                
+                <p>Byte je pripravljen in caka. Tukaj je, kako zaceti v 2 minutah:</p>
+                
+                <ol>
+                  <li>Prijavite se na <a href="https://www.kids-learning-ai.com" style="color: #534AB7;">kids-learning-ai.com</a></li>
+                  <li>Odprite AI umetniski studio</li>
+                  <li>Zacnite s prvo lekcijo — traja samo 15 minut</li>
+                </ol>
+                
+                <p style="text-align: center;">
+                  <a href="https://www.kids-learning-ai.com/courses" class="button">Zacni z Byte-om zdaj</a>
+                </p>
+                
+                <p>Imate vprasanja? Nam pisite na <a href="mailto:hello@kids-learning-ai.com" style="color: #534AB7;">hello@kids-learning-ai.com</a></p>
+                
+                <p>Lep pozdrav,<br>Byte in ekipa KidsLearnAI</p>
               </div>
-              
-              <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/kids/home" class="button">Continue Learning</a>
-              </p>
-              
-              <p><strong>💡 Quick Tip:</strong> Just 10 minutes a day can make a big difference in ${childName}'s learning journey!</p>
-              
-              <p>We're here to help if you need anything.</p>
-              
-              <p>Looking forward to seeing you,<br>The AI Kids Learning Team</p>
+              <div class="footer">
+                <p>KidsLearnAI | Ucenje z AI za otroke</p>
+              </div>
             </div>
-            <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
-              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `,
-  }),
+          </body>
+        </html>
+      `,
+    }
+  },
 
   subscriptionConfirmation: (name: string, planName: string, amount: number) => ({
     subject: "Welcome to Premium! 🎉",
