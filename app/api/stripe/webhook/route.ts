@@ -13,7 +13,12 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY)
 }
 
-const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+function getSupabaseAdmin() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Supabase environment variables are not configured")
+  }
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+}
 
 type SubscriptionWithPeriod = Stripe.Subscription & {
   current_period_start: number
@@ -124,7 +129,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       ? new Date(subscription.current_period_end * 1000).toISOString()
       : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Default to 30 days from now
 
-    const { data, error } = await supabaseAdmin.from("subscriptions").upsert(
+    const { data, error } = await getSupabaseAdmin().from("subscriptions").upsert(
       {
         user_id: userId,
         stripe_customer_id: session.customer as string,
@@ -153,7 +158,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   try {
-    const { data: userData } = await supabaseAdmin
+    const { data: userData } = await getSupabaseAdmin()
       .from("profiles")
       .select("email, display_name")
       .eq("id", userId)
@@ -188,7 +193,7 @@ async function handleCoursePurchase(session: Stripe.Checkout.Session) {
   }
 
   try {
-    const { error } = await supabaseAdmin.from("course_purchases").upsert(
+    const { error } = await getSupabaseAdmin().from("course_purchases").upsert(
       {
         user_id: userId,
         course_id: courseId,
@@ -212,13 +217,13 @@ async function handleCoursePurchase(session: Stripe.Checkout.Session) {
 
     // Send confirmation email
     try {
-      const { data: userData } = await supabaseAdmin
+      const { data: userData } = await getSupabaseAdmin()
         .from("profiles")
         .select("email, display_name")
         .eq("id", userId)
         .single()
 
-      const { data: courseData } = await supabaseAdmin
+      const { data: courseData } = await getSupabaseAdmin()
         .from("courses")
         .select("title, slug")
         .eq("id", courseId)
@@ -253,7 +258,7 @@ async function handleCoursePurchase(session: Stripe.Checkout.Session) {
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
 
-  const { data: existingSub } = await supabaseAdmin
+  const { data: existingSub } = await getSupabaseAdmin()
     .from("subscriptions")
     .select("user_id")
     .eq("stripe_customer_id", customerId)
@@ -287,7 +292,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     }
   }
 
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from("subscriptions")
     .update({
       stripe_subscription_id: sub.id,
@@ -308,7 +313,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
 
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from("subscriptions")
     .update({
       status: "canceled",
@@ -322,7 +327,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   const customerId = invoice.customer as string
 
-  const { data: subscription } = await supabaseAdmin
+  const { data: subscription } = await getSupabaseAdmin()
     .from("subscriptions")
     .select("id, user_id")
     .eq("stripe_customer_id", customerId)
@@ -357,7 +362,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
   const invoiceWithIntent = invoice as unknown as InvoiceWithPaymentIntent
 
-  const { error: paymentError } = await supabaseAdmin.from("payment_history").insert({
+  const { error: paymentError } = await getSupabaseAdmin().from("payment_history").insert({
     user_id: userId,
     subscription_id: subscriptionId || null,
     stripe_payment_intent_id: invoiceWithIntent.payment_intent as string,
@@ -374,7 +379,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   }
 
   try {
-    const { data: userData } = await supabaseAdmin
+    const { data: userData } = await getSupabaseAdmin()
       .from("profiles")
       .select("email, display_name")
       .eq("id", userId)
@@ -411,7 +416,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   const customerId = invoice.customer as string
 
-  const { data: subscription } = await supabaseAdmin
+  const { data: subscription } = await getSupabaseAdmin()
     .from("subscriptions")
     .select("id, user_id")
     .eq("stripe_customer_id", customerId)
@@ -424,7 +429,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   const invoiceWithIntent = invoice as unknown as InvoiceWithPaymentIntent
 
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from("subscriptions")
     .update({
       status: "past_due",
@@ -432,7 +437,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     })
     .eq("stripe_customer_id", customerId)
 
-  await supabaseAdmin.from("payment_history").insert({
+  await getSupabaseAdmin().from("payment_history").insert({
     user_id: subscription.user_id,
     subscription_id: subscription.id,
     stripe_payment_intent_id: invoiceWithIntent.payment_intent as string,
