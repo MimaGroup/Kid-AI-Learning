@@ -3,10 +3,16 @@ import Stripe from "stripe"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured")
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const stripe = getStripe()
     console.log("[v0] Checkout API called")
 
     const { priceId, planType, trialDays } = await request.json()
