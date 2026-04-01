@@ -107,6 +107,8 @@ export async function GET(request: Request) {
 
   try {
     const now = Date.now()
+    const redis = getRedis()
+    const resend = getResend()
     
     // Get all emails that should be sent now (score <= now)
     const jobs = await redis.zrangebyscore(EMAIL_QUEUE_KEY, 0, now) as string[]

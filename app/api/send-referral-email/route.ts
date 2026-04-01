@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"
     const signupUrl = `${siteUrl}/auth/register?ref=${referralCode}`
 
+    const resend = getResend()
     const { data, error } = await resend.emails.send({
       from: "KidsLearnAI <hello@kids-learning-ai.com>",
       to: [to],
