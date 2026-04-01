@@ -30,7 +30,7 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground">Manage your AI Kids Learning platform</p>
+              <p className="text-muted-foreground">Upravljajte svojo KidsLearnAI platformo</p>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" className="gap-2">
@@ -50,7 +50,7 @@ export function AdminDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="w-full overflow-x-auto rounded-3xl p-2 shadow-lg border border-border" style={{ background: 'var(--color-background-secondary, hsl(var(--secondary)))' }}>
+          <div className="w-full overflow-x-auto p-2 shadow-lg" style={{ background: 'var(--color-background-secondary)', border: '0.5px solid var(--color-border-tertiary)', borderRadius: '12px' }}>
             <TabsList className="inline-flex w-auto min-w-full bg-secondary rounded-2xl">
               <TabsTrigger value="recent" className="gap-2 flex-shrink-0 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all">
                 <Activity className="h-4 w-4" />
