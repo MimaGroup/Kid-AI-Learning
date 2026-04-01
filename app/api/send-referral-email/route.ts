@@ -1,7 +1,18 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid build-time errors when env vars aren't available
+let resendInstance: Resend | null = null
+function getResend() {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY environment variable is not set")
+    }
+    resendInstance = new Resend(apiKey)
+  }
+  return resendInstance
+}
 
 export async function POST(request: Request) {
   try {
