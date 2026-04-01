@@ -6,7 +6,12 @@ import { sendEmail, emailTemplates } from "@/lib/email"
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured")
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
+}
 
 const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
@@ -20,6 +25,7 @@ type InvoiceWithPaymentIntent = Stripe.Invoice & {
 }
 
 export async function POST(request: NextRequest) {
+  const stripe = getStripe()
   const body = await request.text()
   const signature = request.headers.get("stripe-signature")!
 
@@ -102,6 +108,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   try {
+    const stripe = getStripe()
     const subscription = (await stripe.subscriptions.retrieve(
       session.subscription as string,
     )) as unknown as SubscriptionWithPeriod
@@ -332,6 +339,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     )
 
     try {
+      const stripe = getStripe()
       const customer = await stripe.customers.retrieve(customerId)
       if (customer && !customer.deleted && customer.metadata?.user_id) {
         userId = customer.metadata.user_id
