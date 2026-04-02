@@ -42,7 +42,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob: https://www.facebook.com https://www.google-analytics.com",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co https://api.stripe.com https://vercel.live wss://*.supabase.co https://www.facebook.com https://connect.facebook.net",
+              "connect-src 'self' https://*.supabase.co https://api.stripe.com https://vercel.live wss://*.supabase.co https://www.facebook.com https://www.facebook.com/tr/ https://connect.facebook.net",
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.facebook.com",
               "object-src 'none'",
               "base-uri 'self'",
