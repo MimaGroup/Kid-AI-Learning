@@ -1,3 +1,4 @@
+// cache-bust-2026-04-03
 import type { Metadata } from "next"
 import { createMetadata } from "@/lib/metadata"
 import SignUpPageClient from "./sign-up-client"
