@@ -46,7 +46,7 @@ const nextConfig = {
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.facebook.com",
               "object-src 'none'",
               "base-uri 'self'",
-              "form-action 'self'",
+              "form-action 'self' https://www.facebook.com",
               "frame-ancestors 'none'",
               "upgrade-insecure-requests",
             ].join('; '),
