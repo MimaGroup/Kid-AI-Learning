@@ -30,10 +30,8 @@ const nextConfig = {
       {
         source: '/auth/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-store',
-          },
+          { key: 'Cache-Control', value: 'no-store, no-cache' },
+          { key: 'Surrogate-Control', value: 'no-store' },
         ],
       },
       {
@@ -55,7 +53,7 @@ const nextConfig = {
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.facebook.com",
               "object-src 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://www.facebook.com",
+              "form-action 'self' https://www.facebook.com https://www.facebook.com/tr/",
               "frame-ancestors 'none'",
               "upgrade-insecure-requests",
             ].join('; '),
