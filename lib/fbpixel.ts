@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-export const FB_PIXEL_ID = '2608175668814186'
+export const FB_PIXEL_ID = '26081756688144186'
 
 export const pageview = () => {
   window.fbq('track', 'PageView')
