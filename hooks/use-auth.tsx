@@ -125,25 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw error
       }
 
-      if (data.user) {
-        try {
-          await fetch("/api/send-welcome-email", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: data.user.email,
-              name: email.split("@")[0],
-            }),
-          })
-
-          console.log("[v0] Welcome email queued for", data.user.email)
-        } catch (error) {
-          console.error("[v0] Error sending welcome email:", error)
-          // Don't throw - registration was successful even if email fails
-        }
-      }
+      // Welcome email sequence is triggered from sign-up-client.tsx via /api/email/welcome
     } catch (error: any) {
       const errorMessage = error?.message || "Failed to connect to authentication service"
       setError(errorMessage)
