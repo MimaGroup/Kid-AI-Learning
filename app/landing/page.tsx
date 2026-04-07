@@ -1,4 +1,4 @@
-// cache-bust-2026-04-07-courses-section
+// cache-bust-2026-04-07-v3-courses-section-forced
 "use client"
 
 import Image from "next/image"
@@ -20,7 +20,7 @@ export default function AdLandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden" data-version="2026-04-07-v3">
       {/* Minimal Header - Logo only, not clickable */}
       <header className="border-b border-border/40 bg-white/95 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
