@@ -1,4 +1,4 @@
-// cache-bust-2026-04-05
+// cache-bust-2026-04-07-courses-section
 "use client"
 
 import Image from "next/image"
