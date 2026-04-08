@@ -217,7 +217,7 @@ export default function AdLandingPage() {
               {"Izberite tečaj za vašega otroka"}
             </h2>
             <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
-              {"Vsi tečaji vključujejo 7-dnevni brezplačen preizkus"}
+              {"Z enim Pro naročnino dostopate do vseh tečajev — že od €7.90/mesec"}
             </p>
           </div>
 
@@ -244,7 +244,7 @@ export default function AdLandingPage() {
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
                   {"Otrok spozna varno in odgovorno uporabo AI."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-4">
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3.5 h-3.5" />
                     8 lekcij
@@ -254,15 +254,13 @@ export default function AdLandingPage() {
                     6-12 let
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100 mb-4">
-                  <span className="font-bold text-lg text-[#2D2A3D]">{"€9,90"}</span>
-                  <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
-                    Pro tečaj
-                  </Badge>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
                 </div>
                 <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
                   <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
-                    {"Začni brezplačno"}
+                    {"Preizkusi 7 dni brezplačno"}
                   </Button>
                 </Link>
               </div>
@@ -290,7 +288,7 @@ export default function AdLandingPage() {
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
                   {"Ustvarjanje z umetno inteligenco skozi igro in kreativnost."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-4">
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3.5 h-3.5" />
                     9 lekcij
@@ -300,15 +298,13 @@ export default function AdLandingPage() {
                     5-10 let
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100 mb-4">
-                  <span className="font-bold text-lg text-[#2D2A3D]">{"€14,90"}</span>
-                  <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
-                    Pro tečaj
-                  </Badge>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
                 </div>
                 <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
                   <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
-                    {"Začni brezplačno"}
+                    {"Preizkusi 7 dni brezplačno"}
                   </Button>
                 </Link>
               </div>
@@ -336,7 +332,7 @@ export default function AdLandingPage() {
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
                   {"Prvi koraki v svet umetne inteligence na zabaven način."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-4">
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3.5 h-3.5" />
                     12 lekcij
@@ -346,15 +342,13 @@ export default function AdLandingPage() {
                     6-12 let
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100 mb-4">
-                  <span className="font-bold text-lg text-[#2D2A3D]">{"€19,90"}</span>
-                  <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
-                    Pro tečaj
-                  </Badge>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
                 </div>
                 <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
                   <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
-                    {"Začni brezplačno"}
+                    {"Preizkusi 7 dni brezplačno"}
                   </Button>
                 </Link>
               </div>
@@ -382,7 +376,7 @@ export default function AdLandingPage() {
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
                   {"Osnove programiranja s pomočjo AI orodij in izzivov."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-4">
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3.5 h-3.5" />
                     20 lekcij
@@ -392,15 +386,13 @@ export default function AdLandingPage() {
                     8-14 let
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100 mb-4">
-                  <span className="font-bold text-lg text-[#2D2A3D]">{"€29,90"}</span>
-                  <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
-                    Pro tečaj
-                  </Badge>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
                 </div>
                 <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
                   <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
-                    {"Začni brezplačno"}
+                    {"Preizkusi 7 dni brezplačno"}
                   </Button>
                 </Link>
               </div>
@@ -428,7 +420,7 @@ export default function AdLandingPage() {
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
                   {"Napredni izzivi s roboti in umetno inteligenco."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-4">
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3.5 h-3.5" />
                     25 lekcij
@@ -438,15 +430,13 @@ export default function AdLandingPage() {
                     10-16 let
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100 mb-4">
-                  <span className="font-bold text-lg text-[#2D2A3D]">{"€39,90"}</span>
-                  <Badge className="bg-[#7C3AED] text-white border-0 px-3 py-1 text-xs font-semibold">
-                    Pro tečaj
-                  </Badge>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
                 </div>
                 <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
                   <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
-                    {"Začni brezplačno"}
+                    {"Preizkusi 7 dni brezplačno"}
                   </Button>
                 </Link>
               </div>
