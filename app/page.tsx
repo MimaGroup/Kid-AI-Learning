@@ -1,3 +1,4 @@
+// cache-bust-2026-04-08-v1
 "use client"
 
 import Link from "next/link"
@@ -21,7 +22,7 @@ const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) =>
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden" data-version="2026-04-08-v1">
       <Suspense fallback={null}>
         <ConversionTracker />
       </Suspense>
