@@ -17,7 +17,7 @@ export function StatsSection() {
               <BookOpen className="w-10 h-10 opacity-90" />
             </div>
             <div className="text-4xl md:text-5xl font-heading font-bold">5</div>
-            <div className="text-base font-medium opacity-90">{"Tečajev"}</div>
+            <div className="text-base font-medium opacity-90">{"Tečajev na voljo"}</div>
           </div>
           <div className="space-y-3">
             <div className="flex items-center justify-center">
