@@ -51,15 +51,15 @@ export default function AdLandingPage() {
               </Badge>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-balance leading-[1.1] tracking-tight">
-                <span className="text-[#2D2A3D]">Zaslon, ki uči.</span>
+                <span className="text-[#2D2A3D]">{"Spremenite čas pred zaslonom"}</span>
                 <br />
                 <span className="bg-gradient-to-r from-[#A78BFA] via-[#7C3AED] to-[#60A5FA] bg-clip-text text-transparent">
-                  Igra, ki razvija.
+                  {"v učenje, ki otroka navduši."}
                 </span>
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed text-[#64748B] max-w-xl">
-                {"KidsLearnAI je prva slovenska AI učna platforma, ki otrokom od 5 do 12 let pomaga razumeti umetno inteligenco — skozi igro, izzive in osebnega AI tutorja Byte-a. Brez dolgočasnih predavanj. Samo učenje, ki otroke res navdušuje."}
+                {"KidsLearnAI je prva slovenska AI platforma za otroke 5–12 let. Robotika, umetna inteligenca in kreativnost — skozi igro, brez dolgočasnih predavanj. Vaš otrok začne danes."}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">

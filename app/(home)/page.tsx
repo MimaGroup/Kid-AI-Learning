@@ -1,3 +1,4 @@
+// cache-bust-2026-04-08-v1
 "use client"
 
 import Link from "next/link"
@@ -21,7 +22,7 @@ const TrustBadges = lazy(() => import("@/components/trust-badges").then((mod) =>
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden" data-version="2026-04-08-v1">
       <Suspense fallback={null}>
         <ConversionTracker />
       </Suspense>
@@ -244,6 +245,245 @@ export default function HomePage() {
               <p className="text-[#64748B] leading-relaxed">
                 {"Tečaji so prilagojeni starosti — od prvih korakov z AI pri 5 letih do naprednih izzivov pri 12 letih."}
               </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Courses Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F5F3FF] via-white to-[#F0FDFA]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 border-[#7C3AED] text-[#7C3AED]">
+              {"Tečaji"}
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
+              {"Izberite tečaj za vašega otroka"}
+            </h2>
+            <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
+              {"Z enim Pro naročnino dostopate do vseh tečajev — že od €7.90/mesec"}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Course 1 - AI varnost in etika */}
+            <Card className="group h-full overflow-hidden border-2 border-transparent hover:border-[#7C3AED]/20 hover:shadow-xl transition-all duration-300 bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src="/images/courses/ai-safety.jpg"
+                  alt="AI varnost in etika"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3">
+                  <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 text-xs font-semibold">
+                    {"Začetnik"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading font-bold text-lg text-[#2D2A3D] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                  {"AI varnost in etika"}
+                </h3>
+                <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
+                  {"Otrok spozna varno in odgovorno uporabo AI."}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    8 lekcij
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5" />
+                    6-12 let
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
+                </div>
+                <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
+                  <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
+                    {"Preizkusi 7 dni brezplačno"}
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Course 2 - AI umetniški studio */}
+            <Card className="group h-full overflow-hidden border-2 border-transparent hover:border-[#7C3AED]/20 hover:shadow-xl transition-all duration-300 bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src="/images/courses/ai-art.jpg"
+                  alt="AI umetniški studio"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3">
+                  <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 text-xs font-semibold">
+                    {"Začetnik"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading font-bold text-lg text-[#2D2A3D] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                  {"AI umetniški studio"}
+                </h3>
+                <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
+                  {"Ustvarjanje z umetno inteligenco skozi igro in kreativnost."}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    9 lekcij
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5" />
+                    5-10 let
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
+                </div>
+                <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
+                  <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
+                    {"Preizkusi 7 dni brezplačno"}
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Course 3 - AI osnove za otroke */}
+            <Card className="group h-full overflow-hidden border-2 border-transparent hover:border-[#7C3AED]/20 hover:shadow-xl transition-all duration-300 bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src="/images/courses/ai-basics.jpg"
+                  alt="AI osnove za otroke"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3">
+                  <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 text-xs font-semibold">
+                    {"Začetnik"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading font-bold text-lg text-[#2D2A3D] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                  {"AI osnove za otroke"}
+                </h3>
+                <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
+                  {"Prvi koraki v svet umetne inteligence na zabaven način."}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    12 lekcij
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5" />
+                    6-12 let
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
+                </div>
+                <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
+                  <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
+                    {"Preizkusi 7 dni brezplačno"}
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Course 4 - Programiranje z AI */}
+            <Card className="group h-full overflow-hidden border-2 border-transparent hover:border-[#7C3AED]/20 hover:shadow-xl transition-all duration-300 bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src="/images/courses/coding-ai.jpg"
+                  alt="Programiranje z AI"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3">
+                  <Badge className="bg-amber-100 text-amber-800 border border-amber-200 px-3 py-1 text-xs font-semibold">
+                    {"Srednji"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading font-bold text-lg text-[#2D2A3D] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                  {"Programiranje z AI"}
+                </h3>
+                <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
+                  {"Osnove programiranja s pomočjo AI orodij in izzivov."}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    20 lekcij
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5" />
+                    8-14 let
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
+                </div>
+                <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
+                  <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
+                    {"Preizkusi 7 dni brezplačno"}
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Course 5 - Robotika in AI */}
+            <Card className="group h-full overflow-hidden border-2 border-transparent hover:border-[#7C3AED]/20 hover:shadow-xl transition-all duration-300 bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src="/images/courses/robotics-ai.jpg"
+                  alt="Robotika in AI"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3">
+                  <Badge className="bg-rose-100 text-rose-800 border border-rose-200 px-3 py-1 text-xs font-semibold">
+                    {"Napreden"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading font-bold text-lg text-[#2D2A3D] mb-2 group-hover:text-[#7C3AED] transition-colors">
+                  {"Robotika in AI"}
+                </h3>
+                <p className="text-sm text-[#64748B] mb-4 line-clamp-2">
+                  {"Napredni izzivi s roboti in umetno inteligenco."}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-[#94A3B8] mb-2">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    25 lekcij
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5" />
+                    10-16 let
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
+                  <Check className="w-4 h-4" />
+                  {"Vključeno v Pro"}
+                </div>
+                <Link href="/auth/sign-up" onClick={() => trackLead()} className="w-full block">
+                  <Button className="w-full rounded-full bg-[#7C3AED] hover:bg-[#6B2FD6] text-white">
+                    {"Preizkusi 7 dni brezplačno"}
+                  </Button>
+                </Link>
+              </div>
             </Card>
           </div>
         </div>
