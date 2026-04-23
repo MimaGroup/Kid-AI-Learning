@@ -8,8 +8,23 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error && data.user) {
+      // Trigger email onboarding sequence (non-blocking)
+      try {
+        await fetch(`${origin}/api/trial/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            userId: data.user.id, 
+            email: data.user.email 
+          })
+        })
+      } catch (emailError) {
+        // Don't block signup if email sequence fails
+        console.error('[v0] Email sequence trigger failed:', emailError)
+      }
+      
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

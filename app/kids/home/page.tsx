@@ -2,7 +2,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { RecommendedActivities } from "@/components/recommended-activities"
 import { GamificationDisplay } from "@/components/gamification-display"
 import { DailyChallenges } from "@/components/daily-challenges"
 import { Button } from "@/components/ui/button"
@@ -174,16 +173,16 @@ export default function KidsHome() {
           <DailyChallenges />
         </div>
 
-        <div className="mb-8">
-          <RecommendedActivities />
-        </div>
-
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">All Activities</h3>
+        <div className="mb-6 flex items-center justify-between">
+          <h3 className="text-xl font-bold text-gray-900">Featured Activities</h3>
+          <Link href="/kids/activities" className="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center gap-1">
+            See all activities
+            <span aria-hidden="true">→</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 activities-grid">
-          {activities.map((activity) => (
+          {activities.slice(0, 3).map((activity) => (
             <Link
               key={activity.id}
               href={activity.href}
