@@ -27,7 +27,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/faq" className="text-gray-600 hover:text-gray-900">
-                  Pogosta vprasanja
+                  Pogosta vprašanja
                 </Link>
               </li>
             </ul>
@@ -42,7 +42,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/getting-started" className="text-gray-600 hover:text-gray-900">
-                  Zacetek uporabe
+                  Začetek uporabe
                 </Link>
               </li>
             </ul>
@@ -62,7 +62,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/cookie-policy" className="text-gray-600 hover:text-gray-900">
-                  Politika piskotkov
+                  Politika piškotkov
                 </Link>
               </li>
             </ul>
@@ -72,7 +72,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/contact" className="text-gray-600 hover:text-gray-900">
-                  Posljite nam e-posto
+                  Pošljite nam e-pošto
                 </Link>
               </li>
             </ul>
@@ -90,7 +90,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t pt-6 text-center text-sm text-gray-600">
-          <p>&copy; {new Date().getFullYear()} KidsLearnAI Platforma. Vse pravice pridrzane.</p>
+          <p>&copy; {new Date().getFullYear()} KidsLearnAI Platforma. Vse pravice pridržane.</p>
         </div>
       </div>
     </footer>

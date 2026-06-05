@@ -7,9 +7,9 @@ import { ArrowLeft } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export const metadata: Metadata = createMetadata({
-  title: "FAQ - Frequently Asked Questions | AI Kids Learning",
+  title: "Pogosta vprašanja - KidsLearnAI",
   description:
-    "Find answers to common questions about AI Kids Learning Platform. Learn about pricing, safety, features, and how our AI-powered education works for children.",
+    "Poiščite odgovore na pogosta vprašanja o platformi KidsLearnAI. Spoznajte cene, varnost, funkcije in kako naše AI učenje deluje za otroke.",
   path: "/faq",
 })
 
@@ -17,29 +17,29 @@ export default function FAQPage() {
   const faqSchema = generateStructuredData("FAQPage", {
     questions: [
       {
-        question: "What age group is this platform designed for?",
+        question: "Za katero starostno skupino je platforma namenjena?",
         answer:
-          "AI Kids Learning Platform is designed for children aged 6-12 years old. Our content is carefully crafted to be age-appropriate, with different difficulty levels and content types suitable for various developmental stages within this range.",
+          "KidsLearnAI je namenjena otrokom od 5 do 12 let. Vsebina je skrbno prilagojena starosti, z različnimi stopnjami težavnosti za različne razvojne faze.",
       },
       {
-        question: "Is the platform safe for my child?",
+        question: "Ali je platforma varna za mojega otroka?",
         answer:
-          "Yes! Safety is our top priority. We are COPPA-compliant, use content filtering, require parental account creation, and implement industry-standard security measures. All AI interactions are monitored and filtered for age-appropriate content.",
+          "Da! Varnost je naša prioriteta. Platforma je skladna s COPPA, uporablja filtriranje vsebin, zahteva registracijo staršev in uvaja industrijske varnostne standarde. Vse AI interakcije so nadzorovane in filtrirane za starostno primerno vsebino.",
       },
       {
-        question: "How much does Premium cost?",
+        question: "Koliko stane Premium naročnina?",
         answer:
-          "We offer two Premium subscription options: Monthly at $9.99/month and Yearly at $99.99/year (save 17% - equivalent to $8.33/month). Both plans include all Premium features and can be cancelled anytime.",
+          "Ponujamo dve možnosti: Mesečno za €7,90/mesec in Letno za €59/leto (prihranite več kot 37%). Oba paketa vključujeta vse Premium funkcije in ju lahko kadarkoli prekličete.",
       },
       {
-        question: "Can I cancel my subscription anytime?",
+        question: "Ali lahko kadarkoli prekličem naročnino?",
         answer:
-          "Yes! You can cancel your subscription at any time from your account settings. Your Premium access will continue until the end of your current billing period.",
+          "Da! Naročnino lahko kadarkoli prekličete v nastavitvah računa. Premium dostop ohranite do konca tekočega obračunskega obdobja.",
       },
       {
-        question: "Can I track my child's progress?",
+        question: "Ali lahko spremljam napredek svojega otroka?",
         answer:
-          "Yes! The parent dashboard provides comprehensive analytics including learning time, activity history, game scores, achievements, badges earned, daily learning streaks, and detailed session logs.",
+          "Da! Nadzorna plošča za starše omogoča celovit pregled analitike, vključno s časom učenja, zgodovino aktivnosti, rezultati iger, dosežki, zbranimi značkami in podrobnimi dnevniki sej.",
       },
     ],
   })
@@ -62,242 +62,238 @@ export default function FAQPage() {
           <Link href="/">
             <Button variant="ghost" className="mb-6 hover:bg-white/50 rounded-full">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
+              Nazaj na začetno stran
             </Button>
           </Link>
 
           <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 border border-white/20">
             <div className="text-center mb-12">
               <div className="text-5xl mb-4">❓</div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Frequently Asked Questions</h1>
-              <p className="text-lg text-gray-600">Find answers to common questions about our platform</p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Pogosta vprašanja</h1>
+              <p className="text-lg text-gray-600">Poiščite odgovore na pogosta vprašanja o naši platformi</p>
             </div>
 
             <Accordion type="multiple" className="space-y-4">
               <AccordionItem value="item-1" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  What age group is this platform designed for?
+                  Za katero starostno skupino je platforma namenjena?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  AI Kids Learning Platform is designed for children aged 6-12 years old. Our content is carefully
-                  crafted to be age-appropriate, with different difficulty levels and content types suitable for various
-                  developmental stages within this range.
+                  KidsLearnAI je namenjena otrokom od 5 do 12 let. Vsebina je skrbno prilagojena starosti, z različnimi
+                  stopnjami težavnosti za različne razvojne faze.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Is the platform safe for my child?
+                  Ali je platforma varna za mojega otroka?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Yes! Safety is our top priority. We are COPPA-compliant, use content filtering, require parental
-                  account creation, and implement industry-standard security measures. All AI interactions are monitored
-                  and filtered for age-appropriate content. We recommend parental supervision, especially for younger
-                  children.
+                  Da! Varnost je naša prioriteta. Platforma je skladna s COPPA, uporablja filtriranje vsebin, zahteva
+                  registracijo staršev in uvaja industrijske varnostne standarde. Vse AI interakcije so nadzorovane in
+                  filtrirane za starostno primerno vsebino. Priporočamo nadzor staršev, zlasti za mlajše otroke.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  What's included in the free tier?
+                  Kaj je vključeno v brezplačni paket?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  The free tier includes:
+                  Brezplačni paket vključuje:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li>Access to basic learning activities</li>
-                    <li>Limited AI interactions per day</li>
-                    <li>Basic progress tracking</li>
-                    <li>One child profile</li>
-                    <li>Access to select games and stories</li>
+                    <li>Dostop do prvih 2 lekcij vsakega tečaja</li>
+                    <li>Spoznavanje Byte-a, AI tutorja</li>
+                    <li>Osnovno spremljanje napredka</li>
+                    <li>En otroški profil</li>
+                    <li>Dostop do izbranih iger in zgodb</li>
                   </ul>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  What additional features do I get with Premium?
+                  Katere dodatne funkcije dobim s Premium naročnino?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Premium subscription includes:
+                  Premium naročnina vključuje:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li>Unlimited AI interactions</li>
-                    <li>Access to all games, activities, and stories</li>
-                    <li>Advanced progress analytics</li>
-                    <li>Multiple child profiles (up to 5)</li>
-                    <li>Priority support</li>
-                    <li>Early access to new features</li>
-                    <li>Ad-free experience</li>
+                    <li>Neomejene AI interakcije</li>
+                    <li>Dostop do vseh iger, aktivnosti in zgodb</li>
+                    <li>Napredna analitika napredka</li>
+                    <li>Več otroških profilov (do 5)</li>
+                    <li>Prednostna podpora</li>
+                    <li>Zgodnji dostop do novih funkcij</li>
+                    <li>Izkušnja brez oglasov</li>
                   </ul>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-5" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  How much does Premium cost?
+                  Koliko stane Premium naročnina?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  We offer two Premium subscription options:
+                  Ponujamo dve možnosti Premium naročnine:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
                     <li>
-                      <strong>Monthly:</strong> $9.99/month
+                      <strong>Mesečno:</strong> €7,90/mesec
                     </li>
                     <li>
-                      <strong>Yearly:</strong> $99.99/year (save 17% - equivalent to $8.33/month)
+                      <strong>Letno:</strong> €59/leto (prihranite več kot 37%)
                     </li>
                   </ul>
-                  Both plans include all Premium features and can be cancelled anytime.
+                  Oba paketa vključujeta vse Premium funkcije in ju lahko kadarkoli prekličete.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-6" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Can I cancel my subscription anytime?
+                  Ali lahko kadarkoli prekličem naročnino?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Yes! You can cancel your subscription at any time from your account settings. Your Premium access will
-                  continue until the end of your current billing period. No refunds are provided for partial months, but
-                  you'll retain access to Premium features until your subscription expires.
+                  Da! Naročnino lahko kadarkoli prekličete v nastavitvah računa. Premium dostop ohranite do konca
+                  tekočega obračunskega obdobja. Vračila za delne mesece niso možna, vendar ohranite dostop do Premium
+                  funkcij do izteka naročnine.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-7" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  How does the AI work? Is it really talking to my child?
+                  Kako deluje AI? Ali res govori z mojim otrokom?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Our platform uses advanced AI language models to generate educational content, stories, and
-                  conversations. The AI is specifically configured for child-friendly interactions with content
-                  filtering and safety measures. While the AI generates responses in real-time, all interactions are
-                  monitored and filtered to ensure age-appropriate content. Think of it as an educational tool, not a
-                  replacement for human interaction.
+                  Naša platforma uporablja napredne AI jezikovne modele za ustvarjanje izobraževalnih vsebin, zgodb in
+                  pogovorov. AI je posebej konfiguriran za otrokom prijazne interakcije s filtriranjem vsebin in
+                  varnostnimi ukrepi. Čeprav AI ustvarja odgovore v realnem času, so vse interakcije nadzorovane in
+                  filtrirane za starostno primerno vsebino. Glejte na to kot na izobraževalno orodje, ne kot nadomestek
+                  za človeško interakcijo.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-8" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Can I track my child's progress?
+                  Ali lahko spremljam napredek svojega otroka?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Yes! The parent dashboard provides comprehensive analytics including:
+                  Da! Nadzorna plošča za starše omogoča celovit pregled analitike, vključno z:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li>Learning time and activity history</li>
-                    <li>Game scores and achievements</li>
-                    <li>Badges and rewards earned</li>
-                    <li>Daily learning streaks</li>
-                    <li>Areas of strength and improvement</li>
-                    <li>Detailed session logs</li>
+                    <li>Časom učenja in zgodovino aktivnosti</li>
+                    <li>Rezultati iger in dosežki</li>
+                    <li>Zbranimi značkami in nagradami</li>
+                    <li>Dnevnimi učnimi nizi</li>
+                    <li>Področji moči in izboljšav</li>
+                    <li>Podrobnimi dnevniki sej</li>
                   </ul>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-9" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  How many child profiles can I create?
+                  Koliko otroških profilov lahko ustvarim?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Free tier accounts can create 1 child profile. Premium subscribers can create up to 5 child profiles,
-                  each with their own progress tracking, achievements, and personalized learning experience.
+                  Z brezplačnim računom lahko ustvarite 1 otroški profil. Premium naročniki lahko ustvarijo do 5 otroških
+                  profilov, vsak s svojim sledenjem napredka, dosežki in prilagojeno učno izkušnjo.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-10" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  What devices can we use?
+                  Katere naprave lahko uporabimo?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  AI Kids Learning Platform works on any device with a modern web browser:
+                  KidsLearnAI deluje na vsaki napravi z modernim spletnim brskalnikom:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li>Desktop computers (Windows, Mac, Linux)</li>
-                    <li>Tablets (iPad, Android tablets)</li>
-                    <li>Smartphones (iOS, Android)</li>
+                    <li>Namizni računalniki (Windows, Mac, Linux)</li>
+                    <li>Tablice (iPad, Android tablice)</li>
+                    <li>Pametni telefoni (iOS, Android)</li>
                   </ul>
-                  We recommend tablets or computers for the best experience. The platform is fully responsive and works
-                  offline for many features once loaded.
+                  Priporočamo tablice ali računalnike za najboljšo izkušnjo. Platforma je popolnoma odzivna in deluje
+                  brez povezave za mnoge funkcije, ko je enkrat naložena.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-11" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Do you collect my child's personal information?
+                  Ali zbirate osebne podatke mojega otroka?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  We collect minimal information necessary for the educational experience: first name, age, and learning
-                  progress data. We do NOT collect sensitive personal information, photos, or location data. All data is
-                  encrypted and stored securely. Parents have full control and can delete their child's data at any
-                  time. See our{" "}
+                  Zbiramo minimalne podatke, potrebne za izobraževalno izkušnjo: ime, starost in podatke o učnem napredku.
+                  NE zbiramo občutljivih osebnih podatkov, fotografij ali podatkov o lokaciji. Vsi podatki so šifrirani
+                  in varno shranjeni. Starši imajo popoln nadzor in lahko kadarkoli izbrišejo podatke svojega otroka.
+                  Za podrobnosti glejte našo{" "}
                   <Link href="/privacy-policy" className="text-blue-600 hover:underline">
-                    Privacy Policy
-                  </Link>{" "}
-                  for complete details.
+                    Politiko zasebnosti
+                  </Link>.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-12" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  What if my child encounters inappropriate content?
+                  Kaj storiti, če moj otrok naleti na neprimerno vsebino?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  While we have robust content filtering and safety measures, no system is perfect. If your child
-                  encounters any inappropriate content, please report it immediately through the platform or contact our
-                  support team. We take all reports seriously and continuously improve our safety systems.
+                  Čeprav imamo robustno filtriranje vsebin in varnostne ukrepe, noben sistem ni popoln. Če vaš otrok
+                  naleti na kakršnokoli neprimerno vsebino, jo prosimo takoj prijavite prek platforme ali kontaktirajte
+                  našo ekipo za podporo. Vse prijave jemljemo resno in nenehno izboljšujemo naše varnostne sisteme.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-13" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Can my child use this without supervision?
+                  Ali lahko moj otrok to uporablja brez nadzora?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  While our platform is designed with safety in mind, we recommend parental supervision, especially for
-                  younger children (ages 6-8). Older children (9-12) may use the platform more independently, but we
-                  encourage parents to regularly review their child's progress and activities through the parent
-                  dashboard.
+                  Čeprav je naša platforma zasnovana z mislijo na varnost, priporočamo nadzor staršev, zlasti za mlajše
+                  otroke (5-8 let). Starejši otroci (9-12 let) lahko platformo uporabljajo bolj samostojno, vendar
+                  spodbujamo starše, da redno pregledujejo napredek in aktivnosti svojega otroka prek nadzorne plošče.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-14" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  How do I get help or report an issue?
+                  Kako dobim pomoč ali prijavim težavo?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  You can get help in several ways:
+                  Pomoč lahko dobite na več načinov:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
                     <li>
-                      Visit our{" "}
+                      Obiščite našo{" "}
                       <Link href="/contact" className="text-blue-600 hover:underline">
-                        Contact page
+                        Kontaktno stran
                       </Link>
                     </li>
-                    <li>Email us at support@kids-learning-ai.com</li>
-                    <li>Use the in-app help button (Premium subscribers get priority support)</li>
+                    <li>Pišite nam na support@kids-learning-ai.com</li>
+                    <li>Uporabite gumb za pomoč v aplikaciji (Premium naročniki imajo prednostno podporo)</li>
                   </ul>
-                  We typically respond within 24-48 hours.
+                  Običajno odgovorimo v 24-48 urah.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-15" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
                 <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
-                  Will my child actually learn about AI?
+                  Se bo moj otrok res naučil o AI?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700">
-                  Yes! Our platform teaches AI concepts through hands-on experience. Children learn about:
+                  Da! Naša platforma uči koncepte AI skozi praktične izkušnje. Otroci se učijo o:
                   <ul className="list-disc pl-6 mt-2 space-y-1">
-                    <li>Pattern recognition and machine learning basics</li>
-                    <li>How AI makes decisions</li>
-                    <li>Natural language processing through conversations</li>
-                    <li>Creative applications of AI</li>
-                    <li>Ethical considerations of AI technology</li>
+                    <li>Prepoznavanju vzorcev in osnovah strojnega učenja</li>
+                    <li>Kako AI sprejema odločitve</li>
+                    <li>Obdelavi naravnega jezika skozi pogovore</li>
+                    <li>Kreativnih uporabah AI</li>
+                    <li>Etičnih vidikih AI tehnologije</li>
                   </ul>
-                  Learning happens naturally through play, making complex concepts accessible and fun.
+                  Učenje poteka naravno skozi igro, kar kompleksne koncepte naredi dostopne in zabavne.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
 
             <div className="mt-12 p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl text-center border-2 border-purple-200">
-              <h3 className="font-bold text-lg mb-2 text-gray-900">Still have questions?</h3>
-              <p className="text-gray-700 mb-4">We're here to help! Reach out to our support team.</p>
+              <h3 className="font-bold text-lg mb-2 text-gray-900">Še imate vprašanja?</h3>
+              <p className="text-gray-700 mb-4">Tukaj smo, da pomagamo! Obrnite se na našo ekipo za podporo.</p>
               <Link href="/contact">
-                <Button className="bg-purple-600 hover:bg-purple-700 rounded-full">Contact Support</Button>
+                <Button className="bg-purple-600 hover:bg-purple-700 rounded-full">Kontaktirajte podporo</Button>
               </Link>
             </div>
           </div>

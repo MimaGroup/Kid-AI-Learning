@@ -286,7 +286,7 @@ export const emailTemplates = {
                 
                 <ol>
                   <li>Prijavite se na <a href="https://www.kids-learning-ai.com" style="color: #534AB7;">kids-learning-ai.com</a></li>
-                  <li>Odprite AI umetniski studio</li>
+                  <li>Odprite AI umetniški studio</li>
                   <li>Zacnite s prvo lekcijo — traja samo 15 minut</li>
                 </ol>
                 

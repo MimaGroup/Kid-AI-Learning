@@ -178,7 +178,7 @@ export default function PricingPageClient() {
     {
       question: "Ali so tečaji primerni za moje otroke?",
       answer:
-        "Imamo tečaje za otroke od 5 do 16 let, razdeljene po starosti in težavnosti. Byte se prilagodi vsakemu otroku posebej.",
+        "Imamo tečaje za otroke od 5 do 12 let, razdeljene po starosti in težavnosti. Byte se prilagodi vsakemu otroku posebej.",
     },
   ]
 

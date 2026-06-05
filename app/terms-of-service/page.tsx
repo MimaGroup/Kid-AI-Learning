@@ -70,11 +70,11 @@ export default function TermsOfServicePage() {
 
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Premium Subscription</h3>
               <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Monthly subscription: $9.99/month</li>
-                <li>Yearly subscription: $99.99/year (save 17%)</li>
+                <li>Monthly subscription: €7,90/month</li>
+                <li>Yearly subscription: €59/year (save more than 37%)</li>
                 <li>Automatic renewal unless cancelled</li>
                 <li>Payments processed securely through Stripe</li>
-                <li>All prices in USD</li>
+                <li>All prices in EUR</li>
               </ul>
 
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Billing</h3>

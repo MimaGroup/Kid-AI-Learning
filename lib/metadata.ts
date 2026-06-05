@@ -93,8 +93,8 @@ export function generateStructuredData(type: "Organization" | "Product" | "FAQPa
       },
       offers: {
         "@type": "Offer",
-        price: data?.price || "9.99",
-        priceCurrency: "USD",
+        price: data?.price || "7.90",
+        priceCurrency: "EUR",
         availability: "https://schema.org/InStock",
         url: `${baseUrl}/pricing`,
       },
@@ -121,8 +121,8 @@ export function generateStructuredData(type: "Organization" | "Product" | "FAQPa
       operatingSystem: "Web Browser",
       offers: {
         "@type": "Offer",
-        price: data?.price || "9.99",
-        priceCurrency: "USD",
+        price: data?.price || "7.90",
+        priceCurrency: "EUR",
       },
       audience: {
         "@type": "EducationalAudience",

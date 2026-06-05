@@ -204,10 +204,10 @@ export function welcomeEmail4(): { subject: string; html: string } {
     
     <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin: 16px 0; text-align: center;">
       <p style="margin: 0 0 8px 0; font-size: 18px; color: #92400e; font-weight: 600;">
-        Samo €9.99/mesec — manj kot skodelica kave na teden.
+        Samo €7,90/mesec — manj kot skodelica kave na teden.
       </p>
       <p style="margin: 0; font-size: 16px; color: #92400e;">
-        Ali pa €99/leto — prihranite 2 meseca.
+        Ali pa €59/leto — prihranite več kot 37%.
       </p>
     </div>
     
@@ -248,12 +248,12 @@ export function welcomeEmail5(): { subject: string; html: string } {
       </p>
       <div style="margin-bottom: 12px;">
         <a href="${SITE_URL}/pricing?plan=monthly" style="display: inline-block; background-color: ${BRAND_COLOR}; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 15px; margin: 4px;">
-          Mesečno: €9.99/mesec
+          Mesečno: €7,90/mesec
         </a>
       </div>
       <div>
         <a href="${SITE_URL}/pricing?plan=yearly" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 15px; margin: 4px;">
-          Letno: €99/leto — prihranite 2 meseca
+          Letno: €59/leto — prihranite več kot 37%
         </a>
       </div>
     </div>

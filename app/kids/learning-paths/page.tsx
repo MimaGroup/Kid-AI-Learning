@@ -36,8 +36,8 @@ export default function LearningPathsPage() {
   const learningPaths: LearningPath[] = [
     {
       id: "ai-basics",
-      title: "AI Basics Journey",
-      description: "Start your AI adventure! Learn what AI is and how it works.",
+      title: "Potovanje po AI osnovah",
+      description: "Začni svojo AI pustolovščino! Nauči se, kaj je AI in kako deluje.",
       icon: "🤖",
       color: "from-blue-500 to-cyan-500",
       totalLessons: 5,
@@ -45,7 +45,7 @@ export default function LearningPathsPage() {
       lessons: [
         {
           id: "1",
-          title: "What is AI?",
+          title: "Kaj je AI?",
           duration: "10 min",
           isCompleted: true,
           isLocked: false,
@@ -53,7 +53,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "2",
-          title: "How Computers Think",
+          title: "Kako računalniki razmišljajo",
           duration: "12 min",
           isCompleted: true,
           isLocked: false,
@@ -61,7 +61,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "3",
-          title: "AI in Everyday Life",
+          title: "AI v vsakdanjem življenju",
           duration: "15 min",
           isCompleted: false,
           isLocked: false,
@@ -69,7 +69,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "4",
-          title: "Machine Learning Basics",
+          title: "Osnove strojnega učenja",
           duration: "18 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -77,7 +77,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "5",
-          title: "Build Your AI Friend",
+          title: "Ustvari svojega AI prijatelja",
           duration: "20 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -87,8 +87,8 @@ export default function LearningPathsPage() {
     },
     {
       id: "coding-adventure",
-      title: "Coding Adventure",
-      description: "Learn to code step by step! Create your own programs.",
+      title: "Programerska pustolovščina",
+      description: "Nauči se programirati korak za korakom! Ustvari svoje programe.",
       icon: "💻",
       color: "from-purple-500 to-pink-500",
       totalLessons: 6,
@@ -96,7 +96,7 @@ export default function LearningPathsPage() {
       lessons: [
         {
           id: "1",
-          title: "What is Code?",
+          title: "Kaj je koda?",
           duration: "8 min",
           isCompleted: false,
           isLocked: false,
@@ -104,7 +104,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "2",
-          title: "Sequences & Commands",
+          title: "Zaporedja in ukazi",
           duration: "12 min",
           isCompleted: false,
           isLocked: false,
@@ -112,7 +112,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "3",
-          title: "Loops & Repetition",
+          title: "Zanke in ponavljanje",
           duration: "15 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -120,7 +120,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "4",
-          title: "Making Decisions (IF/ELSE)",
+          title: "Sprejemanje odločitev (IF/ELSE)",
           duration: "15 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -128,7 +128,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "5",
-          title: "Variables & Data",
+          title: "Spremenljivke in podatki",
           duration: "18 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -136,7 +136,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "6",
-          title: "Build Your First Game",
+          title: "Ustvari svojo prvo igro",
           duration: "25 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -146,8 +146,8 @@ export default function LearningPathsPage() {
     },
     {
       id: "math-master",
-      title: "Math Master Path",
-      description: "Become a math wizard! Solve problems and level up.",
+      title: "Pot matematičnega mojstra",
+      description: "Postani matematični čarovnik! Reši naloge in napreduješ.",
       icon: "🧮",
       color: "from-green-500 to-emerald-500",
       totalLessons: 4,
@@ -155,7 +155,7 @@ export default function LearningPathsPage() {
       lessons: [
         {
           id: "1",
-          title: "Addition & Subtraction",
+          title: "Seštevanje in odštevanje",
           duration: "10 min",
           isCompleted: true,
           isLocked: false,
@@ -163,7 +163,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "2",
-          title: "Multiplication Fun",
+          title: "Množenje za zabavo",
           duration: "12 min",
           isCompleted: false,
           isLocked: false,
@@ -171,7 +171,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "3",
-          title: "Division Challenge",
+          title: "Izziv deljenja",
           duration: "15 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -179,7 +179,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "4",
-          title: "Word Problems",
+          title: "Besedilne naloge",
           duration: "18 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -189,8 +189,8 @@ export default function LearningPathsPage() {
     },
     {
       id: "science-explorer",
-      title: "Science Explorer",
-      description: "Discover how AI helps in science! Conduct virtual experiments.",
+      title: "Raziskovalec znanosti",
+      description: "Odkrij, kako AI pomaga pri znanosti! Izvajaj virtualne eksperimente.",
       icon: "🔬",
       color: "from-orange-500 to-red-500",
       totalLessons: 5,
@@ -198,7 +198,7 @@ export default function LearningPathsPage() {
       lessons: [
         {
           id: "1",
-          title: "AI & Color Recognition",
+          title: "AI in prepoznavanje barv",
           duration: "12 min",
           isCompleted: false,
           isLocked: false,
@@ -206,7 +206,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "2",
-          title: "Sound & Voice AI",
+          title: "Zvok in glasovni AI",
           duration: "15 min",
           isCompleted: false,
           isLocked: false,
@@ -214,7 +214,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "3",
-          title: "Smart Farming",
+          title: "Pametno kmetovanje",
           duration: "15 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -222,7 +222,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "4",
-          title: "Weather Prediction",
+          title: "Napovedovanje vremena",
           duration: "18 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -230,7 +230,7 @@ export default function LearningPathsPage() {
         },
         {
           id: "5",
-          title: "Space Exploration",
+          title: "Raziskovanje vesolja",
           duration: "20 min",
           isCompleted: false,
           isLocked: !hasPremium,
@@ -259,7 +259,7 @@ export default function LearningPathsPage() {
           <div className="mb-6">
             <Button variant="ghost" size="sm" onClick={() => setSelectedPath(null)} className="hover:bg-white/50 rounded-full">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Paths
+              Nazaj na poti
             </Button>
           </div>
           <Card className="bg-white/70 backdrop-blur-xl border-white/20 shadow-2xl rounded-3xl">

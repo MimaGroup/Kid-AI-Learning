@@ -98,10 +98,10 @@ export default function HomePage() {
               </Badge>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold text-balance leading-[1.1] tracking-tight">
-                <span className="text-[#2D2A3D]">Zaslon, ki uči.</span>
+                <span className="text-[#2D2A3D]">Spremenite čas pred zaslonom</span>
                 <br />
                 <span className="bg-gradient-to-r from-[#A78BFA] via-[#7C3AED] to-[#60A5FA] bg-clip-text text-transparent">
-                  Igra, ki razvija.
+                  v učenje, ki otroka navduši.
                 </span>
               </h1>
 
@@ -762,7 +762,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">{"Poveži se"}</h4>
+              <h4 className="font-semibold mb-4">{"Pove��i se"}</h4>
               <ul className="space-y-3 text-sm">
                 <li>
                   <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">

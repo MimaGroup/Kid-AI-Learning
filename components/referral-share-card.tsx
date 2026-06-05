@@ -61,7 +61,7 @@ export function ReferralShareCard() {
     ctx.fillText("KidsLearnAI", 600, 200)
 
     ctx.font = "32px Arial"
-    ctx.fillText("Zaslon, ki uči. Igra, ki razvija.", 600, 280)
+    ctx.fillText("Spremenite čas pred zaslonom v učenje!", 600, 280)
 
     ctx.font = "bold 48px Arial"
     ctx.fillText(`Uporabi kodo: ${referralCode}`, 600, 400)
