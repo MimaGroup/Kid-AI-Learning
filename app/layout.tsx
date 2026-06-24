@@ -8,9 +8,11 @@ import { ErrorBoundary } from "@/components/error-boundary"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "AI Kids Learning Platform",
-  description: "Where Young Minds Meet Artificial Intelligence!",
-    generator: 'v0.app'
+  title: "Kids Learning AI",
+  description: "Slovenska učna platforma za varno, igrivo AI učenje. Interaktivne igre in dejavnosti za otroke med 5 in 12 letom.",
+  icons: {
+    icon: "/icon.svg",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

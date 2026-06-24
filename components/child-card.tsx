@@ -17,7 +17,7 @@ export function ChildCard({ child, onDelete, onEdit }: ChildCardProps) {
   const [deleting, setDeleting] = useState(false)
 
   const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${child.name}'s profile?`)) {
+    if (!confirm(`Ali ste prepričani, da želite izbrisati profil ${child.name}?`)) {
       return
     }
 
@@ -43,7 +43,7 @@ export function ChildCard({ child, onDelete, onEdit }: ChildCardProps) {
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-lg">{child.name}</h3>
-            <p className="text-sm text-muted-foreground">{child.age} years old</p>
+            <p className="text-sm text-muted-foreground">{child.age} let</p>
           </div>
         </div>
       </CardHeader>
@@ -57,11 +57,11 @@ export function ChildCard({ child, onDelete, onEdit }: ChildCardProps) {
       <CardFooter className="flex gap-2 pt-4 border-t">
         <Button variant="outline" size="sm" onClick={() => onEdit(child)} className="flex-1">
           <Edit className="w-4 h-4 mr-2" />
-          Edit
+          Uredi
         </Button>
         <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting} className="flex-1">
           <Trash2 className="w-4 h-4 mr-2" />
-          {deleting ? "Deleting..." : "Delete"}
+          {deleting ? "Brisanje..." : "Izbriši"}
         </Button>
       </CardFooter>
     </Card>

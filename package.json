@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -51,6 +52,8 @@
     "react": "^18",
     "react-day-picker": "^8.9.1",
     "react-dom": "^18",
+    "resend": "^6.12.4",
+    "stripe": "^22.2.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "latest"

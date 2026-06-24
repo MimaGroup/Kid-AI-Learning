@@ -38,17 +38,17 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
           <Card className="max-w-md">
             <CardHeader>
-              <CardTitle className="text-red-600">Something went wrong</CardTitle>
+              <CardTitle className="text-red-600">Prišlo je do napake</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-gray-700">We encountered an unexpected error. Please try refreshing the page.</p>
+              <p className="text-gray-700">Prišlo je do nepričakovane napake. Poskusite osvežiti stran.</p>
               {this.state.error && (
                 <div className="bg-red-50 border border-red-200 rounded p-3">
                   <p className="text-sm text-red-800 font-mono">{this.state.error.message}</p>
                 </div>
               )}
               <Button onClick={() => window.location.reload()} className="w-full">
-                Refresh Page
+                Osveži stran
               </Button>
             </CardContent>
           </Card>

@@ -13,10 +13,10 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="max-w-md">
         <CardHeader>
-          <CardTitle className="text-red-600">Something went wrong!</CardTitle>
+          <CardTitle className="text-red-600">Prišlo je do napake!</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-700">We encountered an unexpected error. Please try again.</p>
+          <p className="text-gray-700">Prišlo je do nepričakovane napake. Poskusite znova.</p>
           {error.message && (
             <div className="bg-red-50 border border-red-200 rounded p-3">
               <p className="text-sm text-red-800 font-mono">{error.message}</p>
@@ -24,10 +24,10 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           )}
           <div className="space-y-2">
             <Button onClick={reset} className="w-full">
-              Try Again
+              Poskusi znova
             </Button>
             <Button onClick={() => (window.location.href = "/")} variant="outline" className="w-full">
-              Go Home
+              Na začetno stran
             </Button>
           </div>
         </CardContent>

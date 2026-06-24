@@ -8,12 +8,12 @@ export default function NotFound() {
       <Card className="max-w-md text-center">
         <CardHeader>
           <div className="text-6xl mb-4">🔍</div>
-          <CardTitle className="text-3xl">Page Not Found</CardTitle>
+          <CardTitle className="text-3xl">Stran ni najdena</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-700">Oops! The page you're looking for doesn't exist.</p>
+          <p className="text-gray-700">Stran, ki jo iščete, ne obstaja.</p>
           <Link href="/">
-            <Button className="w-full">Go Back Home</Button>
+            <Button className="w-full">Na začetno stran</Button>
           </Link>
         </CardContent>
       </Card>

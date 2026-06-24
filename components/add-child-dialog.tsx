@@ -74,7 +74,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       setOpen(false)
     } catch (error) {
       console.error("[v0] Failed to add child:", error)
-      alert(`Failed to create child profile: ${error instanceof Error ? error.message : "Unknown error"}`)
+      alert(`Ustvarjanje profila otroka ni uspelo: ${error instanceof Error ? error.message : "Neznana napaka"}`)
     } finally {
       setLoading(false)
     }
@@ -84,43 +84,43 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-          Add Child Profile
+          Dodaj profil otroka
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Child Profile</DialogTitle>
+            <DialogTitle>Dodaj profil otroka</DialogTitle>
             <DialogDescription>
-              Create a new learning profile for your child. They'll get their own login credentials.
+              Ustvarite nov učni profil za vašega otroka. Dobil bo lastne podatke za prijavo.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Ime</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Enter child's name"
+                placeholder="Ime otroka"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age">Starost</Label>
               <Input
                 id="age"
                 type="number"
-                min="3"
-                max="18"
+                min="5"
+                max="12"
                 value={formData.age}
                 onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                placeholder="Enter age (3-18)"
+                placeholder="Enter age (5-12)"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email (for login)</Label>
+              <Label htmlFor="email">E-pošta (za prijavo)</Label>
               <Input
                 id="email"
                 type="email"
@@ -131,19 +131,19 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Geslo</Label>
               <Input
                 id="password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="Create a password"
+                placeholder="Ustvarite geslo"
                 required
                 minLength={6}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="avatar_color">Avatar Color</Label>
+              <Label htmlFor="avatar_color">Barva avatarja</Label>
               <Select
                 value={formData.avatar_color}
                 onValueChange={(value) => setFormData({ ...formData, avatar_color: value })}
@@ -164,7 +164,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="learning_level">Learning Level</Label>
+              <Label htmlFor="learning_level">Stopnja znanja</Label>
               <Select
                 value={formData.learning_level}
                 onValueChange={(value: any) => setFormData({ ...formData, learning_level: value })}
@@ -173,16 +173,16 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="beginner">Začetnik</SelectItem>
+                  <SelectItem value="intermediate">Srednji</SelectItem>
+                  <SelectItem value="advanced">Napredni</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create Profile"}
+              {loading ? "Ustvarjanje..." : "Ustvari profil"}
             </Button>
           </DialogFooter>
         </form>

@@ -52,7 +52,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
   if (loading) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-gray-500">Loading progress...</CardContent>
+        <CardContent className="py-8 text-center text-gray-500">Nalaganje napredka...</CardContent>
       </Card>
     )
   }
@@ -60,7 +60,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
   if (!data) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-gray-500">No progress data available</CardContent>
+        <CardContent className="py-8 text-center text-gray-500">Ni podatkov o napredku</CardContent>
       </Card>
     )
   }
@@ -82,7 +82,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
             </div>
           </div>
           <button onClick={() => setExpanded(!expanded)} className="text-sm text-blue-600 hover:underline">
-            {expanded ? "Show Less" : "Show More"}
+            {expanded ? "Prikaži manj" : "Prikaži več"}
           </button>
         </div>
       </CardHeader>
@@ -91,28 +91,28 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <div className="bg-purple-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Brain className="w-4 h-4 text-purple-600" />
-              <span className="text-xs text-purple-600 font-medium">Quizzes</span>
+              <span className="text-xs text-purple-600 font-medium">Kvizi</span>
             </div>
             <p className="text-2xl font-bold text-purple-900">{data.stats.quizzesTaken}</p>
           </div>
           <div className="bg-indigo-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Search className="w-4 h-4 text-indigo-600" />
-              <span className="text-xs text-indigo-600 font-medium">Mysteries</span>
+              <span className="text-xs text-indigo-600 font-medium">Uganke</span>
             </div>
             <p className="text-2xl font-bold text-indigo-900">{data.stats.mysteriesSolved}</p>
           </div>
           <div className="bg-green-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="w-4 h-4 text-green-600" />
-              <span className="text-xs text-green-600 font-medium">Avg Score</span>
+              <span className="text-xs text-green-600 font-medium">Povp. rezultat</span>
             </div>
             <p className="text-2xl font-bold text-green-900">{data.stats.averageScore}%</p>
           </div>
           <div className="bg-yellow-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Trophy className="w-4 h-4 text-yellow-600" />
-              <span className="text-xs text-yellow-600 font-medium">Achievements</span>
+              <span className="text-xs text-yellow-600 font-medium">Dosežki</span>
             </div>
             <p className="text-2xl font-bold text-yellow-900">{data.stats.totalAchievements}</p>
           </div>
@@ -122,7 +122,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <>
             {data.achievements.length > 0 && (
               <div>
-                <h4 className="font-semibold text-sm mb-2">Recent Achievements</h4>
+                <h4 className="font-semibold text-sm mb-2">Nedavni dosežki</h4>
                 <div className="space-y-2">
                   {data.achievements.slice(0, 3).map((achievement) => (
                     <div
@@ -144,7 +144,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
 
             {data.progress.length > 0 && (
               <div>
-                <h4 className="font-semibold text-sm mb-2">Recent Activity</h4>
+                <h4 className="font-semibold text-sm mb-2">Nedavna dejavnost</h4>
                 <div className="space-y-2">
                   {data.progress.slice(0, 5).map((activity) => (
                     <div key={activity.id} className="bg-gray-50 rounded-lg p-2 flex items-center justify-between">
@@ -152,7 +152,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
                         <Badge variant="secondary" className="capitalize">
                           {activity.activity_type.replace("_", " ")}
                         </Badge>
-                        <span className="text-sm text-gray-600">Score: {activity.score}</span>
+                        <span className="text-sm text-gray-600">Rezultat: {activity.score}</span>
                       </div>
                       <span className="text-xs text-gray-500">
                         {new Date(activity.completed_at).toLocaleDateString()}

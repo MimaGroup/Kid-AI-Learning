@@ -24,6 +24,28 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    /*
+     * Kids Learning AI — brand tokens (space / purple-dark theme)
+     * Namespaced separately from the shadcn --background/--primary/etc.
+     * tokens above so they document the brand palette without altering
+     * the site's current light theme. HSL triplets, no hsl() wrapper —
+     * use as hsl(var(--brand-bg)) etc., same pattern as tailwind.config.js.
+     *
+     * Logo sources: public/logo.svg (full lockup with wordmark),
+     * public/logo-mark.svg (square mark), app/icon.svg (favicon,
+     * same mark — served automatically by Next.js as the site icon).
+     */
+    --brand-bg: 256 45% 8%;             /* deep space indigo — page/app canvas in space theme */
+    --brand-bg-elevated: 256 40% 12%;   /* cards/panels raised above --brand-bg */
+    --brand-foreground: 270 60% 92%;    /* lavender text on dark space surfaces */
+    --brand-primary: 263 70% 58%;       /* orbit/planet purple — primary brand accent */
+    --brand-primary-foreground: 270 60% 97%;
+    --brand-secondary: 258 35% 18%;     /* nebula-tinted secondary surface */
+    --brand-muted: 258 30% 16%;
+    --brand-muted-foreground: 260 20% 65%;
+    --brand-border: 258 30% 22%;
+    --brand-star: 43 96% 62%;           /* amber star accent from the logo, used for CTAs/highlights */
   }
 }
 

@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "../../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
@@ -16,9 +14,22 @@ interface Question {
   explanation: string
 }
 
+const STARS = [
+  {x:7,y:12},{x:20,y:80},{x:30,y:28},{x:42,y:65},{x:52,y:8},
+  {x:62,y:78},{x:72,y:42},{x:82,y:88},{x:90,y:22},{x:96,y:58},
+  {x:14,y:52},{x:55,y:48},{x:85,y:68},{x:35,y:85},{x:75,y:15},
+]
+
+const OPTION_LETTERS = ["A", "B", "C", "D"]
+
 export default function AIQuizPage() {
-  const { user, loading } = useAuth()
+  const { user, loading, logout } = useAuth()
   const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+    router.push("/auth/login")
+  }
   const { submitProgress } = useProgress()
 
   const [questions, setQuestions] = useState<Question[]>([])
@@ -50,14 +61,10 @@ export default function AIQuizPage() {
             count: 5,
           }),
         })
-
         const data = await response.json()
-
         if (response.ok && data.questions) {
           setQuestions(data.questions)
         } else {
-          console.error("Failed to generate questions:", data.error)
-          // Fallback to sample questions if AI generation fails
           setQuestions([
             {
               question: "What does AI stand for?",
@@ -68,25 +75,21 @@ export default function AIQuizPage() {
             },
           ])
         }
-      } catch (error) {
-        console.error("Error generating questions:", error)
+      } catch {
+        // silence
       } finally {
         setLoadingQuestions(false)
       }
     }
-
-    if (user) {
-      generateQuestions()
-    }
+    if (user) generateQuestions()
   }, [user])
 
   const handleAnswerSelect = (answerIndex: number) => {
-    setSelectedAnswer(answerIndex)
+    if (!showExplanation) setSelectedAnswer(answerIndex)
   }
 
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return
-
     if (selectedAnswer === questions[currentQuestion].correct) {
       setScore(score + 1)
     }
@@ -115,36 +118,30 @@ export default function AIQuizPage() {
     setScore(0)
     setQuizComplete(false)
     setNewAchievements([])
-
     setLoadingQuestions(true)
     try {
       const response = await fetch("/api/generate/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          topic: "artificial intelligence and technology",
-          difficulty: "beginner",
-          count: 5,
-        }),
+        body: JSON.stringify({ topic: "artificial intelligence and technology", difficulty: "beginner", count: 5 }),
       })
-
       const data = await response.json()
-      if (response.ok && data.questions) {
-        setQuestions(data.questions)
-      }
-    } catch (error) {
-      console.error("Error generating questions:", error)
+      if (response.ok && data.questions) setQuestions(data.questions)
+    } catch {
+      // silence
     } finally {
       setLoadingQuestions(false)
     }
   }
 
+  const spaceStyle = { background: "radial-gradient(ellipse at 60% 20%, #2d1000 0%, #0a0a1a 75%)" }
+
   if (loading || loadingQuestions) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={spaceStyle}>
         <div className="text-center">
-          <div className="text-4xl mb-4">🤖</div>
-          <p className="text-gray-600">Generating your personalized quiz...</p>
+          <div className="text-6xl mb-4 animate-bounce">🎯</div>
+          <p className="text-orange-300 font-semibold">Ustvarjanje tvojega kviza...</p>
         </div>
       </div>
     )
@@ -152,137 +149,271 @@ export default function AIQuizPage() {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
-        <Card className="max-w-md">
-          <CardContent className="text-center py-8">
-            <p className="text-gray-600 mb-4">Failed to generate quiz questions</p>
-            <Button onClick={() => window.location.reload()}>Try Again</Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center p-4" style={spaceStyle}>
+        <div
+          className="rounded-3xl p-8 text-center max-w-sm"
+          style={{ background: "rgba(8,8,30,0.9)", border: "1px solid rgba(249,115,22,0.3)" }}
+        >
+          <div className="text-5xl mb-4">😕</div>
+          <p className="text-white mb-4">Ustvarjanje vprašanj ni uspelo</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 rounded-xl font-bold text-white"
+            style={{ background: "linear-gradient(135deg, #ea580c, #f97316)" }}
+          >
+            Poskusi znova
+          </button>
+        </div>
       </div>
     )
   }
 
   if (quizComplete) {
+    const pct = Math.round((score / questions.length) * 100)
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
-        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
-        <div className="max-w-2xl mx-auto">
-          <Card className="text-center">
-            <CardHeader>
-              <CardTitle className="text-3xl text-purple-600">Quiz Complete!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-6xl">🏆</div>
-              <p className="text-xl">
-                You scored <span className="font-bold text-purple-600">{score}</span> out of{" "}
-                <span className="font-bold">{questions.length}</span>!
-              </p>
-              {newAchievements.length > 0 && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h4 className="font-bold text-yellow-900 mb-2">New Achievements!</h4>
-                  {newAchievements.map((achievement) => (
-                    <p key={achievement.id} className="text-yellow-800">
-                      🏆 {achievement.title}
-                    </p>
-                  ))}
-                </div>
-              )}
-              <div className="space-y-4">
-                <Button onClick={resetQuiz} className="bg-purple-600 hover:bg-purple-700">
-                  Try New Quiz
-                </Button>
-                <div>
-                  <Link href="/kids/activities">
-                    <Button variant="outline">Back to Activities</Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen relative p-4 pb-8 flex items-center justify-center" style={spaceStyle}>
+        {STARS.map((s, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-white pointer-events-none"
+            style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.12 + (i % 4) * 0.08 }}
+          />
+        ))}
+        <AchievementPopup badges={newAchievements.map((a: any) => a.achievement_type ?? a.id)} onClose={() => setNewAchievements([])} />
+        <div
+          className="relative z-10 rounded-3xl p-8 text-center max-w-md w-full shadow-2xl"
+          style={{
+            background: "rgba(8,8,30,0.9)",
+            border: "1px solid rgba(249,115,22,0.35)",
+            boxShadow: "0 0 40px rgba(249,115,22,0.12)",
+          }}
+        >
+          <div className="text-7xl mb-4">{pct >= 80 ? "🏆" : pct >= 60 ? "⭐" : "💪"}</div>
+          <h2 className="text-3xl font-bold text-white mb-2">Kviz končan!</h2>
+          <p className="text-orange-300 text-lg mb-6">
+            <span className="text-3xl font-bold text-orange-400">{score}</span>
+            <span className="text-white/50"> / {questions.length} točk</span>
+          </p>
+
+          {newAchievements.length > 0 && (
+            <div
+              className="rounded-2xl p-4 mb-6"
+              style={{ background: "rgba(251,191,36,0.13)", border: "1px solid rgba(251,191,36,0.35)" }}
+            >
+              <h4 className="text-yellow-400 text-xs font-bold mb-2 tracking-wider">🏆 NOVI DOSEŽKI</h4>
+              {newAchievements.map((a) => (
+                <p key={a.id} className="text-yellow-200 text-sm">{a.title}</p>
+              ))}
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <button
+              onClick={resetQuiz}
+              className="w-full py-3.5 rounded-2xl font-bold text-white text-lg transition-all active:scale-95"
+              style={{ background: "linear-gradient(135deg, #c2410c, #f97316)" }}
+            >
+              Nov kviz
+            </button>
+            <Link href="/kids/home">
+              <button
+                className="w-full py-3 rounded-2xl font-semibold text-orange-300 text-sm transition-all hover:bg-orange-500/10"
+                style={{ border: "1px solid rgba(249,115,22,0.3)" }}
+              >
+                Na zemljevid
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     )
   }
 
   const question = questions[currentQuestion]
+  const progress = ((currentQuestion + 1) / questions.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <Link href="/kids/activities" className="text-purple-600 hover:underline">
-            ← Back to Activities
+    <div className="min-h-screen relative p-4 pb-8" style={spaceStyle}>
+      {STARS.map((s, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-white pointer-events-none"
+          style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.12 + (i % 4) * 0.08 }}
+        />
+      ))}
+
+      <AchievementPopup badges={newAchievements.map((a: any) => a.achievement_type ?? a.id)} onClose={() => setNewAchievements([])} />
+
+      <div className="max-w-2xl mx-auto relative z-10">
+        <div className="mb-5 flex items-center justify-between">
+          <Link href="/kids/home" className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors">
+            ← Nazaj na zemljevid
           </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/parent/dashboard"
+              className="text-xs font-semibold px-3 py-1.5 rounded-xl transition-all hover:bg-white/5"
+              style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              🛸 Starševska plošča
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="text-xs font-semibold px-3 py-1.5 rounded-xl transition-all hover:bg-red-500/10 active:scale-95"
+              style={{ color: "rgba(239,68,68,0.7)", border: "1px solid rgba(239,68,68,0.2)" }}
+            >
+              ↩ Odjava
+            </button>
+          </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-2xl text-purple-600">AI Quiz</CardTitle>
-              <div className="text-sm text-gray-500">
-                Question {currentQuestion + 1} of {questions.length}
+        {/* Main game panel */}
+        <div
+          className="rounded-3xl overflow-hidden shadow-2xl"
+          style={{
+            background: "rgba(8,8,30,0.88)",
+            border: "1px solid rgba(249,115,22,0.3)",
+            boxShadow: "0 0 40px rgba(249,115,22,0.1)",
+          }}
+        >
+          {/* Header */}
+          <div
+            className="px-6 py-4 flex justify-between items-center"
+            style={{ background: "rgba(249,115,22,0.18)", borderBottom: "1px solid rgba(249,115,22,0.2)" }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">🎯</span>
+              <div>
+                <h1 className="text-xl font-bold text-white">AI Kviz</h1>
+                <p className="text-orange-400 text-xs font-medium">
+                  Vprašanje {currentQuestion + 1} od {questions.length}
+                </p>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-              />
+            <div
+              className="px-4 py-2 rounded-xl text-sm font-bold"
+              style={{ background: "rgba(249,115,22,0.25)", border: "1px solid rgba(249,115,22,0.35)" }}
+            >
+              <span className="text-orange-300">{score}</span>
+              <span className="text-white/40 text-xs"> točk</span>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="h-1.5" style={{ background: "rgba(255,255,255,0.07)" }}>
+            <div
+              className="h-full transition-all duration-500"
+              style={{
+                width: `${progress}%`,
+                background: "linear-gradient(90deg, #c2410c, #f97316)",
+                boxShadow: "0 0 8px rgba(249,115,22,0.6)",
+              }}
+            />
+          </div>
+
+          <div className="p-6 space-y-5">
+            {/* Question */}
+            <div
+              className="rounded-2xl p-5"
+              style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }}
+            >
+              <p className="text-xs text-orange-400 font-bold mb-2 tracking-wider">VPRAŠANJE</p>
+              <h3 className="text-lg font-semibold text-white leading-snug">{question.question}</h3>
             </div>
 
-            <h3 className="text-xl font-semibold">{question.question}</h3>
-
+            {/* Answer options */}
             <div className="space-y-3">
-              {question.options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerSelect(index)}
-                  disabled={showExplanation}
-                  className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                    selectedAnswer === index
-                      ? showExplanation
-                        ? index === question.correct
-                          ? "border-green-500 bg-green-50"
-                          : "border-red-500 bg-red-50"
-                        : "border-purple-500 bg-purple-50"
-                      : showExplanation && index === question.correct
-                        ? "border-green-500 bg-green-50"
-                        : "border-gray-300 hover:border-purple-300"
-                  } ${showExplanation ? "cursor-not-allowed" : "cursor-pointer"}`}
-                >
-                  {option}
-                </button>
-              ))}
+              {question.options.map((option, index) => {
+                let bg = "rgba(255,255,255,0.05)"
+                let borderColor = "rgba(255,255,255,0.12)"
+                let textColor = "rgba(255,255,255,0.8)"
+                let letterBg = "rgba(255,255,255,0.1)"
+                let letterColor = "rgba(255,255,255,0.5)"
+
+                if (showExplanation) {
+                  if (index === question.correct) {
+                    bg = "rgba(34,197,94,0.18)"
+                    borderColor = "rgba(34,197,94,0.5)"
+                    textColor = "#86efac"
+                    letterBg = "rgba(34,197,94,0.3)"
+                    letterColor = "#4ade80"
+                  } else if (index === selectedAnswer) {
+                    bg = "rgba(239,68,68,0.18)"
+                    borderColor = "rgba(239,68,68,0.5)"
+                    textColor = "#fca5a5"
+                    letterBg = "rgba(239,68,68,0.3)"
+                    letterColor = "#f87171"
+                  }
+                } else if (index === selectedAnswer) {
+                  bg = "rgba(249,115,22,0.2)"
+                  borderColor = "rgba(249,115,22,0.6)"
+                  textColor = "#fdba74"
+                  letterBg = "rgba(249,115,22,0.35)"
+                  letterColor = "#fb923c"
+                }
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    disabled={showExplanation}
+                    className="w-full rounded-2xl p-4 flex items-center gap-4 text-left transition-all hover:brightness-125 disabled:cursor-default"
+                    style={{ background: bg, border: `1.5px solid ${borderColor}` }}
+                  >
+                    <span
+                      className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-sm font-bold transition-all"
+                      style={{ background: letterBg, color: letterColor }}
+                    >
+                      {OPTION_LETTERS[index]}
+                    </span>
+                    <span className="text-sm font-medium transition-all" style={{ color: textColor }}>
+                      {option}
+                    </span>
+                    {showExplanation && index === question.correct && (
+                      <span className="ml-auto text-green-400 text-lg">✓</span>
+                    )}
+                    {showExplanation && index === selectedAnswer && index !== question.correct && (
+                      <span className="ml-auto text-red-400 text-lg">✗</span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
 
+            {/* Explanation */}
             {showExplanation && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800">
-                  <strong>Explanation:</strong> {question.explanation}
-                </p>
+              <div
+                className="rounded-2xl p-4 animate-slide-up"
+                style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)" }}
+              >
+                <p className="text-indigo-400 text-xs font-bold mb-1 tracking-wider">💡 RAZLAGA</p>
+                <p className="text-indigo-200 text-sm leading-relaxed">{question.explanation}</p>
               </div>
             )}
 
-            <div className="flex justify-center">
+            {/* Action button */}
+            <div className="flex justify-center pt-1">
               {!showExplanation ? (
-                <Button
+                <button
                   onClick={handleSubmitAnswer}
                   disabled={selectedAnswer === null}
-                  className="bg-purple-600 hover:bg-purple-700"
+                  className="px-10 py-3.5 rounded-2xl font-bold text-white text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+                  style={{ background: "linear-gradient(135deg, #c2410c, #f97316)" }}
                 >
-                  Submit Answer
-                </Button>
+                  Oddaj odgovor →
+                </button>
               ) : (
-                <Button onClick={handleNextQuestion} className="bg-purple-600 hover:bg-purple-700">
-                  {currentQuestion < questions.length - 1 ? "Next Question" : "Finish Quiz"}
-                </Button>
+                <button
+                  onClick={handleNextQuestion}
+                  className="px-10 py-3.5 rounded-2xl font-bold text-white text-lg transition-all active:scale-95"
+                  style={{ background: "linear-gradient(135deg, #c2410c, #f97316)" }}
+                >
+                  {currentQuestion < questions.length - 1 ? "Naslednje vprašanje →" : "Zaključi kviz →"}
+                </button>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   )
