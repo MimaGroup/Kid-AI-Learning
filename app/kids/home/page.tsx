@@ -28,6 +28,7 @@ export default function KidsHome() {
   const router = useRouter()
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [completedLessons, setCompletedLessons] = useState(0)
+  const [xp, setXp] = useState<{ progress: number; needed: number; level: number; points: number } | null>(null)
 
   useEffect(() => {
     fetch("/api/lesson-progress")
@@ -40,6 +41,15 @@ export default function KidsHome() {
     fetch("/api/user-badges")
       .then(r => r.json())
       .then(data => setEarnedBadges((data.badges ?? []).map((b: any) => b.badge_id)))
+      .catch(() => {})
+    fetch("/api/gamification")
+      .then(r => r.json())
+      .then(data => setXp({
+        progress: data.experienceProgress ?? 0,
+        needed: data.experienceNeeded ?? 100,
+        level: data.level ?? 1,
+        points: data.points ?? 0,
+      }))
       .catch(() => {})
   }, [])
 
@@ -172,6 +182,25 @@ export default function KidsHome() {
                 <div className="text-2xl mb-1">🎯</div>
                 <div className="text-lg font-bold text-white">{statsLoading ? "—" : `Lv ${stats.level}`}</div>
                 <div className="text-xs text-purple-400">{statsLoading ? "" : stats.levelName}</div>
+              </div>
+            </div>
+
+            {/* XP progress bar toward next level */}
+            <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-purple-300">⭐ XP do naslednje stopnje</span>
+                <span className="text-xs text-white/40">
+                  {xp ? `${xp.progress} / ${xp.needed} XP` : "—"}
+                </span>
+              </div>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(168,85,247,0.15)" }}>
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: xp ? `${Math.min(100, Math.round((xp.progress / xp.needed) * 100))}%` : "0%",
+                    background: "linear-gradient(90deg, #7C3AED, #a855f7)",
+                  }}
+                />
               </div>
             </div>
           </div>
