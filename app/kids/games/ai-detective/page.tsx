@@ -378,20 +378,36 @@ export default function AIDetectivePage() {
 
             {/* Solution */}
             {showSolution && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-semibold text-green-900 mb-2">Solution:</h4>
-                <p className="text-green-800">{caseData.solution}</p>
-                <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button onClick={newCase} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
-                    New Mystery
-                  </Button>
-                  <Button onClick={resetCase} variant="outline" className="w-full sm:w-auto bg-transparent">
-                    Try Again
-                  </Button>
-                  <Link href="/kids/activities" className="w-full sm:w-auto">
-                    <Button variant="outline" className="w-full bg-transparent">
-                      Back to Activities
-                    </Button>
+              <div
+                className="rounded-2xl p-5 animate-slide-up"
+                style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.35)" }}
+              >
+                <h4 className="font-bold text-green-400 mb-2 flex items-center gap-2">
+                  <span>✅</span> Rešitev
+                </h4>
+                <p className="text-green-200 leading-relaxed text-sm">{caseData.solution}</p>
+                <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={newCase}
+                    className="flex-1 py-3 rounded-2xl font-bold text-white text-sm transition-all active:scale-95"
+                    style={{ background: "linear-gradient(135deg, #1d4ed8, #3b82f6)" }}
+                  >
+                    Nov primer 🔍
+                  </button>
+                  <button
+                    onClick={resetCase}
+                    className="flex-1 py-3 rounded-2xl font-bold text-sm transition-all active:scale-95"
+                    style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}
+                  >
+                    Poskusi znova
+                  </button>
+                  <Link href="/kids/activities" className="flex-1">
+                    <button
+                      className="w-full py-3 rounded-2xl font-bold text-sm transition-all active:scale-95"
+                      style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}
+                    >
+                      ← Dejavnosti
+                    </button>
                   </Link>
                 </div>
               </div>
