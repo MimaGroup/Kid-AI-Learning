@@ -62,6 +62,9 @@ module.exports = {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+      fontFamily: {
+        heading: ["var(--font-fredoka)", "cursive"],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
