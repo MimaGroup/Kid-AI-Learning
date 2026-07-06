@@ -7,6 +7,7 @@ import { useSubscription } from "@/hooks/use-subscription"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ActivityListSkeleton } from "@/components/skeleton-screens"
+import { KidsBottomNav } from "@/components/kids-bottom-nav"
 
 export default function ActivitiesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -156,10 +157,10 @@ export default function ActivitiesPage() {
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {categories.map((cat) => (
             <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
               className={`px-6 py-3 rounded-full font-medium transition-all ${
-                selectedCategory === category.id
+                selectedCategory === cat.id
                   ? "bg-purple-600 text-white shadow-lg scale-110"
                   : "bg-white/70 backdrop-blur-sm text-gray-700 hover:bg-purple-50 border-2 border-purple-200"
               }`}
