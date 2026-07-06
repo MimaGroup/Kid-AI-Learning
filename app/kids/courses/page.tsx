@@ -132,7 +132,7 @@ export default function CoursesPage() {
 
       {/* ── Sidebar ── */}
       <aside
-        className="hidden md:flex w-64 flex-shrink-0 flex-col relative overflow-hidden"
+        className="hidden md:flex w-64 flex-shrink-0 flex-col relative overflow-hidden h-screen sticky top-0"
         style={{
           background: "linear-gradient(180deg, #0d0d2b 0%, #050510 100%)",
           borderRight: "1px solid rgba(255,255,255,0.07)",

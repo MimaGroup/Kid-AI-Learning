@@ -87,8 +87,8 @@ export function SupportChat() {
           style={{
             width: "min(380px, calc(100vw - 48px))",
             height: 480,
-            background: "#ffffff",
-            boxShadow: "0 16px 64px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+            background: "#0d0d2b",
+            boxShadow: "0 16px 64px rgba(0,0,0,0.5), 0 0 32px rgba(168,85,247,0.15)",
             animation: "slideChatUp 0.25s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
@@ -119,12 +119,13 @@ export function SupportChat() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50"
-            style={{ scrollbarWidth: "thin" }}>
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+            style={{ background: "#0d0d2b", scrollbarWidth: "thin", scrollbarColor: "rgba(168,85,247,0.3) transparent" }}>
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 {m.role === "assistant" && (
-                  <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5"
+                    style={{ background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.3)" }}>
                     🚀
                   </div>
                 )}
@@ -132,7 +133,7 @@ export function SupportChat() {
                   className="max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed"
                   style={m.role === "user"
                     ? { background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "white", borderBottomRightRadius: 4 }
-                    : { background: "white", color: "#1f2937", border: "1px solid #e5e7eb", borderBottomLeftRadius: 4 }
+                    : { background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.09)", borderBottomLeftRadius: 4 }
                   }
                 >
                   {m.content}
@@ -145,8 +146,8 @@ export function SupportChat() {
               <div className="space-y-1.5 pt-1">
                 {QUICK.map(q => (
                   <button key={q} onClick={() => send(q)}
-                    className="w-full text-left px-3.5 py-2 rounded-xl text-sm font-medium transition-all hover:bg-purple-50 active:scale-98"
-                    style={{ background: "white", border: "1px solid #e5e7eb", color: "#374151" }}>
+                    className="w-full text-left px-3.5 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(168,85,247,0.2)", color: "rgba(255,255,255,0.7)" }}>
                     {q}
                   </button>
                 ))}
@@ -155,8 +156,9 @@ export function SupportChat() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5">🚀</div>
-                <div className="px-4 py-3 rounded-2xl bg-white border border-gray-100" style={{ borderBottomLeftRadius: 4 }}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5"
+                  style={{ background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.3)" }}>🚀</div>
+                <div className="px-4 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.09)", borderBottomLeftRadius: 4 }}>
                   <div className="flex gap-1 items-center h-4">
                     {[0, 1, 2].map(i => (
                       <div key={i} className="w-1.5 h-1.5 rounded-full bg-purple-400"
@@ -170,7 +172,8 @@ export function SupportChat() {
           </div>
 
           {/* Input */}
-          <div className="px-3 py-3 bg-white border-t border-gray-100 flex-shrink-0">
+          <div className="px-3 py-3 flex-shrink-0"
+            style={{ background: "#0d0d2b", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
             <div className="flex gap-2">
               <input
                 ref={inputRef}
@@ -178,7 +181,8 @@ export function SupportChat() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
                 placeholder="Vaše vprašanje..."
-                className="flex-1 px-3.5 py-2.5 rounded-xl text-sm outline-none text-gray-800 placeholder-gray-400 border border-gray-200 focus:border-purple-400 transition-colors"
+                className="flex-1 px-3.5 py-2.5 rounded-xl text-sm outline-none text-white placeholder-white/30"
+                style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.25)" }}
               />
               <button
                 onClick={() => send()}
@@ -189,9 +193,9 @@ export function SupportChat() {
                 →
               </button>
             </div>
-            <p className="text-center text-xs text-gray-400 mt-2">
+            <p className="text-center text-xs mt-2" style={{ color: "rgba(255,255,255,0.3)" }}>
               Ali pišite na{" "}
-              <a href="mailto:support@kids-learning-ai.com" className="text-purple-500 hover:underline">
+              <a href="mailto:support@kids-learning-ai.com" className="text-purple-400 hover:underline">
                 support@kids-learning-ai.com
               </a>
             </p>

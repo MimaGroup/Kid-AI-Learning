@@ -1,16 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect, useRef } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
-import { ArrowLeft, Send } from "lucide-react"
 import { BYTE_CHARACTER } from "@/lib/byte-character"
 import Image from "next/image"
+import Link from "next/link"
 
 interface AIFriend {
   id: string
@@ -27,11 +24,14 @@ interface Message {
   timestamp: string
 }
 
+const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }
+
 export default function AIFriendChat() {
   const params = useParams()
   const router = useRouter()
   const toast = useToast()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const friendId = params.friendId as string
   const [friend, setFriend] = useState<AIFriend | null>(null)
@@ -45,7 +45,7 @@ export default function AIFriendChat() {
   }, [friendId])
 
   useEffect(() => {
-    scrollToBottom()
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   const loadFriend = () => {
@@ -53,17 +53,17 @@ export default function AIFriendChat() {
       const stored = localStorage.getItem("ai_friends")
       if (stored) {
         const friends: AIFriend[] = JSON.parse(stored)
-        const foundFriend = friends.find((f) => f.id === friendId)
-        if (foundFriend) {
-          setFriend(foundFriend)
+        const found = friends.find((f) => f.id === friendId)
+        if (found) {
+          setFriend(found)
         } else {
-          toast.error("Friend not found")
+          toast.error("Prijatelj ni bil najden")
           router.push("/kids/ai-friend")
         }
       }
     } catch (err) {
       console.error("Error loading friend:", err)
-      toast.error("Failed to load friend")
+      toast.error("Napaka pri nalaganju prijatelja")
     }
   }
 
@@ -73,18 +73,17 @@ export default function AIFriendChat() {
       if (stored) {
         setMessages(JSON.parse(stored))
       } else {
-        // Check if this is Byte for a personalized welcome
-        const stored = localStorage.getItem("ai_friends")
-        const friends: AIFriend[] = stored ? JSON.parse(stored) : []
+        const friendsStored = localStorage.getItem("ai_friends")
+        const friends: AIFriend[] = friendsStored ? JSON.parse(friendsStored) : []
         const currentFriend = friends.find((f) => f.id === friendId)
         const isByte = currentFriend?.name === BYTE_CHARACTER.name
-        
+
         const welcomeMessage: Message = {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: isByte 
+          content: isByte
             ? "Zdravo! Jaz sem Byte, tvoj robotski prijatelj! Skupaj bova odkrivala svet umetne inteligence. Kaj te danes zanima?"
-            : "Hi! I'm so excited to chat with you! Ask me anything or tell me about your day!",
+            : `Zdravo! Super je, da si tu! Vprašaj me karkoli ali mi povej, kako ti gre.`,
           timestamp: new Date().toISOString(),
         }
         setMessages([welcomeMessage])
@@ -93,10 +92,6 @@ export default function AIFriendChat() {
     } catch (err) {
       console.error("Error loading messages:", err)
     }
-  }
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
   const handleSend = async () => {
@@ -122,13 +117,13 @@ export default function AIFriendChat() {
           friendName: friend.name,
           personality: friend.personality,
           message: userMessage.content,
-          conversationHistory: updatedMessages.slice(-6), // Last 3 exchanges for context
+          conversationHistory: updatedMessages.slice(-6),
         }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || "Failed to get response")
+        throw new Error(errorData.error || "Napaka pri odgovoru")
       }
 
       const data = await response.json()
@@ -145,16 +140,16 @@ export default function AIFriendChat() {
       localStorage.setItem(`chat_${friendId}`, JSON.stringify(finalMessages))
 
       if (data.fallback) {
-        toast.warning(data.fallbackMessage || "Using simple responses due to high demand")
+        toast.warning(data.fallbackMessage || "Preprosti odgovori zaradi obremenitve strežnika")
       }
     } catch (err) {
       console.error("Error sending message:", err)
-      toast.error(err instanceof Error ? err.message : "Failed to send message")
+      toast.error(err instanceof Error ? err.message : "Napaka pri pošiljanju sporočila")
 
       const fallbackMessage: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "I'm having trouble thinking right now. Can you try asking me again in a moment?",
+        content: "Trenutno imam težave z razmišljanjem. Poskusi me vprašati čez trenutek!",
         timestamp: new Date().toISOString(),
       }
       const finalMessages = [...updatedMessages, fallbackMessage]
@@ -165,102 +160,152 @@ export default function AIFriendChat() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
   }
 
+  const isByte = friend?.name === BYTE_CHARACTER.name
+
   if (!friend) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={spaceStyle}>
         <div className="text-center">
-          <div className="text-4xl mb-4">🤖</div>
-          <p className="text-gray-600">Loading friend...</p>
+          <div className="inline-block w-10 h-10 rounded-full animate-spin mb-3"
+            style={{ border: "3px solid rgba(168,85,247,0.2)", borderTopColor: "#a855f7" }} />
+          <p className="text-white/50 text-sm">Nalaganje...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={spaceStyle}>
       <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
 
-      <header className="bg-white shadow-sm border-b p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/kids/ai-friend")}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            {friend.name === BYTE_CHARACTER.name ? (
-              <Image
-                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
-                alt={BYTE_CHARACTER.fullName}
-                width={48}
-                height={48}
-                className="w-12 h-12 rounded-full ring-2 ring-purple-200"
-              />
-            ) : (
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white"
-                style={{ backgroundColor: friend.color }}
-              >
-                {friend.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">{friend.name}</h1>
-              <p className="text-sm text-gray-600">{friend.personality}</p>
-            </div>
+      {/* Header */}
+      <header className="flex items-center gap-3 px-4 py-3 flex-shrink-0"
+        style={{ background: "rgba(8,8,30,0.9)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <Link href="/kids/ai-friend"
+          className="flex items-center justify-center w-9 h-9 rounded-xl transition-all hover:bg-white/10 active:scale-95 text-white/60 hover:text-white"
+          style={{ border: "1px solid rgba(255,255,255,0.1)", fontSize: 18 }}>
+          ←
+        </Link>
+
+        {isByte ? (
+          <Image
+            src={BYTE_CHARACTER.images.avatar}
+            alt={BYTE_CHARACTER.fullName}
+            width={40}
+            height={40}
+            className="rounded-full object-cover flex-shrink-0"
+            style={{ border: "2px solid rgba(168,85,247,0.5)" }}
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0"
+            style={{ backgroundColor: friend.color, border: "2px solid rgba(255,255,255,0.2)" }}>
+            {friend.name.charAt(0).toUpperCase()}
           </div>
+        )}
+
+        <div>
+          <h1 className="text-white font-bold text-base leading-none">{friend.name}</h1>
+          <p className="text-purple-400 text-xs mt-0.5">{friend.personality}</p>
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-4xl mx-auto space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[80%] rounded-lg p-4 ${
-                  message.role === "user" ? "bg-blue-600 text-white" : "bg-white border-2 border-gray-200 text-gray-900"
-                }`}
-              >
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                <p className={`text-xs mt-2 ${message.role === "user" ? "text-blue-100" : "text-gray-500"}`}>
-                  {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </p>
-              </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+        style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(168,85,247,0.3) transparent" }}>
+        {messages.map((message) => (
+          <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} items-end gap-2`}>
+            {message.role === "assistant" && (
+              isByte ? (
+                <Image
+                  src={BYTE_CHARACTER.images.avatar}
+                  alt="Byte"
+                  width={28}
+                  height={28}
+                  className="rounded-full object-cover flex-shrink-0 mb-0.5"
+                  style={{ border: "1px solid rgba(168,85,247,0.4)" }}
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mb-0.5"
+                  style={{ backgroundColor: friend.color }}>
+                  {friend.name.charAt(0).toUpperCase()}
                 </div>
+              )
+            )}
+            <div
+              className="max-w-[78%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
+              style={message.role === "user"
+                ? { background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "white", borderBottomRightRadius: 4 }
+                : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.9)", border: "1px solid rgba(255,255,255,0.1)", borderBottomLeftRadius: 4 }
+              }
+            >
+              <p className="whitespace-pre-wrap">{message.content}</p>
+              <p className="text-xs mt-1.5 opacity-50">
+                {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-start items-end gap-2">
+            {isByte ? (
+              <Image src={BYTE_CHARACTER.images.avatar} alt="Byte" width={28} height={28}
+                className="rounded-full object-cover flex-shrink-0 mb-0.5"
+                style={{ border: "1px solid rgba(168,85,247,0.4)" }} />
+            ) : (
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mb-0.5"
+                style={{ backgroundColor: friend.color }}>
+                {friend.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div className="px-4 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderBottomLeftRadius: 4 }}>
+              <div className="flex gap-1 items-center">
+                {[0,1,2].map(i => (
+                  <div key={i} className="rounded-full bg-purple-400"
+                    style={{ width: 6, height: 6, animation: `bounce 1.2s ${i * 0.2}s infinite` }} />
+                ))}
               </div>
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="bg-white border-t p-4">
-        <div className="max-w-4xl mx-auto flex space-x-2">
-          <Textarea
+      {/* Input */}
+      <div className="px-4 pb-4 pt-3 flex-shrink-0"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(8,8,30,0.8)" }}>
+        <div className="flex gap-2 items-end">
+          <textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder={`Chat with ${friend.name}...`}
-            className="flex-1 min-h-[60px] max-h-[120px] resize-none"
+            onKeyDown={handleKeyDown}
+            placeholder={`Pogovarjaj se z ${friend.name}...`}
+            rows={1}
+            className="flex-1 px-4 py-3 rounded-2xl text-sm outline-none text-white placeholder-white/30 resize-none"
+            style={{
+              background: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(168,85,247,0.25)",
+              minHeight: 48,
+              maxHeight: 120,
+            }}
             disabled={isLoading}
           />
-          <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="h-[60px] w-[60px]">
-            <Send className="h-5 w-5" />
-          </Button>
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || isLoading}
+            className="flex items-center justify-center rounded-2xl font-bold text-white transition-all active:scale-95 disabled:opacity-40 flex-shrink-0"
+            style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", width: 48, height: 48 }}
+          >
+            →
+          </button>
         </div>
       </div>
     </div>

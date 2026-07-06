@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
 
 interface Message {
   role: "user" | "assistant"
@@ -16,7 +18,7 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState("")
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Živjo! 🤖 Sem Byte, tvoj učni pomočnik! Če imaš kakšno vprašanje o lekciji ali o AI, sem tu da pomagam!" },
+    { role: "assistant", content: "Živjo! Sem Byte, tvoj učni pomočnik! Če imaš kakšno vprašanje o lekciji ali o AI, sem tu da pomagam!" },
   ])
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -52,7 +54,7 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
         }),
       })
       const data = await res.json()
-      setMessages(prev => [...prev, { role: "assistant", content: data.reply ?? "Ups, poskusi znova 🤖" }])
+      setMessages(prev => [...prev, { role: "assistant", content: data.reply ?? "Ups, poskusi znova!" }])
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Ups, pri meni je prišlo do napake. Poskusi znova! 🔧" }])
     } finally {
@@ -65,14 +67,21 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
       {/* Floating button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="fixed bottom-24 right-5 md:bottom-8 md:right-8 z-40 flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-white transition-all active:scale-95 hover:scale-105"
+        className="fixed bottom-24 right-5 md:bottom-8 md:right-8 z-40 flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl font-bold text-white transition-all active:scale-95 hover:scale-105"
         style={{
           background: open ? "linear-gradient(135deg,#6d28d9,#9333ea)" : "linear-gradient(135deg,#7c3aed,#a855f7)",
           boxShadow: "0 4px 24px rgba(168,85,247,0.55)",
         }}
         aria-label="Vprašaj Byte-a"
       >
-        <span style={{ fontSize: 22 }}>🤖</span>
+        <Image
+          src={BYTE_CHARACTER.images.avatar}
+          alt="Byte"
+          width={28}
+          height={28}
+          className="rounded-full flex-shrink-0 object-cover"
+          style={{ border: "2px solid rgba(255,255,255,0.3)" }}
+        />
         <span className="text-sm hidden sm:inline">{open ? "Zapri" : "Vprašaj Byte-a"}</span>
       </button>
 
@@ -104,10 +113,14 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0"
             style={{ background: "linear-gradient(135deg,#7c3aed22,#a855f711)", borderBottom: "1px solid rgba(168,85,247,0.2)" }}>
-            <div className="flex items-center justify-center rounded-xl"
-              style={{ width: 36, height: 36, background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.4)", fontSize: 20 }}>
-              🤖
-            </div>
+            <Image
+              src={BYTE_CHARACTER.images.avatar}
+              alt="Byte"
+              width={36}
+              height={36}
+              className="rounded-full object-cover flex-shrink-0"
+              style={{ border: "2px solid rgba(168,85,247,0.5)" }}
+            />
             <div>
               <p className="text-white font-bold text-sm leading-none">Byte</p>
               <p className="text-purple-400 text-xs mt-0.5">AI učni pomočnik</p>
@@ -122,7 +135,14 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 {m.role === "assistant" && (
-                  <div className="flex-shrink-0 mr-2 mt-0.5 text-lg">🤖</div>
+                  <Image
+                    src={BYTE_CHARACTER.images.avatar}
+                    alt="Byte"
+                    width={24}
+                    height={24}
+                    className="rounded-full object-cover flex-shrink-0 mr-2 mt-0.5"
+                    style={{ border: "1px solid rgba(168,85,247,0.4)" }}
+                  />
                 )}
                 <div
                   className="max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed"
@@ -137,8 +157,15 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
             ))}
 
             {loading && (
-              <div className="flex justify-start">
-                <div className="flex-shrink-0 mr-2 text-lg">🤖</div>
+              <div className="flex justify-start items-end gap-2">
+                <Image
+                  src={BYTE_CHARACTER.images.avatar}
+                  alt="Byte"
+                  width={24}
+                  height={24}
+                  className="rounded-full object-cover flex-shrink-0"
+                  style={{ border: "1px solid rgba(168,85,247,0.4)" }}
+                />
                 <div className="px-4 py-2.5 rounded-2xl" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <div className="flex gap-1 items-center">
                     {[0,1,2].map(i => (
