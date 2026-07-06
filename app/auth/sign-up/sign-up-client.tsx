@@ -102,31 +102,31 @@ function SignUpPageClient() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute top-20 left-10 text-5xl opacity-20 animate-bounce">✨</div>
-        <div className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse">🎉</div>
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}>
+        <div className="absolute top-20 left-10 text-5xl opacity-10 animate-bounce">✨</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🎉</div>
 
-        <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95 border-2 border-green-200 relative z-10">
+        <div className="max-w-md w-full rounded-3xl shadow-2xl p-8 text-center relative z-10"
+          style={{ background: "rgba(8,8,30,0.92)", border: "1px solid rgba(34,197,94,0.35)", boxShadow: "0 0 60px rgba(34,197,94,0.1)" }}>
           <div className="text-6xl mb-4">✉️</div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
-            Preverite svojo e-pošto!
-          </h1>
-          <p className="text-gray-600 mb-6">
+          <h1 className="text-3xl font-bold text-white mb-4">Preverite svojo e-pošto!</h1>
+          <p className="text-white/55 mb-6 text-sm leading-relaxed">
             Poslali smo vam potrditveno povezavo. Preverite svojo e-pošto in kliknite povezavo za aktivacijo računa.
           </p>
           {referralCode && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
-              <p className="text-sm text-green-700 flex items-center justify-center gap-2">
-                <Gift className="w-4 h-4" />
-                Priporočilni bonus aktiviran! Dobili boste 14-dnevni brezplačni preizkus.
-              </p>
+            <div className="rounded-2xl p-3 mb-6 flex items-center justify-center gap-2 text-sm"
+              style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", color: "#4ade80" }}>
+              <Gift className="w-4 h-4 flex-shrink-0" />
+              Priporočilni bonus aktiviran! Dobili boste 14-dnevni brezplačni preizkus.
             </div>
           )}
           <Link
             href="/parent/dashboard"
-            className="inline-block bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
+            className="inline-block py-3 px-6 rounded-2xl font-bold text-white transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)" }}
           >
-            Pojdi na nadzorno plosco
+            Pojdi na nadzorno ploščo
           </Link>
         </div>
       </div>
@@ -134,165 +134,126 @@ function SignUpPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100 flex items-center justify-center p-4 relative overflow-hidden">
-      <div
-        className="absolute top-20 left-10 text-5xl opacity-15 animate-float"
-        style={{ filter: "drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))" }}
-      >
-        🤖
-      </div>
-      <div
-        className="absolute top-40 right-20 text-4xl opacity-15 animate-pulse delay-100"
-        style={{ filter: "drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))" }}
-      >
-        🎨
-      </div>
-      <div
-        className="absolute bottom-40 left-1/4 text-4xl opacity-15 animate-bounce delay-200"
-        style={{ filter: "drop-shadow(0 4px 8px rgba(244, 114, 182, 0.3))" }}
-      >
-        ✨
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}>
+      {/* Stars */}
+      {[{x:5,y:8},{x:18,y:82},{x:28,y:22},{x:38,y:58},{x:48,y:12},{x:58,y:72},{x:68,y:38},{x:78,y:88},{x:88,y:18},{x:94,y:52},{x:12,y:48},{x:52,y:42},{x:82,y:62},{x:32,y:78},{x:72,y:8}].map((s, i) => (
+        <div key={i} className="absolute rounded-full bg-white pointer-events-none"
+          style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.08 + (i % 4) * 0.05 }} />
+      ))}
+      <div className="absolute top-20 left-10 text-5xl opacity-10 animate-bounce">🤖</div>
+      <div className="absolute top-40 right-20 text-4xl opacity-10 animate-pulse">🎨</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-10 animate-bounce delay-200">✨</div>
 
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 relative border-2 border-purple-200 z-10">
+      <div className="max-w-md w-full rounded-3xl shadow-2xl p-8 relative z-10"
+        style={{ background: "rgba(8,8,30,0.92)", border: "1px solid rgba(168,85,247,0.3)", boxShadow: "0 0 60px rgba(168,85,247,0.1)" }}>
         {isLoading && <LoadingOverlay message="Ustvarjanje vašega računa..." />}
 
-        <div className="text-center mb-8">
+        <div className="text-center mb-7">
           {/* Byte avatar with speech bubble */}
           <div className="flex flex-col items-center mb-5">
             <div className="relative mb-3">
-              {/* Speech bubble */}
-              <div className="bg-purple-50 border border-purple-200 rounded-2xl px-5 py-3 max-w-[260px] shadow-sm">
-                <p className="text-sm text-purple-800 font-medium">
-                  {"Zdravo! Jaz sem Byte — komaj cakam, da se skupaj uciva!"}
+              <div className="rounded-2xl px-5 py-3 max-w-[260px]"
+                style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.3)" }}>
+                <p className="text-sm text-purple-300 font-medium">
+                  Zdravo! Jaz sem Byte — komaj čakam, da se skupaj učiva!
                 </p>
               </div>
-              {/* Speech bubble tail */}
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-50 border-b border-r border-purple-200 rotate-45" />
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45"
+                style={{ background: "rgba(168,85,247,0.12)", borderBottom: "1px solid rgba(168,85,247,0.3)", borderRight: "1px solid rgba(168,85,247,0.3)" }} />
             </div>
-
-            {/* Byte avatar */}
             <div className="relative w-20 h-20 mt-1">
               <Image
                 src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
                 alt={BYTE_CHARACTER.fullName}
                 fill
-                className="object-cover rounded-full ring-4 ring-purple-100 shadow-lg"
+                className="object-cover rounded-full shadow-lg"
+                style={{ ring: "none", boxShadow: "0 0 0 3px rgba(168,85,247,0.4)" }}
               />
-              {/* Pulsing online indicator */}
-              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 border-white rounded-full animate-pulse" />
+              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 rounded-full animate-pulse"
+                style={{ borderColor: "#0a0a1a" }} />
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
-            Ustvari racun
-          </h1>
-          <p className="text-gray-600">Pridruzi se KidsLearnAI platformi</p>
+          <h1 className="text-3xl font-bold text-white mb-1">Ustvari račun</h1>
+          <p className="text-white/50 text-sm">Pridruži se KidsLearnAI platformi</p>
 
           {referralCode && (
-            <div className="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">
+            <div className="mt-4 rounded-2xl p-3"
+              style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.3)" }}>
               <div className="flex items-center justify-center gap-2">
-                <Gift className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-medium text-purple-700">Priporočilni bonus aktiviran!</span>
+                <Gift className="w-4 h-4 text-purple-400" />
+                <span className="text-sm font-medium text-purple-300">Priporočilni bonus aktiviran!</span>
               </div>
-              <p className="text-xs text-purple-600 mt-1">Dobili boste 14-dnevni brezplačni preizkus namesto 7 dni</p>
+              <p className="text-xs text-purple-400 mt-1">14-dnevni brezplačni preizkus namesto 7 dni</p>
             </div>
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              E-pošta
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Vnesite svojo e-pošto"
-              required
-            />
+            <label htmlFor="email" className="block text-xs font-semibold text-white/60 mb-2">E-pošta</label>
+            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-2xl text-white focus:outline-none"
+              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.25)" }}
+              placeholder="Vnesite svojo e-pošto" required />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Geslo
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Ustvarite geslo (najmanj 6 znakov)"
-              required
-              minLength={6}
-            />
+            <label htmlFor="password" className="block text-xs font-semibold text-white/60 mb-2">Geslo</label>
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-2xl text-white focus:outline-none"
+              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.25)" }}
+              placeholder="Ustvarite geslo (najmanj 6 znakov)" required minLength={6} />
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-              Potrdi geslo
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Potrdite svoje geslo"
-              required
-              minLength={6}
-            />
+            <label htmlFor="confirmPassword" className="block text-xs font-semibold text-white/60 mb-2">Potrdi geslo</label>
+            <input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-2xl text-white focus:outline-none"
+              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.25)" }}
+              placeholder="Potrdite svoje geslo" required minLength={6} />
           </div>
 
           <div>
-            <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700 mb-2">
-              Priporočilna koda <span className="text-gray-400 font-normal">(Neobvezno)</span>
+            <label htmlFor="referralCode" className="block text-xs font-semibold text-white/60 mb-2">
+              Priporočilna koda <span className="text-white/30 font-normal">(Neobvezno)</span>
             </label>
             <div className="relative">
-              <input
-                id="referralCode"
-                type="text"
-                value={referralCode}
+              <input id="referralCode" type="text" value={referralCode}
                 onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono uppercase"
-                placeholder="Vnesite priporočilno kodo"
-                maxLength={8}
-              />
+                className="w-full px-4 py-3 rounded-2xl text-white focus:outline-none font-mono uppercase"
+                style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.25)" }}
+                placeholder="Vnesite priporočilno kodo" maxLength={8} />
               {referralCode && referralValid && (
-                <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+                <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
               )}
             </div>
             {referralCode && (
-              <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                <Gift className="w-3 h-3" />
-                Dobili boste 14-dnevni brezplačni preizkus!
+              <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                <Gift className="w-3 h-3" /> Dobili boste 14-dnevni brezplačni preizkus!
               </p>
             )}
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg animate-in slide-in-from-top">
+            <div className="px-4 py-3 rounded-2xl text-sm"
+              style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#f87171" }}>
               {error}
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+          <button type="submit" disabled={isLoading}
+            className="w-full py-3.5 rounded-2xl font-bold text-white transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)", boxShadow: "0 2px 16px rgba(168,85,247,0.3)" }}>
             {isLoading ? "Ustvarjanje računa..." : "Ustvari račun"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600">
+        <div className="mt-5 text-center">
+          <p className="text-white/40 text-sm">
             Že imate račun?{" "}
-            <Link href="/auth/login" className="text-purple-600 hover:underline">
+            <Link href="/auth/login" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
               Prijavite se
             </Link>
           </p>

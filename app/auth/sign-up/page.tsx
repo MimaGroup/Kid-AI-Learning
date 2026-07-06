@@ -16,8 +16,12 @@ export default function SignUpPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100">
-          <div className="text-center">Loading...</div>
+        <div className="min-h-screen flex items-center justify-center"
+          style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}>
+          <div className="text-center">
+            <div className="inline-block w-10 h-10 rounded-full animate-spin"
+              style={{ border: "3px solid rgba(168,85,247,0.2)", borderTopColor: "#a855f7" }} />
+          </div>
         </div>
       }
     >
