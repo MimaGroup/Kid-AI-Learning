@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
   const rawReply = (response.content[0] as { type: string; text: string }).text
   const validated = await validateAIResponse(rawReply, "byte-chat")
   const reply = validated.isAppropriate
-    ? validated.content
+    ? (validated.sanitizedContent ?? rawReply)
     : "Za to temo prosim vprašaj starše. 🤖"
 
   return NextResponse.json({ reply })
