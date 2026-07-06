@@ -1,12 +1,15 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useStats } from "../../../hooks/use-progress"
 import { useAuth } from "../../../hooks/use-auth"
 import { AdventureMap } from "../../../components/adventure-map"
 import { KidsBottomNav } from "../../../components/kids-bottom-nav"
 import { BadgeShowcase } from "../../../components/badge-showcase"
+import { ByteTutor } from "../../../components/byte-tutor"
+import { BYTE_CHARACTER } from "../../../lib/byte-character"
 import { useEffect, useState } from "react"
 
 const NAV = [
@@ -114,9 +117,29 @@ export default function KidsHome() {
           })}
         </nav>
 
+        {/* Byte avatar */}
+        <div className="relative z-10 mx-3 mb-2">
+          <div
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
+            style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}
+          >
+            <Image
+              src={BYTE_CHARACTER.images.avatar}
+              alt="Byte"
+              width={32}
+              height={32}
+              className="rounded-full object-cover flex-shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="text-white text-xs font-bold">Byte</p>
+              <p className="text-purple-300 text-xs truncate">{BYTE_CHARACTER.phrases.helpOffer}</p>
+            </div>
+          </div>
+        </div>
+
         {/* Parent link */}
         <div
-          className="relative z-10 mx-3 mb-6 mt-4 pt-4"
+          className="relative z-10 mx-3 mb-6 mt-2 pt-4"
           style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
         >
           <Link
@@ -237,6 +260,7 @@ export default function KidsHome() {
           <BadgeShowcase earnedBadgeIds={earnedBadges} completedLessons={completedLessons} />
         </div>
       </div>
+      <ByteTutor />
       <KidsBottomNav />
     </div>
   )
