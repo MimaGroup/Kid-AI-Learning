@@ -132,9 +132,8 @@ async function logContentFlag(content: string, flaggedWords: string[], context?:
       reviewed: false,
     })
 
-    console.log("[v0] Content flagged for review:", flaggedWords.join(", "))
   } catch (error) {
-    console.error("[v0] Error logging content flag:", error)
+    console.error("Error logging content flag:", error)
     // Don't throw - logging failure shouldn't break the app
   }
 }

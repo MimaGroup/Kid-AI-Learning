@@ -25,6 +25,12 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    const handler = () => setOpen(true)
+    window.addEventListener("open-byte-tutor", handler)
+    return () => window.removeEventListener("open-byte-tutor", handler)
+  }, [])
+
+  useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100)
     }

@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
   // Sanitize, filter and limit input
   message = sanitizeUserInput(String(message).trim().slice(0, MAX_MESSAGE_LENGTH))
-  const inputCheck = moderateContent(message)
+  const inputCheck = await moderateContent(message)
   if (!inputCheck.isAppropriate) {
     return NextResponse.json(
       { reply: "Tega vprašanja ne morem obdelati. Za pomoč vprašaj starše ali učitelja! 🤖" },
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
   })
 
   const rawReply = (response.content[0] as { type: string; text: string }).text
-  const validated = validateAIResponse(rawReply, "byte-chat")
+  const validated = await validateAIResponse(rawReply, "byte-chat")
   const reply = validated.isAppropriate
     ? validated.content
     : "Za to temo prosim vprašaj starše. 🤖"

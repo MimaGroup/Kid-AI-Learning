@@ -119,10 +119,11 @@ export default function KidsHome() {
           })}
         </nav>
 
-        {/* Byte avatar */}
+        {/* Byte avatar — click to open ByteTutor chat */}
         <div className="relative z-10 mx-3 mb-2">
-          <div
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-byte-tutor"))}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.02] active:scale-95"
             style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}
           >
             <Image
@@ -132,11 +133,11 @@ export default function KidsHome() {
               height={32}
               className="rounded-full object-cover flex-shrink-0"
             />
-            <div className="min-w-0">
+            <div className="min-w-0 text-left">
               <p className="text-white text-xs font-bold">Byte</p>
               <p className="text-purple-300 text-xs truncate">{BYTE_CHARACTER.phrases.helpOffer}</p>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Parent link */}
