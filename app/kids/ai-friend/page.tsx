@@ -127,10 +127,11 @@ export default function AIFriendBuilder() {
 
   if (loading || isLoadingFriends) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center"
+        style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}>
         <div className="text-center">
-          <div className="text-4xl mb-4">🤖</div>
-          <p className="text-gray-600">Loading AI Playground...</p>
+          <div className="text-5xl mb-4 animate-bounce">🤖</div>
+          <p className="text-purple-300 font-semibold">Nalaganje...</p>
         </div>
       </div>
     )
@@ -170,134 +171,113 @@ export default function AIFriendBuilder() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative pb-8"
+      style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}>
       <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
 
-      <header className="bg-white shadow-sm border-b p-4">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-          <span className="text-4xl mr-3">🎮</span>
-          AI Playground
-        </h1>
-      </header>
-
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-blue-100 p-4 rounded-lg mb-6 flex items-start space-x-4">
-          <div className="text-4xl">🤖</div>
-          <div>
-            <p className="text-gray-800">
-              Welcome to the AI Playground! This is where you can have fun, create, and explore interactive AI
-              experiences. Choose an activity below to get started!
-            </p>
-          </div>
+      <div className="relative z-10 max-w-5xl mx-auto px-4 pt-6">
+        {/* Back */}
+        <div className="mb-6">
+          <a href="/kids/home" className="text-blue-400 hover:text-blue-300 text-sm font-semibold transition-colors flex items-center gap-1">
+            ← Nazaj na zemljevid
+          </a>
         </div>
 
-        <div className="flex space-x-1 mb-6 bg-white rounded-lg p-1">
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🗺️ Adventure Map</button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🏆 Achievements</button>
-          <button className="px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-md">
-            🤖 AI Friend Builder
-          </button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-600">🧪 Experiment Lab</button>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Ustvari AI prijatelja 🤖</h1>
+          <p className="text-white/50 text-sm">Prilagodi svojega lastnega AI spremljevalca!</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Build Your AI Friend</h2>
-            <p className="text-gray-600 mb-6">Create your very own AI friend! Customize how they look and behave.</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Build form */}
+          <div className="rounded-3xl p-6"
+            style={{ background: "rgba(8,8,30,0.88)", border: "1px solid rgba(168,85,247,0.25)" }}>
+            <h2 className="text-xl font-bold text-white mb-5">Ustvari AI prijatelja</h2>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name your AI friend</label>
-                <input
-                  type="text"
-                  value={friendName}
-                  onChange={(e) => setFriendName(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter a name..."
-                />
+                <label className="block text-white/60 text-xs font-medium mb-2">Ime tvojega AI prijatelja</label>
+                <input type="text" value={friendName} onChange={(e) => setFriendName(e.target.value)}
+                  className="w-full p-3 text-white rounded-2xl focus:outline-none"
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(168,85,247,0.3)" }}
+                  placeholder="Vpiši ime..." />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Choose a personality</label>
-                <select
-                  value={personality}
-                  onChange={(e) => setPersonality(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="Friendly">Friendly</option>
-                  <option value="Curious">Curious</option>
-                  <option value="Helpful">Helpful</option>
-                  <option value="Playful">Playful</option>
+                <label className="block text-white/60 text-xs font-medium mb-2">Izberi osebnost</label>
+                <select value={personality} onChange={(e) => setPersonality(e.target.value)}
+                  className="w-full p-3 text-white rounded-2xl focus:outline-none"
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(168,85,247,0.3)" }}>
+                  <option value="Friendly">Prijazno</option>
+                  <option value="Curious">Radovedno</option>
+                  <option value="Helpful">Koristno</option>
+                  <option value="Playful">Igrivo</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pick your friend's favorite color
-                </label>
-                <div className="flex space-x-3">
+                <label className="block text-white/60 text-xs font-medium mb-2">Priljubljena barva prijatelja</label>
+                <div className="flex gap-3">
                   {["#4F46E5", "#EF4444", "#10B981", "#F59E0B", "#8B5CF6"].map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setColor(c)}
-                      className={`w-12 h-12 rounded-lg border-2 ${color === c ? "border-gray-800" : "border-gray-300"}`}
-                      style={{ backgroundColor: c }}
-                      aria-label={`Select color ${c}`}
-                    />
+                    <button key={c} onClick={() => setColor(c)}
+                      className="w-11 h-11 rounded-xl transition-all"
+                      style={{ backgroundColor: c, outline: color === c ? "2px solid white" : "none", outlineOffset: "2px" }}
+                      aria-label={`Barva ${c}`} />
                   ))}
                 </div>
               </div>
 
-              <button
-                onClick={handleSaveFriend}
-                disabled={isSaving || !friendName.trim()}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-              >
-                {isSaving ? "Creating..." : "Create AI Friend"}
+              <button onClick={handleSaveFriend} disabled={isSaving || !friendName.trim()}
+                className="w-full py-3.5 rounded-2xl font-bold text-white transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)" }}>
+                {isSaving ? "Ustvarjanje..." : "Ustvari AI prijatelja"}
               </button>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Your AI Friend Preview</h3>
-            <div className="border-2 border-blue-200 rounded-lg p-8 text-center">
-              <div
-                className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl"
-                style={{ backgroundColor: color }}
-              >
+          {/* Preview */}
+          <div className="rounded-3xl p-6 flex flex-col"
+            style={{ background: "rgba(8,8,30,0.88)", border: "1px solid rgba(168,85,247,0.25)" }}>
+            <h3 className="text-xl font-bold text-white mb-5">Predogled</h3>
+            <div className="flex-1 flex flex-col items-center justify-center rounded-2xl py-10"
+              style={{ background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.15)" }}>
+              <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl mb-4"
+                style={{ backgroundColor: color }}>
                 🤖
               </div>
-              <h4 className="text-xl font-bold text-blue-700 mb-2">{friendName || "Your Friend"}</h4>
-              <p className="text-gray-600">Personality: {personality}</p>
+              <h4 className="text-xl font-bold text-white mb-1">{friendName || "Tvoj prijatelj"}</h4>
+              <p className="text-white/40 text-sm">
+                {personality === "Friendly" ? "Prijazno" : personality === "Curious" ? "Radovedno" : personality === "Helpful" ? "Koristno" : "Igrivo"}
+              </p>
             </div>
           </div>
         </div>
 
+        {/* Saved friends */}
         {savedFriends.length > 0 && (
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Your AI Friends</h3>
+          <div className="rounded-3xl p-6"
+            style={{ background: "rgba(8,8,30,0.88)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <h3 className="text-xl font-bold text-white mb-5">Tvoji AI prijatelji</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {savedFriends.map((friend) => (
-                <div
-                  key={friend.id}
-                  className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors"
-                >
+                <div key={friend.id} className="rounded-2xl p-4 transition-all"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
                   <div className="flex items-center justify-between mb-3">
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
-                      style={{ backgroundColor: friend.color }}
-                    >
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
+                      style={{ backgroundColor: friend.color }}>
                       🤖
                     </div>
-                    <button
-                      onClick={() => handleDeleteFriend(friend.id, friend.name)}
-                      className="text-red-500 hover:text-red-700 text-sm font-medium"
-                    >
-                      Delete
+                    <button onClick={() => handleDeleteFriend(friend.id, friend.name)}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-xl transition-all hover:bg-red-500/10"
+                      style={{ color: "rgba(239,68,68,0.7)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                      Izbriši
                     </button>
                   </div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-1">{friend.name}</h4>
-                  <p className="text-sm text-gray-600">Personality: {friend.personality}</p>
+                  <h4 className="text-base font-bold text-white mb-0.5">{friend.name}</h4>
+                  <p className="text-white/40 text-xs">
+                    {friend.personality === "Friendly" ? "Prijazno" : friend.personality === "Curious" ? "Radovedno" : friend.personality === "Helpful" ? "Koristno" : friend.personality === "Playful" ? "Igrivo" : friend.personality}
+                  </p>
                 </div>
               ))}
             </div>
