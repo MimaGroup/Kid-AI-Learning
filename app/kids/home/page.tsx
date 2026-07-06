@@ -152,6 +152,32 @@ export default function KidsHome() {
           <div className="text-3xl animate-bounce">🚀</div>
         </header>
 
+        {/* Getting-started banner — only for new users with 0 lessons */}
+        {!statsLoading && completedLessons === 0 && (
+          <div className="px-6 md:px-8 pt-4">
+            <div
+              className="rounded-2xl p-5 flex items-center justify-between gap-4"
+              style={{
+                background: "linear-gradient(135deg, rgba(124,58,237,0.25), rgba(168,85,247,0.15))",
+                border: "1px solid rgba(168,85,247,0.4)",
+                boxShadow: "0 0 20px rgba(168,85,247,0.1)",
+              }}
+            >
+              <div>
+                <p className="text-purple-300 text-xs font-semibold mb-1">🚀 Začni svojo pot</p>
+                <p className="text-white font-bold text-base">Izberi svoj prvi tečaj in začni z učenjem!</p>
+              </div>
+              <Link
+                href="/kids/courses"
+                className="flex-shrink-0 px-4 py-2.5 rounded-xl font-bold text-white text-sm transition-all active:scale-95"
+                style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)" }}
+              >
+                Začni →
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Map */}
         <div className="px-6 md:px-8 pt-6">
           <AdventureMap />

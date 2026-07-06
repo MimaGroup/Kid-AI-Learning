@@ -227,16 +227,21 @@ export default function CoursesPage() {
           {/* Course grid */}
           {!coursesLoading && (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {filtered.map((course) => {
+              {filtered.map((course, index) => {
                 const level = normalizeLevel(course.difficulty)
                 const lc = LEVEL_COLORS[level]
                 const isPro = !course.is_free
                 const hours = course.duration_minutes ? Math.round(course.duration_minutes / 60) : null
+                const isRecommended = index === 0 && activeLevel === "Vsi"
 
                 return (
                   <div key={course.id}
                     className="rounded-2xl overflow-hidden flex flex-col transition-all hover:scale-[1.01]"
-                    style={{ background: "rgba(8,8,30,0.88)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
+                    style={{
+                      background: "rgba(8,8,30,0.88)",
+                      border: isRecommended ? "1px solid rgba(16,185,129,0.5)" : "1px solid rgba(255,255,255,0.09)",
+                      boxShadow: isRecommended ? "0 4px 24px rgba(16,185,129,0.15)" : "0 4px 24px rgba(0,0,0,0.3)",
+                    }}>
 
                     {/* Thumbnail */}
                     <div className="relative h-44 overflow-hidden">
@@ -249,7 +254,13 @@ export default function CoursesPage() {
                         style={{ background: lc.bg, color: lc.text, border: `1px solid ${lc.border}` }}>
                         {level}
                       </div>
-                      {isPro && (
+                      {isRecommended && (
+                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-sm"
+                          style={{ background: "linear-gradient(135deg, #059669, #10b981)", color: "white" }}>
+                          ⭐ Začni tukaj
+                        </div>
+                      )}
+                      {!isRecommended && isPro && (
                         <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-sm"
                           style={{ background: "rgba(168,85,247,0.4)", color: "#c084fc", border: "1px solid rgba(168,85,247,0.5)" }}>
                           Pro
