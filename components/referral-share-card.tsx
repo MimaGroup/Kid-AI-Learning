@@ -12,7 +12,7 @@ export function ReferralShareCard() {
   const { success } = useToast()
   const [copied, setCopied] = useState(false)
 
-  const shareText = `Pridruži se meni na KidsLearnAI - zabavni AI učni platformi za otroke! 🎮📚\n\nUporabi mojo kodo ${referralCode} za 7 dni brezplačnega dostopa.\n\n`
+  const shareText = `Pridruži se meni na Kids Learning AI - zabavni AI učni platformi za otroke! 🎮📚\n\nUporabi mojo kodo ${referralCode} za 7 dni brezplačnega dostopa.\n\n`
 
   const handleCopyLink = async () => {
     try {
@@ -32,7 +32,7 @@ export function ReferralShareCard() {
   }
 
   const handleShareEmail = () => {
-    const subject = encodeURIComponent("Poskusi KidsLearnAI - AI učenje za otroke")
+    const subject = encodeURIComponent("Poskusi Kids Learning AI - AI učenje za otroke")
     const body = encodeURIComponent(`${shareText}${getReferralLink()}`)
     window.location.href = `mailto:?subject=${subject}&body=${body}`
   }
@@ -58,7 +58,7 @@ export function ReferralShareCard() {
     ctx.fillStyle = "#FFFFFF"
     ctx.font = "bold 64px Arial"
     ctx.textAlign = "center"
-    ctx.fillText("KidsLearnAI", 600, 200)
+    ctx.fillText("Kids Learning AI", 600, 200)
 
     ctx.font = "32px Arial"
     ctx.fillText("Zaslon, ki uči. Igra, ki razvija.", 600, 280)

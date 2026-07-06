@@ -90,7 +90,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t pt-6 text-center text-sm text-gray-600">
-          <p>&copy; {new Date().getFullYear()} KidsLearnAI Platforma. Vse pravice pridrzane.</p>
+          <p>&copy; {new Date().getFullYear()} Kids Learning AI Platforma. Vse pravice pridrzane.</p>
         </div>
       </div>
     </footer>

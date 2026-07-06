@@ -30,7 +30,7 @@ function getRedis() {
 }
 
 const EMAIL_QUEUE_KEY = "email:welcome:queue"
-const FROM_EMAIL = "KidsLearnAI <hello@kids-learning-ai.com>"
+const FROM_EMAIL = "Kids Learning AI <hello@kids-learning-ai.com>"
 
 export async function POST(request: Request) {
   try {

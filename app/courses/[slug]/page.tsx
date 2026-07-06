@@ -175,13 +175,13 @@ export default function CourseDetailPage() {
             <div className="w-8 h-8 rounded-lg overflow-hidden ring-2 ring-[#7C3AED]/20">
               <Image
                 src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
-                alt="KidsLearnAI"
+                alt="Kids Learning AI"
                 width={32}
                 height={32}
                 className="object-cover w-full h-full"
               />
             </div>
-            <span className="font-heading font-bold text-lg text-[#2D2A3D]">KidsLearnAI</span>
+            <span className="font-heading font-bold text-lg text-[#2D2A3D]">Kids Learning AI</span>
           </Link>
           <Link href="/courses">
             <Button variant="ghost" size="sm" className="gap-2 text-[#64748B]">

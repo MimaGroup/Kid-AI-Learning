@@ -27,9 +27,9 @@ export async function POST(request: Request) {
 
     const resend = getResend()
     const { data, error } = await resend.emails.send({
-      from: "KidsLearnAI <hello@kids-learning-ai.com>",
+      from: "Kids Learning AI <hello@kids-learning-ai.com>",
       to: [to],
-      subject: `${referrerEmail} invited you to try KidsLearnAI!`,
+      subject: `${referrerEmail} invited you to try Kids Learning AI!`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
                 Hi${inviteeName ? ` ${inviteeName}` : ""}!
               </p>
               <p style="font-size: 16px; color: #6B7280; line-height: 1.6;">
-                <strong>${referrerEmail}</strong> thinks you'd love KidsLearnAI - an interactive platform that teaches children ages 4-12 about AI through fun games and activities.
+                <strong>${referrerEmail}</strong> thinks you'd love Kids Learning AI - an interactive platform that teaches children ages 4-12 about AI through fun games and activities.
               </p>
               
               <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 12px; padding: 20px; margin: 30px 0; text-align: center;">
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
             </div>
             <div style="background: #F9FAFB; padding: 20px; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #9CA3AF;">
-                © ${new Date().getFullYear()} KidsLearnAI. Making AI education fun for kids.
+                © ${new Date().getFullYear()} Kids Learning AI. Making AI education fun for kids.
               </p>
             </div>
           </div>

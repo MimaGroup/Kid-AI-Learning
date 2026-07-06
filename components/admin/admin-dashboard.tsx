@@ -30,7 +30,7 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground">Upravljajte svojo KidsLearnAI platformo</p>
+              <p className="text-muted-foreground">Upravljajte svojo Kids Learning AI platformo</p>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" className="gap-2">

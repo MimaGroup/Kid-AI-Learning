@@ -277,7 +277,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Invite Friends</h3>
             <p className="text-gray-700 leading-relaxed">
               {friends.length === 0
-                ? "Looks like you don't have any friends on KidsLearnAI yet. Want to invite some? Send them an invitation to join the fun and start exploring AI together."
+                ? "Looks like you don't have any friends on Kids Learning AI yet. Want to invite some? Send them an invitation to join the fun and start exploring AI together."
                 : "Invite more friends to join the fun and start exploring AI together!"}
             </p>
           </div>

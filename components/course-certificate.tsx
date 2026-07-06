@@ -213,7 +213,7 @@ export function CourseCertificate({ slug }: CourseCertificateProps) {
     // Platform name
     ctx.fillStyle = "#2D2A3D"
     ctx.font = "bold 18px Arial, Helvetica, sans-serif"
-    ctx.fillText("KidsLearnAI", w / 2, 660)
+    ctx.fillText("Kids Learning AI", w / 2, 660)
 
     ctx.fillStyle = "#9CA3AF"
     ctx.font = "13px Arial, Helvetica, sans-serif"
@@ -258,7 +258,7 @@ export function CourseCertificate({ slug }: CourseCertificateProps) {
         const file = new File([blob], `certifikat-${slug}.png`, { type: "image/png" })
         await navigator.share({
           title: `Certifikat - ${data.courseTitle}`,
-          text: `Uspešno sem zaključil/a tečaj "${data.courseTitle}" na KidsLearnAI!`,
+          text: `Uspešno sem zaključil/a tečaj "${data.courseTitle}" na Kids Learning AI!`,
           files: [file],
         })
       }
@@ -391,7 +391,7 @@ export function CourseCertificate({ slug }: CourseCertificateProps) {
                 </p>
 
                 {/* Platform */}
-                <p className="text-center font-bold text-[#2D2A3D]">KidsLearnAI</p>
+                <p className="text-center font-bold text-[#2D2A3D]">Kids Learning AI</p>
                 <p className="text-center text-muted-foreground text-xs">
                   {"Platforma za učenje umetne inteligence za otroke"}
                 </p>

@@ -37,7 +37,7 @@ const testimonials: Testimonial[] = [
     name: "Ana P.",
     role: "Učiteljica in mama",
     location: "Celje",
-    quote: "Kot učiteljica vem, kako pomembno je, da se otroci naučijo kritičnega razmišljanja. KidsLearnAI to dela na zabaven način. Priporočam vsem staršem!",
+    quote: "Kot učiteljica vem, kako pomembno je, da se otroci naučijo kritičnega razmišljanja. Kids Learning AI to dela na zabaven način. Priporočam vsem staršem!",
     rating: 5,
     childAge: "6 let",
     avatar: "A"
@@ -56,7 +56,7 @@ export function TestimonialsSection() {
             Kaj pravijo starši
           </h2>
           <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
-            Resnične zgodbe družin, ki uporabljajo KidsLearnAI
+            Resnične zgodbe družin, ki uporabljajo Kids Learning AI
           </p>
         </div>
 

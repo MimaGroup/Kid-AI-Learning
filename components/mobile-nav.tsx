@@ -22,7 +22,7 @@ export function MobileNav() {
         <nav className="flex flex-col gap-4 mt-8">
           <Link href="/" className="flex items-center gap-2 mb-4" onClick={() => setOpen(false)}>
             <Sparkles className="w-6 h-6 text-primary" />
-            <span className="font-bold text-xl">KidsLearnAI</span>
+            <span className="font-bold text-xl">Kids Learning AI</span>
           </Link>
           <Link
             href="/courses"

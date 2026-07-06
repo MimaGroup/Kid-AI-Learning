@@ -330,7 +330,7 @@ export function DemoVideoSection() {
             Oglejte si v akciji
           </Badge>
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
-            Kako deluje KidsLearnAI
+            Kako deluje Kids Learning AI
           </h2>
           <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
             Kliknite skozi korake in odkrijte, kako Byte vodi vase otroke skozi zabavno ucenje AI
@@ -486,7 +486,7 @@ export function DemoVideoSection() {
                         <Sparkles className="w-3 h-3 text-white" />
                       </div>
                       <span className="text-xs font-bold bg-gradient-to-r from-[#7C3AED] to-[#6CD4C3] bg-clip-text text-transparent">
-                        KidsLearnAI
+                        Kids Learning AI
                       </span>
                     </div>
                     {/* Content */}

@@ -70,7 +70,7 @@ export function AppNavigation() {
           {/* Logo */}
           <Link href="/kids/home" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Sparkles className="w-6 h-6 text-primary" />
-            <span className="font-bold text-lg hidden sm:inline">KidsLearnAI</span>
+            <span className="font-bold text-lg hidden sm:inline">Kids Learning AI</span>
           </Link>
 
           {/* Main Navigation */}

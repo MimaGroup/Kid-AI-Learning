@@ -18,7 +18,7 @@ const adCreatives = [
     bestFor: ["Facebook Feed", "Facebook Marketplace"],
     suggestedCopy: {
       headline: "Vas otrok se uci AI - skozi igro!",
-      body: "KidsLearnAI - 8 interaktivnih AI iger za otroke od 6 do 12 let. Kvizi, uganke, vzorci in vec. Brezplacno za zacetek!",
+      body: "Kids Learning AI - 8 interaktivnih AI iger za otroke od 6 do 12 let. Kvizi, uganke, vzorci in vec. Brezplacno za zacetek!",
       cta: "Preizkusi brezplacno"
     }
   },
@@ -44,7 +44,7 @@ const adCreatives = [
     bestFor: ["Facebook Feed", "Instagram Feed"],
     suggestedCopy: {
       headline: "Nagrade za vsak korak ucenja",
-      body: "Vas otrok osvaja znacke, napreduje po nivojih in se zabava med ucenjem o AI. Pridruzi se KidsLearnAI!",
+      body: "Vas otrok osvaja znacke, napreduje po nivojih in se zabava med ucenjem o AI. Pridruzi se Kids Learning AI!",
       cta: "Preizkusi brezplacno"
     }
   },
@@ -57,7 +57,7 @@ const adCreatives = [
     bestFor: ["Instagram Feed", "Instagram Stories", "Facebook Stories"],
     suggestedCopy: {
       headline: "Skupaj odkrivajta svet AI",
-      body: "KidsLearnAI - platforma, kjer se otroci ucijo o umetni inteligenci skozi igro. Starsi spremljajo napredek.",
+      body: "Kids Learning AI - platforma, kjer se otroci ucijo o umetni inteligenci skozi igro. Starsi spremljajo napredek.",
       cta: "Zacni brezplacno"
     }
   }

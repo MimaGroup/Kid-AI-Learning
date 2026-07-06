@@ -248,7 +248,7 @@ export default function LessonViewerPage() {
               <div className="w-7 h-7 rounded-lg overflow-hidden ring-2 ring-[#7C3AED]/20">
                 <Image
                   src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
-                  alt="KidsLearnAI"
+                  alt="Kids Learning AI"
                   width={28}
                   height={28}
                   className="object-cover w-full h-full"

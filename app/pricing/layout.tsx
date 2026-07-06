@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { createMetadata } from "@/lib/metadata"
 
 export const metadata: Metadata = createMetadata({
-  title: "Ucni paketi - KidsLearnAI Platforma",
+  title: "Ucni paketi - Kids Learning AI Platforma",
   description:
     "Izberite popoln paket za vasega otroka. 7-dnevni brezplacni preizkus. Premium paketi od 9,99EUR/mesec z dostopom do vseh AI ucnih iger, aktivnosti in sledenja napredka.",
   path: "/pricing",

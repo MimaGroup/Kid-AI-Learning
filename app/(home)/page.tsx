@@ -36,7 +36,7 @@ export default function HomePage() {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <span className="font-heading font-bold text-2xl bg-gradient-to-r from-[#7C3AED] to-[#6CD4C3] bg-clip-text text-transparent">
-                KidsLearnAI
+                Kids Learning AI
               </span>
             </Link>
             <div className="hidden md:flex items-center gap-8">
@@ -106,7 +106,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed text-[#64748B] max-w-xl">
-                {"KidsLearnAI je prva slovenska AI učna platforma, ki otrokom od 5 do 12 let pomaga razumeti umetno inteligenco — skozi igro, izzive in osebnega AI tutorja Byte-a. Brez dolgočasnih predavanj. Samo učenje, ki otroke res navdušuje."}
+                {"Kids Learning AI je prva slovenska AI učna platforma, ki otrokom od 5 do 12 let pomaga razumeti umetno inteligenco — skozi igro, izzive in osebnega AI tutorja Byte-a. Brez dolgočasnih predavanj. Samo učenje, ki otroke res navdušuje."}
               </p>
 
               <div className="pt-2">
@@ -199,7 +199,7 @@ export default function HomePage() {
               {"Značilnosti"}
             </Badge>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 text-[#2D2A3D]">
-              {"Zakaj starši izbirajo KidsLearnAI?"}
+              {"Zakaj starši izbirajo Kids Learning AI?"}
             </h2>
             <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
               {"Celovita platforma, zasnovana z mislijo na izobraževanje in varnost"}
@@ -635,7 +635,7 @@ export default function HomePage() {
               {"Kaj pravijo starši?"}
             </h2>
             <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
-              {"Zgodbe družin, ki so že preizkusile KidsLearnAI"}
+              {"Zgodbe družin, ki so že preizkusile Kids Learning AI"}
             </p>
           </div>
 
@@ -686,7 +686,7 @@ export default function HomePage() {
             {"Dajte svojemu otroku znanje prihodnosti — še danes."}
           </h2>
           <p className="text-xl mb-10 text-[#64748B] max-w-2xl mx-auto">
-            {"Pridružite se prvim slovenskim družinam na KidsLearnAI. Prvih 7 dni je popolnoma brezplačnih. Nobene kreditne kartice ni potrebno."}
+            {"Pridružite se prvim slovenskim družinam na Kids Learning AI. Prvih 7 dni je popolnoma brezplačnih. Nobene kreditne kartice ni potrebno."}
           </p>
           <Link href="/auth/sign-up">
             <Button
@@ -783,14 +783,14 @@ export default function HomePage() {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <span className="font-heading font-bold text-2xl">KidsLearnAI</span>
+              <span className="font-heading font-bold text-2xl">Kids Learning AI</span>
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-300 italic mb-1">
                 Umetna inteligenca za vsako slovensko otroško sobo.
               </p>
               <p className="text-sm text-gray-400">
-                &copy; {new Date().getFullYear()} KidsLearnAI. Vse pravice {"pridržane"}.
+                &copy; {new Date().getFullYear()} Kids Learning AI. Vse pravice {"pridržane"}.
               </p>
             </div>
           </div>

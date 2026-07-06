@@ -192,7 +192,7 @@ export default function PricingPageClient() {
             <div className="flex h-16 items-center justify-between">
               <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <Home className="w-5 h-5 text-[#534AB7]" />
-                <span className="font-bold text-lg">KidsLearnAI</span>
+                <span className="font-bold text-lg">Kids Learning AI</span>
               </Link>
               <Link href="/auth/login">
                 <Button variant="outline" size="sm">
@@ -260,7 +260,7 @@ export default function PricingPageClient() {
                 <Badge className="bg-[#534AB7]/10 text-[#534AB7] border-[#534AB7]/20 mb-4">
                   Pro mesečno
                 </Badge>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">KidsLearnAI Pro</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Kids Learning AI Pro</h3>
                 <div className="mb-2">
                   <span className="text-4xl font-bold text-gray-900">€7.90</span>
                   <span className="text-gray-500 ml-2">/mesec</span>
@@ -292,7 +292,7 @@ export default function PricingPageClient() {
                 <Badge className="bg-[#534AB7] text-white border-[#534AB7] mb-4">
                   Najboljša vrednost
                 </Badge>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">KidsLearnAI Pro Letno</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Kids Learning AI Pro Letno</h3>
                 <div className="mb-2">
                   <span className="text-4xl font-bold text-gray-900">€59</span>
                   <span className="text-gray-500 ml-2">/leto</span>

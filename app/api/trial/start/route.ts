@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           email_type: "trial_sequence_1",
           recipient_email: email,
-          subject: "Dobrodošli v KidsLearnAI!",
+          subject: "Dobrodošli v Kids Learning AI!",
           status: "sent",
           metadata: {
             sequence_id: newSequence.id,
