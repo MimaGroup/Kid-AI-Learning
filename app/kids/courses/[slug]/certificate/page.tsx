@@ -22,6 +22,7 @@ export default function CertificatePage() {
   const [courseTitle, setCourseTitle] = useState("")
   const [userName, setUserName] = useState("")
   const [completedAt, setCompletedAt] = useState("")
+  const [averageScore, setAverageScore] = useState<number | null>(null)
   const [isValid, setIsValid] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
 
@@ -31,23 +32,23 @@ export default function CertificatePage() {
 
   useEffect(() => {
     if (!user) return
-    Promise.all([
-      fetch("/api/certificates").then(r => r.json()),
-      fetch("/api/children").then(r => r.json()).catch(() => ({ children: [] })),
-    ]).then(([certData, childData]) => {
-      const cert = (certData.certificates ?? []).find((c: any) => c.slug === slug)
-      if (cert) {
-        setIsValid(true)
-        setCourseTitle(cert.course_title)
-        setCompletedAt(new Date(cert.completed_at).toLocaleDateString("sl-SI", {
-          day: "numeric", month: "long", year: "numeric",
-        }))
-      }
-      const firstChild = childData.children?.[0]
-      const name = firstChild?.name ?? user.email?.split("@")[0] ?? "Učenec"
-      setUserName(name.charAt(0).toUpperCase() + name.slice(1))
-    }).finally(() => setPageLoading(false))
-  }, [user, slug])
+    fetch(`/api/courses/${slug}/certificate`)
+      .then(async r => {
+        if (r.status === 401) { router.push("/auth/login"); return }
+        const data = await r.json()
+        if (r.ok) {
+          setIsValid(true)
+          setUserName(data.studentName ?? "Učenec")
+          setCourseTitle(data.courseTitle ?? "")
+          setCompletedAt(new Date(data.completionDate).toLocaleDateString("sl-SI", {
+            day: "numeric", month: "long", year: "numeric",
+          }))
+          setAverageScore(data.averageScore ?? null)
+        }
+      })
+      .catch(() => {})
+      .finally(() => setPageLoading(false))
+  }, [user, slug, router])
 
   if (loading || pageLoading) {
     return (
@@ -196,13 +197,21 @@ export default function CertificatePage() {
               <div className="cert-divider mx-auto mb-8 h-px w-64" style={{ background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent)" }} />
 
               {/* Footer info */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className={`grid gap-6 ${averageScore !== null ? "grid-cols-3" : "grid-cols-2"}`}>
                 <div>
                   <p className="cert-date text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}>
                     Datum
                   </p>
                   <p className="cert-sub text-sm font-semibold" style={{ color: "rgba(255,255,255,0.65)" }}>{completedAt}</p>
                 </div>
+                {averageScore !== null && (
+                  <div>
+                    <p className="cert-date text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}>
+                      Povprečna ocena
+                    </p>
+                    <p className="cert-sub text-sm font-semibold" style={{ color: "rgba(168,85,247,0.9)" }}>{averageScore}%</p>
+                  </div>
+                )}
                 <div>
                   <p className="cert-date text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}>
                     Platforma
