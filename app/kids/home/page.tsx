@@ -18,6 +18,13 @@ const NAV = [
   { href: "/kids/courses",    icon: "📚", label: "Tečaji" },
 ]
 
+const QUICK_PLAY = [
+  { href: "/kids/games/ai-quiz",        icon: "🎯", label: "AI Kviz",      gradient: "linear-gradient(135deg,#ea580c,#ef4444)" },
+  { href: "/kids/games/ai-detective",   icon: "🕵️", label: "AI Detektiv",  gradient: "linear-gradient(135deg,#1d4ed8,#06b6d4)" },
+  { href: "/kids/games/math-adventure", icon: "🧮", label: "Matematika",   gradient: "linear-gradient(135deg,#059669,#10b981)" },
+  { href: "/kids/games/memory-match",   icon: "🎴", label: "Spomin",       gradient: "linear-gradient(135deg,#ec4899,#7C3AED)" },
+]
+
 const SIDEBAR_STARS = [
   {x:15,y:8},{x:70,y:15},{x:30,y:30},{x:85,y:40},
   {x:10,y:55},{x:60,y:62},{x:40,y:75},{x:80,y:85},
@@ -94,7 +101,7 @@ export default function KidsHome() {
         </div>
 
         {/* Nav */}
-        <nav className="relative z-10 px-3 space-y-1 flex-1">
+        <nav className="relative z-10 px-3 space-y-1">
           {NAV.map((item) => {
             const active = pathname === item.href
             return (
@@ -118,6 +125,27 @@ export default function KidsHome() {
             )
           })}
         </nav>
+
+        {/* Quick Play */}
+        <div className="relative z-10 px-3 pt-5 flex-1">
+          <p className="text-white/25 text-xs font-semibold uppercase tracking-widest px-2 mb-2">⚡ Hitri dostop</p>
+          <div className="space-y-1.5">
+            {QUICK_PLAY.map(game => (
+              <Link key={game.href} href={game.href}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.02] active:scale-95 group"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                  style={{ background: game.gradient }}>
+                  {game.icon}
+                </div>
+                <span className="text-white/60 text-xs font-semibold truncate group-hover:text-white/90 transition-colors">
+                  {game.label}
+                </span>
+                <span className="ml-auto text-white/20 text-xs group-hover:text-white/40 transition-colors">→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Byte avatar — click to open ByteTutor chat */}
         <div className="relative z-10 mx-3 mb-2">
