@@ -14,11 +14,14 @@ interface AIFriend {
   created_at: string
 }
 
+const CONSENT_KEY = "ai-friend-consent"
+
 export default function AIFriendBuilder() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const toast = useToast()
 
+  const [consentGiven, setConsentGiven] = useState(true) // default true to avoid flash
   const [friendName, setFriendName] = useState("")
   const [personality, setPersonality] = useState("Friendly")
   const [color, setColor] = useState("#4F46E5")
@@ -32,6 +35,10 @@ export default function AIFriendBuilder() {
       router.push("/auth/login")
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    setConsentGiven(!!localStorage.getItem(CONSENT_KEY))
+  }, [])
 
   useEffect(() => {
     if (user) {
@@ -124,6 +131,39 @@ export default function AIFriendBuilder() {
         <div className="text-center">
           <div className="text-4xl mb-4">🤖</div>
           <p className="text-gray-600">Loading AI Playground...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!consentGiven) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center p-6"
+        style={{ background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }}
+      >
+        <div
+          className="max-w-sm w-full rounded-3xl p-8 text-center"
+          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(168,85,247,0.35)" }}
+        >
+          <div className="text-6xl mb-4">🤖</div>
+          <h2 className="text-2xl font-bold text-white mb-3">AI Prijatelj</h2>
+          <p className="text-white/70 text-sm leading-relaxed mb-2">
+            Tu lahko ustvariš svojega AI spremljevalca, ki ti pomaga pri učenju.
+          </p>
+          <p className="text-purple-300 text-xs font-medium mb-6">
+            ℹ️ Starši so obveščeni o tej funkciji in lahko dostopajo do vseh pogovorov prek starševske plošče.
+          </p>
+          <button
+            onClick={() => {
+              localStorage.setItem(CONSENT_KEY, "1")
+              setConsentGiven(true)
+            }}
+            className="w-full py-3.5 rounded-2xl font-bold text-white transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)" }}
+          >
+            Razumem, gremo naprej! 🚀
+          </button>
         </div>
       </div>
     )

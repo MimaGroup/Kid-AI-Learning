@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import Anthropic from "@anthropic-ai/sdk"
 import { createServerClient } from "@/lib/supabase/server"
+import { sanitizeUserInput, moderateContent, validateAIResponse } from "@/lib/content-moderation"
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -73,8 +74,15 @@ export async function POST(req: NextRequest) {
 
   if (!message?.trim()) return NextResponse.json({ error: "Prazno sporočilo" }, { status: 400 })
 
-  // Sanitize and limit input
-  message = String(message).trim().slice(0, MAX_MESSAGE_LENGTH)
+  // Sanitize, filter and limit input
+  message = sanitizeUserInput(String(message).trim().slice(0, MAX_MESSAGE_LENGTH))
+  const inputCheck = moderateContent(message)
+  if (!inputCheck.isAppropriate) {
+    return NextResponse.json(
+      { reply: "Tega vprašanja ne morem obdelati. Za pomoč vprašaj starše ali učitelja! 🤖" },
+      { status: 200 }
+    )
+  }
 
   // Rate limit check — gracefully skip if table doesn't exist yet
   try {
@@ -109,7 +117,11 @@ export async function POST(req: NextRequest) {
     messages,
   })
 
-  const reply = (response.content[0] as { type: string; text: string }).text
+  const rawReply = (response.content[0] as { type: string; text: string }).text
+  const validated = validateAIResponse(rawReply, "byte-chat")
+  const reply = validated.isAppropriate
+    ? validated.content
+    : "Za to temo prosim vprašaj starše. 🤖"
 
   return NextResponse.json({ reply })
 }
