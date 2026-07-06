@@ -20,24 +20,18 @@ export function LoginPageClient() {
     clearError()
 
     try {
-      console.log("[v0] Login attempt for:", email)
       await login(email, password)
-      console.log("[v0] Login successful, waiting for auth state to sync...")
 
       trackEvent("user_login", {
         email_domain: email.split("@")[1],
         timestamp: Date.now(),
       })
 
-      console.log("[v0] Refreshing router to sync server session...")
       router.refresh()
-
       await new Promise((resolve) => setTimeout(resolve, 500))
-      console.log("[v0] Redirecting to /kids/home")
       router.push("/kids/home")
     } catch (err) {
       trackError(err instanceof Error ? err : new Error("Login failed"), "login")
-      console.error("[v0] Login failed:", err)
     } finally {
       setIsLoading(false)
     }

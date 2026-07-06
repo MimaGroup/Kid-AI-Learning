@@ -73,7 +73,6 @@ function SignUpPageClient() {
       }
 
       setSuccess(true)
-      console.log('[v0] CompleteRegistration firing', { fbqExists: typeof window !== 'undefined' && typeof window.fbq === 'function' })
       trackCompleteRegistration()
 
       // Trigger welcome email sequence
