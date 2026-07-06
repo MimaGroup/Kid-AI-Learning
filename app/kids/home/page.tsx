@@ -87,7 +87,7 @@ export default function KidsHome() {
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🚀</span>
             <span className="font-heading font-bold text-lg leading-tight bg-gradient-to-r from-[#7C3AED] to-[#6CD4C3] bg-clip-text text-transparent">
-              KidsLearnAI
+              Kids Learning AI
             </span>
           </div>
           <p className="text-white/35 text-xs pl-9">Tvoje učno središče</p>

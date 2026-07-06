@@ -175,7 +175,7 @@ function SignUpPageClient() {
           </div>
 
           <h1 className="text-3xl font-bold text-white mb-1">Ustvari račun</h1>
-          <p className="text-white/50 text-sm">Pridruži se KidsLearnAI platformi</p>
+          <p className="text-white/50 text-sm">Pridruži se Kids Learning AI platformi</p>
 
           {referralCode && (
             <div className="mt-4 rounded-2xl p-3"

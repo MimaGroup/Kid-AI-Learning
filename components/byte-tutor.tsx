@@ -76,6 +76,11 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
         <span className="text-sm hidden sm:inline">{open ? "Zapri" : "Vprašaj Byte-a"}</span>
       </button>
 
+      {/* Tap-outside overlay (mobile) */}
+      {open && (
+        <div className="fixed inset-0 z-30 md:hidden" onClick={() => setOpen(false)} aria-hidden />
+      )}
+
       {/* Chat panel */}
       {open && (
         <div
@@ -107,7 +112,9 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
               <p className="text-white font-bold text-sm leading-none">Byte</p>
               <p className="text-purple-400 text-xs mt-0.5">AI učni pomočnik</p>
             </div>
-            <button onClick={() => setOpen(false)} className="ml-auto text-white/30 hover:text-white/60 transition-colors text-lg leading-none">✕</button>
+            <button onClick={() => setOpen(false)} aria-label="Zapri"
+              className="ml-auto flex items-center justify-center rounded-lg transition-all hover:bg-white/10 active:scale-90"
+              style={{ width: 32, height: 32, color: "rgba(255,255,255,0.65)", fontSize: 18 }}>✕</button>
           </div>
 
           {/* Messages */}

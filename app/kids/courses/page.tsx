@@ -309,20 +309,12 @@ export default function CoursesPage() {
                         ) : null
                       })()}
 
-                      <div className="flex gap-2">
-                        <Link href={`/kids/courses/${course.slug}`} className="flex-1">
-                          <button className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
-                            style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}>
-                            {(progressMap[course.id] ?? 0) > 0 ? "Nadaljuj →" : isPro ? "Preizkusi brezplačno" : "Začni tečaj"}
-                          </button>
-                        </Link>
-                        <Link href={`/kids/courses/${course.slug}`}>
-                          <button className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-white/5"
-                            style={{ color: "rgba(168,85,247,0.9)", border: "1px solid rgba(168,85,247,0.3)" }}>
-                            Info →
-                          </button>
-                        </Link>
-                      </div>
+                      <Link href={`/kids/courses/${course.slug}`} className="block">
+                        <button className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
+                          style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}>
+                          {(progressMap[course.id] ?? 0) > 0 ? "Nadaljuj →" : isPro ? "Preizkusi brezplačno" : "Začni tečaj"}
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 )

@@ -57,7 +57,7 @@ export function LoginPageClient() {
         <div className="text-center mb-8">
           <div className="text-4xl mb-3">🚀</div>
           <h1 className="text-3xl font-bold text-white mb-2">Dobrodošli nazaj</h1>
-          <p className="text-white/50 text-sm">Prijavite se v svoj KidsLearnAI račun</p>
+          <p className="text-white/50 text-sm">Prijavite se v svoj Kids Learning AI račun</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
