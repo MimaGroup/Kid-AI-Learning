@@ -38,32 +38,22 @@ export function useSubscription() {
         return
       }
 
-      // Fetch subscription
-      const { data: subData, error: subError } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", user.id)
-        .single()
+      // Fetch all three in parallel instead of sequentially
+      const [subResult, rewardResult, profileResult] = await Promise.all([
+        supabase.from("subscriptions").select("*").eq("user_id", user.id).single(),
+        supabase.from("referral_rewards").select("*").eq("user_id", user.id).eq("reward_type", "extended_trial").in("status", ["pending", "claimed"]).maybeSingle(),
+        supabase.from("profiles").select("created_at, referred_by").eq("id", user.id).maybeSingle(),
+      ])
+
+      const { data: subData, error: subError } = subResult
+      const { data: rewardData } = rewardResult
+      const { data: profileData } = profileResult
 
       if (subError && subError.code !== "PGRST116") {
         console.error("Error fetching subscription:", subError)
       }
 
       setSubscription(subData)
-
-      const { data: rewardData } = await supabase
-        .from("referral_rewards")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("reward_type", "extended_trial")
-        .in("status", ["pending", "claimed"])
-        .maybeSingle()
-
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("created_at, referred_by")
-        .eq("id", user.id)
-        .maybeSingle()
 
       let isInTrial = false
       let daysRemaining: number | null = null

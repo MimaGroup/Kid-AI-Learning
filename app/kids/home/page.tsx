@@ -7,7 +7,6 @@ import { useStats } from "../../../hooks/use-progress"
 import { useAuth } from "../../../hooks/use-auth"
 import { AdventureMap } from "../../../components/adventure-map"
 import { KidsBottomNav } from "../../../components/kids-bottom-nav"
-import { BadgeShowcase } from "../../../components/badge-showcase"
 import { ByteTutor } from "../../../components/byte-tutor"
 import { BYTE_CHARACTER } from "../../../lib/byte-character"
 import { useEffect, useState } from "react"
@@ -19,10 +18,10 @@ const NAV = [
 ]
 
 const QUICK_PLAY = [
-  { href: "/kids/games/ai-quiz",        icon: "🎯", label: "AI Kviz",      gradient: "linear-gradient(135deg,#ea580c,#ef4444)" },
-  { href: "/kids/games/ai-detective",   icon: "🕵️", label: "AI Detektiv",  gradient: "linear-gradient(135deg,#1d4ed8,#06b6d4)" },
-  { href: "/kids/games/math-adventure", icon: "🧮", label: "Matematika",   gradient: "linear-gradient(135deg,#059669,#10b981)" },
-  { href: "/kids/games/memory-match",   icon: "🎴", label: "Spomin",       gradient: "linear-gradient(135deg,#ec4899,#7C3AED)" },
+  { href: "/kids/games/ai-quiz",        icon: "🎯", label: "AI Kviz",      gradient: "linear-gradient(135deg,#ea580c,#ef4444)",  desc: "Preveri znanje o umetni inteligenci!" },
+  { href: "/kids/games/ai-detective",   icon: "🕵️", label: "AI Detektiv",  gradient: "linear-gradient(135deg,#1d4ed8,#06b6d4)",  desc: "Odkrij, kje je AI v vsakdanjem življenju!" },
+  { href: "/kids/games/math-adventure", icon: "🧮", label: "Matematika",   gradient: "linear-gradient(135deg,#059669,#10b981)",  desc: "Reši matematične izzive z AI pomočnikom!" },
+  { href: "/kids/games/memory-match",   icon: "🎴", label: "Spomin",       gradient: "linear-gradient(135deg,#ec4899,#7C3AED)", desc: "Vadij spomin in poišči ujemajoče pare!" },
 ]
 
 const SIDEBAR_STARS = [
@@ -36,7 +35,7 @@ export default function KidsHome() {
   const { logout } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
-  const [earnedBadges, setEarnedBadges] = useState<string[]>([])
+  const [earnedBadges, setEarnedBadges] = useState<{ id: string; icon: string }[]>([])
   const [completedLessons, setCompletedLessons] = useState(0)
   const [xp, setXp] = useState<{ progress: number; needed: number; level: number; points: number } | null>(null)
 
@@ -50,7 +49,7 @@ export default function KidsHome() {
       .catch(() => {})
     fetch("/api/user-badges")
       .then(r => r.json())
-      .then(data => setEarnedBadges((data.badges ?? []).map((b: any) => b.badge_id)))
+      .then(data => setEarnedBadges((data.badges ?? []).map((b: any) => ({ id: b.badge_id, icon: b.icon ?? b.badges?.icon ?? "🏅" }))))
       .catch(() => {})
     fetch("/api/gamification")
       .then(r => r.json())
@@ -145,27 +144,6 @@ export default function KidsHome() {
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* Byte avatar — click to open ByteTutor chat */}
-        <div className="relative z-10 mx-3 mb-2">
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-byte-tutor"))}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.02] active:scale-95"
-            style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.25)" }}
-          >
-            <Image
-              src={BYTE_CHARACTER.images.avatar}
-              alt="Byte"
-              width={32}
-              height={32}
-              className="rounded-full object-cover flex-shrink-0"
-            />
-            <div className="min-w-0 text-left">
-              <p className="text-white text-xs font-bold">Byte</p>
-              <p className="text-purple-300 text-xs truncate">{BYTE_CHARACTER.phrases.helpOffer}</p>
-            </div>
-          </button>
         </div>
 
         {/* Parent link */}
@@ -286,10 +264,70 @@ export default function KidsHome() {
           </div>
         </div>
 
-        {/* Badge showcase */}
-        <div className="px-6 md:px-8 pb-6">
-          <BadgeShowcase earnedBadgeIds={earnedBadges} completedLessons={completedLessons} />
+        {/* Compact badge strip */}
+        <div className="px-6 md:px-8 pb-4">
+          <div className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🏆</span>
+                <span className="text-white font-bold text-sm">Moje značke</span>
+                <span className="text-white/35 text-xs">{earnedBadges.length} pridobljenih</span>
+              </div>
+              <Link href="/kids/activities" className="text-purple-400 text-xs font-semibold hover:text-purple-300 transition-colors">
+                Vse dejavnosti →
+              </Link>
+            </div>
+            {earnedBadges.length === 0 ? (
+              <p className="text-white/30 text-xs py-1">Opravi svojo prvo igro in pridobi značko! 🌟</p>
+            ) : (
+              <div className="flex items-center gap-2 flex-wrap">
+                {earnedBadges.slice(0, 8).map((b, i) => (
+                  <div key={b.id}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-lg"
+                    style={{ background: "rgba(168,85,247,0.18)", border: "1px solid rgba(168,85,247,0.35)" }}>
+                    {b.icon}
+                  </div>
+                ))}
+                {earnedBadges.length > 8 && (
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white/50"
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    +{earnedBadges.length - 8}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Byte priporoča */}
+        {(() => {
+          const rec = QUICK_PLAY[new Date().getDay() % QUICK_PLAY.length]
+          return (
+            <div className="px-6 md:px-8 pb-28">
+              <div className="rounded-2xl p-4 flex items-center gap-4"
+                style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.18), rgba(168,85,247,0.1))", border: "1px solid rgba(168,85,247,0.3)" }}>
+                <Image
+                  src={BYTE_CHARACTER.images.avatar}
+                  alt="Byte"
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover flex-shrink-0"
+                  style={{ border: "2px solid rgba(168,85,247,0.5)" }}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-purple-300 text-xs font-semibold mb-0.5">Byte priporoča danes</p>
+                  <p className="text-white font-bold text-sm leading-snug">{rec.icon} {rec.label}</p>
+                  <p className="text-white/45 text-xs mt-0.5">{rec.desc}</p>
+                </div>
+                <Link href={rec.href}
+                  className="flex-shrink-0 px-4 py-2.5 rounded-xl font-bold text-white text-xs transition-all active:scale-95 hover:opacity-90"
+                  style={{ background: rec.gradient }}>
+                  Začni →
+                </Link>
+              </div>
+            </div>
+          )
+        })()}
       </div>
       <ByteTutor />
       <KidsBottomNav />

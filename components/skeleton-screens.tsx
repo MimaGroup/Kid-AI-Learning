@@ -54,16 +54,18 @@ export function DashboardSkeleton() {
 
 export function ActivityListSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {[...Array(6)].map((_, i) => (
-        <Card key={i}>
-          <CardContent className="p-6">
-            <Skeleton className="h-12 w-12 rounded-full mb-4" />
-            <Skeleton className="h-6 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4 mb-4" />
-            <Skeleton className="h-10 w-full" />
-          </CardContent>
-        </Card>
+        <div key={i} className="rounded-2xl overflow-hidden"
+          style={{ background: "rgba(8,8,30,0.85)", border: "1px solid rgba(255,255,255,0.09)" }}>
+          <div className="h-28 animate-pulse" style={{ background: "rgba(168,85,247,0.12)" }} />
+          <div className="p-4 space-y-3">
+            <div className="h-5 w-3/4 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.08)" }} />
+            <div className="h-3 w-full rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="h-3 w-2/3 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="h-10 w-full rounded-xl animate-pulse mt-2" style={{ background: "rgba(168,85,247,0.1)" }} />
+          </div>
+        </div>
       ))}
     </div>
   )

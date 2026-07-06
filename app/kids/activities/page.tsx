@@ -4,7 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useSubscription } from "@/hooks/use-subscription"
-import { ActivityListSkeleton } from "@/components/skeleton-screens"
 import { KidsBottomNav } from "@/components/kids-bottom-nav"
 
 const STARS = [
@@ -167,41 +166,45 @@ export default function ActivitiesPage() {
           })}
         </div>
 
-        {/* Grid */}
-        {loading ? (
-          <ActivityListSkeleton />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredActivities.map((activity) => (
-              <div key={activity.id}
-                className="rounded-2xl overflow-hidden flex flex-col transition-all hover:scale-[1.02]"
-                style={{ background: "rgba(8,8,30,0.85)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
+        {/* Grid — always visible; only premium button waits for subscription */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredActivities.map((activity) => (
+            <div key={activity.id}
+              className="rounded-2xl overflow-hidden flex flex-col transition-all hover:scale-[1.02]"
+              style={{ background: "rgba(8,8,30,0.85)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
 
-                {/* Icon banner */}
-                <div className="h-28 flex items-center justify-center relative"
-                  style={{ background: activity.gradient }}>
-                  <span className="text-5xl drop-shadow-lg">{activity.icon}</span>
-                  {activity.isPremium && (
-                    <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full text-xs font-bold text-white backdrop-blur-sm"
-                      style={{ background: "rgba(168,85,247,0.5)", border: "1px solid rgba(168,85,247,0.7)" }}>
-                      Pro ✨
-                    </div>
-                  )}
+              {/* Icon banner */}
+              <div className="h-28 flex items-center justify-center relative"
+                style={{ background: activity.gradient }}>
+                <span className="text-5xl drop-shadow-lg">{activity.icon}</span>
+                {activity.isPremium && (
+                  <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full text-xs font-bold text-white backdrop-blur-sm"
+                    style={{ background: "rgba(168,85,247,0.5)", border: "1px solid rgba(168,85,247,0.7)" }}>
+                    Pro ✨
+                  </div>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className="text-white font-bold text-base mb-1">{activity.title}</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-3 flex-1">{activity.description}</p>
+
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                    style={{ background: "rgba(168,85,247,0.18)", color: "#c084fc", border: "1px solid rgba(168,85,247,0.3)" }}>
+                    {activity.difficulty}
+                  </span>
                 </div>
 
-                {/* Info */}
-                <div className="p-4 flex flex-col flex-1">
-                  <h3 className="text-white font-bold text-base mb-1">{activity.title}</h3>
-                  <p className="text-white/50 text-xs leading-relaxed mb-3 flex-1">{activity.description}</p>
-
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                      style={{ background: "rgba(168,85,247,0.18)", color: "#c084fc", border: "1px solid rgba(168,85,247,0.3)" }}>
-                      {activity.difficulty}
-                    </span>
-                  </div>
-
-                  {activity.isPremium && !hasPremium ? (
+                {activity.isPremium ? (
+                  loading ? (
+                    <button disabled
+                      className="w-full py-3 rounded-xl font-bold text-sm"
+                      style={{ background: "rgba(168,85,247,0.1)", border: "1px solid rgba(168,85,247,0.25)", color: "rgba(192,132,252,0.5)" }}>
+                      ·  ·  ·
+                    </button>
+                  ) : !hasPremium ? (
                     <button onClick={() => handleActivityClick(activity)}
                       className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95"
                       style={{ background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.4)", color: "#c084fc" }}>
@@ -213,12 +216,18 @@ export default function ActivitiesPage() {
                       style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)", boxShadow: "0 2px 12px rgba(168,85,247,0.35)" }}>
                       Začni igro →
                     </Link>
-                  )}
-                </div>
+                  )
+                ) : (
+                  <Link href={activity.href}
+                    className="block w-full py-3 rounded-xl font-bold text-white text-sm text-center transition-all active:scale-95"
+                    style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)", boxShadow: "0 2px 12px rgba(168,85,247,0.35)" }}>
+                    Začni igro →
+                  </Link>
+                )}
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <KidsBottomNav />
