@@ -55,10 +55,10 @@ export default function AIFriendBuilder() {
       if (response.ok) {
         setSavedFriends(data.friends || [])
       } else {
-        toast.error(data.error || "Failed to load friends")
+        toast.error(data.error || "Napaka pri nalaganju prijateljev")
       }
     } catch (err) {
-      toast.error("Failed to load friends. Please check your connection.")
+      toast.error("Napaka pri nalaganju. Preveri svojo povezavo.")
     } finally {
       setIsLoadingFriends(false)
     }
@@ -66,7 +66,7 @@ export default function AIFriendBuilder() {
 
   const handleSaveFriend = async () => {
     if (!friendName.trim()) {
-      toast.warning("Please enter a name for your AI friend")
+      toast.warning("Vpiši ime za svojega AI prijatelja")
       return
     }
 
@@ -86,25 +86,24 @@ export default function AIFriendBuilder() {
       const data = await response.json()
 
       if (response.ok) {
-        toast.success(`${friendName} has been created!`)
+        toast.success(`${friendName} je bil ustvarjen!`)
         setSavedFriends([data.friend, ...savedFriends])
 
-        // Reset form
         setFriendName("")
         setPersonality("Friendly")
         setColor("#4F46E5")
       } else {
-        toast.error(data.error || "Failed to save friend")
+        toast.error(data.error || "Napaka pri shranjevanju prijatelja")
       }
     } catch (err) {
-      toast.error("Failed to save friend. Please try again.")
+      toast.error("Napaka pri shranjevanju. Poskusi znova.")
     } finally {
       setIsSaving(false)
     }
   }
 
   const handleDeleteFriend = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete ${name}?`)) {
+    if (!confirm(`Ali res želiš izbrisati ${name}?`)) {
       return
     }
 
@@ -115,13 +114,13 @@ export default function AIFriendBuilder() {
 
       if (response.ok) {
         setSavedFriends(savedFriends.filter((f) => f.id !== id))
-        toast.success("Friend deleted successfully")
+        toast.success("Prijatelj uspešno izbrisan")
       } else {
         const data = await response.json()
-        toast.error(data.error || "Failed to delete friend")
+        toast.error(data.error || "Napaka pri brisanju prijatelja")
       }
     } catch (err) {
-      toast.error("Failed to delete friend. Please try again.")
+      toast.error("Napaka pri brisanju. Poskusi znova.")
     }
   }
 
