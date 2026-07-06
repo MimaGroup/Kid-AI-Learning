@@ -2,10 +2,17 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
+import { SupportChat } from "@/components/support-chat"
+
 export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return children
+  return (
+    <>
+      {children}
+      <SupportChat />
+    </>
+  )
 }
