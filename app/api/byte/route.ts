@@ -30,72 +30,75 @@ interface Message {
   content: string
 }
 
-// Simple per-user daily counter using Supabase
-async function checkRateLimit(supabase: ReturnType<typeof createServerClient>, userId: string): Promise<boolean> {
-  const today = new Date().toISOString().split("T")[0]
-  const key = `byte_${userId}_${today}`
-
-  const { data } = await (await supabase)
-    .from("byte_rate_limit")
-    .select("count")
-    .eq("key", key)
-    .maybeSingle()
-
-  if (data && data.count >= DAILY_LIMIT) return false
-  return true
-}
-
-async function incrementUsage(supabase: ReturnType<typeof createServerClient>, userId: string) {
-  const today = new Date().toISOString().split("T")[0]
-  const key = `byte_${userId}_${today}`
-
-  const sb = await supabase
-  const { data } = await sb.from("byte_rate_limit").select("count").eq("key", key).maybeSingle()
-
-  if (data) {
-    await sb.from("byte_rate_limit").update({ count: data.count + 1 }).eq("key", key)
-  } else {
-    await sb.from("byte_rate_limit").insert({ key, user_id: userId, count: 1, date: today })
-  }
-}
-
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: "Byte trenutno ni na voljo." }, { status: 503 })
+    return NextResponse.json({ reply: "Byte trenutno ni na voljo. Poskusi kasneje!" }, { status: 200 })
   }
 
-  const supabase = createServerClient()
-  const { data: { session } } = await (await supabase).auth.getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  // Auth check using getUser() — more reliable than getSession() server-side
+  let userId = ""
+  try {
+    const supabase = await createServerClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    userId = user.id
+  } catch (err) {
+    console.error("Auth check failed:", err)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
 
-  const body = await req.json()
+  let body: any
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "Neveljavna zahteva" }, { status: 400 })
+  }
+
   const { lessonTitle, lessonContent, history = [] } = body
   let { message } = body
 
-  if (!message?.trim()) return NextResponse.json({ error: "Prazno sporočilo" }, { status: 400 })
-
-  // Sanitize, filter and limit input
-  message = sanitizeUserInput(String(message).trim().slice(0, MAX_MESSAGE_LENGTH))
-  const inputCheck = await moderateContent(message)
-  if (!inputCheck.isAppropriate) {
-    return NextResponse.json(
-      { reply: "Tega vprašanja ne morem obdelati. Za pomoč vprašaj starše ali učitelja! 🤖" },
-      { status: 200 }
-    )
+  if (!message?.trim()) {
+    return NextResponse.json({ error: "Prazno sporočilo" }, { status: 400 })
   }
 
-  // Rate limit check — gracefully skip if table doesn't exist yet
+  // Sanitize and moderate input
+  message = sanitizeUserInput(String(message).trim().slice(0, MAX_MESSAGE_LENGTH))
   try {
-    const allowed = await checkRateLimit(supabase, session.user.id)
-    if (!allowed) {
+    const inputCheck = await moderateContent(message)
+    if (!inputCheck.isAppropriate) {
+      return NextResponse.json(
+        { reply: "Tega vprašanja ne morem obdelati. Za pomoč vprašaj starše ali učitelja! 🤖" },
+        { status: 200 }
+      )
+    }
+  } catch {
+    // If moderation fails, allow the request through
+  }
+
+  // Rate limit check — skip if table doesn't exist
+  try {
+    const supabase = await createServerClient()
+    const today = new Date().toISOString().split("T")[0]
+    const key = `byte_${userId}_${today}`
+    const { data } = await supabase.from("byte_rate_limit").select("count").eq("key", key).maybeSingle()
+
+    if (data && data.count >= DAILY_LIMIT) {
       return NextResponse.json(
         { reply: "Danes si me že veliko vprašal/a! 🤖 Vrni se jutri za več odgovorov. Nadaljuj z lekcijami — znaš!" },
         { status: 200 }
       )
     }
-    await incrementUsage(supabase, session.user.id)
+
+    // Increment usage (fire-and-forget, don't block the response)
+    if (data) {
+      supabase.from("byte_rate_limit").update({ count: data.count + 1 }).eq("key", key).then(() => {})
+    } else {
+      supabase.from("byte_rate_limit").insert({ key, user_id: userId, count: 1, date: today }).then(() => {})
+    }
   } catch {
-    // Table doesn't exist yet — allow request, don't crash
+    // Table doesn't exist yet — allow request
   }
 
   const contextBlock = lessonTitle
@@ -110,18 +113,31 @@ export async function POST(req: NextRequest) {
     { role: "user", content: message },
   ]
 
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 280,
-    system: SYSTEM_PROMPT + contextBlock,
-    messages,
-  })
+  try {
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 280,
+      system: SYSTEM_PROMPT + contextBlock,
+      messages,
+    })
 
-  const rawReply = (response.content[0] as { type: string; text: string }).text
-  const validated = await validateAIResponse(rawReply, "byte-chat")
-  const reply = validated.isAppropriate
-    ? (validated.sanitizedContent ?? rawReply)
-    : "Za to temo prosim vprašaj starše. 🤖"
+    const rawReply = (response.content[0] as { type: string; text: string }).text
 
-  return NextResponse.json({ reply })
+    // Validate AI response — if validation fails, still return the raw reply
+    try {
+      const validated = await validateAIResponse(rawReply, "byte-chat")
+      const reply = validated.isAppropriate
+        ? (validated.sanitizedContent ?? rawReply)
+        : "Za to temo prosim vprašaj starše. 🤖"
+      return NextResponse.json({ reply })
+    } catch {
+      return NextResponse.json({ reply: rawReply })
+    }
+  } catch (err) {
+    console.error("Anthropic API error:", err)
+    return NextResponse.json(
+      { reply: "Ups, prišlo je do napake. Poskusi znova čez trenutek! 🔧" },
+      { status: 200 }
+    )
+  }
 }

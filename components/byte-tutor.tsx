@@ -60,6 +60,10 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
         }),
       })
       const data = await res.json()
+      if (!res.ok) {
+        setMessages(prev => [...prev, { role: "assistant", content: "Ups, pri meni je prišlo do napake. Poskusi znova! 🔧" }])
+        return
+      }
       setMessages(prev => [...prev, { role: "assistant", content: data.reply ?? "Ups, poskusi znova!" }])
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Ups, pri meni je prišlo do napake. Poskusi znova! 🔧" }])
