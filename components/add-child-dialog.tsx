@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { CreateChildInput } from "@/types/child"
 
 interface AddChildDialogProps {
-  onAdd: (input: CreateChildInput & { email: string; password: string }) => Promise<void>
+  onAdd: (input: CreateChildInput) => Promise<void>
 }
 
 const AVATAR_COLORS = [
@@ -37,8 +37,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
-    email: "",
-    password: "",
     avatar_color: "#4F46E5",
     learning_level: "beginner" as const,
   })
@@ -46,7 +44,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.name || !formData.age || !formData.email || !formData.password) {
+    if (!formData.name || !formData.age) {
       return
     }
 
@@ -56,8 +54,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       await onAdd({
         name: formData.name,
         age: Number.parseInt(formData.age),
-        email: formData.email,
-        password: formData.password,
         avatar_color: formData.avatar_color,
         learning_level: formData.learning_level,
       })
@@ -66,8 +62,6 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
       setFormData({
         name: "",
         age: "",
-        email: "",
-        password: "",
         avatar_color: "#4F46E5",
         learning_level: "beginner",
       })
@@ -92,7 +86,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
           <DialogHeader>
             <DialogTitle>Dodaj profil otroka</DialogTitle>
             <DialogDescription>
-              Ustvarite nov učni profil za vašega otroka. Dobil bo lastne podatke za prijavo.
+              Create a new learning profile for your child. You'll manage their account from your parent dashboard.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -120,30 +114,7 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">E-pošta (za prijavo)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="child@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Geslo</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="Ustvarite geslo"
-                required
-                minLength={6}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="avatar_color">Barva avatarja</Label>
+              <Label htmlFor="avatar_color">Avatar Color</Label>
               <Select
                 value={formData.avatar_color}
                 onValueChange={(value) => setFormData({ ...formData, avatar_color: value })}

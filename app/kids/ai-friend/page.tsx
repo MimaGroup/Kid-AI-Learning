@@ -2,12 +2,18 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { useAchievements } from "@/hooks/use-progress"
 import { ToastContainer } from "@/components/toast-notification"
-import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { MessageCircle, Sparkles } from "lucide-react"
+import { trackAIFriend } from "@/lib/analytics"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import { ByteMascot, ByteBanner } from "@/components/byte-mascot"
+import Image from "next/image"
+import { useSubscription } from "@/hooks/use-subscription"
+import Link from "next/link" // Added Link import for back button
 
 interface AIFriend {
   id: string
@@ -47,12 +53,9 @@ const STARS = [
 const COLORS = ["#a855f7", "#3b82f6", "#22c55e", "#f97316", "#ec4899"]
 
 export default function AIFriendBuilder() {
-  const { user, loading } = useAuth()
   const router = useRouter()
   const toast = useToast()
-  const { achievements, isLoading: achievementsLoading } = useAchievements()
-
-  const [activeTab, setActiveTab] = useState<Tab>("builder")
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
 
   const [friendName, setFriendName] = useState("")
   const [personality, setPersonality] = useState("Prijazno")
@@ -70,22 +73,20 @@ export default function AIFriendBuilder() {
   const [labDone, setLabDone] = useState(false)
 
   useEffect(() => {
-    if (!loading && !user) router.push("/auth/login")
-  }, [user, loading, router])
+    loadFriendsFromLocalStorage()
+    if (!subscriptionLoading && !hasPremium) {
+      router.push("/pricing")
+    }
+  }, [subscriptionLoading, hasPremium, router])
 
-  useEffect(() => {
-    if (user) { loadFriends(); loadProgress() }
-  }, [user])
-
-  const loadFriends = async () => {
+  const loadFriendsFromLocalStorage = () => {
     try {
-      setIsLoadingFriends(true)
-      const response = await fetch("/api/ai-friends")
-      const data = await response.json()
-      if (response.ok) setSavedFriends(data.friends || [])
-      else toast.error(data.error || "Nalaganje prijateljev ni uspelo")
-    } catch {
-      toast.error("Nalaganje prijateljev ni uspelo. Preverite povezavo.")
+      const stored = localStorage.getItem("ai_friends")
+      if (stored) {
+        setSavedFriends(JSON.parse(stored))
+      }
+    } catch (err) {
+      console.error("Error loading friends from localStorage:", err)
     } finally {
       setIsLoadingFriends(false)
     }
@@ -102,27 +103,32 @@ export default function AIFriendBuilder() {
     } catch {}
   }
 
-  const handleSaveFriend = async () => {
-    if (!friendName.trim()) { toast.warning("Vnesite ime za vašega AI prijatelja"); return }
+    setIsSaving(true)
+
     try {
-      setIsSaving(true)
-      const response = await fetch("/api/ai-friends", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: friendName, personality, color }),
-      })
-      const data = await response.json()
-      if (response.ok) {
-        toast.success(`${friendName} je bil ustvarjen!`)
-        setSavedFriends([data.friend, ...savedFriends])
-        setFriendName("")
-        setPersonality("Prijazno")
-        setColor("#a855f7")
-      } else {
-        toast.error(data.error || "Shranjevanje prijatelja ni uspelo")
+      const newFriend: AIFriend = {
+        id: crypto.randomUUID(),
+        name: friendName,
+        personality,
+        color,
+        created_at: new Date().toISOString(),
       }
-    } catch {
-      toast.error("Shranjevanje prijatelja ni uspelo. Poskusite znova.")
+
+      const updatedFriends = [newFriend, ...savedFriends]
+      setSavedFriends(updatedFriends)
+      localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
+
+      trackAIFriend("created", friendName)
+
+      toast.success(`${friendName} has been created!`)
+
+      // Reset form
+      setFriendName("")
+      setPersonality("Friendly")
+      setColor("#4F46E5")
+    } catch (err) {
+      console.error("Error saving friend:", err)
+      toast.error("Failed to create friend. Please try again.")
     } finally {
       setIsSaving(false)
     }
@@ -131,47 +137,28 @@ export default function AIFriendBuilder() {
   const handleDeleteFriend = async (id: string, name: string) => {
     if (!confirm(`Ali ste prepričani, da želite izbrisati ${name}?`)) return
     try {
-      const response = await fetch(`/api/ai-friends/${id}`, { method: "DELETE" })
-      if (response.ok) {
-        setSavedFriends(savedFriends.filter((f) => f.id !== id))
-        toast.success("Prijatelj uspešno izbrisan")
-      } else {
-        const data = await response.json()
-        toast.error(data.error || "Brisanje prijatelja ni uspelo")
-      }
-    } catch {
-      toast.error("Brisanje prijatelja ni uspelo. Poskusite znova.")
+      const updatedFriends = savedFriends.filter((f) => f.id !== id)
+      setSavedFriends(updatedFriends)
+      localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
+
+      localStorage.removeItem(`chat_${id}`)
+
+      toast.success("Friend deleted")
+    } catch (err) {
+      console.error("Error deleting friend:", err)
+      toast.error("Failed to delete friend. Please try again.")
     }
   }
 
-  const handleLabAnswer = (answer: boolean) => {
-    if (labAnswered) return
-    setLabUserAnswer(answer)
-    setLabAnswered(true)
-    if (answer === LAB_SCENARIOS[labIndex].answer) setLabScore((s) => s + 1)
+  const handleChatWithFriend = (friendId: string) => {
+    const friend = savedFriends.find((f) => f.id === friendId)
+    if (friend) {
+      trackAIFriend("chat_started", friend.name)
+    }
+    router.push(`/kids/ai-friend/chat/${friendId}`)
   }
 
-  const handleLabNext = () => {
-    if (labIndex + 1 >= LAB_SCENARIOS.length) { setLabDone(true); return }
-    setLabIndex((i) => i + 1)
-    setLabAnswered(false)
-    setLabUserAnswer(null)
-  }
-
-  const handleLabRestart = () => {
-    setLabIndex(0); setLabScore(0); setLabAnswered(false); setLabUserAnswer(null); setLabDone(false)
-  }
-
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "map",          label: "Pustolovska karta",        icon: "🗺️" },
-    { id: "achievements", label: "Dosežki",                  icon: "🏆" },
-    { id: "builder",      label: "AI Prijatelji",            icon: "🤖" },
-    { id: "lab",          label: "Laboratorij",              icon: "🧪" },
-  ]
-
-  const spaceStyle = { background: "radial-gradient(ellipse at 50% 20%, #1a0040 0%, #0a0a1a 75%)" }
-
-  if (loading || isLoadingFriends) {
+  if (isLoadingFriends || subscriptionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={spaceStyle}>
         <div className="text-center">
@@ -182,9 +169,9 @@ export default function AIFriendBuilder() {
     )
   }
 
-  const completedCount = ACTIVITIES.filter(a =>
-    a.activityType ? completedTypes.has(a.activityType) : savedFriends.length > 0
-  ).length
+  if (!hasPremium) {
+    return null
+  }
 
   return (
     <div className="min-h-screen relative pb-8" style={spaceStyle}>
@@ -199,78 +186,78 @@ export default function AIFriendBuilder() {
 
       <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
 
-      {/* Header */}
-      <div
-        className="relative z-10 px-6 py-4 flex items-center justify-between"
-        style={{ background: "rgba(168,85,247,0.18)", borderBottom: "1px solid rgba(168,85,247,0.2)" }}
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">🎮</span>
-          <h1 className="text-xl font-bold text-white">AI Igrišče</h1>
-        </div>
-        <Link href="/kids/home" className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-          ← Zemljevid
-        </Link>
-      </div>
-
-      <div className="max-w-5xl mx-auto p-4 relative z-10">
-        {/* Tab bar */}
-        <div
-          className="flex gap-1 p-1 rounded-2xl mb-6"
-          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
-        >
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-semibold transition-all"
-              style={{
-                background: activeTab === tab.id ? "linear-gradient(135deg, #7c3aed, #a855f7)" : "transparent",
-                color: activeTab === tab.id ? "white" : "rgba(255,255,255,0.5)",
-                boxShadow: activeTab === tab.id ? "0 0 16px rgba(168,85,247,0.4)" : "none",
-              }}
-            >
-              <span>{tab.icon}</span>
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          ))}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="mb-6">
+          <Link href="/kids/activities" className="text-cyan-600 hover:underline">
+            ← Back to Activities
+          </Link>
         </div>
 
-        {/* ADVENTURE MAP TAB */}
-        {activeTab === "map" && (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1">Tvoja pustolovska karta</h2>
-            <p className="text-purple-300 text-sm mb-5">Dokonča vse dejavnosti in postani AI mojster!</p>
+        <ByteBanner
+          title="AI Playground"
+          subtitle="Spoznaj Byte-a in ustvari svoje AI prijatelje!"
+          variant="waving"
+          className="mb-6"
+        />
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {ACTIVITIES.map((activity) => {
-                const done = activity.activityType ? completedTypes.has(activity.activityType) : savedFriends.length > 0
-                return (
-                  <Link key={activity.id} href={activity.href} className="group block">
-                    <div
-                      className={`rounded-2xl p-5 text-white transition-all group-hover:scale-105 relative overflow-hidden`}
-                      style={{
-                        background: `linear-gradient(135deg, ${activity.accent}33, ${activity.accent}11)`,
-                        border: `1px solid ${activity.accent}44`,
-                        boxShadow: done ? `0 0 20px ${activity.accent}33` : "none",
-                      }}
-                    >
-                      {done && (
-                        <div
-                          className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold"
-                          style={{ background: activity.accent }}
-                        >
-                          ✓
-                        </div>
-                      )}
-                      <div className="text-4xl mb-3">{activity.icon}</div>
-                      <p className="font-bold text-sm">{activity.label}</p>
-                      <p className="text-white/60 text-xs mt-1">{done ? "Dokončano!" : "Tapni →"}</p>
-                    </div>
-                  </Link>
-                )
-              })}
+        {/* Meet Byte - Featured Character */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-purple-200 mb-6">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-shrink-0">
+              <Image
+                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={120}
+                height={120}
+                className="rounded-full ring-4 ring-purple-200 shadow-lg"
+              />
             </div>
+            <div className="text-center md:text-left flex-1">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                <h2 className="text-2xl font-bold text-gray-900">Spoznaj Byte-a!</h2>
+                <Sparkles className="h-5 w-5 text-purple-500" />
+              </div>
+              <p className="text-gray-600 mb-4">
+                Byte je prijazen robotek, ki te bo spremljal na poti ucenja o umetni inteligenci. Pogovarjaj se z njim, postavljaj vprasanja in skupaj odkrivajta svet AI!
+              </p>
+              <Button
+                onClick={() => {
+                  // Ensure Byte exists in saved friends
+                  const stored = localStorage.getItem("ai_friends")
+                  const friends: AIFriend[] = stored ? JSON.parse(stored) : []
+                  let byteFriend = friends.find((f) => f.name === BYTE_CHARACTER.name)
+                  if (!byteFriend) {
+                    byteFriend = {
+                      id: "byte-default",
+                      name: BYTE_CHARACTER.name,
+                      personality: "Curious, Playful, Encouraging",
+                      color: BYTE_CHARACTER.colors.primary,
+                      created_at: new Date().toISOString(),
+                    }
+                    const updatedFriends = [byteFriend, ...friends]
+                    localStorage.setItem("ai_friends", JSON.stringify(updatedFriends))
+                    setSavedFriends(updatedFriends)
+                  }
+                  handleChatWithFriend(byteFriend.id)
+                }}
+                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Klepetaj z Byte-om
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-purple-50 border border-purple-200 p-4 rounded-2xl mb-6 flex items-start gap-4">
+          <ByteMascot variant="teaching" size="sm" />
+          <div>
+            <p className="text-sm font-semibold text-purple-700">Byte pravi:</p>
+            <p className="text-sm text-purple-900 mt-1">
+              Ustvari si lahko tudi svoje AI prijatelje! Izberi jim ime, osebnost in barvo.
+            </p>
+          </div>
+        </div>
 
             <div
               className="rounded-2xl p-5"
@@ -304,167 +291,13 @@ export default function AIFriendBuilder() {
               <div className="text-center py-12 text-purple-400">Nalaganje dosežkov...</div>
             ) : achievements.length === 0 ? (
               <div
-                className="rounded-2xl p-10 text-center"
-                style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.2)" }}
+                className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl text-white font-bold"
+                style={{ backgroundColor: color }}
               >
-                <div className="text-6xl mb-4">🏆</div>
-                <h3 className="text-xl font-bold text-white mb-2">Še nobenih značk!</h3>
-                <p className="text-purple-300 text-sm mb-6">Dokonči dejavnosti in dosezi popolne rezultate, da prislužiš svojo prvo značko.</p>
-                <Link href="/kids/home">
-                  <button
-                    className="px-6 py-3 rounded-xl font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}
-                  >
-                    Na zemljevid
-                  </button>
-                </Link>
+                {friendName ? friendName.charAt(0).toUpperCase() : "?"}
               </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className="rounded-2xl p-5 flex items-start gap-4"
-                    style={{ background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)" }}
-                  >
-                    <div className="text-3xl">🏆</div>
-                    <div>
-                      <p className="font-bold text-white">{achievement.title}</p>
-                      <p className="text-yellow-200 text-xs mt-1">{achievement.description}</p>
-                      <p className="text-yellow-500/60 text-xs mt-1">{new Date(achievement.earned_at).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* BUILDER TAB */}
-        {activeTab === "builder" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Build form */}
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: "rgba(8,8,30,0.8)", border: "1px solid rgba(168,85,247,0.3)" }}
-            >
-              <h2 className="text-xl font-bold text-white mb-1">Ustvari AI prijatelja</h2>
-              <p className="text-purple-300 text-sm mb-5">Prilagodi ime, osebnost in barvo.</p>
-
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-purple-300 text-xs font-bold mb-2 tracking-wider">IME</label>
-                  <input
-                    type="text"
-                    value={friendName}
-                    onChange={(e) => setFriendName(e.target.value)}
-                    className="w-full rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none"
-                    placeholder="Poimenuj svojega AI prijatelja..."
-                    style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.3)" }}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-purple-300 text-xs font-bold mb-2 tracking-wider">OSEBNOST</label>
-                  <select
-                    value={personality}
-                    onChange={(e) => setPersonality(e.target.value)}
-                    className="w-full rounded-xl px-4 py-3 text-white focus:outline-none"
-                    style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(168,85,247,0.3)" }}
-                  >
-                    <option value="Prijazno" className="bg-gray-900">Prijazno</option>
-                    <option value="Radovedno" className="bg-gray-900">Radovedno</option>
-                    <option value="Koristno" className="bg-gray-900">Koristno</option>
-                    <option value="Igrivo" className="bg-gray-900">Igrivo</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-purple-300 text-xs font-bold mb-3 tracking-wider">BARVA</label>
-                  <div className="flex gap-3">
-                    {COLORS.map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => setColor(c)}
-                        className="w-11 h-11 rounded-xl transition-all"
-                        style={{
-                          backgroundColor: c,
-                          border: color === c ? "3px solid white" : "3px solid transparent",
-                          transform: color === c ? "scale(1.15)" : "scale(1)",
-                          boxShadow: color === c ? `0 0 12px ${c}` : "none",
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleSaveFriend}
-                  disabled={isSaving || !friendName.trim()}
-                  className="w-full py-3.5 rounded-2xl font-bold text-white text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}
-                >
-                  {isSaving ? "Ustvarjanje..." : "Ustvari AI prijatelja →"}
-                </button>
-              </div>
-            </div>
-
-            {/* Preview + saved list */}
-            <div className="space-y-4">
-              {/* Preview */}
-              <div
-                className="rounded-2xl p-6 text-center"
-                style={{ background: "rgba(8,8,30,0.8)", border: "1px solid rgba(168,85,247,0.3)" }}
-              >
-                <p className="text-purple-400 text-xs font-bold mb-4 tracking-wider">PREDOGLED</p>
-                <div
-                  className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl shadow-lg transition-all"
-                  style={{
-                    backgroundColor: color,
-                    boxShadow: `0 0 24px ${color}88`,
-                  }}
-                >
-                  🤖
-                </div>
-                <h4 className="text-xl font-bold text-white mb-1">{friendName || "Tvoj prijatelj"}</h4>
-                <p className="text-purple-400 text-sm">Osebnost: {personality}</p>
-              </div>
-
-              {/* Saved friends */}
-              {savedFriends.length > 0 && (
-                <div
-                  className="rounded-2xl p-4"
-                  style={{ background: "rgba(8,8,30,0.8)", border: "1px solid rgba(168,85,247,0.2)" }}
-                >
-                  <p className="text-purple-400 text-xs font-bold mb-3 tracking-wider">TVOJI PRIJATELJI ({savedFriends.length})</p>
-                  <div className="space-y-2 max-h-56 overflow-y-auto">
-                    {savedFriends.map((friend) => (
-                      <div
-                        key={friend.id}
-                        className="flex items-center gap-3 rounded-xl p-3"
-                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-                      >
-                        <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-xl flex-shrink-0"
-                          style={{ backgroundColor: friend.color }}
-                        >
-                          🤖
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-white text-sm truncate">{friend.name}</p>
-                          <p className="text-purple-400 text-xs">{friend.personality}</p>
-                        </div>
-                        <button
-                          onClick={() => handleDeleteFriend(friend.id, friend.name)}
-                          className="text-red-500/60 hover:text-red-400 text-xs transition-colors flex-shrink-0"
-                        >
-                          Izbriši
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <h4 className="text-xl font-bold text-blue-700 mb-2">{friendName || "Your Friend"}</h4>
+              <p className="text-sm text-gray-600 mb-3">Personality: {personality}</p>
             </div>
           </div>
         )}
@@ -496,30 +329,36 @@ export default function AIFriendBuilder() {
                   className="px-8 py-3.5 rounded-2xl font-bold text-white transition-all active:scale-95"
                   style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}
                 >
-                  Poskusi znova
-                </button>
-              </div>
-            ) : (
-              <div
-                className="rounded-2xl overflow-hidden"
-                style={{ background: "rgba(8,8,30,0.88)", border: "1px solid rgba(168,85,247,0.3)" }}
-              >
-                {/* Lab header */}
-                <div
-                  className="px-6 py-4 flex justify-between items-center"
-                  style={{ background: "rgba(168,85,247,0.18)", borderBottom: "1px solid rgba(168,85,247,0.2)" }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🧪</span>
-                    <span className="text-white font-bold">Scenarij {labIndex + 1} od {LAB_SCENARIOS.length}</span>
+                  <div className="flex items-center justify-between mb-3">
+                    {friend.name === BYTE_CHARACTER.name ? (
+                      <Image
+                        src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                        alt={BYTE_CHARACTER.fullName}
+                        width={64}
+                        height={64}
+                        className="w-16 h-16 rounded-full ring-2 ring-purple-200"
+                      />
+                    ) : (
+                      <div
+                        className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white font-bold"
+                        style={{ backgroundColor: friend.color }}
+                      >
+                        {friend.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <button
+                      onClick={() => handleDeleteFriend(friend.id, friend.name)}
+                      className="text-red-500 hover:text-red-700 text-sm font-medium"
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <div
-                    className="px-3 py-1.5 rounded-xl text-sm font-bold"
-                    style={{ background: "rgba(168,85,247,0.25)", border: "1px solid rgba(168,85,247,0.3)" }}
-                  >
-                    <span className="text-purple-300">{labScore}</span>
-                    <span className="text-white/40 text-xs"> pt</span>
-                  </div>
+                  <h4 className="text-lg font-bold text-gray-900 mb-1">{friend.name}</h4>
+                  <p className="text-sm text-gray-600 mb-3">Personality: {friend.personality}</p>
+                  <Button onClick={() => handleChatWithFriend(friend.id)} className="w-full" variant="default">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Chat with {friend.name}
+                  </Button>
                 </div>
 
                 {/* Progress */}

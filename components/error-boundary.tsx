@@ -3,6 +3,8 @@
 import { Component, type ReactNode } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
+import { logError } from "@/lib/monitoring"
+import { captureException } from "@/lib/sentry"
 
 interface Props {
   children: ReactNode
@@ -25,7 +27,26 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error("Error caught by boundary:", error, errorInfo)
+    console.error("[v0] Error caught by boundary:", error, errorInfo)
+
+    captureException(error, {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: true,
+    })
+
+    // Also log to internal monitoring system
+    logError({
+      error_type: "react_error",
+      error_message: error.message,
+      stack_trace: error.stack,
+      severity: "high",
+      source: "client",
+      metadata: {
+        componentStack: errorInfo.componentStack,
+      },
+    }).catch((err) => {
+      console.error("[v0] Failed to log error:", err)
+    })
   }
 
   render() {

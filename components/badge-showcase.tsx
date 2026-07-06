@@ -1,106 +1,136 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const ALL_BADGES = [
-  { id: "first_steps",       icon: "🌟", label: "Prve korake",      desc: "Opravi 1 lekcijo",     threshold: 1,   color: "#fbbf24" },
-  { id: "quick_learner",     icon: "⚡", label: "Hitri učenec",     desc: "Opravi 5 lekcij",      threshold: 5,   color: "#60a5fa" },
-  { id: "dedicated_student", icon: "🎓", label: "Vztrajni študent", desc: "Opravi 25 lekcij",     threshold: 25,  color: "#a78bfa" },
-  { id: "master_learner",    icon: "🏆", label: "Mojster učenja",   desc: "Opravi 100 lekcij",    threshold: 100, color: "#f472b6" },
-  { id: "perfect_score",     icon: "💯", label: "Perfektna ocena",  desc: "Kviz s 100% točnostjo",threshold: null, color: "#34d399" },
-]
-
-interface BadgeShowcaseProps {
-  earnedBadgeIds: string[]
-  completedLessons: number
+interface BadgeData {
+  badge_id: string
+  name: string
+  description: string
+  icon: string
+  points_required: number
+  category: string
+  rarity: string
 }
 
-export function BadgeShowcase({ earnedBadgeIds, completedLessons }: BadgeShowcaseProps) {
-  const earned = new Set(earnedBadgeIds)
+interface UserBadge {
+  badge_id: string
+  earned_at: string
+  badges: BadgeData
+}
 
-  // Find next milestone badge
-  const nextMilestone = ALL_BADGES.filter(b => b.threshold !== null && !earned.has(b.id))
-    .sort((a, b) => (a.threshold ?? 0) - (b.threshold ?? 0))[0]
+export function BadgeShowcase() {
+  const [earnedBadges, setEarnedBadges] = useState<UserBadge[]>([])
+  const [allBadges, setAllBadges] = useState<BadgeData[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const remaining = nextMilestone?.threshold ? nextMilestone.threshold - completedLessons : null
+  useEffect(() => {
+    fetchBadges()
+  }, [])
 
-  return (
-    <div
-      className="rounded-2xl p-5"
-      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-    >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-bold">Tvoje značke</h3>
-        <span className="text-white/40 text-sm">{earnedBadgeIds.length}/{ALL_BADGES.length}</span>
-      </div>
+  const fetchBadges = async () => {
+    try {
+      const response = await fetch("/api/gamification")
+      if (response.ok) {
+        const data = await response.json()
+        setEarnedBadges(data.earnedBadges || [])
+        setAllBadges(data.allBadges || [])
+      }
+    } catch (error) {
+      console.error("Error fetching badges:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      <div className="grid grid-cols-5 gap-3 mb-4">
-        {ALL_BADGES.map((badge) => {
-          const isEarned = earned.has(badge.id)
-          return (
-            <div key={badge.id} className="flex flex-col items-center gap-1.5 group relative">
-              <div
-                className="flex items-center justify-center rounded-2xl transition-all"
-                style={{
-                  width: 52, height: 52,
-                  background: isEarned ? `${badge.color}18` : "rgba(255,255,255,0.04)",
-                  border: isEarned ? `2px solid ${badge.color}55` : "2px solid rgba(255,255,255,0.08)",
-                  boxShadow: isEarned ? `0 0 16px ${badge.color}33` : "none",
-                  fontSize: 24,
-                  filter: isEarned ? "none" : "grayscale(1) opacity(0.3)",
-                }}
-              >
-                {badge.icon}
-              </div>
-              <span
-                className="text-center text-xs leading-tight font-medium"
-                style={{ color: isEarned ? badge.color : "rgba(255,255,255,0.25)", fontSize: 10 }}
-              >
-                {badge.label}
-              </span>
+  const earnedBadgeIds = new Set(earnedBadges.map((ub) => ub.badge_id))
 
-              {/* Tooltip on hover */}
-              <div
-                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
-                style={{ background: "#0d0d2b", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)" }}
-              >
-                {badge.desc}
-              </div>
-            </div>
-          )
-        })}
-      </div>
+  const categories = ["all", "milestone", "achievement", "streak", "subject", "special"]
 
-      {/* Next milestone hint */}
-      {nextMilestone && remaining !== null && remaining > 0 && (
-        <div
-          className="flex items-center gap-3 rounded-xl px-4 py-3"
-          style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.2)" }}
-        >
-          <span style={{ fontSize: 20 }}>{nextMilestone.icon}</span>
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-white/60 text-xs">Naslednja značka: <strong className="text-white/80">{nextMilestone.label}</strong></span>
-              <span className="text-purple-400 text-xs font-semibold">{completedLessons}/{nextMilestone.threshold}</span>
-            </div>
-            <div className="rounded-full overflow-hidden" style={{ height: 4, background: "rgba(255,255,255,0.08)" }}>
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${Math.min(100, (completedLessons / (nextMilestone.threshold ?? 1)) * 100)}%`,
-                  background: "linear-gradient(90deg, #7c3aed, #a855f7)",
-                }}
-              />
-            </div>
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case "common":
+        return "bg-gray-100 text-gray-800"
+      case "rare":
+        return "bg-blue-100 text-blue-800"
+      case "epic":
+        return "bg-purple-100 text-purple-800"
+      case "legendary":
+        return "bg-yellow-100 text-yellow-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card className="p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded"></div>
+            ))}
           </div>
         </div>
-      )}
+      </Card>
+    )
+  }
 
-      {earnedBadgeIds.length === ALL_BADGES.length && (
-        <div className="text-center py-2 text-sm font-semibold" style={{ color: "#fbbf24" }}>
-          🎉 Vse značke so odklenjen! Si pravi mojster!
-        </div>
-      )}
-    </div>
+  return (
+    <Card className="p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">Badge Collection</h2>
+        <p className="text-gray-600">
+          {earnedBadges.length} / {allBadges.length} badges earned
+        </p>
+      </div>
+
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="mb-4 flex flex-wrap h-auto gap-2">
+          {categories.map((category) => (
+            <TabsTrigger
+              key={category}
+              value={category}
+              className="capitalize text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0"
+            >
+              {category}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {categories.map((category) => (
+          <TabsContent key={category} value={category}>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {allBadges
+                .filter((badge) => category === "all" || badge.category === category)
+                .map((badge) => {
+                  const isEarned = earnedBadgeIds.has(badge.badge_id)
+                  return (
+                    <div
+                      key={badge.badge_id}
+                      className={`p-4 rounded-lg border-2 text-center transition ${
+                        isEarned
+                          ? "bg-white border-green-500 shadow-lg"
+                          : "bg-gray-50 border-gray-200 opacity-50 grayscale"
+                      }`}
+                    >
+                      <div className="text-4xl mb-2">{badge.icon}</div>
+                      <div className="text-sm font-semibold mb-1">{badge.name}</div>
+                      <div className="text-xs text-gray-600 mb-2">{badge.description}</div>
+                      <Badge className={`text-xs ${getRarityColor(badge.rarity)}`}>{badge.rarity}</Badge>
+                      {!isEarned && (
+                        <div className="text-xs text-gray-500 mt-2">{badge.points_required} pts required</div>
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </Card>
   )
 }

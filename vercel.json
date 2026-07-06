@@ -5,8 +5,20 @@
   "installCommand": "npm install",
   "crons": [
     {
-      "path": "/api/cron/trial-reminder",
+      "path": "/api/cron/inactive-users",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/email/welcome",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/engagement/weekly-summary",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/email-sequence",
+      "schedule": "0 * * * *"
     }
   ]
 }

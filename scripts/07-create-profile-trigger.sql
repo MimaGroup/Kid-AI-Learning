@@ -1,6 +1,7 @@
 -- Automatically create a profile when a user signs up
 -- This ensures every authenticated user has a profile record
 
+-- Fixed to handle errors gracefully and log issues
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
@@ -12,8 +13,14 @@ BEGIN
     COALESCE(new.raw_user_meta_data->>'role', 'parent'),
     now(),
     now()
-  );
+  )
+  ON CONFLICT (id) DO NOTHING; -- Prevent duplicate key errors
   RETURN new;
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Log error but don't fail the signup
+    RAISE WARNING 'Error creating profile for user %: %', new.id, SQLERRM;
+    RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

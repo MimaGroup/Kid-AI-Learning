@@ -1,264 +1,315 @@
-"use client"
-
+import type { Metadata } from "next"
+import { createMetadata, generateStructuredData } from "@/lib/metadata"
+import { StructuredData } from "@/components/structured-data"
 import Link from "next/link"
-import { useState } from "react"
-import { SupportChat } from "../../components/support-chat"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from 'lucide-react'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
-const CATEGORIES = [
-  {
-    label: "Splošno",
-    icon: "🚀",
-    items: [
-      {
-        q: "Kaj je Kids Learning AI?",
-        a: "Kids Learning AI je izobraževalna platforma, ki otrokom med 5 in 12 let na zabaven in interaktiven način predstavi umetno inteligenco. Skozi tečaje, igre, kvize in pogovore z AI pomočnikom Byte-om otroci spoznajo, kako AI deluje v vsakdanjem življenju.",
-      },
-      {
-        q: "Za katero starost je platforma primerna?",
-        a: "Platforma je zasnovana za otroke med 5 in 12 let. Vsebine so razporejene po stopnjah (Začetnik, Srednji, Napreden), tako da so primerne tako za prvič srečanje z AI kot za naprednejše učence.",
-      },
-      {
-        q: "V katerem jeziku je platforma?",
-        a: "Celotna platforma je v slovenščini — vsebina, tečaji, igre in Byte, naš AI pomočnik. Zasnovana je posebej za slovensko govoreče otroke in starše.",
-      },
-      {
-        q: "Katere vsebine so na voljo?",
-        a: "Na voljo je 5 tečajev (od osnov AI do robotike), 3 interaktivne igre (AI Detektiv, AI Kviz, Vzorci), sistem značk in napredka, certifikati ob zaključku tečaja ter Byte — AI učni pomočnik, ki je na voljo med vsako lekcijo.",
-      },
-    ],
-  },
-  {
-    label: "Naročnina in plačilo",
-    icon: "💳",
-    items: [
-      {
-        q: "Ali potrebujem kreditno kartico za preskusno obdobje?",
-        a: "Ne. Za začetek 14-dnevnega brezplačnega preskusa kreditna kartica ni potrebna. Plačilni podatki so zahtevani šele ko se odločite za plačano naročnino.",
-      },
-      {
-        q: "Koliko stane naročnina?",
-        a: "Na voljo sta dva plana:\n• Mesečni: €7,90/mesec\n• Letni: €79,00/leto (prihranite €15,80 — enako kot 2 meseca brezplačno)\n\nOba plana vključujeta popoln dostop za en družinski račun. Vse cene so v EUR in vključujejo DDV.",
-      },
-      {
-        q: "Kdaj se zaračuna naročnina?",
-        a: "Zaračunavanje poteka na isti datum vsak mesec (mesečni plan) oz. enkrat letno (letni plan), od dneva aktivacije naročnine.",
-      },
-      {
-        q: "Kako prekličem naročnino?",
-        a: "Naročnino prekličete kadar koli v starševski plošči → Nastavitve. Preklic začne veljati ob koncu obračunskega obdobja — dostop ohranite do tega datuma. Nobenih skritih stroškov ali kazni.",
-      },
-      {
-        q: "Ali imam pravico do vračila?",
-        a: "Da. V skladu z EU zakonodajo o pravicah potrošnikov (Direktiva 2011/83/EU) ponujamo popolno povračilo v 14 dneh od prvega plačila. Pišite nam na support@kids-learning-ai.com.",
-      },
-    ],
-  },
-  {
-    label: "Tečaji in napredek",
-    icon: "📚",
-    items: [
-      {
-        q: "Koliko tečajev je na voljo?",
-        a: "Trenutno je na voljo 5 tečajev: AI osnove za otroke, AI varnost in zasebnost, AI in umetnost, Kodiranje z AI, AI in robotika. Skupaj vsebujejo 74 lekcij. Vsak tečaj je razdeljen na module.",
-      },
-      {
-        q: "Kako platforma sledi napredku otroka?",
-        a: "Sistem samodejno beleži vsako začeto in zaključeno lekcijo. Starš vidi napredek v starševski plošči: katere lekcije so opravljene, rezultati kvizov in pridobljene značke.",
-      },
-      {
-        q: "Kaj so značke in kako jih pridobi otrok?",
-        a: "Značke so digitalne nagrade za dosežke:\n• 🌟 Prve korake — 1. zaključena lekcija\n• ⚡ Hitri učenec — 5 zaključenih lekcij\n• 🎓 Vztrajni študent — 25 zaključenih lekcij\n• 🏆 Mojster učenja — 100 zaključenih lekcij\n• 💯 Perfektna ocena — kviz s 100% točnostjo",
-      },
-      {
-        q: "Kaj je certifikat in kako ga otrok dobi?",
-        a: "Ko otrok zaključi vse lekcije v posameznem tečaju, prejme digitalni certifikat z imenom, naslovom tečaja in datumom. Certifikat je na voljo na strani tečaja in ga je možno natisniti ali shraniti kot PDF.",
-      },
-      {
-        q: "Ali se napredek shrani, če prekličem naročnino?",
-        a: "Da. Napredek, značke in certifikati so shranjeni tudi po preklicu naročnine. Ob ponovni aktivaciji so takoj dostopni.",
-      },
-    ],
-  },
-  {
-    label: "Byte — AI pomočnik",
-    icon: "🤖",
-    items: [
-      {
-        q: "Kaj je Byte?",
-        a: "Byte je naš AI učni pomočnik, ki je na voljo med vsako lekcijo. Otroku pomaga razumeti snov, odgovarja na vprašanja o vsebini in spodbuja radovednost. Byte ne poda direktnih odgovorov na kvizna vprašanja — daje namige.",
-      },
-      {
-        q: "Je Byte varen za otroke?",
-        a: "Da. Byte je programiran izključno za izobraževalne pogovore. Ne razpravlja o neprimernih temah, ne sprašuje po osebnih podatkih in ob morebitno zaskrbljujočem sporočilu otroka napoti k staršem. Pogovori so omejeni na 40 na dan.",
-      },
-      {
-        q: "Ali Byte shrani pogovore?",
-        a: "Pogovori z Byte-om se ne shranjujejo trajno. Vsaka seja je ločena in ni dostopna staršem ali nam. Byte si ne zapomni prejšnjih pogovorov.",
-      },
-      {
-        q: "V katerem jeziku govori Byte?",
-        a: "Byte vedno odgovarja v slovenščini, ne glede na jezik vprašanja.",
-      },
-    ],
-  },
-  {
-    label: "Varnost in zasebnost",
-    icon: "🛡️",
-    items: [
-      {
-        q: "Ali je platforma varna za otroke?",
-        a: "Da. Platforma ne zbira e-poštnih naslovov ali kontaktnih podatkov otrok. Ni klepetalnic, forumov ali oglasov. Otroci nimajo samostojnih računov — vse upravljanje poteka prek starševskega računa.",
-      },
-      {
-        q: "Katere podatke zberate o otroku?",
-        a: "Zbiramo samo: ime profila (ki ga določi starš) in stopnjo znanja. Ne zbiramo datuma rojstva, lokacije, fotografij ali e-poštnega naslova otroka.",
-      },
-      {
-        q: "Ali prodajate podatke tretjim osebam?",
-        a: "Ne. Podatkov ne prodajamo, ne dajemo v najem in ne tržimo. Delimo jih izključno s ponudniki infrastrukture (Supabase za bazo, Vercel za gostovanje) — oba delujeta skladno z GDPR.",
-      },
-      {
-        q: "Kako zahtevam izbris podatkov?",
-        a: "Profil otroka izbrišete v starševski plošči. Za popoln izbris računa in vseh podatkov pišite na support@kids-learning-ai.com — izbrišemo vse v 30 dneh.",
-      },
-    ],
-  },
-  {
-    label: "Tehnično",
-    icon: "⚙️",
-    items: [
-      {
-        q: "Ali platforma deluje na mobilnih napravah?",
-        a: "Da. Platforma je popolnoma odzivna in deluje na telefonih, tablicah in računalnikih. Ni potrebno nameščati aplikacije — dostop je prek brskalnika.",
-      },
-      {
-        q: "Kateri brskalniki so podprti?",
-        a: "Platforma deluje v vseh modernih brskalnikih: Chrome, Firefox, Safari, Edge. Priporočamo najnovejšo različico brskalnika za najboljšo izkušnjo.",
-      },
-      {
-        q: "Kaj naredim, če ne morem dostopati do računa?",
-        a: "Na strani za prijavo kliknite 'Pozabljeno geslo' in sledite navodilom. Če težava ne izgine, pišite na support@kids-learning-ai.com.",
-      },
-    ],
-  },
-]
-
-function AccordionItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="border-b border-gray-100 last:border-0">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full text-left py-5 flex items-start justify-between gap-4 group"
-      >
-        <span className="font-semibold text-gray-900 group-hover:text-purple-700 transition-colors text-sm md:text-base leading-snug">
-          {q}
-        </span>
-        <span className="flex-shrink-0 mt-0.5 text-purple-500 text-lg leading-none transition-transform duration-200"
-          style={{ transform: open ? "rotate(45deg)" : "rotate(0deg)" }}>
-          +
-        </span>
-      </button>
-      {open && (
-        <div className="pb-5 pr-8">
-          {a.split("\n").map((line, i) =>
-            line.trim() ? (
-              <p key={i} className="text-gray-600 text-sm leading-relaxed mb-1">{line}</p>
-            ) : <div key={i} className="h-1" />
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
+export const metadata: Metadata = createMetadata({
+  title: "FAQ - Frequently Asked Questions | AI Kids Learning",
+  description:
+    "Find answers to common questions about AI Kids Learning Platform. Learn about pricing, safety, features, and how our AI-powered education works for children.",
+  path: "/faq",
+})
 
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState(0)
-  const total = CATEGORIES.reduce((s, c) => s + c.items.length, 0)
+  const faqSchema = generateStructuredData("FAQPage", {
+    questions: [
+      {
+        question: "What age group is this platform designed for?",
+        answer:
+          "AI Kids Learning Platform is designed for children aged 6-12 years old. Our content is carefully crafted to be age-appropriate, with different difficulty levels and content types suitable for various developmental stages within this range.",
+      },
+      {
+        question: "Is the platform safe for my child?",
+        answer:
+          "Yes! Safety is our top priority. We are COPPA-compliant, use content filtering, require parental account creation, and implement industry-standard security measures. All AI interactions are monitored and filtered for age-appropriate content.",
+      },
+      {
+        question: "How much does Premium cost?",
+        answer:
+          "We offer two Premium subscription options: Monthly at $9.99/month and Yearly at $99.99/year (save 17% - equivalent to $8.33/month). Both plans include all Premium features and can be cancelled anytime.",
+      },
+      {
+        question: "Can I cancel my subscription anytime?",
+        answer:
+          "Yes! You can cancel your subscription at any time from your account settings. Your Premium access will continue until the end of your current billing period.",
+      },
+      {
+        question: "Can I track my child's progress?",
+        answer:
+          "Yes! The parent dashboard provides comprehensive analytics including learning time, activity history, game scores, achievements, badges earned, daily learning streaks, and detailed session logs.",
+      },
+    ],
+  })
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Nav */}
-      <nav className="border-b bg-white sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl">🚀</span>
-            <span className="font-bold text-gray-900">Kids Learning AI</span>
-          </Link>
-          <Link href="/auth/sign-up"
-            className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
-            Začni brezplačno
-          </Link>
-        </div>
-      </nav>
+    <>
+      <StructuredData data={faqSchema} />
+      <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden">
+        {/* Floating AI-themed decorative elements */}
+        <div className="absolute top-10 left-10 text-6xl opacity-30 animate-float">🤖</div>
+        <div className="absolute top-32 right-20 text-5xl opacity-20 animate-float" style={{ animationDelay: '1s' }}>💡</div>
+        <div className="absolute top-56 left-1/4 text-4xl opacity-25 animate-float" style={{ animationDelay: '2s' }}>📚</div>
+        <div className="absolute bottom-40 right-1/4 text-5xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}>⚙️</div>
 
-      <main className="max-w-5xl mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3">Pogosta vprašanja</h1>
-          <p className="text-gray-500">{total} odgovorov na najpogostejša vprašanja o platformi Kids Learning AI.</p>
-        </div>
+        {/* Gradient blobs */}
+        <div className="absolute top-20 right-10 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
 
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Category sidebar */}
-          <aside className="md:w-52 flex-shrink-0">
-            <div className="sticky top-24 space-y-1">
-              {CATEGORIES.map((cat, i) => (
-                <button key={i} onClick={() => setActiveCategory(i)}
-                  className="w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                  style={activeCategory === i
-                    ? { background: "#f3e8ff", color: "#7c3aed" }
-                    : { color: "#6b7280" }
-                  }>
-                  <span>{cat.icon}</span>
-                  <span>{cat.label}</span>
-                  <span className="ml-auto text-xs opacity-50">{cat.items.length}</span>
-                </button>
-              ))}
+        <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
+          <Link href="/">
+            <Button variant="ghost" className="mb-6 hover:bg-white/50 rounded-full">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+
+          <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 border border-white/20">
+            <div className="text-center mb-12">
+              <div className="text-5xl mb-4">❓</div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Frequently Asked Questions</h1>
+              <p className="text-lg text-gray-600">Find answers to common questions about our platform</p>
             </div>
-          </aside>
 
-          {/* Questions */}
-          <div className="flex-1 min-w-0">
-            {CATEGORIES.map((cat, i) => (
-              <div key={i} className={i === activeCategory ? "block" : "hidden"}>
-                <div className="flex items-center gap-2 mb-6">
-                  <span className="text-2xl">{cat.icon}</span>
-                  <h2 className="text-xl font-bold text-gray-900">{cat.label}</h2>
-                </div>
-                <div className="bg-white border border-gray-100 rounded-2xl px-6 divide-y divide-gray-50">
-                  {cat.items.map((item, j) => (
-                    <AccordionItem key={j} q={item.q} a={item.a} />
-                  ))}
-                </div>
-              </div>
-            ))}
+            <Accordion type="multiple" className="space-y-4">
+              <AccordionItem value="item-1" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  What age group is this platform designed for?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  AI Kids Learning Platform is designed for children aged 6-12 years old. Our content is carefully
+                  crafted to be age-appropriate, with different difficulty levels and content types suitable for various
+                  developmental stages within this range.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Is the platform safe for my child?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Yes! Safety is our top priority. We are COPPA-compliant, use content filtering, require parental
+                  account creation, and implement industry-standard security measures. All AI interactions are monitored
+                  and filtered for age-appropriate content. We recommend parental supervision, especially for younger
+                  children.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  What's included in the free tier?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  The free tier includes:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Access to basic learning activities</li>
+                    <li>Limited AI interactions per day</li>
+                    <li>Basic progress tracking</li>
+                    <li>One child profile</li>
+                    <li>Access to select games and stories</li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  What additional features do I get with Premium?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Premium subscription includes:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Unlimited AI interactions</li>
+                    <li>Access to all games, activities, and stories</li>
+                    <li>Advanced progress analytics</li>
+                    <li>Multiple child profiles (up to 5)</li>
+                    <li>Priority support</li>
+                    <li>Early access to new features</li>
+                    <li>Ad-free experience</li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  How much does Premium cost?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  We offer two Premium subscription options:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>
+                      <strong>Monthly:</strong> $9.99/month
+                    </li>
+                    <li>
+                      <strong>Yearly:</strong> $99.99/year (save 17% - equivalent to $8.33/month)
+                    </li>
+                  </ul>
+                  Both plans include all Premium features and can be cancelled anytime.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-6" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Can I cancel my subscription anytime?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Yes! You can cancel your subscription at any time from your account settings. Your Premium access will
+                  continue until the end of your current billing period. No refunds are provided for partial months, but
+                  you'll retain access to Premium features until your subscription expires.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-7" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  How does the AI work? Is it really talking to my child?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Our platform uses advanced AI language models to generate educational content, stories, and
+                  conversations. The AI is specifically configured for child-friendly interactions with content
+                  filtering and safety measures. While the AI generates responses in real-time, all interactions are
+                  monitored and filtered to ensure age-appropriate content. Think of it as an educational tool, not a
+                  replacement for human interaction.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-8" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Can I track my child's progress?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Yes! The parent dashboard provides comprehensive analytics including:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Learning time and activity history</li>
+                    <li>Game scores and achievements</li>
+                    <li>Badges and rewards earned</li>
+                    <li>Daily learning streaks</li>
+                    <li>Areas of strength and improvement</li>
+                    <li>Detailed session logs</li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-9" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  How many child profiles can I create?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Free tier accounts can create 1 child profile. Premium subscribers can create up to 5 child profiles,
+                  each with their own progress tracking, achievements, and personalized learning experience.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-10" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  What devices can we use?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  AI Kids Learning Platform works on any device with a modern web browser:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Desktop computers (Windows, Mac, Linux)</li>
+                    <li>Tablets (iPad, Android tablets)</li>
+                    <li>Smartphones (iOS, Android)</li>
+                  </ul>
+                  We recommend tablets or computers for the best experience. The platform is fully responsive and works
+                  offline for many features once loaded.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-11" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Do you collect my child's personal information?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  We collect minimal information necessary for the educational experience: first name, age, and learning
+                  progress data. We do NOT collect sensitive personal information, photos, or location data. All data is
+                  encrypted and stored securely. Parents have full control and can delete their child's data at any
+                  time. See our{" "}
+                  <Link href="/privacy-policy" className="text-blue-600 hover:underline">
+                    Privacy Policy
+                  </Link>{" "}
+                  for complete details.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-12" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  What if my child encounters inappropriate content?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  While we have robust content filtering and safety measures, no system is perfect. If your child
+                  encounters any inappropriate content, please report it immediately through the platform or contact our
+                  support team. We take all reports seriously and continuously improve our safety systems.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-13" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Can my child use this without supervision?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  While our platform is designed with safety in mind, we recommend parental supervision, especially for
+                  younger children (ages 6-8). Older children (9-12) may use the platform more independently, but we
+                  encourage parents to regularly review their child's progress and activities through the parent
+                  dashboard.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-14" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  How do I get help or report an issue?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  You can get help in several ways:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>
+                      Visit our{" "}
+                      <Link href="/contact" className="text-blue-600 hover:underline">
+                        Contact page
+                      </Link>
+                    </li>
+                    <li>Email us at support@kids-learning-ai.com</li>
+                    <li>Use the in-app help button (Premium subscribers get priority support)</li>
+                  </ul>
+                  We typically respond within 24-48 hours.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-15" className="border-2 border-purple-100 rounded-2xl px-6 bg-white/50">
+                <AccordionTrigger className="text-left font-semibold hover:text-purple-600">
+                  Will my child actually learn about AI?
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-700">
+                  Yes! Our platform teaches AI concepts through hands-on experience. Children learn about:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Pattern recognition and machine learning basics</li>
+                    <li>How AI makes decisions</li>
+                    <li>Natural language processing through conversations</li>
+                    <li>Creative applications of AI</li>
+                    <li>Ethical considerations of AI technology</li>
+                  </ul>
+                  Learning happens naturally through play, making complex concepts accessible and fun.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <div className="mt-12 p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl text-center border-2 border-purple-200">
+              <h3 className="font-bold text-lg mb-2 text-gray-900">Still have questions?</h3>
+              <p className="text-gray-700 mb-4">We're here to help! Reach out to our support team.</p>
+              <Link href="/contact">
+                <Button className="bg-purple-600 hover:bg-purple-700 rounded-full">Contact Support</Button>
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-16 bg-purple-50 border border-purple-200 rounded-2xl p-8 text-center">
-          <h3 className="text-xl font-bold text-purple-900 mb-2">Niste našli odgovora?</h3>
-          <p className="text-purple-700 mb-6">Pišite nam in odgovorili vam bomo v 2 delovnih dneh.</p>
-          <a href="mailto:support@kids-learning-ai.com"
-            className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-            Pišite nam →
-          </a>
+        {/* Cloud wave divider at bottom */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 0L60 10C120 20 240 40 360 45C480 50 600 40 720 35C840 30 960 30 1080 35C1200 40 1320 50 1380 55L1440 60V120H0V0Z" fill="white" fillOpacity="0.3"/>
+          </svg>
         </div>
-      </main>
-
-      <footer className="border-t bg-gray-50 py-8 px-6 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm text-gray-400">
-          <Link href="/" className="hover:text-gray-700">← Nazaj na domačo stran</Link>
-          <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-gray-700">Zasebnost</Link>
-            <Link href="/varstvo-otrok" className="hover:text-gray-700">Varstvo otrok</Link>
-            <Link href="/terms" className="hover:text-gray-700">Pogoji uporabe</Link>
-          </div>
-          <span>© {new Date().getFullYear()} Kids Learning AI</span>
-        </div>
-      </footer>
-      <SupportChat />
-    </div>
+      </div>
+    </>
   )
 }

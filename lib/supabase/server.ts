@@ -34,4 +34,23 @@ export async function createServerClient() {
   })
 }
 
+export async function createServiceRoleClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error("Missing Supabase service role environment variables")
+  }
+
+  return createSupabaseServerClient(supabaseUrl, supabaseServiceRoleKey, {
+    cookies: {
+      get() {
+        return undefined
+      },
+      set() {},
+      remove() {},
+    },
+  })
+}
+
 export const createClient = createServerClient

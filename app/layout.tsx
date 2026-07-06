@@ -1,27 +1,252 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Fredoka, Poppins } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "../hooks/use-auth"
 import { ErrorBoundary } from "@/components/error-boundary"
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
+import { OfflineIndicator } from "@/components/offline-indicator"
+import { CoppaConsentBanner } from "@/components/coppa-consent-banner"
+import Script from "next/script"
+import { Analytics } from "@vercel/analytics/react"
+import { generateStructuredData } from "@/lib/metadata"
+import { StructuredData } from "@/components/structured-data"
+import { Suspense } from "react"
+import { FacebookPixelPageView } from "@/components/facebook-pixel"
 
-const inter = Inter({ subsets: ["latin"] })
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fredoka",
+  display: "swap",
+  preload: true,
+})
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-poppins",
+  display: "swap",
+  preload: true,
+})
 
 export const metadata: Metadata = {
-  title: "Kids Learning AI",
-  description: "Slovenska učna platforma za varno, igrivo AI učenje. Interaktivne igre in dejavnosti za otroke med 5 in 12 letom.",
-  icons: {
-    icon: "/icon.svg",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"),
+  title: {
+    default: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
+    template: "%s | AI Kids Learning",
+  },
+  description:
+    "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12. Start learning today!",
+  keywords: [
+    "AI learning for kids",
+    "children education",
+    "STEM learning",
+    "coding for kids",
+    "interactive learning",
+    "AI games",
+    "educational technology",
+    "online learning platform",
+  ],
+  authors: [{ name: "AI Kids Learning Platform" }],
+  creator: "AI Kids Learning Platform",
+  publisher: "AI Kids Learning Platform",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  generator: "v0.app",
+  manifest: "/manifest.json",
+  themeColor: "#8b5cf6",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "AI Kids Learning",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com",
+    title: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
+    description:
+      "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12.",
+    siteName: "AI Kids Learning Platform",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AI Kids Learning Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
+    description:
+      "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    // Add your verification codes here after claiming your site
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const organizationSchema = generateStructuredData("Organization", {})
+
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://vercel.live" />
+
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#8b5cf6" />
+        <link rel="apple-touch-icon" href="/icon-192.jpg" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="AI Kids Learning" />
+        <meta name="facebook-domain-verification" content="v077xiu3yrtnmim6nz97d791fnuf3v" />
+        <StructuredData data={organizationSchema} />
+      </head>
+      <body className={`${fredoka.variable} ${poppins.variable}`}>
         <ErrorBoundary>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <PWAInstallPrompt />
+            <OfflineIndicator />
+            <CoppaConsentBanner />
+          </AuthProvider>
         </ErrorBoundary>
+        <Analytics />
+        <Suspense fallback={null}>
+          <FacebookPixelPageView />
+        </Suspense>
+
+        {/* Facebook Pixel - Complete Implementation */}
+        <Script
+          id="fb-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '26081756688144186');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            src="https://www.facebook.com/tr?id=26081756688144186&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
+
+        <Script id="init-monitoring" strategy="afterInteractive">
+          {`
+            // Initialize Sentry if DSN is configured
+            if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+              // Sentry is initialized via instrumentation.ts
+              console.log('[v0] Sentry monitoring active');
+            }
+            
+            // Initialize global error handling (fallback for non-Sentry environments)
+            if (typeof window !== 'undefined') {
+              // Catch unhandled promise rejections
+              window.addEventListener('unhandledrejection', (event) => {
+                console.error('[v0] Unhandled promise rejection:', event.reason);
+                
+                fetch('/api/admin/monitoring/log-error', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    error_type: 'unhandled_rejection',
+                    error_message: event.reason?.message || String(event.reason),
+                    stack_trace: event.reason?.stack,
+                    severity: 'high',
+                    source: 'client',
+                  }),
+                }).catch(err => console.error('[v0] Failed to log error:', err));
+              });
+
+              // Catch global errors
+              window.addEventListener('error', (event) => {
+                console.error('[v0] Global error:', event.error);
+                
+                fetch('/api/admin/monitoring/log-error', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    error_type: 'global_error',
+                    error_message: event.error?.message || event.message,
+                    stack_trace: event.error?.stack,
+                    severity: 'high',
+                    source: 'client',
+                    metadata: {
+                      filename: event.filename,
+                      lineno: event.lineno,
+                      colno: event.colno,
+                    },
+                  }),
+                }).catch(err => console.error('[v0] Failed to log error:', err));
+              });
+            }
+          `}
+        </Script>
+
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                // Unregister ALL service workers to clear cache
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                  registrations.forEach((registration) => {
+                    console.log('[v0] Unregistering service worker to force fresh content');
+                    registration.unregister();
+                  });
+                });
+                
+                // Clear all caches
+                if ('caches' in window) {
+                  caches.keys().then((names) => {
+                    names.forEach((name) => {
+                      console.log('[v0] Deleting cache:', name);
+                      caches.delete(name);
+                    });
+                  });
+                }
+                
+                console.log('[v0] Service worker disabled - serving fresh content');
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   )

@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { useSubscription } from "@/hooks/use-subscription"
 
 interface Pattern {
   sequence: string[]
@@ -34,10 +35,10 @@ const patterns: Pattern[] = [
     explanation: "Vzorec se izmenjuje med psom in mačko!",
   },
   {
-    sequence: ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "?"],
-    options: ["⭐", "⭐⭐⭐⭐⭐", "⭐⭐", "⭐⭐⭐"],
+    sequence: ["⭐", "⭐⭐", "⭐⭐⭐", "⭐", "⭐⭐", "?"],
+    options: ["⭐", "⭐⭐⭐", "⭐⭐", "⭐⭐⭐⭐"],
     correct: 1,
-    explanation: "Vsak korak doda eno zvezdico več!",
+    explanation: "The pattern repeats: one star, two stars, three stars!",
   },
 ]
 
@@ -74,6 +75,7 @@ export default function PatternTrainingPage() {
     router.push("/auth/login")
   }
   const { submitProgress } = useProgress()
+  const { hasPremium, loading: subscriptionLoading } = useSubscription()
 
   const [currentPattern, setCurrentPattern] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -89,7 +91,25 @@ export default function PatternTrainingPage() {
     if (!loading && !user) {
       router.push("/auth/login")
     }
-  }, [user, loading, router])
+    if (!loading && !subscriptionLoading && user && !hasPremium) {
+      router.push("/pricing")
+    }
+  }, [user, loading, router, hasPremium, subscriptionLoading])
+
+  if (loading || subscriptionLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🎯</div>
+          <p className="text-gray-600">Loading Pattern Training...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!hasPremium) {
+    return null
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (!showExplanation) setSelectedAnswer(answerIndex)
@@ -141,68 +161,47 @@ export default function PatternTrainingPage() {
   if (gameComplete) {
     const pct = Math.round((score / patterns.length) * 100)
     return (
-      <div className="min-h-screen relative p-4 pb-8 flex items-center justify-center" style={spaceStyle}>
-        {STARS.map((s, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white pointer-events-none"
-            style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.12 + (i % 4) * 0.08 }}
-          />
-        ))}
-        <AchievementPopup badges={newAchievements.map((a: any) => a.achievement_type ?? a.id)} onClose={() => setNewAchievements([])} />
-        <div
-          className="relative z-10 rounded-3xl p-8 text-center max-w-md w-full shadow-2xl"
-          style={{
-            background: "rgba(8,8,30,0.9)",
-            border: "1px solid rgba(34,197,94,0.35)",
-            boxShadow: "0 0 40px rgba(34,197,94,0.12)",
-          }}
-        >
-          <div className="text-7xl mb-4">{pct >= 80 ? "🧠" : pct >= 60 ? "⭐" : "💪"}</div>
-          <h2 className="text-3xl font-bold text-white mb-2">Mojster vzorcev!</h2>
-          <p className="text-green-300 text-lg mb-6">
-            <span className="text-3xl font-bold text-green-400">{score}</span>
-            <span className="text-white/50"> / {patterns.length} točk</span>
-          </p>
-
-          {newAchievements.length > 0 && (
-            <div
-              className="rounded-2xl p-4 mb-4"
-              style={{ background: "rgba(251,191,36,0.13)", border: "1px solid rgba(251,191,36,0.35)" }}
-            >
-              <h4 className="text-yellow-400 text-xs font-bold mb-2 tracking-wider">🏆 NOVI DOSEŽKI</h4>
-              {newAchievements.map((a) => (
-                <p key={a.id} className="text-yellow-200 text-sm">{a.title}</p>
-              ))}
-            </div>
-          )}
-
-          <div
-            className="rounded-2xl p-4 mb-6"
-            style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.25)" }}
-          >
-            <p className="text-green-200 text-sm leading-relaxed">
-              <strong className="text-green-400">Prepoznavanje vzorcev</strong> je osnova, kako se AI uči iz podatkov!
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <button
-              onClick={resetGame}
-              className="w-full py-3.5 rounded-2xl font-bold text-white text-lg transition-all active:scale-95"
-              style={{ background: "linear-gradient(135deg, #15803d, #22c55e)" }}
-            >
-              Igraj znova
-            </button>
-            <Link href="/kids/home">
-              <button
-                className="w-full py-3 rounded-2xl font-semibold text-green-300 text-sm transition-all hover:bg-green-500/10"
-                style={{ border: "1px solid rgba(34,197,94,0.3)" }}
-              >
-                Na zemljevid
-              </button>
-            </Link>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 p-4">
+        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
+        <div className="max-w-2xl mx-auto">
+          <Card className="text-center">
+            <CardHeader>
+              <CardTitle className="text-3xl text-cyan-600">Pattern Master!</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-6xl">🎯</div>
+              <p className="text-xl">
+                You scored <span className="font-bold text-cyan-600">{score}</span> out of{" "}
+                <span className="font-bold">{patterns.length}</span>!
+              </p>
+              {newAchievements.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h4 className="font-bold text-yellow-900 mb-2">New Achievements!</h4>
+                  {newAchievements.map((achievement) => (
+                    <p key={achievement.id} className="text-yellow-800">
+                      🏆 {achievement.title}
+                    </p>
+                  ))}
+                </div>
+              )}
+              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+                <p className="text-cyan-800">
+                  <strong>Pattern Recognition:</strong> You're getting better at spotting patterns! This skill helps AI
+                  systems learn from data.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button onClick={resetGame} className="bg-cyan-600 hover:bg-cyan-700 w-full sm:w-auto">
+                  Play Again
+                </Button>
+                <Link href="/kids/activities">
+                  <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+                    Back to Activities
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
@@ -243,154 +242,70 @@ export default function PatternTrainingPage() {
           </div>
         </div>
 
-        {/* Main game panel */}
-        <div
-          className="rounded-3xl overflow-hidden shadow-2xl"
-          style={{
-            background: "rgba(8,8,30,0.88)",
-            border: "1px solid rgba(34,197,94,0.3)",
-            boxShadow: "0 0 40px rgba(34,197,94,0.1)",
-          }}
-        >
-          {/* Header */}
-          <div
-            className="px-6 py-4 flex justify-between items-center"
-            style={{ background: "rgba(34,197,94,0.18)", borderBottom: "1px solid rgba(34,197,94,0.2)" }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🧠</span>
-              <div>
-                <h1 className="text-xl font-bold text-white">Vzorci</h1>
-                <p className="text-green-400 text-xs font-medium">
-                  Vzorec {currentPattern + 1} od {patterns.length}
-                </p>
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-2xl text-cyan-600">🎯 Pattern Training</CardTitle>
+              <div className="text-sm text-gray-500">
+                Pattern {currentPattern + 1} of {patterns.length}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div className="text-sm">
+                Score: <span className="font-bold text-cyan-600">{score}</span>
+              </div>
+              <div className="text-sm">
+                Streak: <span className="font-bold text-orange-600">{streak} 🔥</span>
+              </div>
+            </div>
+
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="px-3 py-1.5 rounded-xl text-sm font-bold"
-                style={{ background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.3)" }}
-              >
-                <span className="text-green-300">{score}</span>
-                <span className="text-white/40 text-xs"> pt</span>
-              </div>
-              {streak > 0 && (
-                <div
-                  className="px-3 py-1.5 rounded-xl text-sm font-bold"
-                  style={{ background: "rgba(249,115,22,0.2)", border: "1px solid rgba(249,115,22,0.35)" }}
-                >
-                  <span className="text-orange-300">{streak}</span>
-                  <span className="text-orange-400 ml-1">🔥</span>
-                </div>
-              )}
+                className="bg-cyan-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentPattern + 1) / patterns.length) * 100}%` }}
+              />
             </div>
-          </div>
 
-          {/* Progress bar */}
-          <div className="h-1.5" style={{ background: "rgba(255,255,255,0.07)" }}>
-            <div
-              className="h-full transition-all duration-500"
-              style={{
-                width: `${progress}%`,
-                background: "linear-gradient(90deg, #15803d, #22c55e)",
-                boxShadow: "0 0 8px rgba(34,197,94,0.6)",
-              }}
-            />
-          </div>
+            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 text-center">What comes next in the pattern?</h3>
+              <div className="flex justify-center items-center gap-3 flex-wrap">
+                {pattern.sequence.map((item, index) => (
+                  <div key={index} className="flex items-center justify-center min-w-[48px] min-h-[48px] text-4xl">
+                    {item === "?" ? <span className="text-gray-400 font-bold">?</span> : <span>{item}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <div className="p-6 space-y-5">
-            {/* Pattern sequence */}
             <div>
-              <p className="text-green-400 text-xs font-bold mb-3 tracking-wider">KAJ PRIDE NASLEDNJE?</p>
-              <div
-                className="rounded-2xl p-5"
-                style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}
-              >
-                <div className="flex justify-center items-center gap-2 flex-wrap">
-                  {pattern.sequence.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-center rounded-xl font-bold"
-                      style={{
-                        width: 60,
-                        height: 60,
-                        background: item === "?" ? "rgba(34,197,94,0.2)" : "rgba(255,255,255,0.07)",
-                        border: item === "?" ? "2px dashed rgba(34,197,94,0.6)" : "1px solid rgba(255,255,255,0.12)",
-                        animation: item === "?" ? "pulse 1.5s ease-in-out infinite" : "none",
-                      }}
-                    >
-                      <EmojiItem value={item} size={60} />
-                    </div>
-                  ))}
-                </div>
+              <h4 className="font-semibold mb-3 text-center">Choose the correct answer:</h4>
+              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                {pattern.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    disabled={showExplanation}
+                    className={`p-6 text-4xl rounded-lg border-2 transition-all flex items-center justify-center min-h-[100px] ${
+                      selectedAnswer === index
+                        ? showExplanation
+                          ? index === pattern.correct
+                            ? "border-green-500 bg-green-50"
+                            : "border-red-500 bg-red-50"
+                          : "border-cyan-500 bg-cyan-50"
+                        : showExplanation && index === pattern.correct
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-300 hover:border-cyan-300 bg-white"
+                    } ${showExplanation ? "cursor-not-allowed" : "cursor-pointer"}`}
+                  >
+                    <span className="whitespace-nowrap">{option}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Answer grid */}
-            <div>
-              <p className="text-white/60 text-xs font-semibold mb-3 text-center">Izberi pravilen odgovor:</p>
-              <div className="grid grid-cols-2 gap-3">
-                {pattern.options.map((option, index) => {
-                  let bg = "rgba(255,255,255,0.05)"
-                  let borderColor = "rgba(255,255,255,0.12)"
-                  let textColor = "white"
-
-                  if (showExplanation) {
-                    if (index === pattern.correct) {
-                      bg = "rgba(34,197,94,0.2)"
-                      borderColor = "rgba(34,197,94,0.6)"
-                      textColor = "#86efac"
-                    } else if (index === selectedAnswer) {
-                      bg = "rgba(239,68,68,0.2)"
-                      borderColor = "rgba(239,68,68,0.6)"
-                      textColor = "#fca5a5"
-                    }
-                  } else if (index === selectedAnswer) {
-                    bg = "rgba(34,197,94,0.2)"
-                    borderColor = "rgba(34,197,94,0.7)"
-                    textColor = "#4ade80"
-                  }
-
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswerSelect(index)}
-                      disabled={showExplanation}
-                      className="rounded-2xl flex flex-col items-center justify-center transition-all hover:brightness-125 disabled:cursor-default active:scale-95"
-                      style={{
-                        background: bg,
-                        border: `2px solid ${borderColor}`,
-                        padding: "20px 12px",
-                        gap: 6,
-                        color: textColor,
-                      }}
-                    >
-                      <EmojiItem value={option} size={80} />
-                      {showExplanation && index === pattern.correct && (
-                        <span className="text-green-400 text-lg">✓</span>
-                      )}
-                      {showExplanation && index === selectedAnswer && index !== pattern.correct && (
-                        <span className="text-red-400 text-lg">✗</span>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Explanation */}
-            {showExplanation && (
-              <div
-                className="rounded-2xl p-4 animate-slide-up"
-                style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)" }}
-              >
-                <p className="text-indigo-400 text-xs font-bold mb-1 tracking-wider">💡 RAZLAGA</p>
-                <p className="text-indigo-200 text-sm leading-relaxed">{pattern.explanation}</p>
-              </div>
-            )}
-
-            {/* Action button */}
-            <div className="flex justify-center pt-1">
+            <div className="flex justify-center">
               {!showExplanation ? (
                 <button
                   onClick={handleSubmitAnswer}

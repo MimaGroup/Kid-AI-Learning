@@ -1,15 +1,46 @@
 import { NextResponse } from "next/server"
-import { createServerClient } from "@/lib/supabase/server"
+import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
+
+async function isAdmin(): Promise<boolean> {
+  try {
+    const supabase = await createServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+    return profile?.role === "admin"
+  } catch {
+    return false
+  }
+}
 
 export async function GET() {
-  const supabase = await createServerClient()
+  try {
+    const supabase = await createServiceRoleClient()
+    const adminUser = await isAdmin()
 
-  const { data, error } = await supabase
-    .from("courses")
-    .select("id, title, slug, description, difficulty, age_min, age_max, duration_minutes, lessons_count, thumbnail_url, is_free, price, currency, category")
-    .eq("is_published", true)
-    .order("created_at")
+    let query = supabase
+      .from("courses")
+      .select("*")
+      .order("price", { ascending: true })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ courses: data ?? [] })
+    if (!adminUser) {
+      query = query.eq("is_published", true)
+    }
+
+    const { data: courses, error } = await query
+
+    if (error) {
+      console.error("Error fetching courses:", error)
+      return NextResponse.json({ error: "Failed to fetch courses" }, { status: 500 })
+    }
+
+    return NextResponse.json({ courses: courses || [] })
+  } catch (error) {
+    console.error("Error in courses API:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
 }

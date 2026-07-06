@@ -1,7 +1,8 @@
 import { createServerClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createServerClient()
 
   const {
@@ -18,7 +19,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const { data: friend, error } = await supabase
     .from("ai_friends")
     .update({ name, personality, color, updated_at: new Date().toISOString() })
-    .eq("id", params.id)
+    .eq("id", id)
     .eq("user_id", user.id)
     .select()
     .single()
@@ -30,7 +31,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   return NextResponse.json({ friend })
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createServerClient()
 
   const {
@@ -41,7 +43,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { error } = await supabase.from("ai_friends").delete().eq("id", params.id).eq("user_id", user.id)
+  const { error } = await supabase.from("ai_friends").delete().eq("id", id).eq("user_id", user.id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

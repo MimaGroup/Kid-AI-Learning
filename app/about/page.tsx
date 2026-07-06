@@ -1,151 +1,250 @@
+import type { Metadata } from "next"
+import { createMetadata } from "@/lib/metadata"
 import Link from "next/link"
-import { SupportChat } from "../../components/support-chat"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Heart, Shield, Sparkles, Users } from 'lucide-react'
+import Image from "next/image"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
 
-export const metadata = {
-  title: "O nas — Kids Learning AI",
-  description: "Spoznajte Kids Learning AI — platformo, ki slovenskim otrokom odpira vrata v svet umetne inteligence.",
-}
-
-const VALUES = [
-  {
-    icon: "🎮",
-    title: "Učenje skozi igro",
-    desc: "Verjamemo, da se otroci najboljše učijo, ko se zabavajo. Vsaka dejavnost je zasnovana kot igra, ne kot šolska ura.",
-  },
-  {
-    icon: "👨‍👩‍👧",
-    title: "Starši so partnerji",
-    desc: "Starši imajo popoln vpogled v otrokov napredek. Nismo 'babysitter' — smo orodje za skupno učenje.",
-  },
-  {
-    icon: "🔒",
-    title: "Varnost najprej",
-    desc: "Ne zbiramo osebnih podatkov otrok. Brez oglasov, brez profiliranja, brez interakcij z neznanimi.",
-  },
-  {
-    icon: "🌍",
-    title: "Slovensko srce",
-    desc: "Platforma je v slovenščini in upošteva vrednosti ter kulturo slovenskih družin.",
-  },
-]
-
-const TEAM = [
-  {
-    name: "Danijel Milovanović",
-    role: "Ustanovitelj in razvoj",
-    bio: "Strasten o izobraževalni tehnologiji in AI. Platforma je nastala iz prepričanja, da morajo otroci razumeti svet, v katerem živijo — vključno z umetno inteligenco.",
-  },
-]
+export const metadata: Metadata = createMetadata({
+  title: "About Us - AI Kids Learning Platform",
+  description:
+    "Learn about our mission to make AI accessible and fun for children ages 5-12. Discover how we're empowering the next generation with interactive AI education.",
+  path: "/about",
+})
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Nav */}
-      <nav className="border-b bg-white sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl">🚀</span>
-            <span className="font-bold text-gray-900">Kids Learning AI</span>
-          </Link>
-          <Link href="/auth/sign-up" className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
-            Začni brezplačno
-          </Link>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 right-20 text-6xl opacity-20 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))' }}>🤖</div>
+      <div className="absolute top-60 left-10 text-5xl opacity-20 animate-pulse" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))' }}>🧠</div>
+      <div className="absolute bottom-40 right-1/4 text-4xl opacity-20 animate-bounce" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))' }}>💻</div>
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        {/* Hero */}
-        <div className="text-center mb-16">
-          <div className="text-6xl mb-6">🚀</div>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">O nas</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Kids Learning AI je slovenska izobraževalna platforma, ki otrokom med 5 in 12 letom
-            na zabaven in varen način odpira vrata v svet umetne inteligence.
-          </p>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
+        <Link href="/">
+          <Button variant="ghost" className="mb-6 rounded-full">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+        </Link>
 
-        {/* Mission */}
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-3xl p-10 mb-16 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Naše poslanstvo</h2>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            Živimo v svetu, ki ga vse bolj oblikuje umetna inteligenca. Naš cilj je, da otroci
-            ne bodo zgolj pasivni uporabniki te tehnologije — ampak jo bodo razumeli, kritično
-            ocenjevali in sčasoma tudi soustvarjali. Začnemo z igro, nadaljujemo z znanjem.
-          </p>
-        </div>
+        <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 border-2 border-purple-200">
+          <div className="text-center mb-12">
+            <div className="mx-auto mb-4 w-24 h-24">
+              <Image
+                src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={96}
+                height={96}
+                className="rounded-full ring-4 ring-purple-200 shadow-lg mx-auto"
+              />
+            </div>
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
+              About AI Kids Learning Platform
+            </h1>
+            <p className="text-xl text-gray-600">Where Young Minds Meet Artificial Intelligence</p>
+          </div>
 
-        {/* Values */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">Naše vrednote</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {VALUES.map((v) => (
-              <div key={v.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                <div className="text-4xl mb-4">{v.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{v.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{v.desc}</p>
+          <div className="space-y-8 text-gray-700">
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Our Mission</h2>
+              <p className="text-lg leading-relaxed">
+                We believe that every child deserves to understand the technology shaping their future. Our mission is
+                to make artificial intelligence accessible, understandable, and fun for children through interactive
+                learning experiences that spark curiosity and build confidence.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">What We Offer</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 p-6 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-transform">
+                  <div className="text-3xl mb-3">🎮</div>
+                  <h3 className="font-bold text-lg mb-2">Interactive Games</h3>
+                  <p className="text-sm">
+                    Engaging AI-powered games that teach concepts like pattern recognition, decision-making, and
+                    problem-solving through play.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-100 to-violet-100 p-6 rounded-2xl border-2 border-purple-200 hover:scale-105 transition-transform">
+                  <div className="text-3xl mb-3">📚</div>
+                  <h3 className="font-bold text-lg mb-2">AI Storytelling</h3>
+                  <p className="text-sm">
+                    Personalized stories generated by AI that adapt to your child's interests and reading level, making
+                    learning magical.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-br from-pink-100 to-rose-100 p-6 rounded-2xl border-2 border-pink-200 hover:scale-105 transition-transform">
+                  <div className="text-3xl mb-3">🤖</div>
+                  <h3 className="font-bold text-lg mb-2">AI Friends</h3>
+                  <p className="text-sm">
+                    Safe, educational conversations with AI companions that answer questions and encourage curiosity
+                    about the world.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-br from-orange-100 to-yellow-100 p-6 rounded-2xl border-2 border-orange-200 hover:scale-105 transition-transform">
+                  <div className="text-3xl mb-3">🏆</div>
+                  <h3 className="font-bold text-lg mb-2">Progress Tracking</h3>
+                  <p className="text-sm">
+                    Comprehensive parent dashboard with detailed analytics, achievements, and insights into your child's
+                    learning journey.
+                  </p>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
+            </section>
 
-        {/* Story */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Naša zgodba</h2>
-          <div className="prose prose-gray max-w-none">
-            <p className="text-gray-600 leading-relaxed mb-4">
-              Ideja za Kids Learning AI se je porodila iz enostavnega vprašanja: <em>Kako razložim svojemu otroku, kaj je umetna inteligenca?</em>
-            </p>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              Knjige so bile preveč suhe. YouTube videi preveč površinski. Obstoječe platforme pa
-              bodisi v angleščini bodisi namenjene starejšim učencem. Zato smo se lotili dela sami.
-            </p>
-            <p className="text-gray-600 leading-relaxed">
-              Danes Kids Learning AI ponuja štiri interaktivne AI dejavnosti, pet tečajev, starševsko
-              nadzorno ploščo in varno okolje brez oglasov. Platforma raste skupaj z nami — in skupaj z vašimi otroki.
-            </p>
-          </div>
-        </section>
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Our Values</h2>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Safety First</h3>
+                    <p>
+                      We prioritize child safety with COPPA-compliant practices, content filtering, and parental
+                      controls. Your child's data is protected with industry-leading security measures.
+                    </p>
+                  </div>
+                </div>
 
-        {/* Team */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Ekipa</h2>
-          <div className="space-y-6">
-            {TEAM.map((member) => (
-              <div key={member.name} className="flex items-start gap-5 bg-gray-50 rounded-2xl p-6">
-                <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shrink-0">
-                  {member.name.charAt(0)}
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <Heart className="h-8 w-8 text-pink-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Age-Appropriate Learning</h3>
+                    <p>
+                      All content is carefully designed for children aged 6-12, with age-appropriate language, concepts,
+                      and interactions that match developmental stages.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <Sparkles className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Fun & Engaging</h3>
+                    <p>
+                      Learning should be exciting! We use gamification, rewards, and interactive experiences to keep
+                      children motivated and engaged in their AI education journey.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <Users className="h-8 w-8 text-orange-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Parent Partnership</h3>
+                    <p>
+                      We empower parents with tools to monitor progress, understand their child's learning, and be
+                      active participants in their educational journey.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Why AI Education Matters</h2>
+              <p className="leading-relaxed mb-4">
+                Artificial Intelligence is transforming every aspect of our lives, from how we work to how we
+                communicate. Today's children will grow up in a world where AI is ubiquitous, and understanding these
+                technologies is no longer optional—it's essential.
+              </p>
+              <p className="leading-relaxed">
+                By introducing AI concepts early through play and exploration, we're not just teaching technology—we're
+                building critical thinking skills, fostering creativity, and preparing children to be informed,
+                confident participants in an AI-powered future.
+              </p>
+            </section>
+
+            <section className="bg-gradient-to-r from-purple-50 to-teal-50 rounded-2xl p-6 border border-purple-200">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-shrink-0">
+                  <Image
+                    src={BYTE_CHARACTER.images.teaching || "/placeholder.svg"}
+                    alt={`${BYTE_CHARACTER.name} - our mascot`}
+                    width={120}
+                    height={120}
+                    className="rounded-full ring-4 ring-purple-200 shadow-lg"
+                  />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 text-lg">{member.name}</h3>
-                  <p className="text-purple-600 text-sm font-medium mb-2">{member.role}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
+                  <h2 className="text-2xl font-semibold mb-2 text-gray-900">Meet Byte - Our AI Learning Buddy</h2>
+                  <p className="leading-relaxed">
+                    Byte is our friendly robot mascot who guides children through their AI learning journey.
+                    With a curious personality and endless patience, Byte makes complex AI concepts fun and
+                    approachable. Kids can chat with Byte, ask questions, and learn together in a safe,
+                    encouraging environment.
+                  </p>
                 </div>
               </div>
-            ))}
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Our Technology</h2>
+              <p className="leading-relaxed mb-4">
+                We use cutting-edge AI technology from trusted providers to deliver safe, educational experiences:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Advanced natural language processing for conversations and storytelling</li>
+                <li>Content filtering and safety measures to ensure age-appropriate interactions</li>
+                <li>Adaptive learning algorithms that personalize content to each child</li>
+                <li>Secure, encrypted data storage and transmission</li>
+                <li>Regular updates and improvements based on educational research</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Get Started Today</h2>
+              <p className="leading-relaxed mb-6">
+                Join thousands of families who are discovering the joy of AI learning. Start with our free tier to
+                explore the platform, or upgrade to Premium for unlimited access to all features.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/auth/sign-up">
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Create Free Account
+                  </Button>
+                </Link>
+                <Link href="/pricing">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent">
+                    View Pricing
+                  </Button>
+                </Link>
+              </div>
+            </section>
+
+            <section className="border-t pt-8">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Contact Us</h2>
+              <p className="leading-relaxed mb-4">Have questions or feedback? We'd love to hear from you!</p>
+              <Link href="/contact">
+                <Button variant="outline">Get in Touch</Button>
+              </Link>
+            </section>
           </div>
-        </section>
-
-        {/* CTA */}
-        <div className="text-center bg-gradient-to-br from-purple-600 to-purple-800 rounded-3xl p-10 text-white">
-          <h2 className="text-2xl font-bold mb-3">Pridružite se nam</h2>
-          <p className="text-purple-200 mb-6">14 dni brezplačno. Brez kreditne kartice. Brez tveganja.</p>
-          <Link
-            href="/auth/sign-up"
-            className="inline-block bg-white text-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-purple-50 transition-colors"
-          >
-            Začni brezplačno
-          </Link>
         </div>
-      </main>
+      </div>
 
-      <footer className="border-t bg-gray-50 py-8 px-6 mt-12">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-400">
-          <Link href="/" className="hover:text-gray-700">← Nazaj na domačo stran</Link>
-          <span>© {new Date().getFullYear()} Podjetniške in poslovne storitve, Danijel Milovanović s.p. · Kids Learning AI</span>
-          <Link href="/faq" className="hover:text-gray-700">Pogosta vprašanja</Link>
-        </div>
-      </footer>
-      <SupportChat />
+      <div className="relative h-32 mt-12">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,32 C320,96 640,96 960,32 C1280,0 1600,0 1440,32 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.8"
+          />
+        </svg>
+      </div>
     </div>
   )
 }

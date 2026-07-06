@@ -1,0 +1,305 @@
+"use client"
+
+import type React from "react"
+import { useState, useEffect } from "react"
+import { useAuth } from "../../../hooks/use-auth"
+import { useSearchParams } from "next/navigation"
+import Link from "next/link"
+import { trackEvent, trackError } from "@/lib/analytics"
+import { trackCompleteRegistration } from "@/lib/fbpixel"
+import { LoadingOverlay } from "@/components/loading-overlay"
+import { Gift, Check } from "lucide-react"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
+
+function SignUpPageClient() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [referralCode, setReferralCode] = useState("")
+  const [referralValid, setReferralValid] = useState<boolean | null>(null)
+  const { register } = useAuth()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const ref = searchParams.get("ref")
+    if (ref) {
+      setReferralCode(ref.toUpperCase())
+      setReferralValid(true)
+    }
+  }, [searchParams])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+
+    if (password !== confirmPassword) {
+      setError("Gesli se ne ujemata")
+      setIsLoading(false)
+      return
+    }
+
+    if (password.length < 6) {
+      setError("Geslo mora imeti vsaj 6 znakov")
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      await register(email, password)
+      trackEvent("user_signup", {
+        email_domain: email.split("@")[1],
+        timestamp: Date.now(),
+        has_referral: !!referralCode,
+      })
+
+      if (referralCode) {
+        try {
+          await fetch("/api/referrals/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              referralCode,
+              newUserEmail: email,
+            }),
+          })
+        } catch (refError) {
+          console.error("Failed to apply referral:", refError)
+        }
+      }
+
+      setSuccess(true)
+      console.log('[v0] CompleteRegistration firing', { fbqExists: typeof window !== 'undefined' && typeof window.fbq === 'function' })
+      trackCompleteRegistration()
+
+      // Trigger welcome email sequence
+      try {
+        await fetch("/api/email/welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email,
+            firstName: "starš",
+          }),
+        })
+      } catch (emailError) {
+        // Don't block registration if email fails
+        console.error("Failed to send welcome email:", emailError)
+      }
+
+      setIsLoading(false)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Registracija ni uspela"
+      setError(errorMessage)
+      trackError(err instanceof Error ? err : new Error(errorMessage), "signup")
+      setIsLoading(false)
+    }
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-20 left-10 text-5xl opacity-20 animate-bounce">✨</div>
+        <div className="absolute top-40 right-20 text-4xl opacity-20 animate-pulse">🎉</div>
+
+        <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95 border-2 border-green-200 relative z-10">
+          <div className="text-6xl mb-4">✉️</div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+            Preverite svojo e-pošto!
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Poslali smo vam potrditveno povezavo. Preverite svojo e-pošto in kliknite povezavo za aktivacijo računa.
+          </p>
+          {referralCode && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
+              <p className="text-sm text-green-700 flex items-center justify-center gap-2">
+                <Gift className="w-4 h-4" />
+                Priporočilni bonus aktiviran! Dobili boste 14-dnevni brezplačni preizkus.
+              </p>
+            </div>
+          )}
+          <Link
+            href="/parent/dashboard"
+            className="inline-block bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Pojdi na nadzorno plosco
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100 flex items-center justify-center p-4 relative overflow-hidden">
+      <div
+        className="absolute top-20 left-10 text-5xl opacity-15 animate-float"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3))" }}
+      >
+        🤖
+      </div>
+      <div
+        className="absolute top-40 right-20 text-4xl opacity-15 animate-pulse delay-100"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))" }}
+      >
+        🎨
+      </div>
+      <div
+        className="absolute bottom-40 left-1/4 text-4xl opacity-15 animate-bounce delay-200"
+        style={{ filter: "drop-shadow(0 4px 8px rgba(244, 114, 182, 0.3))" }}
+      >
+        ✨
+      </div>
+
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 relative border-2 border-purple-200 z-10">
+        {isLoading && <LoadingOverlay message="Ustvarjanje vašega računa..." />}
+
+        <div className="text-center mb-8">
+          {/* Byte avatar with speech bubble */}
+          <div className="flex flex-col items-center mb-5">
+            <div className="relative mb-3">
+              {/* Speech bubble */}
+              <div className="bg-purple-50 border border-purple-200 rounded-2xl px-5 py-3 max-w-[260px] shadow-sm">
+                <p className="text-sm text-purple-800 font-medium">
+                  {"Zdravo! Jaz sem Byte — komaj cakam, da se skupaj uciva!"}
+                </p>
+              </div>
+              {/* Speech bubble tail */}
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-50 border-b border-r border-purple-200 rotate-45" />
+            </div>
+
+            {/* Byte avatar */}
+            <div className="relative w-20 h-20 mt-1">
+              <Image
+                src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                fill
+                className="object-cover rounded-full ring-4 ring-purple-100 shadow-lg"
+              />
+              {/* Pulsing online indicator */}
+              <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 border-white rounded-full animate-pulse" />
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
+            Ustvari racun
+          </h1>
+          <p className="text-gray-600">Pridruzi se KidsLearnAI platformi</p>
+
+          {referralCode && (
+            <div className="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">
+              <div className="flex items-center justify-center gap-2">
+                <Gift className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-medium text-purple-700">Priporočilni bonus aktiviran!</span>
+              </div>
+              <p className="text-xs text-purple-600 mt-1">Dobili boste 14-dnevni brezplačni preizkus namesto 7 dni</p>
+            </div>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              E-pošta
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Vnesite svojo e-pošto"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              Geslo
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Ustvarite geslo (najmanj 6 znakov)"
+              required
+              minLength={6}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              Potrdi geslo
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Potrdite svoje geslo"
+              required
+              minLength={6}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700 mb-2">
+              Priporočilna koda <span className="text-gray-400 font-normal">(Neobvezno)</span>
+            </label>
+            <div className="relative">
+              <input
+                id="referralCode"
+                type="text"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono uppercase"
+                placeholder="Vnesite priporočilno kodo"
+                maxLength={8}
+              />
+              {referralCode && referralValid && (
+                <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+              )}
+            </div>
+            {referralCode && (
+              <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                <Gift className="w-3 h-3" />
+                Dobili boste 14-dnevni brezplačni preizkus!
+              </p>
+            )}
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg animate-in slide-in-from-top">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isLoading ? "Ustvarjanje računa..." : "Ustvari račun"}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Že imate račun?{" "}
+            <Link href="/auth/login" className="text-purple-600 hover:underline">
+              Prijavite se
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default SignUpPageClient

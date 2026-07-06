@@ -1,54 +1,53 @@
 import { NextResponse } from "next/server"
-import { createServerClient } from "@/lib/supabase/server"
-import { createAdminClient } from "@/lib/supabase/admin"
-
-const ADMIN_EMAIL = "danijel.milovanovic88@gmail.com"
+import { checkAdminAuth } from "@/lib/admin-auth"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 
 export async function GET() {
-  const supabase = await createServerClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  const { isAdmin, error } = await checkAdminAuth()
 
-  if (!session || session.user.email !== ADMIN_EMAIL) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  if (!isAdmin) {
+    return NextResponse.json({ error: error || "Unauthorized" }, { status: 401 })
   }
 
-  const admin = createAdminClient()
+  try {
+    const supabase = await createServiceRoleClient()
 
-  const { data: profiles } = await admin
-    .from("profiles")
-    .select("id, email, created_at")
-    .order("created_at", { ascending: false })
+    const { data: users, error: usersError } = await supabase
+      .from("profiles")
+      .select(`
+        id,
+        email,
+        display_name,
+        created_at,
+        last_activity_date,
+        role
+      `)
+      .order("created_at", { ascending: false })
+      .limit(100)
 
-  const { data: subscriptions } = await admin
-    .from("subscriptions")
-    .select("user_id, status, plan_type, current_period_end, cancel_at_period_end, created_at")
+    if (usersError) throw usersError
 
-  const { data: progress } = await admin
-    .from("lesson_progress")
-    .select("user_id, status")
+    // Get subscription status for each user
+    const usersWithSubscriptions = await Promise.all(
+      (users || []).map(async (user) => {
+        // Remove .single() and use .maybeSingle() to handle 0 results gracefully
+        const { data: subscription } = await supabase
+          .from("subscriptions")
+          .select("status")
+          .eq("user_id", user.id)
+          .eq("status", "active")
+          .maybeSingle()
 
-  const { data: badges } = await admin
-    .from("user_badges")
-    .select("user_id, badge_id")
+        return {
+          ...user,
+          subscription_status: subscription?.status || null,
+        }
+      }),
+    )
 
-  const subMap = Object.fromEntries((subscriptions ?? []).map(s => [s.user_id, s]))
-  const progressCount = (progress ?? []).reduce((acc, p) => {
-    if (p.status === "completed") acc[p.user_id] = (acc[p.user_id] ?? 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-  const badgeCount = (badges ?? []).reduce((acc, b) => {
-    acc[b.user_id] = (acc[b.user_id] ?? 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
-  const users = (profiles ?? []).map(p => ({
-    id: p.id,
-    email: p.email,
-    createdAt: p.created_at,
-    subscription: subMap[p.id] ?? null,
-    lessonsCompleted: progressCount[p.id] ?? 0,
-    badgesEarned: badgeCount[p.id] ?? 0,
-  }))
-
-  return NextResponse.json({ users })
+    return NextResponse.json({ users: usersWithSubscriptions })
+  } catch (error) {
+    console.error("Admin users error:", error)
+    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 })
+  }
 }

@@ -1,7 +1,6 @@
 export interface Child {
   id: string
   parent_id: string
-  child_id: string
   name: string
   age: number
   avatar_color: string

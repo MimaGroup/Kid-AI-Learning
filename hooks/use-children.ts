@@ -14,7 +14,14 @@ export function useChildren() {
       setError(null)
 
       const response = await fetch("/api/children")
-      const data = await response.json()
+
+      let data
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        console.error("[v0] Failed to parse JSON response:", jsonError)
+        throw new Error("Server returned an invalid response. Please try again.")
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch children")
@@ -38,7 +45,13 @@ export function useChildren() {
         body: JSON.stringify(input),
       })
 
-      const data = await response.json()
+      let data
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        console.error("[v0] Failed to parse JSON response:", jsonError)
+        throw new Error("Server returned an invalid response. Please try again.")
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to create child")
@@ -63,7 +76,13 @@ export function useChildren() {
         body: JSON.stringify(input),
       })
 
-      const data = await response.json()
+      let data
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        console.error("[v0] Failed to parse JSON response:", jsonError)
+        throw new Error("Server returned an invalid response. Please try again.")
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to update child")
@@ -86,7 +105,13 @@ export function useChildren() {
         method: "DELETE",
       })
 
-      const data = await response.json()
+      let data
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        console.error("[v0] Failed to parse JSON response:", jsonError)
+        throw new Error("Server returned an invalid response. Please try again.")
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to delete child")

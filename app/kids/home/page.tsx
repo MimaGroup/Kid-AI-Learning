@@ -1,25 +1,15 @@
 "use client"
-
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useStats } from "../../../hooks/use-progress"
-import { useAuth } from "../../../hooks/use-auth"
-import { AdventureMap } from "../../../components/adventure-map"
-import { KidsBottomNav } from "../../../components/kids-bottom-nav"
-import { BadgeShowcase } from "../../../components/badge-showcase"
-import { useEffect, useState } from "react"
-
-const NAV = [
-  { href: "/kids/home",       icon: "🏠", label: "Domov" },
-  { href: "/kids/activities", icon: "🎮", label: "Dejavnosti" },
-  { href: "/kids/courses",    icon: "📚", label: "Tečaji" },
-]
-
-const SIDEBAR_STARS = [
-  {x:15,y:8},{x:70,y:15},{x:30,y:30},{x:85,y:40},
-  {x:10,y:55},{x:60,y:62},{x:40,y:75},{x:80,y:85},
-  {x:25,y:92},{x:55,y:20},
-]
+import { GamificationDisplay } from "@/components/gamification-display"
+import { DailyChallenges } from "@/components/daily-challenges"
+import { Button } from "@/components/ui/button"
+import { TutorialTour } from "@/components/tutorial-tour"
+import { AppNavigation } from "@/components/app-navigation"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import { BYTE_CHARACTER } from "@/lib/byte-character"
+import Image from "next/image"
 
 export default function KidsHome() {
   const { stats, isLoading: statsLoading } = useStats()
@@ -30,149 +20,216 @@ export default function KidsHome() {
   const [completedLessons, setCompletedLessons] = useState(0)
 
   useEffect(() => {
-    fetch("/api/lesson-progress")
-      .then(r => r.json())
-      .then(data => {
-        const all = data.progress ?? []
-        setCompletedLessons(all.filter((p: any) => p.status === "completed").length)
-      })
-      .catch(() => {})
-    fetch("/api/user-badges")
-      .then(r => r.json())
-      .then(data => setEarnedBadges((data.badges ?? []).map((b: any) => b.badge_id)))
-      .catch(() => {})
-  }, [])
+    const onboardingCompleted = localStorage.getItem("onboarding_completed")
+    if (!onboardingCompleted) {
+      router.replace("/kids/welcome")
+    }
+  }, [router])
+  const kidsTourSteps = [
+    {
+      target: ".gamification-display",
+      title: "Welcome to AI Kids Learning! 🎉",
+      content: "This shows your points, level, and badges. Complete activities to level up and earn rewards!",
+      position: "bottom" as const,
+    },
+    {
+      target: ".daily-challenges",
+      title: "Daily Challenges 🎯",
+      content: "Complete these special challenges each day to earn bonus points and unlock achievements!",
+      position: "bottom" as const,
+    },
+    {
+      target: ".activities-grid",
+      title: "Learning Games 🎮",
+      content:
+        "Choose from fun games to learn about AI, math, words, and more. Each game helps you learn something new!",
+      position: "top" as const,
+    },
+    {
+      target: ".library-link",
+      title: "Learning Library 📚",
+      content: "Watch educational videos, read stories, and explore fun facts about AI and technology!",
+      position: "top" as const,
+    },
+  ]
 
-  const handleLogout = async () => {
-    await logout()
-    router.push("/auth/login")
-  }
-
-  const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }
+  const activities = [
+    {
+      id: "detective",
+      title: "AI Detective Game",
+      description: "Discover which items use AI technology!",
+      icon: "🕵️",
+      color: "from-blue-400 to-blue-600",
+      href: "/kids/games/ai-detective",
+    },
+    {
+      id: "friend-creator",
+      title: "AI Friend Creator",
+      description: "Design your own AI companion!",
+      icon: "🤖",
+      color: "from-purple-400 to-purple-600",
+      href: "/kids/ai-friend",
+    },
+    {
+      id: "my-friends",
+      title: "My Friends",
+      description: "Connect and learn with friends!",
+      icon: "👥",
+      color: "from-pink-400 to-pink-600",
+      href: "/friends",
+    },
+    {
+      id: "pattern-training",
+      title: "Pattern Training",
+      description: "Train AI to recognize patterns!",
+      icon: "🧠",
+      color: "from-green-400 to-green-600",
+      href: "/kids/games/pattern-training",
+    },
+    {
+      id: "ai-quiz",
+      title: "AI Quiz",
+      description: "Test your AI knowledge!",
+      icon: "🎯",
+      color: "from-orange-400 to-orange-600",
+      href: "/kids/games/ai-quiz",
+    },
+    {
+      id: "math-adventure",
+      title: "Math Adventure",
+      description: "Solve math problems and level up!",
+      icon: "🧮",
+      color: "from-red-400 to-red-600",
+      href: "/kids/games/math-adventure",
+    },
+    {
+      id: "word-builder",
+      title: "Word Builder",
+      description: "Build your vocabulary!",
+      icon: "📝",
+      color: "from-yellow-400 to-yellow-600",
+      href: "/kids/games/word-builder",
+    },
+    {
+      id: "memory-match",
+      title: "Memory Match",
+      description: "Test your memory skills!",
+      icon: "🧠",
+      color: "from-teal-400 to-teal-600",
+      href: "/kids/games/memory-match",
+    },
+    {
+      id: "library",
+      title: "Learning Library",
+      description: "Videos, stories, and resources!",
+      icon: "📚",
+      color: "from-indigo-400 to-indigo-600",
+      href: "/kids/library",
+    },
+  ]
 
   return (
-    <div className="min-h-screen flex" style={spaceStyle}>
-      {/* ── Sidebar — hidden on mobile, bottom nav handles it ── */}
-      <aside
-        className="hidden md:flex w-64 flex-shrink-0 flex-col relative overflow-hidden"
-        style={{
-          background: "linear-gradient(180deg, #0d0d2b 0%, #050510 100%)",
-          borderRight: "1px solid rgba(255,255,255,0.07)",
-        }}
-      >
-        {/* Sidebar stars */}
-        {SIDEBAR_STARS.map((s, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white pointer-events-none"
-            style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.12 + (i % 3) * 0.08 }}
-          />
-        ))}
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 relative overflow-hidden">
+      {/* AI-themed floating decorative emojis */}
+      <div className="absolute top-20 left-10 text-6xl opacity-25 animate-bounce" style={{ filter: 'drop-shadow(0 4px 8px rgba(147, 51, 234, 0.4))' }}>🤖</div>
+      <div className="absolute top-40 right-20 text-5xl opacity-25 animate-pulse" style={{ filter: 'drop-shadow(0 4px 8px rgba(236, 72, 153, 0.4))' }}>🧠</div>
+      <div className="absolute bottom-40 left-1/4 text-4xl opacity-25 animate-bounce delay-100" style={{ filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.4))' }}>💻</div>
+      <div className="absolute bottom-60 right-1/3 text-5xl opacity-20 animate-pulse delay-200" style={{ filter: 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.4))' }}>⚙️</div>
+      <div className="absolute top-1/2 right-10 text-4xl opacity-25 animate-float" style={{ filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.4))' }}>📚</div>
 
-        {/* Logo */}
-        <div className="relative z-10 p-6 pb-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🚀</span>
-            <span className="text-white font-bold text-lg leading-tight">Kids Learning AI</span>
+      <TutorialTour tourId="kids-home" steps={kidsTourSteps} />
+
+      <AppNavigation />
+      <Breadcrumbs />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <div className="relative bg-gradient-to-r from-purple-500 via-purple-600 to-teal-500 text-white p-8 rounded-3xl mb-8 shadow-2xl overflow-hidden">
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-90 hidden md:block">
+            <Image
+              src={BYTE_CHARACTER.images.waving || "/placeholder.svg"}
+              alt={BYTE_CHARACTER.fullName}
+              width={120}
+              height={120}
+              className="rounded-full ring-4 ring-white/20"
+            />
           </div>
-          <p className="text-white/35 text-xs pl-9">Tvoje učno središče</p>
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="md:hidden flex-shrink-0">
+              <Image
+                src={BYTE_CHARACTER.images.avatar || "/placeholder.svg"}
+                alt={BYTE_CHARACTER.fullName}
+                width={64}
+                height={64}
+                className="rounded-full ring-2 ring-white/30"
+              />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">AI Learning Games</h2>
+              <p className="text-purple-100 text-lg">Byte te vabi na ucno pustolovscino!</p>
+            </div>
+          </div>
         </div>
 
-        {/* Nav */}
-        <nav className="relative z-10 px-3 space-y-1 flex-1">
-          {NAV.map((item) => {
-            const active = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all"
-                style={{
-                  background: active ? "rgba(168,85,247,0.25)" : "transparent",
-                  color: active ? "white" : "rgba(255,255,255,0.55)",
-                  border: active ? "1px solid rgba(168,85,247,0.4)" : "1px solid transparent",
-                  boxShadow: active ? "0 0 12px rgba(168,85,247,0.2)" : "none",
-                }}
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span>{item.label}</span>
-                {active && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-purple-400" />
-                )}
-              </Link>
-            )
-          })}
-        </nav>
+        <div className="mb-8 gamification-display">
+          <GamificationDisplay />
+        </div>
 
-        {/* Parent link */}
-        <div
-          className="relative z-10 mx-3 mb-6 mt-4 pt-4"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
-        >
-          <Link
-            href="/parent/dashboard"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all hover:bg-white/5"
-            style={{ color: "rgba(255,255,255,0.4)" }}
-          >
-            <span className="text-base">🛸</span>
-            <span>Starševska plošča</span>
+        <div className="mb-8 daily-challenges">
+          <DailyChallenges />
+        </div>
+
+        <div className="mb-6 flex items-center justify-between">
+          <h3 className="text-xl font-bold text-gray-900">Featured Activities</h3>
+          <Link href="/kids/activities" className="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center gap-1">
+            See all activities
+            <span aria-hidden="true">→</span>
           </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all hover:bg-red-500/10 active:scale-95"
-            style={{ color: "rgba(239,68,68,0.7)", border: "1px solid rgba(239,68,68,0.2)" }}
-          >
-            <span>↩</span>
-            <span>Odjava</span>
-          </button>
         </div>
-      </aside>
 
-      {/* ── Main content ── */}
-      <div className="flex-1 flex flex-col min-h-screen pb-16 md:pb-0">
-        {/* Top bar */}
-        <header
-          className="px-6 md:px-8 py-4 flex items-center justify-between flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          <div>
-            <p className="text-white/40 text-xs font-medium mb-0.5">Dobrodošel nazaj, mladi AI raziskovalec! 👋</p>
-            <h1 className="text-xl font-bold text-white">Byteov vesoljski zemljevid</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 activities-grid">
+          {activities.slice(0, 3).map((activity) => (
+            <Link
+              key={activity.id}
+              href={activity.href}
+              className={`bg-gradient-to-r ${activity.color} text-white p-6 rounded-3xl hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer block ${
+                activity.id === "library" ? "library-link" : ""
+              }`}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="text-5xl">{activity.icon}</div>
+                <div>
+                  <h3 className="text-xl font-bold">{activity.title}</h3>
+                  <p className="text-white/90 text-sm">{activity.description}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-8 bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-purple-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-900">Your Learning Progress</h3>
+            <Link href="/kids/badges">
+              <Button variant="outline" size="sm" className="rounded-full bg-transparent">
+                View All Badges
+              </Button>
+            </Link>
           </div>
-          <div className="text-3xl animate-bounce">🚀</div>
-        </header>
-
-        {/* Map */}
-        <div className="px-6 md:px-8 pt-6">
-          <AdventureMap />
-        </div>
-
-        {/* Progress stats */}
-        <div className="px-6 md:px-8 pt-6 pb-4">
-          <div
-            className="rounded-2xl p-5"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-          >
-            <h3 className="text-white font-bold mb-4">Tvoj učni napredek</h3>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-4 rounded-xl"
-                style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.2)" }}>
-                <div className="text-2xl mb-1">📖</div>
-                <div className="text-lg font-bold text-white">{statsLoading ? "—" : completedLessons}</div>
-                <div className="text-xs text-blue-400">Lekcij</div>
-              </div>
-              <div className="text-center p-4 rounded-xl"
-                style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.2)" }}>
-                <div className="text-2xl mb-1">⚡</div>
-                <div className="text-lg font-bold text-white">{statsLoading ? "—" : stats.streak}</div>
-                <div className="text-xs text-green-400">Niz dni</div>
-              </div>
-              <div className="text-center p-4 rounded-xl"
-                style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.2)" }}>
-                <div className="text-2xl mb-1">🎯</div>
-                <div className="text-lg font-bold text-white">{statsLoading ? "—" : `Lv ${stats.level}`}</div>
-                <div className="text-xs text-purple-400">{statsLoading ? "" : stats.levelName}</div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-transform">
+              <div className="text-2xl mb-2">🏆</div>
+              <div className="text-lg font-semibold text-blue-900">5 Badges</div>
+              <div className="text-sm text-blue-700">Earned</div>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl border-2 border-green-200 hover:scale-105 transition-transform">
+              <div className="text-2xl mb-2">⚡</div>
+              <div className="text-lg font-semibold text-green-900">3 Day</div>
+              <div className="text-sm text-green-700">Streak</div>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl border-2 border-purple-200 hover:scale-105 transition-transform">
+              <div className="text-2xl mb-2">🎯</div>
+              <div className="text-lg font-semibold text-purple-900">Level 4</div>
+              <div className="text-sm text-purple-700">AI Explorer</div>
             </div>
           </div>
         </div>
@@ -182,7 +239,16 @@ export default function KidsHome() {
           <BadgeShowcase earnedBadgeIds={earnedBadges} completedLessons={completedLessons} />
         </div>
       </div>
-      <KidsBottomNav />
+
+      <div className="relative h-24 mt-12">
+        <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path
+            d="M0,64 C240,108 480,108 720,64 C960,20 1200,20 1440,64 L1440,120 L0,120 Z"
+            fill="white"
+            opacity="0.8"
+          />
+        </svg>
+      </div>
     </div>
   )
 }

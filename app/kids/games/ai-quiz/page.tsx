@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
-import { useRouter } from "next/navigation"
 import { useProgress } from "@/hooks/use-progress"
 import { AchievementPopup } from "@/components/achievement-popup"
+import { trackActivity, trackQuizCompletion } from "@/lib/analytics"
 
 interface Question {
   question: string
@@ -23,13 +23,7 @@ const STARS = [
 const OPTION_LETTERS = ["A", "B", "C", "D"]
 
 export default function AIQuizPage() {
-  const { user, loading, logout } = useAuth()
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    await logout()
-    router.push("/auth/login")
-  }
+  const { user, loading } = useAuth()
   const { submitProgress } = useProgress()
 
   const [questions, setQuestions] = useState<Question[]>([])
@@ -41,17 +35,13 @@ export default function AIQuizPage() {
   const [quizComplete, setQuizComplete] = useState(false)
   const [newAchievements, setNewAchievements] = useState<any[]>([])
   const [startTime] = useState(Date.now())
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/auth/login")
-    }
-  }, [user, loading, router])
+  const [rateLimitMessage, setRateLimitMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const generateQuestions = async () => {
       try {
         setLoadingQuestions(true)
+        setRateLimitMessage(null)
         const response = await fetch("/api/generate/quiz", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -64,25 +54,24 @@ export default function AIQuizPage() {
         const data = await response.json()
         if (response.ok && data.questions) {
           setQuestions(data.questions)
+          trackActivity("started", "AI Quiz", { question_count: data.questions.length })
+          if (data.fallback && data.message) {
+            setRateLimitMessage(data.message)
+          }
         } else {
-          setQuestions([
-            {
-              question: "What does AI stand for?",
-              options: ["Artificial Intelligence", "Automatic Information", "Advanced Internet", "Amazing Ideas"],
-              correct: 0,
-              explanation:
-                "AI stands for Artificial Intelligence - computer systems that can perform tasks that typically require human intelligence!",
-            },
-          ])
+          console.error("[v0] Failed to generate questions:", data.error)
+          throw new Error(data.error || "Failed to generate questions")
         }
-      } catch {
-        // silence
+      } catch (error) {
+        console.error("[v0] Error generating questions:", error)
+        alert("Failed to generate questions. Please try again in a moment.")
       } finally {
         setLoadingQuestions(false)
       }
     }
-    if (user) generateQuestions()
-  }, [user])
+
+    generateQuestions()
+  }, [])
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (!showExplanation) setSelectedAnswer(answerIndex)
@@ -103,8 +92,17 @@ export default function AIQuizPage() {
       setShowExplanation(false)
     } else {
       setQuizComplete(true)
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+
+      trackQuizCompletion("AI Quiz", score, questions.length, timeSpent)
+      trackActivity("completed", "AI Quiz", {
+        score,
+        total_questions: questions.length,
+        time_spent: timeSpent,
+        percentage: Math.round((score / questions.length) * 100),
+      })
+
       if (user) {
-        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
         const achievements = await submitProgress("ai_quiz", score, questions.length, timeSpent)
         setNewAchievements(achievements)
       }
@@ -118,6 +116,8 @@ export default function AIQuizPage() {
     setScore(0)
     setQuizComplete(false)
     setNewAchievements([])
+    setRateLimitMessage(null)
+
     setLoadingQuestions(true)
     try {
       const response = await fetch("/api/generate/quiz", {
@@ -126,9 +126,15 @@ export default function AIQuizPage() {
         body: JSON.stringify({ topic: "artificial intelligence and technology", difficulty: "beginner", count: 5 }),
       })
       const data = await response.json()
-      if (response.ok && data.questions) setQuestions(data.questions)
-    } catch {
-      // silence
+      if (response.ok && data.questions) {
+        setQuestions(data.questions)
+        if (data.fallback && data.message) {
+          setRateLimitMessage(data.message)
+        }
+      }
+    } catch (error) {
+      console.error("[v0] Error generating questions:", error)
+      alert("Failed to generate new questions. Please try again in a moment.")
     } finally {
       setLoadingQuestions(false)
     }
@@ -267,27 +273,18 @@ export default function AIQuizPage() {
           </div>
         </div>
 
-        {/* Main game panel */}
-        <div
-          className="rounded-3xl overflow-hidden shadow-2xl"
-          style={{
-            background: "rgba(8,8,30,0.88)",
-            border: "1px solid rgba(249,115,22,0.3)",
-            boxShadow: "0 0 40px rgba(249,115,22,0.1)",
-          }}
-        >
-          {/* Header */}
-          <div
-            className="px-6 py-4 flex justify-between items-center"
-            style={{ background: "rgba(249,115,22,0.18)", borderBottom: "1px solid rgba(249,115,22,0.2)" }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🎯</span>
-              <div>
-                <h1 className="text-xl font-bold text-white">AI Kviz</h1>
-                <p className="text-orange-400 text-xs font-medium">
-                  Vprašanje {currentQuestion + 1} od {questions.length}
-                </p>
+        {rateLimitMessage && (
+          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-blue-800 text-sm">{rateLimitMessage}</p>
+          </div>
+        )}
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-2xl text-purple-600">AI Quiz</CardTitle>
+              <div className="text-sm text-gray-500">
+                Question {currentQuestion + 1} of {questions.length}
               </div>
             </div>
             <div
