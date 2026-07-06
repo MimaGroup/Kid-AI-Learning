@@ -18,6 +18,13 @@ interface Case {
   solution: string
 }
 
+const STARS = [
+  {x:5,y:8},{x:18,y:82},{x:28,y:22},{x:38,y:58},{x:48,y:12},
+  {x:58,y:72},{x:68,y:38},{x:78,y:88},{x:88,y:18},{x:94,y:52},
+  {x:12,y:48},{x:52,y:42},{x:82,y:62},{x:32,y:78},{x:72,y:8},
+  {x:22,y:95},{x:65,y:95},{x:44,y:95},
+]
+
 const FALLBACK_MYSTERIES: Case[] = [
   {
     title: "The Missing Robot",
