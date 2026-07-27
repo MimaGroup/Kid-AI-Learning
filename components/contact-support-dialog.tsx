@@ -49,7 +49,7 @@ export function ContactSupportDialog() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || "Failed to send message")
+        throw new Error(errorData.error || "Pošiljanje sporočila ni uspelo")
       }
 
       setIsSubmitted(true)
@@ -62,7 +62,7 @@ export function ContactSupportDialog() {
       }, 2000)
     } catch (error) {
       console.error("Error submitting contact form:", error)
-      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again."
+      const errorMessage = error instanceof Error ? error.message : "Pošiljanje sporočila ni uspelo. Poskusite znova."
       alert(errorMessage)
     } finally {
       setIsSubmitting(false)
@@ -81,33 +81,33 @@ export function ContactSupportDialog() {
       <DialogTrigger asChild>
         <Button variant="outline" className="gap-2 bg-transparent">
           <Mail className="w-4 h-4" />
-          Contact Support
+          Kontaktiraj podporo
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Contact Support</DialogTitle>
+          <DialogTitle>Kontaktiraj podporo</DialogTitle>
           <DialogDescription>
-            Send us a message and we'll respond within 24-48 hours. Premium members get priority support.
+            Pošljite nam sporočilo in odgovorili bomo v roku 24–48 ur. Premium naročniki imajo prednostno podporo.
           </DialogDescription>
         </DialogHeader>
 
         {isSubmitted ? (
           <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
             <div className="text-4xl mb-3">✅</div>
-            <h3 className="text-lg font-bold text-green-900 mb-2">Message Sent!</h3>
-            <p className="text-green-700 text-sm">Thank you for contacting us. We'll get back to you soon.</p>
+            <h3 className="text-lg font-bold text-green-900 mb-2">Sporočilo poslano!</h3>
+            <p className="text-green-700 text-sm">Hvala, ker ste nas kontaktirali. Kmalu se vam bomo oglasili.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Your Name *</Label>
+                <Label htmlFor="name">Vaše ime *</Label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Janez Novak"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -116,12 +116,12 @@ export function ContactSupportDialog() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address *</Label>
+                <Label htmlFor="email">E-poštni naslov *</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="janez@primer.com"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -131,12 +131,12 @@ export function ContactSupportDialog() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject">Subject *</Label>
+              <Label htmlFor="subject">Zadeva *</Label>
               <Input
                 id="subject"
                 name="subject"
                 type="text"
-                placeholder="How can we help you?"
+                placeholder="Kako vam lahko pomagamo?"
                 value={formData.subject}
                 onChange={handleChange}
                 required
@@ -145,11 +145,11 @@ export function ContactSupportDialog() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message">Message *</Label>
+              <Label htmlFor="message">Sporočilo *</Label>
               <Textarea
                 id="message"
                 name="message"
-                placeholder="Tell us more about your question or concern..."
+                placeholder="Povejte nam več o svojem vprašanju ali težavi ..."
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -163,12 +163,12 @@ export function ContactSupportDialog() {
               {isSubmitting ? (
                 <>
                   <span className="animate-spin mr-2">⏳</span>
-                  Sending...
+                  Pošiljanje ...
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Send Message
+                  Pošlji sporočilo
                 </>
               )}
             </Button>

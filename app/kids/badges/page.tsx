@@ -10,13 +10,13 @@ export default function BadgesPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <Link href="/kids/home">
-            <Button variant="outline">← Back to Home</Button>
+            <Button variant="outline">← Nazaj na domačo stran</Button>
           </Link>
         </div>
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Your Badge Collection</h1>
-          <p className="text-gray-600">Collect badges by completing activities and reaching milestones!</p>
+          <h1 className="text-4xl font-bold mb-2">Tvoja zbirka značk</h1>
+          <p className="text-gray-600">Zbiraj značke z opravljanjem dejavnosti in doseganjem mejnikov!</p>
         </div>
 
         <BadgeShowcase />

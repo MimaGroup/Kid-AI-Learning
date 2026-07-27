@@ -28,16 +28,16 @@ function PaymentSuccessContent() {
             trackStartTrial()
             setLoading(false)
           } else {
-            setError(data.error || "Payment verification failed")
+            setError(data.error || "Preverjanje plačila ni uspelo")
             setLoading(false)
           }
         })
         .catch((err) => {
-          setError("Failed to verify payment")
+          setError("Preverjanje plačila ni uspelo")
           setLoading(false)
         })
     } else {
-      setError("No session ID provided")
+      setError("Manjka ID seje")
       setLoading(false)
     }
   }, [sessionId])
@@ -47,8 +47,8 @@ function PaymentSuccessContent() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <Card className="p-8 max-w-md text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Verifying Payment...</h2>
-          <p className="text-gray-600">Please wait while we confirm your subscription.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Preverjanje plačila ...</h2>
+          <p className="text-gray-600">Prosimo počakajte, medtem ko potrjujemo vašo naročnino.</p>
         </Card>
       </div>
     )
@@ -59,10 +59,10 @@ function PaymentSuccessContent() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <Card className="p-8 max-w-md text-center">
           <div className="text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Error</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Napaka pri plačilu</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <Button onClick={() => router.push("/pricing")} className="bg-purple-600 hover:bg-purple-700">
-            Back to Pricing
+            Nazaj na cenik
           </Button>
         </Card>
       </div>
@@ -73,24 +73,24 @@ function PaymentSuccessContent() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
       <Card className="p-8 max-w-md text-center">
         <div className="text-6xl mb-4">🎉</div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Premium!</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Dobrodošli v Premium!</h2>
         <p className="text-gray-600 mb-6">
-          Your subscription is now active. You have full access to all premium activities and content.
+          Vaša naročnina je zdaj aktivna. Imate popoln dostop do vseh premium dejavnosti in vsebin.
         </p>
 
         <div className="bg-purple-50 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-gray-900 mb-2">What's unlocked:</h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Kaj je odklenjeno:</h3>
           <ul className="text-left text-sm text-gray-700 space-y-1">
-            <li>✓ AI Friend Creator</li>
-            <li>✓ Pattern Training</li>
-            <li>✓ Full Content Library</li>
-            <li>✓ Advanced Analytics</li>
-            <li>✓ Priority Support</li>
+            <li>✓ Ustvarjalnik AI prijateljev</li>
+            <li>✓ Usposabljanje vzorcev</li>
+            <li>✓ Polna knjižnica vsebin</li>
+            <li>✓ Napredna analitika</li>
+            <li>✓ Prednostna podpora</li>
           </ul>
         </div>
 
         <Button onClick={() => router.push("/kids/home")} className="w-full bg-purple-600 hover:bg-purple-700">
-          Start Learning
+          Začni z učenjem
         </Button>
       </Card>
     </div>
@@ -104,7 +104,7 @@ export default function PaymentSuccessPage() {
         <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
           <Card className="p-8 max-w-md text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading...</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nalaganje ...</h2>
           </Card>
         </div>
       }

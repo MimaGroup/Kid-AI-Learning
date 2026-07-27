@@ -9,6 +9,15 @@ import { ProgressChart } from "./progress-chart"
 import { ActivityBreakdown } from "./activity-breakdown"
 import { LearningInsights } from "./learning-insights"
 
+const ACTIVITY_TYPE_NAMES: Record<string, string> = {
+  ai_quiz: "AI Kviz",
+  ai_detective: "AI Detektiv",
+  math_adventure: "Matematična pustolovščina",
+  word_builder: "Graditelj besed",
+  memory_match: "Spomin",
+  pattern_training: "Usposabljanje vzorcev",
+}
+
 interface ChildProgressCardProps {
   child: Child
 }
@@ -105,12 +114,12 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
       <CardContent className="space-y-4">
         {gamification && (
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
-            <h4 className="font-semibold text-sm mb-3 text-purple-900">Gamification Progress</h4>
+            <h4 className="font-semibold text-sm mb-3 text-purple-900">Napredek v igrifikaciji</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Star className="w-4 h-4 text-yellow-600" />
-                  <span className="text-xs text-gray-600 font-medium">Level</span>
+                  <span className="text-xs text-gray-600 font-medium">Nivo</span>
                 </div>
                 <p className="text-2xl font-bold text-gray-900">{gamification.level}</p>
                 <p className="text-xs text-gray-500">
@@ -120,24 +129,24 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Trophy className="w-4 h-4 text-blue-600" />
-                  <span className="text-xs text-gray-600 font-medium">Points</span>
+                  <span className="text-xs text-gray-600 font-medium">Točke</span>
                 </div>
                 <p className="text-2xl font-bold text-gray-900">{gamification.points}</p>
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Award className="w-4 h-4 text-purple-600" />
-                  <span className="text-xs text-gray-600 font-medium">Badges</span>
+                  <span className="text-xs text-gray-600 font-medium">Značke</span>
                 </div>
                 <p className="text-2xl font-bold text-gray-900">{gamification.earnedBadges.length}</p>
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="flex items-center gap-2 mb-1">
                   <Flame className="w-4 h-4 text-orange-600" />
-                  <span className="text-xs text-gray-600 font-medium">Streak</span>
+                  <span className="text-xs text-gray-600 font-medium">Niz</span>
                 </div>
                 <p className="text-2xl font-bold text-gray-900">{gamification.streakDays}</p>
-                <p className="text-xs text-gray-500">days</p>
+                <p className="text-xs text-gray-500">dni</p>
               </div>
             </div>
           </div>
@@ -161,7 +170,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <div className="bg-green-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Calculator className="w-4 h-4 text-green-600" />
-              <span className="text-xs text-green-600 font-medium">Math</span>
+              <span className="text-xs text-green-600 font-medium">Matematika</span>
             </div>
             <p className="text-2xl font-bold text-green-900">
               {data.progress?.filter((p) => p.activity_type === "math_adventure").length || 0}
@@ -170,7 +179,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <div className="bg-yellow-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <BookOpen className="w-4 h-4 text-yellow-600" />
-              <span className="text-xs text-yellow-600 font-medium">Words</span>
+              <span className="text-xs text-yellow-600 font-medium">Besede</span>
             </div>
             <p className="text-2xl font-bold text-yellow-900">
               {data.progress?.filter((p) => p.activity_type === "word_builder").length || 0}
@@ -179,7 +188,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <div className="bg-pink-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Gamepad2 className="w-4 h-4 text-pink-600" />
-              <span className="text-xs text-pink-600 font-medium">Memory</span>
+              <span className="text-xs text-pink-600 font-medium">Spomin</span>
             </div>
             <p className="text-2xl font-bold text-pink-900">
               {data.progress?.filter((p) => p.activity_type === "memory_match").length || 0}
@@ -188,7 +197,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
           <div className="bg-orange-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <Trophy className="w-4 h-4 text-orange-600" />
-              <span className="text-xs text-orange-600 font-medium">Achievements</span>
+              <span className="text-xs text-orange-600 font-medium">Dosežki</span>
             </div>
             <p className="text-2xl font-bold text-orange-900">{data.stats.totalAchievements}</p>
           </div>
@@ -205,7 +214,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
 
             {gamification && gamification.earnedBadges.length > 0 && (
               <div>
-                <h4 className="font-semibold text-sm mb-2">Earned Badges</h4>
+                <h4 className="font-semibold text-sm mb-2">Osvojene značke</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {gamification.earnedBadges.map((badge) => (
                     <div
@@ -234,7 +243,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
                       <div className="flex-1">
                         <p className="text-sm font-medium text-yellow-900">{achievement.achievement_name}</p>
                         <p className="text-xs text-yellow-700">
-                          {new Date(achievement.earned_at).toLocaleDateString()}
+                          {new Date(achievement.earned_at).toLocaleDateString("sl-SI")}
                         </p>
                       </div>
                     </div>
@@ -250,13 +259,13 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
                   {data.progress.slice(0, 5).map((activity) => (
                     <div key={activity.id} className="bg-gray-50 rounded-lg p-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="capitalize">
-                          {activity.activity_type.replace("_", " ")}
+                        <Badge variant="secondary">
+                          {ACTIVITY_TYPE_NAMES[activity.activity_type] ?? activity.activity_type.replace(/_/g, " ")}
                         </Badge>
                         <span className="text-sm text-gray-600">Rezultat: {activity.score}</span>
                       </div>
                       <span className="text-xs text-gray-500">
-                        {new Date(activity.completed_at).toLocaleDateString()}
+                        {new Date(activity.completed_at).toLocaleDateString("sl-SI")}
                       </span>
                     </div>
                   ))}
