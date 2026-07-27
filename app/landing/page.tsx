@@ -468,7 +468,7 @@ export default function AdLandingPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5" />
-                    10-16 let
+                    5–12 let
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">

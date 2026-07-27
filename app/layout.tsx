@@ -34,24 +34,24 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"),
   title: {
-    default: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
-    template: "%s | AI Kids Learning",
+    default: "Kids Learning AI - Vodilna slovenska AI učna platforma za otroke",
+    template: "%s | Kids Learning AI",
   },
   description:
-    "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12. Start learning today!",
+    "Kids Learning AI je vodilna slovenska AI učna platforma za otroke, stare 5–12 let. Interaktivne igre, osnove programiranja in osebni AI tutor Byte — v varnem okolju brez oglasov. Prvih 7 dni brezplačno!",
   keywords: [
-    "AI learning for kids",
-    "children education",
-    "STEM learning",
-    "coding for kids",
-    "interactive learning",
-    "AI games",
-    "educational technology",
-    "online learning platform",
+    "AI učenje za otroke",
+    "izobraževanje otrok",
+    "učenje programiranja za otroke",
+    "interaktivno učenje",
+    "AI igre za otroke",
+    "izobraževalna tehnologija",
+    "spletna učna platforma",
+    "slovenska AI platforma",
   ],
-  authors: [{ name: "AI Kids Learning Platform" }],
-  creator: "AI Kids Learning Platform",
-  publisher: "AI Kids Learning Platform",
+  authors: [{ name: "Kids Learning AI" }],
+  creator: "Kids Learning AI",
+  publisher: "Kids Learning AI",
   formatDetection: {
     email: false,
     address: false,
@@ -63,30 +63,30 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AI Kids Learning",
+    title: "Kids Learning AI",
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "sl_SI",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com",
-    title: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
+    title: "Kids Learning AI - Vodilna slovenska AI učna platforma za otroke",
     description:
-      "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12.",
-    siteName: "AI Kids Learning Platform",
+      "Kids Learning AI je vodilna slovenska AI učna platforma za otroke, stare 5–12 let. Interaktivne igre, osnove programiranja in osebni AI tutor Byte — v varnem okolju brez oglasov.",
+    siteName: "Kids Learning AI",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "AI Kids Learning Platform",
+        alt: "Kids Learning AI",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Kids Learning Platform - Where Young Minds Meet Artificial Intelligence",
+    title: "Kids Learning AI - Vodilna slovenska AI učna platforma za otroke",
     description:
-      "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12.",
+      "Kids Learning AI je vodilna slovenska AI učna platforma za otroke, stare 5–12 let. Interaktivne igre, osnove programiranja in osebni AI tutor Byte — v varnem okolju brez oglasov.",
     images: ["/og-image.jpg"],
   },
   robots: {

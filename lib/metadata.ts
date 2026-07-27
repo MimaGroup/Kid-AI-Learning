@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 
 const siteConfig = {
-  name: "AI Kids Learning Platform",
+  name: "Kids Learning AI",
   description:
-    "Empower your child's future with AI-powered learning. Interactive games, coding lessons, and personalized education for kids ages 5-12.",
+    "Kids Learning AI je vodilna slovenska AI učna platforma za otroke, stare 5–12 let. Interaktivne igre, osnove programiranja in osebni AI tutor Byte — v varnem okolju brez oglasov.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com",
   ogImage: "/og-image.jpg",
 }
@@ -24,7 +24,7 @@ export function createMetadata({
   const url = `${siteConfig.url}${path}`
 
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
       title,
@@ -39,7 +39,7 @@ export function createMetadata({
           alt: title,
         },
       ],
-      locale: "en_US",
+      locale: "sl_SI",
       type: "website",
     },
     twitter: {
@@ -93,8 +93,8 @@ export function generateStructuredData(type: "Organization" | "Product" | "FAQPa
       },
       offers: {
         "@type": "Offer",
-        price: data?.price || "9.99",
-        priceCurrency: "USD",
+        price: data?.price || "7.90",
+        priceCurrency: "EUR",
         availability: "https://schema.org/InStock",
         url: `${baseUrl}/pricing`,
       },
@@ -121,8 +121,8 @@ export function generateStructuredData(type: "Organization" | "Product" | "FAQPa
       operatingSystem: "Web Browser",
       offers: {
         "@type": "Offer",
-        price: data?.price || "9.99",
-        priceCurrency: "USD",
+        price: data?.price || "7.90",
+        priceCurrency: "EUR",
       },
       audience: {
         "@type": "EducationalAudience",
