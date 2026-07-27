@@ -48,7 +48,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ us
     }
 
     // Check if subscription exists
-    const { data: existingSub } = await supabase.from("subscriptions").select("id").eq("user_id", userId).single()
+    const { data: existingSub } = await supabase.from("subscriptions").select("id").eq("user_id", userId).maybeSingle()
 
     if (existingSub) {
       // Update existing subscription
