@@ -11,11 +11,11 @@ interface ActivityBreakdownProps {
 }
 
 const ACTIVITY_LABELS: Record<string, { name: string; color: string; emoji: string }> = {
-  ai_quiz: { name: "AI Quiz", color: "bg-purple-500", emoji: "🎯" },
-  ai_detective: { name: "AI Detective", color: "bg-blue-500", emoji: "🕵️" },
-  math_adventure: { name: "Math Adventure", color: "bg-green-500", emoji: "🧮" },
-  word_builder: { name: "Word Builder", color: "bg-yellow-500", emoji: "📚" },
-  memory_match: { name: "Memory Match", color: "bg-pink-500", emoji: "🎴" },
+  ai_quiz: { name: "AI Kviz", color: "bg-purple-500", emoji: "🎯" },
+  ai_detective: { name: "AI Detektiv", color: "bg-blue-500", emoji: "🕵️" },
+  math_adventure: { name: "Matematična pustolovščina", color: "bg-green-500", emoji: "🧮" },
+  word_builder: { name: "Graditelj besed", color: "bg-yellow-500", emoji: "📚" },
+  memory_match: { name: "Spomin", color: "bg-pink-500", emoji: "🎴" },
 }
 
 export function ActivityBreakdown({ data }: ActivityBreakdownProps) {
@@ -47,12 +47,12 @@ export function ActivityBreakdown({ data }: ActivityBreakdownProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Activity Breakdown</CardTitle>
+        <CardTitle className="text-lg">Razčlenitev dejavnosti</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {breakdown.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">No activities yet</p>
+            <p className="text-sm text-gray-500 text-center py-4">Še ni dejavnosti</p>
           ) : (
             breakdown.map((activity) => {
               const percentage = Math.round((activity.count / totalActivities) * 100)
@@ -64,8 +64,8 @@ export function ActivityBreakdown({ data }: ActivityBreakdownProps) {
                       <span className="font-medium">{activity.name}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-600">{activity.count} times</span>
-                      <span className="text-gray-600">Avg: {activity.avgScore}%</span>
+                      <span className="text-gray-600">{activity.count}-krat</span>
+                      <span className="text-gray-600">Povp.: {activity.avgScore}%</span>
                     </div>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">

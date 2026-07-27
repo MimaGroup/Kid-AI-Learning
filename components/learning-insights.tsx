@@ -4,6 +4,25 @@ import { useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, TrendingDown, Award, Target } from "lucide-react"
 
+const ACTIVITY_NAMES: Record<string, string> = {
+  ai_quiz: "AI Kviz",
+  ai_detective: "AI Detektiv",
+  math_adventure: "Matematična pustolovščina",
+  word_builder: "Graditelj besed",
+  memory_match: "Spomin",
+  pattern_training: "Usposabljanje vzorcev",
+}
+
+const TREND_LABELS: Record<string, string> = {
+  up: "Naraščajoč",
+  down: "Padajoč",
+  neutral: "Stabilen",
+}
+
+function activityName(type: string) {
+  return ACTIVITY_NAMES[type] ?? type.replace(/_/g, " ")
+}
+
 interface LearningInsightsProps {
   data: Array<{
     activity_type: string
@@ -85,14 +104,14 @@ export function LearningInsights({ data }: LearningInsightsProps) {
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    if (hours > 0) return `${hours}h ${minutes}m`
-    return `${minutes}m`
+    if (hours > 0) return `${hours} h ${minutes} min`
+    return `${minutes} min`
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Learning Insights</CardTitle>
+        <CardTitle className="text-lg">Vpogledi v učenje</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -106,41 +125,41 @@ export function LearningInsights({ data }: LearningInsightsProps) {
                 ) : (
                   <Target className="w-5 h-5 text-blue-600" />
                 )}
-                <span className="text-sm font-medium text-gray-700">Performance Trend</span>
+                <span className="text-sm font-medium text-gray-700">Trend uspešnosti</span>
               </div>
-              <p className="text-lg font-bold text-gray-900 capitalize">{insights.trend}</p>
+              <p className="text-lg font-bold text-gray-900">{TREND_LABELS[insights.trend] ?? insights.trend}</p>
             </div>
 
             <div className="bg-purple-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Award className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-medium text-gray-700">Learning Streak</span>
+                <span className="text-sm font-medium text-gray-700">Učni niz</span>
               </div>
-              <p className="text-lg font-bold text-gray-900">{insights.recentStreak} days</p>
+              <p className="text-lg font-bold text-gray-900">{insights.recentStreak} dni</p>
             </div>
           </div>
 
           {insights.strongestArea && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-green-900 mb-1">Strongest Area</h4>
-              <p className="text-sm text-green-800 capitalize">
-                {insights.strongestArea.type.replace("_", " ")} - {Math.round(insights.strongestArea.avg)}% average
+              <h4 className="text-sm font-semibold text-green-900 mb-1">Najmočnejše področje</h4>
+              <p className="text-sm text-green-800">
+                {activityName(insights.strongestArea.type)} — povprečje {Math.round(insights.strongestArea.avg)} %
               </p>
             </div>
           )}
 
           {insights.improvementArea && insights.improvementArea.avg < 70 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-yellow-900 mb-1">Room for Growth</h4>
-              <p className="text-sm text-yellow-800 capitalize">
-                {insights.improvementArea.type.replace("_", " ")} - {Math.round(insights.improvementArea.avg)}% average
+              <h4 className="text-sm font-semibold text-yellow-900 mb-1">Priložnost za napredek</h4>
+              <p className="text-sm text-yellow-800">
+                {activityName(insights.improvementArea.type)} — povprečje {Math.round(insights.improvementArea.avg)} %
               </p>
-              <p className="text-xs text-yellow-700 mt-1">Consider more practice in this area</p>
+              <p className="text-xs text-yellow-700 mt-1">Razmislite o dodatni vadbi na tem področju</p>
             </div>
           )}
 
           <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-gray-900 mb-1">Total Learning Time</h4>
+            <h4 className="text-sm font-semibold text-gray-900 mb-1">Skupni čas učenja</h4>
             <p className="text-lg font-bold text-gray-900">{formatTime(insights.totalTimeSpent)}</p>
           </div>
         </div>

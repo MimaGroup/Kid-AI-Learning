@@ -10,27 +10,27 @@ interface SkillProgressChartProps {
 export function SkillProgressChart({ data }: SkillProgressChartProps) {
   const skillData = [
     {
-      skill: "Math",
+      skill: "Matematika",
       activities: data.filter((p) => p.activity_type === "math_adventure").length,
       avgScore: calculateAvgScore(data.filter((p) => p.activity_type === "math_adventure")),
     },
     {
-      skill: "Reading",
+      skill: "Branje",
       activities: data.filter((p) => p.activity_type === "word_builder").length,
       avgScore: calculateAvgScore(data.filter((p) => p.activity_type === "word_builder")),
     },
     {
-      skill: "Logic",
+      skill: "Logika",
       activities: data.filter((p) => p.activity_type === "ai_quiz").length,
       avgScore: calculateAvgScore(data.filter((p) => p.activity_type === "ai_quiz")),
     },
     {
-      skill: "Memory",
+      skill: "Spomin",
       activities: data.filter((p) => p.activity_type === "memory_match").length,
       avgScore: calculateAvgScore(data.filter((p) => p.activity_type === "memory_match")),
     },
     {
-      skill: "Problem Solving",
+      skill: "Reševanje problemov",
       activities: data.filter((p) => p.activity_type === "ai_detective").length,
       avgScore: calculateAvgScore(data.filter((p) => p.activity_type === "ai_detective")),
     },
@@ -45,8 +45,8 @@ export function SkillProgressChart({ data }: SkillProgressChartProps) {
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow border-2">
       <CardHeader className="bg-gradient-to-r from-accent/10 to-primary/10 rounded-t-xl">
-        <CardTitle className="text-xl font-bold">Skill Progress</CardTitle>
-        <p className="text-sm text-muted-foreground">Performance across different learning areas</p>
+        <CardTitle className="text-xl font-bold">Napredek po veščinah</CardTitle>
+        <p className="text-sm text-muted-foreground">Uspešnost na različnih učnih področjih</p>
       </CardHeader>
       <CardContent className="pt-6">
         <ResponsiveContainer width="100%" height={350}>
@@ -88,14 +88,14 @@ export function SkillProgressChart({ data }: SkillProgressChartProps) {
               dataKey="activities"
               fill="url(#activitiesGradient)"
               radius={[8, 8, 0, 0]}
-              name="Activities Completed"
+              name="Opravljenih dejavnosti"
             />
             <Bar
               yAxisId="right"
               dataKey="avgScore"
               fill="url(#scoreGradient)"
               radius={[8, 8, 0, 0]}
-              name="Average Score %"
+              name="Povprečna ocena %"
             />
           </BarChart>
         </ResponsiveContainer>

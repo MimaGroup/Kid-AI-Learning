@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { Child } from "@/types/child"
+import { LEARNING_LEVEL_LABELS, type Child } from "@/types/child"
 import { Trash2, Edit } from "lucide-react"
 
 interface ChildCardProps {
@@ -49,8 +49,8 @@ export function ChildCard({ child, onDelete, onEdit }: ChildCardProps) {
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex gap-2">
-          <Badge variant="secondary" className="capitalize">
-            {child.learning_level}
+          <Badge variant="secondary">
+            {LEARNING_LEVEL_LABELS[child.learning_level] ?? child.learning_level}
           </Badge>
         </div>
       </CardContent>

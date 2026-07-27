@@ -24,7 +24,7 @@ export function DownloadReportButton({ childId, childName }: DownloadReportButto
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
-        a.download = `${childName}-learning-report-${new Date().toISOString().split("T")[0]}.txt`
+        a.download = `${childName}-porocilo-o-napredku-${new Date().toISOString().split("T")[0]}.txt`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
@@ -38,52 +38,52 @@ export function DownloadReportButton({ childId, childName }: DownloadReportButto
   }
 
   const generateReportContent = (data: any, name: string) => {
-    const date = new Date().toLocaleDateString()
+    const date = new Date().toLocaleDateString("sl-SI")
     return `
-AI Kids Learning - Progress Report
-Generated: ${date}
-Student: ${name}
+Kids Learning AI — Poročilo o napredku
+Ustvarjeno: ${date}
+Otrok: ${name}
 
-=== OVERVIEW ===
-Total Activities Completed: ${data.stats?.totalActivities || 0}
-Total Achievements: ${data.stats?.totalAchievements || 0}
-Average Score: ${data.stats?.averageScore || 0}%
-Current Level: ${data.gamification?.level || 1}
-Total Points: ${data.gamification?.points || 0}
-Current Streak: ${data.gamification?.streakDays || 0} days
+=== PREGLED ===
+Skupaj opravljenih dejavnosti: ${data.stats?.totalActivities || 0}
+Skupaj dosežkov: ${data.stats?.totalAchievements || 0}
+Povprečna ocena: ${data.stats?.averageScore || 0} %
+Trenutni nivo: ${data.gamification?.level || 1}
+Skupaj točk: ${data.gamification?.points || 0}
+Trenutni niz: ${data.gamification?.streakDays || 0} dni
 
-=== ACTIVITY BREAKDOWN ===
-Math Adventures: ${data.stats?.mathGames || 0}
-Word Builder: ${data.stats?.wordGames || 0}
-AI Quizzes: ${data.stats?.quizzesTaken || 0}
-Memory Games: ${data.stats?.memoryGames || 0}
-Mysteries Solved: ${data.stats?.mysteriesSolved || 0}
+=== RAZČLENITEV DEJAVNOSTI ===
+Matematična pustolovščina: ${data.stats?.mathGames || 0}
+Graditelj besed: ${data.stats?.wordGames || 0}
+AI Kvizi: ${data.stats?.quizzesTaken || 0}
+Igre spomina: ${data.stats?.memoryGames || 0}
+Rešene skrivnosti: ${data.stats?.mysteriesSolved || 0}
 
-=== RECENT ACHIEVEMENTS ===
+=== NEDAVNI DOSEŽKI ===
 ${
   data.achievements
     ?.slice(0, 5)
-    .map((a: any) => `- ${a.achievement_name} (${new Date(a.earned_at).toLocaleDateString()})`)
-    .join("\n") || "No achievements yet"
+    .map((a: any) => `- ${a.achievement_name} (${new Date(a.earned_at).toLocaleDateString("sl-SI")})`)
+    .join("\n") || "Še ni dosežkov"
 }
 
-=== EARNED BADGES ===
-${data.gamification?.earnedBadges?.map((b: any) => `- ${b.badges.name} (${b.badges.rarity})`).join("\n") || "No badges yet"}
+=== OSVOJENE ZNAČKE ===
+${data.gamification?.earnedBadges?.map((b: any) => `- ${b.badges.name} (${b.badges.rarity})`).join("\n") || "Še ni značk"}
 
-=== RECOMMENDATIONS ===
-Continue practicing regularly to maintain your learning streak!
-Try new activities to earn more badges and achievements.
-Challenge yourself with harder difficulty levels.
+=== PRIPOROČILA ===
+Za ohranjanje učnega niza redno vadi!
+Preizkusi nove dejavnosti za več značk in dosežkov.
+Izzovi se z višjo stopnjo težavnosti.
 
 ---
-Keep up the great work!
+Tako naprej!
     `.trim()
   }
 
   return (
     <Button onClick={handleDownload} disabled={loading} variant="outline" size="sm">
       <Download className="w-4 h-4 mr-2" />
-      {loading ? "Generating..." : "Download Report"}
+      {loading ? "Ustvarjanje ..." : "Prenesi poročilo"}
     </Button>
   )
 }

@@ -133,8 +133,8 @@ export function GamificationDisplay() {
     <div className="space-y-4">
       {isGuest && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
-          <span className="font-semibold">Guest Mode:</span> Your progress is saved locally. Log in to sync across
-          devices!
+          <span className="font-semibold">Gostujoči način:</span> Tvoj napredek se shranjuje lokalno. Prijavi se za
+          sinhronizacijo med napravami!
         </div>
       )}
 
@@ -142,17 +142,17 @@ export function GamificationDisplay() {
       <Card className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-sm opacity-90">Level</div>
+            <div className="text-sm opacity-90">Nivo</div>
             <div className="text-4xl font-bold">{data.level}</div>
           </div>
           <div className="text-right">
-            <div className="text-sm opacity-90">Total Points</div>
+            <div className="text-sm opacity-90">Skupaj točk</div>
             <div className="text-2xl font-bold">{data.points.toLocaleString()}</div>
           </div>
         </div>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Progress to Level {data.level + 1}</span>
+            <span>Napredek do nivoja {data.level + 1}</span>
             <span>
               {data.experienceProgress} / {data.experienceNeeded} XP
             </span>
@@ -166,24 +166,24 @@ export function GamificationDisplay() {
         <Card className="p-4 text-center bg-gradient-to-br from-orange-400 to-orange-600 text-white">
           <div className="text-3xl mb-2">🔥</div>
           <div className="text-2xl font-bold">{data.streakDays}</div>
-          <div className="text-sm opacity-90">Day Streak</div>
+          <div className="text-sm opacity-90">Dnevni niz</div>
         </Card>
         <Card className="p-4 text-center bg-gradient-to-br from-blue-400 to-blue-600 text-white">
           <div className="text-3xl mb-2">🏆</div>
           <div className="text-2xl font-bold">{data.badgeCount}</div>
-          <div className="text-sm opacity-90">Badges Earned</div>
+          <div className="text-sm opacity-90">Osvojenih značk</div>
         </Card>
         <Card className="p-4 text-center bg-gradient-to-br from-green-400 to-green-600 text-white">
           <div className="text-3xl mb-2">⚡</div>
           <div className="text-2xl font-bold">{data.experience}</div>
-          <div className="text-sm opacity-90">Total XP</div>
+          <div className="text-sm opacity-90">Skupaj XP</div>
         </Card>
       </div>
 
       {/* Recent Badges */}
       {data.earnedBadges.length > 0 && (
         <Card className="p-6">
-          <h3 className="text-lg font-bold mb-4">Recent Badges</h3>
+          <h3 className="text-lg font-bold mb-4">Nedavne značke</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {data.earnedBadges.slice(0, 8).map((userBadge: any, index: number) => (
               <div

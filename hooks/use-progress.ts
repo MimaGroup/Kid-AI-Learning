@@ -96,7 +96,7 @@ interface Stats {
 }
 
 export function useStats() {
-  const [stats, setStats] = useState<Stats>({ badges: 0, streak: 0, level: 1, levelName: "Beginner" })
+  const [stats, setStats] = useState<Stats>({ badges: 0, streak: 0, level: 1, levelName: "Začetnik" })
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -159,11 +159,11 @@ export function useStats() {
       // Level based on total activities completed
       const total = progressList.length
       let level = 1
-      let levelName = "Beginner"
-      if (total >= 50) { level = 5; levelName = "AI Master" }
-      else if (total >= 20) { level = 4; levelName = "AI Explorer" }
-      else if (total >= 10) { level = 3; levelName = "Learner" }
-      else if (total >= 5) { level = 2; levelName = "Explorer" }
+      let levelName = "Začetnik"
+      if (total >= 50) { level = 5; levelName = "AI Mojster" }
+      else if (total >= 20) { level = 4; levelName = "AI Raziskovalec" }
+      else if (total >= 10) { level = 3; levelName = "Učenec" }
+      else if (total >= 5) { level = 2; levelName = "Raziskovalec" }
 
       setStats({ badges, streak, level, levelName })
     } catch {

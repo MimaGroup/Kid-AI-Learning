@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { Child } from "@/types/child"
+import { LEARNING_LEVEL_LABELS, type Child } from "@/types/child"
 import { Trophy, Brain, Search, Calculator, BookOpen, Gamepad2, Star, Flame, Award } from "lucide-react"
 import { ProgressChart } from "./progress-chart"
 import { ActivityBreakdown } from "./activity-breakdown"
@@ -94,7 +94,7 @@ export function ChildProgressCard({ child }: ChildProgressCardProps) {
             </div>
             <div>
               <CardTitle className="text-lg">{child.name}</CardTitle>
-              <p className="text-sm text-muted-foreground capitalize">{child.learning_level}</p>
+              <p className="text-sm text-muted-foreground">{LEARNING_LEVEL_LABELS[child.learning_level] ?? child.learning_level}</p>
             </div>
           </div>
           <button onClick={() => setExpanded(!expanded)} className="text-sm text-blue-600 hover:underline">

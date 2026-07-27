@@ -17,7 +17,7 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
   const weeklyData = last7Days.map((date) => {
     const dayActivities = data.filter((p) => p.completed_at?.startsWith(date))
     return {
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "short" }),
+      date: new Date(date).toLocaleDateString("sl-SI", { weekday: "short" }),
       activities: dayActivities.length,
       avgScore: dayActivities.length
         ? Math.round(dayActivities.reduce((sum, a) => sum + (a.score || 0), 0) / dayActivities.length)
@@ -29,8 +29,8 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow border-2">
       <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-xl">
-        <CardTitle className="text-xl font-bold">Weekly Activity Trend</CardTitle>
-        <p className="text-sm text-muted-foreground">Track daily learning activities and performance</p>
+        <CardTitle className="text-xl font-bold">Tedenski trend aktivnosti</CardTitle>
+        <p className="text-sm text-muted-foreground">Spremljaj dnevne učne dejavnosti in uspešnost</p>
       </CardHeader>
       <CardContent className="pt-6">
         <ResponsiveContainer width="100%" height={350}>
@@ -56,7 +56,7 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
               strokeWidth={3}
               dot={{ fill: "#8b5cf6", r: 5 }}
               activeDot={{ r: 7, fill: "#7c3aed" }}
-              name="Activities"
+              name="Dejavnosti"
             />
             <Line
               type="monotone"
@@ -65,7 +65,7 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
               strokeWidth={3}
               dot={{ fill: "#10b981", r: 5 }}
               activeDot={{ r: 7, fill: "#059669" }}
-              name="Avg Score %"
+              name="Povp. ocena %"
             />
             <Line
               type="monotone"
@@ -74,7 +74,7 @@ export function WeeklyActivityChart({ data }: WeeklyActivityChartProps) {
               strokeWidth={3}
               dot={{ fill: "#f59e0b", r: 5 }}
               activeDot={{ r: 7, fill: "#d97706" }}
-              name="Time (min)"
+              name="Čas (min)"
             />
           </LineChart>
         </ResponsiveContainer>

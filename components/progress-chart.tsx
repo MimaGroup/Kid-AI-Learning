@@ -28,7 +28,7 @@ export function ProgressChart({ data }: ProgressChartProps) {
         : 0
 
       return {
-        date: new Date(date).toLocaleDateString("en-US", { weekday: "short" }),
+        date: new Date(date).toLocaleDateString("sl-SI", { weekday: "short" }),
         score: avgScore,
         count: dayActivities.length,
       }
@@ -40,7 +40,7 @@ export function ProgressChart({ data }: ProgressChartProps) {
   return (
     <Card className="shadow-md border-2">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
-        <CardTitle className="text-lg font-bold">Weekly Progress</CardTitle>
+        <CardTitle className="text-lg font-bold">Tedenski napredek</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="space-y-4">
@@ -64,7 +64,7 @@ export function ProgressChart({ data }: ProgressChartProps) {
                 <div className="text-sm text-foreground font-semibold">{day.date}</div>
                 {day.count > 0 && (
                   <div className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                    {day.count} {day.count === 1 ? "activity" : "activities"}
+                    {day.count} {day.count === 1 ? "dejavnost" : "dejavnosti"}
                   </div>
                 )}
               </div>

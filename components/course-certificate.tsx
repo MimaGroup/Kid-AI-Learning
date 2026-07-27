@@ -31,7 +31,7 @@ export function CourseCertificate({ slug }: CourseCertificateProps) {
       const res = await fetch(`/api/courses/${slug}/certificate`)
       if (!res.ok) {
         const json = await res.json()
-        throw new Error(json.error || "Failed to load certificate")
+        throw new Error(json.error || "Napaka pri nalaganju certifikata")
       }
       const json = await res.json()
       setData(json)

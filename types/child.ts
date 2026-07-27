@@ -1,3 +1,9 @@
+export const LEARNING_LEVEL_LABELS: Record<string, string> = {
+  beginner: "Začetnik",
+  intermediate: "Srednji",
+  advanced: "Napredni",
+}
+
 export interface Child {
   id: string
   parent_id: string
