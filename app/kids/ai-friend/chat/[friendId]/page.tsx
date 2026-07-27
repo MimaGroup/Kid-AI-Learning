@@ -41,25 +41,27 @@ export default function AIFriendChat() {
 
   useEffect(() => {
     loadFriend()
-    loadMessages()
   }, [friendId])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  const loadFriend = () => {
+  const loadFriend = async () => {
     try {
-      const stored = localStorage.getItem("ai_friends")
-      if (stored) {
-        const friends: AIFriend[] = JSON.parse(stored)
-        const found = friends.find((f) => f.id === friendId)
-        if (found) {
-          setFriend(found)
-        } else {
-          toast.error("Prijatelj ni bil najden")
-          router.push("/kids/ai-friend")
-        }
+      const response = await fetch("/api/ai-friends")
+      if (!response.ok) {
+        throw new Error("Napaka pri nalaganju prijatelja")
+      }
+      const data = await response.json()
+      const friends: AIFriend[] = data.friends || []
+      const found = friends.find((f) => f.id === friendId)
+      if (found) {
+        setFriend(found)
+        loadMessages(found)
+      } else {
+        toast.error("Prijatelj ni bil najden")
+        router.push("/kids/ai-friend")
       }
     } catch (err) {
       console.error("Error loading friend:", err)
@@ -67,16 +69,13 @@ export default function AIFriendChat() {
     }
   }
 
-  const loadMessages = () => {
+  const loadMessages = (currentFriend: AIFriend) => {
     try {
       const stored = localStorage.getItem(`chat_${friendId}`)
       if (stored) {
         setMessages(JSON.parse(stored))
       } else {
-        const friendsStored = localStorage.getItem("ai_friends")
-        const friends: AIFriend[] = friendsStored ? JSON.parse(friendsStored) : []
-        const currentFriend = friends.find((f) => f.id === friendId)
-        const isByte = currentFriend?.name === BYTE_CHARACTER.name
+        const isByte = currentFriend.name === BYTE_CHARACTER.name
 
         const welcomeMessage: Message = {
           id: crypto.randomUUID(),
