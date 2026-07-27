@@ -26,6 +26,13 @@ interface Message {
 
 const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%, #0a0a1a 75%)" }
 
+const PERSONALITY_LABELS: Record<string, string> = {
+  Friendly: "Prijazno",
+  Curious: "Radovedno",
+  Helpful: "Koristno",
+  Playful: "Igrivo",
+}
+
 export default function AIFriendChat() {
   const params = useParams()
   const router = useRouter()
@@ -211,7 +218,7 @@ export default function AIFriendChat() {
 
         <div>
           <h1 className="text-white font-bold text-base leading-none">{friend.name}</h1>
-          <p className="text-purple-400 text-xs mt-0.5">{friend.personality}</p>
+          <p className="text-purple-400 text-xs mt-0.5">{PERSONALITY_LABELS[friend.personality] || friend.personality}</p>
         </div>
       </header>
 

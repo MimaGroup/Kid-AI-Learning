@@ -127,24 +127,17 @@ Respond as ${friendName} with a ${personality.toLowerCase()} personality:`
     } catch (error: any) {
       console.error("[v0] Error generating chat response:", error)
 
-      if (error?.message?.includes("rate_limit_exceeded") || error?.message?.includes("429")) {
-        const fallbackResponse = FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
-        return NextResponse.json({
-          message: fallbackResponse,
-          fallback: true,
-          fallbackMessage: "Trenutno razmišljam malo počasneje. Za trenutek bom uporabil/a enostavne odgovore!",
-        })
-      }
-
-      throw error
+      const fallbackResponse = FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)]
+      return NextResponse.json({
+        message: fallbackResponse,
+        fallback: true,
+        fallbackMessage: "Trenutno razmišljam malo počasneje. Za trenutek bom uporabil/a enostavne odgovore!",
+      })
     }
   } catch (error) {
     console.error("[v0] Error in chat API:", error)
     return NextResponse.json(
-      {
-        error: "Failed to generate response",
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: "Failed to generate response" },
       { status: 500 },
     )
   }
