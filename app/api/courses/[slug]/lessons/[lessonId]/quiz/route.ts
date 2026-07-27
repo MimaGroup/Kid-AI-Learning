@@ -1,26 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
-import { generateText } from "ai"
-import { createGroq } from "@ai-sdk/groq"
+import Anthropic from "@anthropic-ai/sdk"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, createSafePrompt } from "@/lib/content-moderation"
 
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-})
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string> {
   let lastError: Error | null = null
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      const { text } = await generateText({
-        model: groq("llama-3.3-70b-versatile"),
-        prompt,
+      const response = await anthropic.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1200,
+        messages: [{ role: "user", content: prompt }],
       })
-      return text
+      return (response.content[0] as { type: string; text: string }).text
     } catch (error: any) {
       lastError = error
-      if (error?.message?.includes("rate_limit_exceeded") || error?.message?.includes("429")) {
+      if (error?.status === 429) {
         const waitTime = 3000 * Math.pow(2, attempt)
         if (attempt < maxRetries - 1) {
           await new Promise((resolve) => setTimeout(resolve, waitTime))

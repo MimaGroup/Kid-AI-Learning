@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { generateText } from "ai"
-import { createGroq } from "@ai-sdk/groq"
+import Anthropic from "@anthropic-ai/sdk"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 export const dynamic = "force-dynamic"
 
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-})
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 const FALLBACK_QUESTIONS = [
   {
@@ -64,24 +61,17 @@ async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      const { text } = await generateText({
-        model: groq("llama-3.3-70b-versatile"),
-        prompt,
+      const response = await anthropic.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1200,
+        messages: [{ role: "user", content: prompt }],
       })
-      return text
+      return (response.content[0] as { type: string; text: string }).text
     } catch (error: any) {
       lastError = error
 
-      if (error?.message?.includes("rate_limit_exceeded") || error?.message?.includes("429")) {
-        const waitMatch = error.message.match(/try again in ([\d.]+)(ms|s)/)
-        let waitTime = 3000 * Math.pow(2, attempt)
-
-        if (waitMatch) {
-          const value = Number.parseFloat(waitMatch[1])
-          const unit = waitMatch[2]
-          waitTime = Math.max(waitTime, unit === "s" ? value * 1000 : value)
-          waitTime += 1000
-        }
+      if (error?.status === 429) {
+        const waitTime = 3000 * Math.pow(2, attempt)
 
         console.log(`[v0] Rate limited, waiting ${waitTime}ms before retry ${attempt + 1}/${maxRetries}`)
 

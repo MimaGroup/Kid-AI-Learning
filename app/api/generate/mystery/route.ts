@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server"
-import { generateText } from "ai"
-import { createGroq } from "@ai-sdk/groq"
+import Anthropic from "@anthropic-ai/sdk"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { createClient } from "@/lib/supabase/server"
 import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 export const dynamic = "force-dynamic"
 
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-})
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 const FALLBACK_MYSTERIES = [
   {
@@ -115,11 +112,13 @@ Return ONLY the JSON object, no additional text.`
 
         const safePrompt = createSafePrompt(basePrompt)
 
-        const { text } = await generateText({
-          model: groq("llama-3.3-70b-versatile"),
-          prompt: safePrompt,
-          maxRetries: 0,
+        const response = await anthropic.messages.create({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 800,
+          messages: [{ role: "user", content: safePrompt }],
         })
+
+        const text = (response.content[0] as { type: string; text: string }).text
 
         const cleanedText = text
           .trim()
@@ -143,7 +142,7 @@ Return ONLY the JSON object, no additional text.`
 
         return NextResponse.json({ mystery })
       } catch (aiError: any) {
-        if (aiError?.message?.includes("rate_limit_exceeded") && retryCount < maxRetries - 1) {
+        if (aiError?.status === 429 && retryCount < maxRetries - 1) {
           console.log(`[v0] Rate limited, waiting before retry ${retryCount + 1}/${maxRetries}`)
           await new Promise((resolve) => setTimeout(resolve, 2000))
           retryCount++

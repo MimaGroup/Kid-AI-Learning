@@ -1,13 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
-import { generateText } from "ai"
-import { createGroq } from "@ai-sdk/groq"
+import Anthropic from "@anthropic-ai/sdk"
 import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
 import { validateAIResponse, createSafePrompt, sanitizeUserInput } from "@/lib/content-moderation"
 
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-})
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function POST(
   request: NextRequest,
@@ -106,10 +103,13 @@ Vrni SAMO razlago, brez ničesar drugega.`
 
       const safePrompt = createSafePrompt(basePrompt, ageRange)
 
-      const { text } = await generateText({
-        model: groq("llama-3.3-70b-versatile"),
-        prompt: safePrompt,
+      const response = await anthropic.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 500,
+        messages: [{ role: "user", content: safePrompt }],
       })
+
+      const text = (response.content[0] as { type: string; text: string }).text
 
       // Validate
       const moderation = await validateAIResponse(text, "lesson-explain")
