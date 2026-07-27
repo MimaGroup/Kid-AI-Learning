@@ -104,7 +104,11 @@ export async function validateAIResponse(response: string, endpoint: string): Pr
   const moderation = await moderateContent(response, `AI Response from ${endpoint}`)
 
   // Additional checks for AI responses
-  if (response.length > 1000) {
+  // Note: some endpoints (e.g. mystery-generation) concatenate multiple fields
+  // (title + description + clues + solution) into one string before validating,
+  // so the cap must accommodate combined multi-field content, not just a single
+  // short chat reply.
+  if (response.length > 2500) {
     return {
       isAppropriate: false,
       flaggedContent: ["Response too long"],
