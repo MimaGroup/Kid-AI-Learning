@@ -387,7 +387,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
     if (userData?.email) {
       const amount = invoice.amount_paid
-      const date = new Date(invoice.created * 1000).toLocaleDateString("en-US", {
+      const date = new Date(invoice.created * 1000).toLocaleDateString("sl-SI", {
         year: "numeric",
         month: "long",
         day: "numeric",

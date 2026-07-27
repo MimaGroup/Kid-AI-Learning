@@ -123,7 +123,7 @@ export const emailTemplates = {
   },
 
   weeklyProgress: (name: string, childName: string, stats: any) => ({
-    subject: `${childName}'s Weekly Learning Summary 📊`,
+    subject: `Tedenski učni pregled za ${childName} 📊`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -143,52 +143,52 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>📊 Weekly Learning Summary</h1>
-              <p>${childName}'s Progress This Week</p>
+              <h1>📊 Tedenski učni pregled</h1>
+              <p>Napredek otroka ${childName} ta teden</p>
             </div>
             <div class="content">
               <div style="text-align: center; margin-bottom: 15px;">
-                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-celebrating.jpg" alt="Byte celebrating" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #E9D5FF;" />
+                <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-celebrating.jpg" alt="Byte praznuje" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #E9D5FF;" />
               </div>
-              <p>Hi ${name},</p>
-              <p>Byte is proud of ${childName}'s progress this week! Here's the summary:</p>
-              
+              <p>Pozdravljeni ${name},</p>
+              <p>Byte je ponosen na napredek otroka ${childName} ta teden! Tukaj je povzetek:</p>
+
               <div class="stat-card">
                 <div class="stat-number">${stats.activitiesCompleted || 0}</div>
-                <p>Activities Completed</p>
+                <p>Opravljenih dejavnosti</p>
               </div>
-              
+
               <div class="stat-card">
                 <div class="stat-number">${stats.timeSpent || 0} min</div>
-                <p>Learning Time</p>
+                <p>Čas učenja</p>
               </div>
-              
+
               <div class="stat-card">
                 <div class="stat-number">${stats.pointsEarned || 0}</div>
-                <p>Points Earned</p>
+                <p>Zbranih točk</p>
               </div>
-              
+
               <div class="stat-card">
                 <div class="stat-number">${stats.achievementsUnlocked || 0}</div>
-                <p>New Achievements</p>
+                <p>Novih dosežkov</p>
               </div>
-              
-              <h3>🎯 This Week's Highlights:</h3>
+
+              <h3>🎯 Vrhunci tega tedna:</h3>
               <ul>
-                ${stats.highlights?.map((h: string) => `<li>${h}</li>`).join("") || "<li>Keep up the great work!</li>"}
+                ${stats.highlights?.map((h: string) => `<li>${h}</li>`).join("") || "<li>Tako naprej!</li>"}
               </ul>
-              
+
               <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">View Full Report</a>
+                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">Poglej celotno poročilo</a>
               </p>
-              
-              <p>Keep encouraging ${childName} to explore and learn!</p>
-              
-              <p>Best regards,<br>The AI Kids Learning Team</p>
+
+              <p>Spodbujajte otroka ${childName}, naj raziskuje in se uči naprej!</p>
+
+              <p>Lep pozdrav,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
-              <p><a href="https://kids-learning-ai.com/parent/dashboard">Dashboard</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
+              <p><a href="https://kids-learning-ai.com/parent/dashboard">Nadzorna plošča</a> | <a href="https://kids-learning-ai.com/contact">Kontaktirajte podporo</a></p>
             </div>
           </div>
         </body>
@@ -197,7 +197,7 @@ export const emailTemplates = {
   }),
 
   achievementUnlocked: (name: string, childName: string, achievement: any) => ({
-    subject: `🎉 ${childName} Unlocked a New Achievement!`,
+    subject: `🎉 ${childName} je odklenil/a nov dosežek!`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -216,30 +216,30 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎉 Achievement Unlocked!</h1>
+              <h1>🎉 Dosežek odklenjen!</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>Great news! ${childName} just unlocked a new achievement:</p>
-              
+              <p>Pozdravljeni ${name},</p>
+              <p>Odlična novica! ${childName} je pravkar odklenil/a nov dosežek:</p>
+
               <div class="achievement-badge">${achievement.icon || "🏆"}</div>
-              <h2>${achievement.name || "Amazing Achievement"}</h2>
-              <p>${achievement.description || "Keep up the excellent work!"}</p>
-              
+              <h2>${achievement.name || "Osupljiv dosežek"}</h2>
+              <p>${achievement.description || "Tako naprej!"}</p>
+
               <p style="margin-top: 30px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
-                <strong>Points Earned:</strong> ${achievement.points || 0}
+                <strong>Zbranih točk:</strong> ${achievement.points || 0}
               </p>
-              
+
               <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">View All Achievements</a>
+                <a href="https://kids-learning-ai.com/parent/dashboard" class="button">Poglej vse dosežke</a>
               </p>
-              
-              <p>Celebrate this milestone with ${childName}!</p>
-              
-              <p>Proud of you both,<br>The AI Kids Learning Team</p>
+
+              <p>Proslavite ta mejnik skupaj z ${childName}!</p>
+
+              <p>Ponosni na vaju,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
             </div>
           </div>
         </body>
@@ -309,7 +309,7 @@ export const emailTemplates = {
   },
 
   subscriptionConfirmation: (name: string, planName: string, amount: number) => ({
-    subject: "Welcome to Premium! 🎉",
+    subject: "Dobrodošli v Premium! 🎉",
     html: `
       <!DOCTYPE html>
       <html>
@@ -327,32 +327,32 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎉 Welcome to Premium!</h1>
+              <h1>🎉 Dobrodošli v Premium!</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>Thank you for subscribing to <strong>${planName}</strong>! Your payment of $${(amount / 100).toFixed(2)} has been processed.</p>
-              
-              <h3>✨ You now have access to:</h3>
+              <p>Pozdravljeni ${name},</p>
+              <p>Hvala za naročnino na <strong>${planName}</strong>! Vaše plačilo v znesku ${(amount / 100).toFixed(2)} € je bilo uspešno obdelano.</p>
+
+              <h3>✨ Zdaj imate dostop do:</h3>
               <ul>
-                <li>All 7 interactive AI games</li>
-                <li>AI Friend Creator</li>
-                <li>Pattern Training activities</li>
-                <li>Full content library</li>
-                <li>Advanced progress analytics</li>
-                <li>Priority support</li>
+                <li>Vseh 7 interaktivnih AI iger</li>
+                <li>Ustvarjalca AI prijateljev</li>
+                <li>Dejavnosti za učenje vzorcev</li>
+                <li>Celotne knjižnice vsebin</li>
+                <li>Napredne analitike napredka</li>
+                <li>Prednostne podpore</li>
               </ul>
-              
+
               <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/kids/home" class="button">Start Learning Now</a>
+                <a href="https://kids-learning-ai.com/kids/home" class="button">Začni z učenjem zdaj</a>
               </p>
-              
-              <p>If you have any questions, we're here to help!</p>
-              
-              <p>Thank you for choosing AI Kids Learning,<br>The AI Kids Learning Team</p>
+
+              <p>Če imate kakršna koli vprašanja, smo vam na voljo!</p>
+
+              <p>Hvala, da ste izbrali Kids Learning AI,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
             </div>
           </div>
         </body>
@@ -361,7 +361,7 @@ export const emailTemplates = {
   }),
 
   paymentReceipt: (name: string, amount: number, date: string, invoiceUrl: string) => ({
-    subject: "Payment Receipt - AI Kids Learning",
+    subject: "Plačilni račun - Kids Learning AI",
     html: `
       <!DOCTYPE html>
       <html>
@@ -380,28 +380,28 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Payment Receipt</h1>
+              <h1>Plačilni račun</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>Thank you for your payment. Here are the details:</p>
-              
+              <p>Pozdravljeni ${name},</p>
+              <p>Hvala za vaše plačilo. Tukaj so podrobnosti:</p>
+
               <div class="receipt-box">
-                <p><strong>Amount Paid:</strong> $${(amount / 100).toFixed(2)}</p>
-                <p><strong>Date:</strong> ${date}</p>
-                <p><strong>Service:</strong> AI Kids Learning Subscription</p>
+                <p><strong>Plačan znesek:</strong> ${(amount / 100).toFixed(2)} €</p>
+                <p><strong>Datum:</strong> ${date}</p>
+                <p><strong>Storitev:</strong> Naročnina Kids Learning AI</p>
               </div>
-              
+
               <p style="text-align: center;">
-                <a href="${invoiceUrl}" class="button">Download Invoice</a>
+                <a href="${invoiceUrl}" class="button">Prenesi račun</a>
               </p>
-              
-              <p>If you have any questions about this payment, please contact our support team.</p>
-              
-              <p>Best regards,<br>The AI Kids Learning Team</p>
+
+              <p>Če imate kakršna koli vprašanja glede tega plačila, kontaktirajte našo podporo.</p>
+
+              <p>Lep pozdrav,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
             </div>
           </div>
         </body>
@@ -410,7 +410,7 @@ export const emailTemplates = {
   }),
 
   contactFormSubmission: (name: string, email: string, subject: string, message: string) => ({
-    subject: `New Contact Form: ${subject}`,
+    subject: `Nov kontaktni obrazec: ${subject}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -429,27 +429,27 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>New Contact Form Submission</h1>
+              <h1>Nova oddaja kontaktnega obrazca</h1>
             </div>
             <div class="content">
               <div class="info-box">
-                <p><strong>From:</strong> ${name}</p>
-                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-                <p><strong>Subject:</strong> ${subject}</p>
-                <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                <p><strong>Od:</strong> ${name}</p>
+                <p><strong>E-pošta:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p><strong>Zadeva:</strong> ${subject}</p>
+                <p><strong>Datum:</strong> ${new Date().toLocaleString("sl-SI")}</p>
               </div>
-              
-              <h3>Message:</h3>
+
+              <h3>Sporočilo:</h3>
               <div class="message-box">
                 <p>${message.replace(/\n/g, "<br>")}</p>
               </div>
-              
+
               <p style="margin-top: 30px; padding: 15px; background: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
-                <strong>⚠️ Action Required:</strong> Please respond to this inquiry within 24-48 hours.
+                <strong>⚠️ Potreben odziv:</strong> Prosimo, odgovorite na to povpraševanje v 24-48 urah.
               </p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning Support System</p>
+              <p>Sistem podpore Kids Learning AI</p>
             </div>
           </div>
         </body>
@@ -458,7 +458,7 @@ export const emailTemplates = {
   }),
 
   onboardingFollowUp: (name: string, daysActive: number) => ({
-    subject: "How's your learning journey going? 🌟",
+    subject: "Kako poteka vaša učna pot? 🌟",
     html: `
       <!DOCTYPE html>
       <html>
@@ -477,39 +477,39 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>How's It Going? 🌟</h1>
+              <h1>Kako gre? 🌟</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>It's been ${daysActive} days since you joined AI Kids Learning! We wanted to check in and see how things are going.</p>
-              
+              <p>Pozdravljeni ${name},</p>
+              <p>Že ${daysActive} dni ste del Kids Learning AI! Radi bi preverili, kako vam gre.</p>
+
               <div class="tip-box">
-                <h3>💡 Quick Tips for Success:</h3>
+                <h3>💡 Hitri nasveti za uspeh:</h3>
                 <ul>
-                  <li><strong>Set a routine:</strong> 10-15 minutes daily works wonders</li>
-                  <li><strong>Celebrate wins:</strong> Acknowledge every achievement, big or small</li>
-                  <li><strong>Mix it up:</strong> Try different activities to keep learning fresh</li>
-                  <li><strong>Track progress:</strong> Check the dashboard weekly to see growth</li>
+                  <li><strong>Vzpostavite rutino:</strong> 10-15 minut dnevno naredi čudeže</li>
+                  <li><strong>Praznujte uspehe:</strong> Priznajte vsak dosežek, velik ali majhen</li>
+                  <li><strong>Menjavajte dejavnosti:</strong> Preizkusite različne aktivnosti, da učenje ostane sveže</li>
+                  <li><strong>Spremljajte napredek:</strong> Tedensko preverite nadzorno ploščo</li>
                 </ul>
               </div>
-              
-              <h3>🎮 Popular Activities This Week:</h3>
+
+              <h3>🎮 Priljubljene dejavnosti tega tedna:</h3>
               <ul>
-                <li>AI Quiz Master - Test knowledge with adaptive quizzes</li>
-                <li>Word Builder - Build vocabulary through fun challenges</li>
-                <li>Science Lab - Explore scientific concepts interactively</li>
+                <li>AI Kviz Mojster - Preveri znanje s prilagodljivimi kvizi</li>
+                <li>Graditelj besed - Širi besedni zaklad skozi zabavne izzive</li>
+                <li>Znanstveni laboratorij - Interaktivno raziskuj znanstvene koncepte</li>
               </ul>
-              
+
               <p style="text-align: center;">
-                <a href="https://kids-learning-ai.com/kids/activities" class="button">Explore Activities</a>
+                <a href="https://kids-learning-ai.com/kids/activities" class="button">Razišči dejavnosti</a>
               </p>
-              
-              <p>Have questions or feedback? We'd love to hear from you! Just reply to this email.</p>
-              
-              <p>Keep up the great work!<br>The AI Kids Learning Team</p>
+
+              <p>Imate vprašanja ali povratne informacije? Z veseljem jih slišimo! Preprosto odgovorite na ta email.</p>
+
+              <p>Tako naprej!<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
             </div>
           </div>
         </body>
@@ -518,7 +518,7 @@ export const emailTemplates = {
   }),
 
   passwordReset: (name: string, resetLink: string) => ({
-    subject: "Reset Your Password - AI Kids Learning",
+    subject: "Ponastavitev gesla - Kids Learning AI",
     html: `
       <!DOCTYPE html>
       <html>
@@ -537,30 +537,30 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Reset Your Password</h1>
+              <h1>Ponastavitev gesla</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>We received a request to reset your password for your AI Kids Learning account.</p>
-              
+              <p>Pozdravljeni ${name},</p>
+              <p>Prejeli smo zahtevo za ponastavitev gesla za vaš račun Kids Learning AI.</p>
+
               <p style="text-align: center;">
-                <a href="${resetLink}" class="button">Reset Password</a>
+                <a href="${resetLink}" class="button">Ponastavi geslo</a>
               </p>
-              
-              <p>This link will expire in 1 hour for security reasons.</p>
-              
+
+              <p>Ta povezava bo iz varnostnih razlogov potekla čez 1 uro.</p>
+
               <div class="warning-box">
-                <p><strong>⚠️ Didn't request this?</strong></p>
-                <p>If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+                <p><strong>⚠️ Niste zahtevali tega?</strong></p>
+                <p>Če niste zahtevali ponastavitve gesla, lahko ta email varno prezrete. Vaše geslo ostane nespremenjeno.</p>
               </div>
-              
-              <p>For security, never share this link with anyone.</p>
-              
-              <p>Best regards,<br>The AI Kids Learning Team</p>
+
+              <p>Zaradi varnosti te povezave nikoli ne delite z nikomer.</p>
+
+              <p>Lep pozdrav,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
-              <p>If the button doesn't work, copy and paste this link: ${resetLink}</p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
+              <p>Če gumb ne deluje, kopirajte in prilepite to povezavo: ${resetLink}</p>
             </div>
           </div>
         </body>
@@ -689,7 +689,7 @@ export const emailTemplates = {
   }),
 
   supportTicketConfirmationUser: (name: string, ticketNumber: string, subject: string, message: string) => ({
-    subject: `Support Ticket Created: ${ticketNumber}`,
+    subject: `Prijava v podporo ustvarjena: ${ticketNumber}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -709,32 +709,32 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Thank You for Contacting Us!</h1>
+              <h1>Hvala za vaše sporočilo!</h1>
             </div>
             <div class="content">
-              <p>Hi ${name},</p>
-              <p>We've received your message and our team will get back to you within 24-48 hours.</p>
+              <p>Pozdravljeni ${name},</p>
+              <p>Prejeli smo vaše sporočilo in naša ekipa vam bo odgovorila v 24-48 urah.</p>
 
               <div class="ticket-box">
-                <p style="color: #666; margin: 0 0 10px 0;">Your Support Ticket Number</p>
+                <p style="color: #666; margin: 0 0 10px 0;">Številka vaše prijave v podporo</p>
                 <div class="ticket-number">${ticketNumber}</div>
               </div>
 
-              <h3>Your message:</h3>
+              <h3>Vaše sporočilo:</h3>
               <div class="message-box">
-                <p style="margin: 0 0 10px 0;"><strong>Subject:</strong> ${subject}</p>
+                <p style="margin: 0 0 10px 0;"><strong>Zadeva:</strong> ${subject}</p>
                 <p style="margin: 0;">${message.replace(/\n/g, "<br>")}</p>
               </div>
 
-              <p>Please save this ticket number for your records. You can reference it in any follow-up communications.</p>
+              <p>Prosimo, shranite si to številko prijave za svoje evidence. Nanjo se lahko sklicujete v nadaljnji komunikaciji.</p>
 
-              <p>If you have any urgent questions, feel free to reply to this email.</p>
+              <p>Če imate nujna vprašanja, nam prosto odgovorite na ta email.</p>
 
-              <p>Best regards,<br>The AI Kids Learning Team</p>
+              <p>Lep pozdrav,<br>Ekipa Kids Learning AI</p>
             </div>
             <div class="footer">
-              <p>AI Kids Learning | Making education fun with AI</p>
-              <p><a href="https://kids-learning-ai.com">Visit Website</a> | <a href="https://kids-learning-ai.com/contact">Contact Support</a></p>
+              <p>Kids Learning AI | Učenje z AI za otroke</p>
+              <p><a href="https://kids-learning-ai.com">Obiščite spletno stran</a> | <a href="https://kids-learning-ai.com/contact">Kontaktirajte podporo</a></p>
             </div>
           </div>
         </body>
