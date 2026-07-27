@@ -214,7 +214,7 @@ export default function MemoryMatchPage() {
               <p className="text-blue-300 font-bold text-sm mb-2">Kako igrati:</p>
               <ul className="text-blue-200/70 text-xs space-y-1">
                 <li>• Klikni na kartice, da jih obrneš</li>
-                <li>• Poišči dve kartici z istim emojiem</li>
+                <li>• Poišči dve kartici z istim emojijem</li>
                 <li>• Najdi vse pare, da zmagaš</li>
                 <li>• Poskusi z čim manj potezami!</li>
               </ul>
