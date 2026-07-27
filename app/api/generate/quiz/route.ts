@@ -1,14 +1,8 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import Anthropic from "@anthropic-ai/sdk"
-import { checkRateLimit, RATE_LIMITS, getRateLimitKey } from "@/lib/rate-limit"
-import { validateAIResponse, sanitizeUserInput, createSafePrompt } from "@/lib/content-moderation"
 
 export const dynamic = "force-dynamic"
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
-const FALLBACK_QUESTIONS = [
+const QUESTIONS = [
   {
     question: "Za kaj stoji kratica AI?",
     options: ["Umetna inteligenca", "Samodejne informacije", "Napredni internet", "Neverjetne ideje"],
@@ -54,158 +48,197 @@ const FALLBACK_QUESTIONS = [
     explanation:
       "AI lahko pomaga zdravnikom z analizo medicinskih slik in podatkov, da bolezni odkrijejo zgodaj. A ne pozabi — AI je orodje, ki pomaga ljudem, ne pa njihova zamenjava!",
   },
+  {
+    question: "Kaj je robot?",
+    options: [
+      "Naprava, ki lahko zaznava okolico in izvaja naloge",
+      "Vrsta hrane",
+      "Igra na telefonu",
+      "Risana serija",
+    ],
+    correct: 0,
+    explanation:
+      "Robot je naprava, ki z senzorji zazna svet okoli sebe in nato izvaja naloge, kot je premikanje ali prijemanje predmetov!",
+  },
+  {
+    question: "Kaj pomeni, da se računalnik 'uči'?",
+    options: [
+      "Da bere knjige v šoli",
+      "Da iz podatkov prepoznava vzorce in postaja boljši",
+      "Da se pogovarja z učiteljem",
+      "Da se igra z drugimi računalniki",
+    ],
+    correct: 1,
+    explanation:
+      "Računalnik se 'uči' tako, da analizira veliko podatkov in v njih najde vzorce, s pomočjo katerih postaja pri svoji nalogi vedno boljši!",
+  },
+  {
+    question: "Kaj so podatki?",
+    options: [
+      "Koščki informacij, ki jih računalniki zbirajo in uporabljajo",
+      "Igrače za otroke",
+      "Vrsta glasbe",
+      "Šolski predmet",
+    ],
+    correct: 0,
+    explanation: "Podatki so informacije, kot so števila, besede ali slike, ki jih računalniki zbirajo, shranjujejo in analizirajo!",
+  },
+  {
+    question: "Kaj naredi računalniški vid?",
+    options: [
+      "Pomaga računalnikom razumeti in prepoznavati slike",
+      "Popravlja slab vid pri ljudeh",
+      "Ustvarja risane filme",
+      "Meri hitrost interneta",
+    ],
+    correct: 0,
+    explanation: "Računalniški vid je veja umetne inteligence, ki računalnikom pomaga 'videti' in razumeti fotografije ter video posnetke!",
+  },
+  {
+    question: "Kaj je algoritem?",
+    options: ["Zaporedje korakov za rešitev problema", "Vrsta robota", "Ime za internet", "Igra na računalniku"],
+    correct: 0,
+    explanation:
+      "Algoritem je niz jasnih korakov, ki povedo računalniku (ali tebi!), kako rešiti neko nalogo — podobno kot recept za kuhanje!",
+  },
+  {
+    question: "Kaj je chatbot?",
+    options: [
+      "Program, s katerim se lahko pogovarjaš s pisanjem sporočil",
+      "Vrsta igrače za male otroke",
+      "Naprava za merjenje vremena",
+      "Šolska knjiga",
+    ],
+    correct: 0,
+    explanation: "Chatbot je AI program, ki prebere tvoje sporočilo, ga razume in ti nanj odgovori — kot bi se pogovarjal s prijateljem!",
+  },
+  {
+    question: "Zakaj je pomembno, da svojih osebnih podatkov ne deliš z AI programi ali neznanci?",
+    options: [
+      "Ker to ni pomembno",
+      "Da zaščitimo zasebnost in varnost",
+      "Ker AI tega ne zna razumeti",
+      "Ker je to prepovedano samo odraslim",
+    ],
+    correct: 1,
+    explanation: "Varovanje osebnih podatkov, kot so ime, naslov ali telefonska številka, je zelo pomembno za zaščito zasebnosti in varnosti vsakogar!",
+  },
+  {
+    question: "Kaj je pametni zvočnik (na primer Alexa ali Google Home)?",
+    options: [
+      "Naprava, ki z AI razume govorjene ukaze in odgovarja nanje",
+      "Navaden radio",
+      "Igrača za risanje",
+      "Vrsta telefona brez zaslona",
+    ],
+    correct: 0,
+    explanation: "Pametni zvočniki uporabljajo AI, da razumejo, kar jim rečeš, in ti pomagajo — na primer predvajajo glasbo ali odgovorijo na vprašanja!",
+  },
+  {
+    question: "Kaj lahko naredi AI v bolnišnici?",
+    options: [
+      "Pomaga zdravnikom prepoznati bolezni na slikah",
+      "Kuha kosila za paciente",
+      "Čisti bolniške sobe",
+      "Vozi reševalna vozila",
+    ],
+    correct: 0,
+    explanation: "AI lahko pomaga zdravnikom analizirati rentgenske slike in druge preiskave, da hitreje odkrijejo bolezni!",
+  },
+  {
+    question: "Kaj je pomembno, preden zaupamo odgovoru, ki ga da AI?",
+    options: [
+      "Vedno mu brezpogojno verjeti",
+      "Preveriti, ali je informacija resnična in smiselna",
+      "Odgovor takoj deliti z vsemi prijatelji",
+      "Nič, AI se nikoli ne zmoti",
+    ],
+    correct: 1,
+    explanation: "AI se lahko včasih zmoti, zato je pomembno, da odgovore preveriš in razmisliš, ali so smiselni, preden jim popolnoma zaupaš!",
+  },
+  {
+    question: "Kaj je robotska roka v tovarni?",
+    options: [
+      "Stroj, ki opravlja ponavljajoča se opravila, kot je sestavljanje delov",
+      "Igrača za otroke",
+      "Vrsta računalniške miške",
+      "Del video igre",
+    ],
+    correct: 0,
+    explanation: "Robotske roke v tovarnah pomagajo sestavljati izdelke, kot so avtomobili, hitro in natančno, brez utrujenosti!",
+  },
+  {
+    question: "Kako AI pomaga pri prevajanju jezikov?",
+    options: [
+      "Prepozna besede in stavke ter jih prevede v drug jezik",
+      "Uči otroke peti",
+      "Popravlja pravopisne napake v risankah",
+      "Ustvarja nove jezike",
+    ],
+    correct: 0,
+    explanation: "Prevajalniki, ki uporabljajo AI, analizirajo besedilo in ga prevedejo v drug jezik, tako da si ljudje iz različnih držav lahko lažje pomagajo!",
+  },
+  {
+    question: "Kaj je pomembno pri uporabi interneta in AI orodij?",
+    options: [
+      "Da vedno prosiš starše ali skrbnike za dovoljenje in nasvet",
+      "Da nikoli ne uporabljaš računalnika",
+      "Da vse deliš z neznanci",
+      "Da ignoriraš navodila staršev",
+    ],
+    correct: 0,
+    explanation: "Starši in skrbniki ti lahko pomagajo varno uporabljati internet in AI orodja, zato jih vedno vprašaj, če nisi prepričan/a!",
+  },
+  {
+    question: "Kaj so senzorji pri robotih?",
+    options: [
+      "Naprave, ki robotu pomagajo zaznavati okolico, kot so kamere ali mikrofoni",
+      "Igrače za sestavljanje",
+      "Vrsta baterije",
+      "Del programske kode",
+    ],
+    correct: 0,
+    explanation: "Senzorji so robotova 'čutila' — kamere mu pomagajo videti, mikrofoni pa slišati zvoke iz okolice!",
+  },
+  {
+    question: "Zakaj pravimo, da je AI 'orodje', ne pa 'oseba'?",
+    options: [
+      "Ker AI nima lastnih čustev in misli tako kot ljudje",
+      "Ker je AI narejen iz kovine",
+      "Ker AI ne dela nič uporabnega",
+      "Ker AI živi v računalniku kot žival",
+    ],
+    correct: 0,
+    explanation: "AI je zelo pameten program, a nima čustev, misli ali zavesti kot ljudje — je orodje, ki nam pomaga, ne pa živo bitje!",
+  },
 ]
 
-async function generateWithRetry(prompt: string, maxRetries = 2): Promise<string> {
-  let lastError: Error | null = null
-
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const response = await anthropic.messages.create({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1200,
-        messages: [{ role: "user", content: prompt }],
-      })
-      return (response.content[0] as { type: string; text: string }).text
-    } catch (error: any) {
-      lastError = error
-
-      if (error?.status === 429) {
-        const waitTime = 3000 * Math.pow(2, attempt)
-
-        console.log(`[v0] Rate limited, waiting ${waitTime}ms before retry ${attempt + 1}/${maxRetries}`)
-
-        if (attempt < maxRetries - 1) {
-          await new Promise((resolve) => setTimeout(resolve, waitTime))
-          continue
-        }
-      }
-
-      throw error
-    }
+function shuffle<T>(arr: T[]): T[] {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
   }
-
-  throw lastError || new Error("Failed to generate after retries")
+  return copy
 }
 
 export async function POST(request: Request) {
   try {
-    console.log("[v0] Generating quiz - start")
-
-    let userId = "anonymous"
+    let count = 5
     try {
-      const supabase = await createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (user) {
-        userId = user.id
-        console.log("[v0] Authenticated user:", userId)
-      } else {
-        console.log("[v0] Anonymous user - quiz will work without auth")
+      const body = await request.json()
+      if (typeof body?.count === "number" && body.count > 0) {
+        count = body.count
       }
-    } catch (authError) {
-      console.log("[v0] Auth check failed, continuing as anonymous:", authError)
+    } catch {
+      // no body provided, use default count
     }
 
-    const body = await request.json()
-    console.log("[v0] Quiz generation params:", body)
-    const { topic = "artificial intelligence", difficulty = "beginner", count = 5 } = body
+    const selectedQuestions = shuffle(QUESTIONS).slice(0, Math.min(count, QUESTIONS.length))
 
-    const sanitizedTopic = sanitizeUserInput(topic)
-
-    const rateLimitKey = getRateLimitKey(userId, "ai-generation")
-    const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMITS.aiGeneration)
-
-    if (!rateLimitResult.allowed) {
-      console.log(`[v0] Rate limit exceeded for user ${userId}, using fallback questions`)
-      const shuffled = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5)
-      const selectedQuestions = shuffled.slice(0, Math.min(count, FALLBACK_QUESTIONS.length))
-
-      return NextResponse.json({
-        questions: selectedQuestions,
-        fallback: true,
-        message: `Preveč zahtev! Počakaj ${rateLimitResult.resetIn} sekund, preden ustvariš nova AI vprašanja. Medtem uživaj v teh vnaprej pripravljenih vprašanjih!`,
-      })
-    }
-
-    try {
-      console.log("[v0] Calling Anthropic API with retry logic...")
-
-      const basePrompt = `Generate ${count} multiple choice quiz questions about ${sanitizedTopic} for kids aged 5-12 at ${difficulty} level.
-
-Format the response as a JSON array with this exact structure:
-[
-  {
-    "question": "Question text here?",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correct": 0,
-    "explanation": "Kid-friendly explanation of why this is correct"
-  }
-]
-
-Requirements:
-- Write ALL text (questions, options, explanations) in Slovenian language — this is mandatory
-- Questions should be age-appropriate and engaging
-- Use simple, clear language
-- Include fun facts in explanations
-- Make sure the correct answer index (0-3) matches the options array
-- Topics should be educational but fun
-
-Return ONLY the JSON array, no additional text.`
-
-      const safePrompt = createSafePrompt(basePrompt)
-
-      const text = await generateWithRetry(safePrompt)
-
-      console.log("[v0] Anthropic API response received, length:", text.length)
-
-      const cleanedText = text
-        .trim()
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-
-      console.log("[v0] Cleaned text:", cleanedText.substring(0, 200))
-
-      const questions = JSON.parse(cleanedText)
-      console.log("[v0] Parsed questions count:", questions.length)
-
-      for (const question of questions) {
-        const contentToCheck = `${question.question} ${question.options.join(" ")} ${question.explanation}`
-        const moderation = await validateAIResponse(contentToCheck, "quiz-generation")
-
-        if (!moderation.isAppropriate) {
-          console.log("[v0] Quiz question blocked by content moderation, using fallback")
-          const shuffled = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5)
-          const selectedQuestions = shuffled.slice(0, Math.min(count, FALLBACK_QUESTIONS.length))
-
-          return NextResponse.json({
-            questions: selectedQuestions,
-            fallback: true,
-            message: "Uporabljamo vnaprej pripravljena vprašanja, da zagotovimo starosti primerno vsebino!",
-          })
-        }
-      }
-
-      return NextResponse.json({ questions })
-    } catch (error: any) {
-      console.error("[v0] Error generating quiz, using fallback questions:", error.message)
-
-      const shuffled = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5)
-      const selectedQuestions = shuffled.slice(0, Math.min(count, FALLBACK_QUESTIONS.length))
-
-      return NextResponse.json({
-        questions: selectedQuestions,
-        fallback: true,
-        message: "Zaradi velikega povpraševanja uporabljamo vnaprej pripravljena vprašanja. Poskusi znova čez minuto za vprašanja, ustvarjena z AI!",
-      })
-    }
+    return NextResponse.json({ questions: selectedQuestions })
   } catch (error) {
-    console.error("[v0] Error in quiz generation:", error)
-    return NextResponse.json(
-      { error: "Failed to load quiz questions" },
-      { status: 500 }
-    )
+    console.error("[v0] Error in quiz selection:", error)
+    return NextResponse.json({ questions: QUESTIONS.slice(0, 5) }, { status: 200 })
   }
 }
