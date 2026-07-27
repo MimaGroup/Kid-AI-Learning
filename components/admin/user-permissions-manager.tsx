@@ -142,7 +142,7 @@ export function UserPermissionsManager({ userId, userName }: { userId: string; u
         .select("id")
         .eq("user_id", userId)
         .eq("permission_id", permission.id)
-        .single()
+        .maybeSingle()
 
       if (existing) {
         const { error } = await supabase

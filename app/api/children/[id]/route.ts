@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       .select("*")
       .eq("id", id)
       .eq("parent_id", user.id)
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error("Error fetching child:", error)
@@ -69,11 +69,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       .eq("id", id)
       .eq("parent_id", user.id)
       .select()
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error("Error updating child:", error)
       return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    if (!child) {
+      return NextResponse.json({ error: "Child not found" }, { status: 404 })
     }
 
     return NextResponse.json({ child })

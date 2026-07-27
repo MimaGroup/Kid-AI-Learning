@@ -22,10 +22,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     .eq("id", id)
     .eq("user_id", user.id)
     .select()
-    .single()
+    .maybeSingle()
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  if (!friend) {
+    return NextResponse.json({ error: "AI Friend not found" }, { status: 404 })
   }
 
   return NextResponse.json({ friend })
