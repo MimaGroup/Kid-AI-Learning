@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
+import { hasCourseAccess } from "@/lib/course-access"
 
 export async function GET(
   request: NextRequest,
@@ -52,53 +53,26 @@ export async function GET(
 
     // Check if user has purchased this course, or has an active/trial subscription
     let purchased = false
-    let hasPremium = false
+    let hasAccess = course.is_free ?? false
     try {
       const user = currentUser
-
       if (user) {
-        const { data: purchase } = await supabase
-          .from("course_purchases")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("course_id", course.id)
-          .eq("status", "completed")
-          .maybeSingle()
-
-        purchased = !!purchase
-
-        const [subResult, rewardResult, profileResult] = await Promise.all([
-          supabase.from("subscriptions").select("status, plan_type").eq("user_id", user.id).maybeSingle(),
+        const [{ data: purchase }, accessGranted] = await Promise.all([
           supabase
-            .from("referral_rewards")
+            .from("course_purchases")
             .select("id")
             .eq("user_id", user.id)
-            .eq("reward_type", "extended_trial")
-            .in("status", ["pending", "claimed"])
+            .eq("course_id", course.id)
+            .eq("status", "completed")
             .maybeSingle(),
-          supabase.from("profiles").select("created_at, referred_by").eq("id", user.id).maybeSingle(),
+          hasCourseAccess(supabase, user.id, course),
         ])
-
-        const hasPaidSubscription =
-          subResult.data?.status === "active" &&
-          (subResult.data?.plan_type === "monthly" || subResult.data?.plan_type === "yearly")
-
-        let isInTrial = false
-        if (profileResult.data?.created_at) {
-          const daysSinceCreation = Math.floor(
-            (Date.now() - new Date(profileResult.data.created_at).getTime()) / (1000 * 60 * 60 * 24),
-          )
-          const trialDays = rewardResult.data || profileResult.data.referred_by ? 14 : 7
-          isInTrial = daysSinceCreation < trialDays
-        }
-
-        hasPremium = hasPaidSubscription || isInTrial
+        purchased = !!purchase
+        hasAccess = accessGranted
       }
     } catch {
       // User not authenticated, that's fine
     }
-
-    const hasAccess = course.is_free || purchased || hasPremium
 
     return NextResponse.json({ course, lessons: lessons || [], purchased, hasAccess })
   } catch (error) {

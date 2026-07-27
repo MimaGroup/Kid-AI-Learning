@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServiceRoleClient, createServerClient } from "@/lib/supabase/server"
+import { hasCourseAccess } from "@/lib/course-access"
 
 export async function GET(
   request: NextRequest,
@@ -31,7 +32,7 @@ export async function GET(
     // Get the course (admins can see unpublished courses)
     let courseQuery = supabase
       .from("courses")
-      .select("id, title, slug, price, curriculum")
+      .select("id, title, slug, price, is_free, curriculum")
       .eq("slug", slug)
 
     if (!isAdmin) {
@@ -44,24 +45,16 @@ export async function GET(
       return NextResponse.json({ error: "Course not found" }, { status: 404 })
     }
 
-    // Check purchase status (admins bypass purchase check)
-    let purchased = isAdmin
-    if (!isAdmin && userId) {
-      if (course.price === 0) {
-        purchased = true
-      } else {
-        const { data: purchase } = await supabase
-          .from("course_purchases")
-          .select("id")
-          .eq("user_id", userId)
-          .eq("course_id", course.id)
-          .eq("status", "completed")
-          .single()
-        purchased = !!purchase
+    // Check access status (admins bypass)
+    let hasAccess = isAdmin
+    if (!isAdmin) {
+      if (!userId) {
+        return NextResponse.json({ error: "Authentication required" }, { status: 401 })
       }
+      hasAccess = await hasCourseAccess(supabase, userId, course)
     }
 
-    if (!purchased) {
+    if (!hasAccess) {
       return NextResponse.json({ error: "Course not purchased" }, { status: 403 })
     }
 
