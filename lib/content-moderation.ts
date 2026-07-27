@@ -135,6 +135,20 @@ export async function validateAIResponse(response: string, endpoint: string): Pr
     }
   }
 
+  // Slovenian text should only ever use Latin script (plus č/š/ž and common
+  // punctuation/emoji). A stray Cyrillic, Greek, CJK, Arabic, or Hebrew
+  // character is a sign the model glitched/hallucinated mid-generation —
+  // reject it rather than show garbled foreign script to a child.
+  const nonLatinScriptPattern = /[Ѐ-ӿͰ-Ͽ一-鿿぀-ヿ가-힯؀-ۿ֐-׿]/
+  if (nonLatinScriptPattern.test(response)) {
+    return {
+      isAppropriate: false,
+      flaggedContent: ["Non-Latin script detected"],
+      severity: "blocked",
+      reason: "AI response contains characters outside the Slovenian (Latin) alphabet",
+    }
+  }
+
   return moderation
 }
 
