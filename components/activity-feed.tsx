@@ -52,7 +52,7 @@ export function ActivityFeed({ childId }: { childId?: string }) {
   if (loading) {
     return (
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+        <h3 className="text-lg font-semibold mb-4">Nedavna dejavnost</h3>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="animate-pulse flex gap-3">
@@ -72,7 +72,7 @@ export function ActivityFeed({ childId }: { childId?: string }) {
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
       {activities.length === 0 ? (
-        <p className="text-muted-foreground text-center py-8">No recent activity</p>
+        <p className="text-muted-foreground text-center py-8">Ni nedavne dejavnosti</p>
       ) : (
         <div className="space-y-4">
           {activities.map((activity) => (
@@ -83,7 +83,7 @@ export function ActivityFeed({ childId }: { childId?: string }) {
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm">{activity.title}</p>
                 <p className="text-xs text-muted-foreground">{activity.description}</p>
-                <p className="text-xs text-muted-foreground mt-1">{new Date(activity.timestamp).toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground mt-1">{new Date(activity.timestamp).toLocaleString("sl-SI")}</p>
               </div>
             </div>
           ))}

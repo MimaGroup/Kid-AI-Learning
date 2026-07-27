@@ -43,7 +43,7 @@ export function RecommendedActivities() {
   if (loading) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-gray-500">Loading recommendations...</CardContent>
+        <CardContent className="py-8 text-center text-gray-500">Nalaganje priporočil ...</CardContent>
       </Card>
     )
   }
@@ -60,14 +60,22 @@ export function RecommendedActivities() {
     explore: "bg-pink-100 text-pink-700",
   }
 
+  const difficultyLabels: Record<string, string> = {
+    beginner: "Začetno",
+    practice: "Vadba",
+    review: "Ponovitev",
+    advanced: "Napredno",
+    explore: "Raziskovanje",
+  }
+
   return (
     <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-600" />
-          <CardTitle className="text-xl text-purple-900">Recommended For You</CardTitle>
+          <CardTitle className="text-xl text-purple-900">Priporočeno za tebe</CardTitle>
         </div>
-        <p className="text-sm text-gray-600">Personalized activities based on your learning journey</p>
+        <p className="text-sm text-gray-600">Prilagojene dejavnosti glede na tvojo učno pot</p>
       </CardHeader>
       <CardContent className="space-y-3">
         {recommendations.map((rec, index) => (
@@ -81,13 +89,13 @@ export function RecommendedActivities() {
                 <div className="flex items-center gap-2 mb-1">
                   <h4 className="font-semibold text-gray-900">{rec.activityName}</h4>
                   <span className={`text-xs px-2 py-1 rounded-full ${difficultyColors[rec.difficulty]}`}>
-                    {rec.difficulty}
+                    {difficultyLabels[rec.difficulty] ?? rec.difficulty}
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">{rec.reason}</p>
                 <Link href={rec.href}>
                   <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                    Start Activity
+                    Začni dejavnost
                   </Button>
                 </Link>
               </div>

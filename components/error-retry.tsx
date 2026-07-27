@@ -40,7 +40,7 @@ export function ErrorRetry({ error, onRetry, maxRetries = 3 }: ErrorRetryProps) 
         <div className="flex items-start gap-4">
           <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="font-semibold text-red-900 mb-2">Something went wrong</h3>
+            <h3 className="font-semibold text-red-900 mb-2">Prišlo je do napake</h3>
             <p className="text-sm text-red-800 mb-4">{errorMessage}</p>
             <div className="flex items-center gap-3">
               <Button
@@ -53,24 +53,24 @@ export function ErrorRetry({ error, onRetry, maxRetries = 3 }: ErrorRetryProps) 
                 {isRetrying ? (
                   <>
                     <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                    Retrying...
+                    Ponovno poskušam ...
                   </>
                 ) : (
                   <>
                     <RefreshCw className="mr-2 h-4 w-4" />
-                    Try Again
+                    Poskusi znova
                   </>
                 )}
               </Button>
               {retryCount > 0 && (
                 <span className="text-xs text-red-600">
-                  Attempt {retryCount} of {maxRetries}
+                  Poskus {retryCount} od {maxRetries}
                 </span>
               )}
             </div>
             {retryCount >= maxRetries && (
               <p className="text-xs text-red-600 mt-3">
-                Maximum retry attempts reached. Please refresh the page or contact support if the problem persists.
+                Doseženo je največje število poskusov. Osvežite stran ali kontaktirajte podporo, če se težava nadaljuje.
               </p>
             )}
           </div>

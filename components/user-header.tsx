@@ -40,7 +40,7 @@ export function UserHeader() {
           className="w-56 bg-white border-2 shadow-xl z-50"
           style={{ backgroundColor: "white" }}
         >
-          <DropdownMenuLabel className="bg-white text-gray-900">My Account</DropdownMenuLabel>
+          <DropdownMenuLabel className="bg-white text-gray-900">Moj račun</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-200" />
           <DropdownMenuItem className="text-sm text-gray-500 break-all bg-white hover:bg-gray-100">
             {user.email}
@@ -51,7 +51,7 @@ export function UserHeader() {
             className="bg-white hover:bg-red-50 text-red-600 focus:text-red-600 focus:bg-red-50"
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
+            Odjava
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

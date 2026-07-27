@@ -56,10 +56,10 @@ export async function POST(request: Request) {
     try {
       await sendEmail({
         to: ticket.email,
-        subject: `Re: Support Ticket ${ticket.ticket_number} - ${ticket.subject}`,
+        subject: `Re: Zahtevek za podporo ${ticket.ticket_number} - ${ticket.subject}`,
         html: `
           <!DOCTYPE html>
-          <html>
+          <html lang="sl">
             <head>
               <meta charset="utf-8">
               <style>
@@ -72,22 +72,22 @@ export async function POST(request: Request) {
             </head>
             <body>
               <div class="header">
-                <h1>Support Team Response</h1>
+                <h1>Odgovor podpore</h1>
               </div>
-              
+
               <div class="content">
-                <h2 style="color: #8B5CF6;">Hi ${ticket.name},</h2>
-                <p>Our support team has responded to your ticket <strong>${ticket.ticket_number}</strong>:</p>
-                
+                <h2 style="color: #8B5CF6;">Pozdravljeni, ${ticket.name},</h2>
+                <p>Naša ekipa za podporo je odgovorila na vaš zahtevek <strong>${ticket.ticket_number}</strong>:</p>
+
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #8B5CF6; margin: 20px 0;">
                   ${message.replace(/\n/g, "<br>")}
                 </div>
-                
-                <p>If you have any follow-up questions, please reply to this email or reference your ticket number.</p>
+
+                <p>Če imate dodatna vprašanja, odgovorite na to e-pošto ali navedite številko zahtevka.</p>
               </div>
-              
+
               <div class="footer">
-                <p>© ${new Date().getFullYear()} AI Kids Learning. All rights reserved.</p>
+                <p>© ${new Date().getFullYear()} Kids Learning AI. Vse pravice pridržane.</p>
               </div>
             </body>
           </html>
