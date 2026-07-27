@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendEmail({
         to: email,
-        subject: `${inviterName} invited you to join AI Kids Learning!`,
+        subject: `${inviterName} te je povabil/a na Kids Learning AI!`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -63,21 +63,21 @@ export async function POST(request: NextRequest) {
             <body>
               <div class="container">
                 <div class="header">
-                  <h1>You're Invited!</h1>
+                  <h1>Povabljen/a si!</h1>
                 </div>
                 <div class="content">
-                  <p>Hi ${name},</p>
-                  <p><strong>${inviterName}</strong> wants to be friends with you on <strong>AI Kids Learning</strong>!</p>
-                  <p>Join them to explore fun AI-powered learning activities, games, and stories together.</p>
+                  <p>Živjo ${name},</p>
+                  <p><strong>${inviterName}</strong> bi se rad/a s teboj spoprijateljil/a na <strong>Kids Learning AI</strong>!</p>
+                  <p>Pridruži se in skupaj raziskujta zabavne učne dejavnosti, igre in zgodbe s pomočjo umetne inteligence.</p>
                   <p style="text-align: center;">
                     <a href="${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/sign-up" class="button">
-                      Join Now
+                      Pridruži se zdaj
                     </a>
                   </p>
-                  <p>Once you sign up, you can connect with ${inviterName} and start learning together!</p>
+                  <p>Ko se registriraš, se lahko povežeš z uporabnikom ${inviterName} in začneta učiti skupaj!</p>
                 </div>
                 <div class="footer">
-                  <p>AI Kids Learning - Making learning fun with AI</p>
+                  <p>Kids Learning AI - Učenje postane zabavno z umetno inteligenco</p>
                 </div>
               </div>
             </body>

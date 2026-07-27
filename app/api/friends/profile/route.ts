@@ -14,39 +14,32 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { data, error } = await supabase.rpc('exec_sql', {
-      query: `SELECT id, email, display_name, secret_key FROM profiles WHERE id = '${user.id}' LIMIT 1`
-    })
+    const { data: profileData, error: selectError } = await supabase
+      .from('profiles')
+      .select('id, email, display_name, secret_key')
+      .eq('id', user.id)
+      .maybeSingle()
 
-    if (error) {
-      console.error('[v0] Profile API: RPC error, trying alternative', error)
-      
-      // Fallback: try direct table query with select
-      const { data: profileData, error: selectError } = await supabase
-        .from('profiles')
-        .select('id, email, display_name')
-        .eq('id', user.id)
-        .single()
-      
-      if (selectError || !profileData) {
-        console.error('[v0] Profile API: Select error', selectError)
-        return NextResponse.json({ error: "Profile not found" }, { status: 404 })
-      }
-
-      // Generate a temporary key if none exists
-      const tempKey = Array.from({ length: 8 }, () => 
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]
-      ).join('')
-
-      return NextResponse.json({
-        profile: {
-          ...profileData,
-          secret_key: tempKey
-        }
-      })
+    if (selectError || !profileData) {
+      console.error('[v0] Profile API: Select error', selectError)
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
     }
 
-    return NextResponse.json({ profile: data[0] })
+    if (profileData.secret_key) {
+      return NextResponse.json({ profile: profileData })
+    }
+
+    // Generate a temporary key if none exists (should be auto-set by DB trigger)
+    const tempKey = Array.from({ length: 8 }, () =>
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]
+    ).join('')
+
+    return NextResponse.json({
+      profile: {
+        ...profileData,
+        secret_key: tempKey
+      }
+    })
   } catch (error) {
     console.error('[v0] Profile API: Error', error)
     return NextResponse.json(
