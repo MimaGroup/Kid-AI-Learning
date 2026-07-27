@@ -168,7 +168,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       const planName = planType === "monthly" ? "Premium Monthly" : "Premium Yearly"
       const amount = planType === "monthly" ? 999 : 9999
 
-      const emailTemplate = emailTemplates.subscriptionConfirmation(userData.display_name || "there", planName, amount)
+      const emailTemplate = emailTemplates.subscriptionConfirmation(userData.display_name || "", planName, amount)
 
       await sendEmail({
         to: userData.email,
@@ -394,7 +394,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       })
 
       const emailTemplate = emailTemplates.paymentReceipt(
-        userData.display_name || "there",
+        userData.display_name || "",
         amount,
         date,
         invoice.hosted_invoice_url || "",

@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       // Determine which email to send based on days since signup
       let emailType: string | null = null
       let emailTemplate: { subject: string; html: string } | null = null
-      const name = user.display_name || "there"
+      const name = user.display_name || ""
 
       if (daysSinceSignup >= 7) {
         emailType = "final_nudge"

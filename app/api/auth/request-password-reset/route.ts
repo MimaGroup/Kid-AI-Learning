@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     // Send custom password reset email
     try {
       const resetLink = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/reset-password`
-      const emailTemplate = emailTemplates.passwordReset(profile?.display_name || "there", resetLink)
+      const emailTemplate = emailTemplates.passwordReset(profile?.display_name || "", resetLink)
 
       await sendEmail({
         to: email,

@@ -54,14 +54,14 @@ async function runWeeklySummary() {
           pointsEarned: activities?.reduce((sum, a) => sum + (a.score || 0), 0) || 0,
           achievementsUnlocked: achievements?.length || 0,
           highlights: [
-            activities && activities.length > 0 ? `Completed ${activities.length} activities` : null,
-            achievements && achievements.length > 0 ? `Unlocked ${achievements.length} new achievements` : null,
+            activities && activities.length > 0 ? `Opravljenih ${activities.length} dejavnosti` : null,
+            achievements && achievements.length > 0 ? `Odklenjenih ${achievements.length} novih dosežkov` : null,
           ].filter(Boolean),
         }
 
         // Only send if there's activity
         if (stats.activitiesCompleted > 0) {
-          const emailTemplate = emailTemplates.weeklyProgress(parent.display_name || "there", child.name, stats)
+          const emailTemplate = emailTemplates.weeklyProgress(parent.display_name || "", child.name, stats)
 
           const result = await sendEmail({
             to: parent.email,

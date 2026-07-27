@@ -51,6 +51,11 @@ export async function sendEmail(options: EmailOptions) {
   }
 }
 
+// Shared greeting fallback: use the name if it's a real, non-empty, non-email value, otherwise omit it.
+function greetingFor(name: string): string {
+  return name && name.trim() && !name.includes("@") ? `Pozdravljeni ${name},` : "Pozdravljeni,"
+}
+
 export const emailTemplates = {
   welcome: (name: string) => {
     // Fix 2: Use firstName if available and not empty, otherwise just use "Pozdravljeni,"
@@ -150,7 +155,7 @@ export const emailTemplates = {
               <div style="text-align: center; margin-bottom: 15px;">
                 <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-celebrating.jpg" alt="Byte praznuje" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #E9D5FF;" />
               </div>
-              <p>Pozdravljeni ${name},</p>
+              <p>${greetingFor(name)}</p>
               <p>Byte je ponosen na napredek otroka ${childName} ta teden! Tukaj je povzetek:</p>
 
               <div class="stat-card">
@@ -330,7 +335,7 @@ export const emailTemplates = {
               <h1>🎉 Dobrodošli v Premium!</h1>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>${greetingFor(name)}</p>
               <p>Hvala za naročnino na <strong>${planName}</strong>! Vaše plačilo v znesku ${(amount / 100).toFixed(2)} € je bilo uspešno obdelano.</p>
 
               <h3>✨ Zdaj imate dostop do:</h3>
@@ -383,7 +388,7 @@ export const emailTemplates = {
               <h1>Plačilni račun</h1>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>${greetingFor(name)}</p>
               <p>Hvala za vaše plačilo. Tukaj so podrobnosti:</p>
 
               <div class="receipt-box">
@@ -480,7 +485,7 @@ export const emailTemplates = {
               <h1>Kako gre? 🌟</h1>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>${greetingFor(name)}</p>
               <p>Že ${daysActive} dni ste del Kids Learning AI! Radi bi preverili, kako vam gre.</p>
 
               <div class="tip-box">
@@ -540,7 +545,7 @@ export const emailTemplates = {
               <h1>Ponastavitev gesla</h1>
             </div>
             <div class="content">
-              <p>Pozdravljeni ${name},</p>
+              <p>${greetingFor(name)}</p>
               <p>Prejeli smo zahtevo za ponastavitev gesla za vaš račun Kids Learning AI.</p>
 
               <p style="text-align: center;">
