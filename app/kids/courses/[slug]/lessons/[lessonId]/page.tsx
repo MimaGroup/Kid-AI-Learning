@@ -16,7 +16,7 @@ interface Lesson {
   content: string
   content_type: string
   duration_minutes: number
-  key_concepts: string[] | null
+  key_concepts: Array<string | { name: string; explanation?: string }> | null
   quiz_questions: QuizQuestion[] | null
 }
 
@@ -258,10 +258,10 @@ export default function LessonPage() {
 
           {Array.isArray(lesson.key_concepts) && lesson.key_concepts.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {(lesson.key_concepts as string[]).map((concept, i) => (
+              {lesson.key_concepts.map((concept, i) => (
                 <span key={i} className="px-3 py-1 rounded-full text-xs font-semibold"
                   style={{ background: "rgba(168,85,247,0.15)", color: "#c084fc", border: "1px solid rgba(168,85,247,0.3)" }}>
-                  {concept}
+                  {typeof concept === "string" ? concept : concept?.name}
                 </span>
               ))}
             </div>

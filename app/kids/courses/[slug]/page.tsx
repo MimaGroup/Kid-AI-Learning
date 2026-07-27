@@ -13,7 +13,7 @@ interface Lesson {
   title: string
   content_type: string
   duration_minutes: number
-  key_concepts: string[] | null
+  key_concepts: Array<string | { name: string; explanation?: string }> | null
 }
 
 interface Course {
@@ -263,7 +263,11 @@ export default function CourseDetailPage() {
                         </p>
                         {Array.isArray(lesson.key_concepts) && lesson.key_concepts.length > 0 && (
                           <p className="text-white/35 text-xs mt-0.5 truncate">
-                            {(lesson.key_concepts as string[]).slice(0, 3).join(" · ")}
+                            {lesson.key_concepts
+                              .slice(0, 3)
+                              .map((c: any) => (typeof c === "string" ? c : c?.name))
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
                         )}
                       </div>
