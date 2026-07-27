@@ -67,7 +67,7 @@ const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #1a1060 0%
 
 const MODE_META: Record<GameMode, { icon: string; label: string; desc: string }> = {
   spelling:   { icon: "✍️", label: "Črkovanje",   desc: "Pravilno napiši besedo" },
-  unscramble: { icon: "🔀", label: "Razmeši",      desc: "Razvrsti črke" },
+  unscramble: { icon: "🔀", label: "Mešanje",      desc: "Razvrsti črke" },
   definition: { icon: "📖", label: "Pomen",        desc: "Poveži besedo s pomenom" },
 }
 
@@ -231,7 +231,7 @@ export default function WordBuilderPage() {
                   {(["easy", "medium", "hard"] as const).map((diff) => {
                     const meta = {
                       easy:   { icon: "🌱", label: "Lahka",   desc: "Preproste besede",  color: "34,197,94" },
-                      medium: { icon: "⭐", label: "Srednja", desc: "Tehniške besede",    color: "59,130,246" },
+                      medium: { icon: "⭐", label: "Srednja", desc: "Tehnične besede",    color: "59,130,246" },
                       hard:   { icon: "🚀", label: "Težka",  desc: "Napredni izrazi",    color: "168,85,247" },
                     }[diff]
                     return (
