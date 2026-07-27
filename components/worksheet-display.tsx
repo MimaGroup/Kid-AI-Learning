@@ -18,23 +18,23 @@ export function WorksheetDisplay({ title, difficulty, content }: WorksheetDispla
 
   const getDifficultyColor = (diff: string) => {
     const lower = diff.toLowerCase()
-    if (lower.includes("easy")) return "bg-fun-green text-white"
-    if (lower.includes("medium")) return "bg-fun-orange text-white"
-    if (lower.includes("hard")) return "bg-fun-pink text-white"
+    if (lower.includes("lahko")) return "bg-fun-green text-white"
+    if (lower.includes("srednje")) return "bg-fun-orange text-white"
+    if (lower.includes("težko")) return "bg-fun-pink text-white"
     return "bg-primary text-primary-foreground"
   }
 
   const handleDownload = () => {
     const formattedContent = `
 ${title.toUpperCase()}
-Difficulty: ${difficulty}
+Težavnost: ${difficulty}
 ${"=".repeat(50)}
 
 ${content}
 
 ${"=".repeat(50)}
-Downloaded from AI for Kids Learning Platform
-Keep learning and exploring AI concepts!
+Preneseno s platforme Kids Learning AI
+Nadaljuj z učenjem in raziskovanjem konceptov AI!
     `.trim()
 
     const blob = new Blob([formattedContent], { type: "text/plain" })
@@ -53,7 +53,7 @@ Keep learning and exploring AI concepts!
       try {
         await navigator.share({
           title: title,
-          text: `Check out this fun AI worksheet: ${title}`,
+          text: `Poglej ta zabaven AI delovni list: ${title}`,
           url: window.location.href,
         })
       } catch (err) {
@@ -62,7 +62,7 @@ Keep learning and exploring AI concepts!
     } else {
       // Fallback: copy link to clipboard
       navigator.clipboard.writeText(window.location.href)
-      alert("Link copied to clipboard!")
+      alert("Povezava kopirana v odložišče!")
     }
   }
 
@@ -75,7 +75,7 @@ Keep learning and exploring AI concepts!
       <div className="max-w-4xl mx-auto">
         <Button variant="ghost" className="mb-4 hover-lift text-primary font-semibold" onClick={handleBack}>
           <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to Library
+          Nazaj v knjižnico
         </Button>
 
         <Card className="mb-6 p-6 md:p-8 fun-shadow-lg border-4 border-primary/20 bg-white">
@@ -97,7 +97,7 @@ Keep learning and exploring AI concepts!
                 variant="outline"
                 className="rounded-full hover-lift bg-transparent"
                 onClick={handleDownload}
-                title="Download worksheet"
+                title="Prenesi delovni list"
               >
                 <Download className="w-5 h-5" />
               </Button>
@@ -106,7 +106,7 @@ Keep learning and exploring AI concepts!
                 variant="outline"
                 className="rounded-full hover-lift bg-transparent"
                 onClick={handleShare}
-                title="Share worksheet"
+                title="Deli delovni list"
               >
                 <Share2 className="w-5 h-5" />
               </Button>
@@ -116,10 +116,10 @@ Keep learning and exploring AI concepts!
 
         <div className="space-y-6">
           {sections.map((section, index) => {
-            const isInstruction = section.toLowerCase().includes("instruction")
-            const isPattern = section.toLowerCase().includes("pattern")
-            const isChallenge = section.toLowerCase().includes("challenge")
-            const isAnswer = section.toLowerCase().includes("answer:")
+            const isInstruction = section.toLowerCase().includes("navodila")
+            const isPattern = section.toLowerCase().includes("vzorec")
+            const isChallenge = section.toLowerCase().includes("izziv")
+            const isAnswer = section.toLowerCase().includes("odgovor:")
 
             // Determine card style based on content type
             let cardClass = "bg-white"
@@ -163,8 +163,8 @@ Keep learning and exploring AI concepts!
               <Trophy className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-1">Great job! 🎉</h3>
-              <p className="text-lg opacity-90">Keep learning and exploring AI concepts!</p>
+              <h3 className="text-2xl font-bold mb-1">Odlično opravljeno! 🎉</h3>
+              <p className="text-lg opacity-90">Nadaljuj z učenjem in raziskovanjem konceptov AI!</p>
             </div>
           </div>
         </Card>

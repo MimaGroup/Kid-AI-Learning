@@ -5,9 +5,9 @@ import SignUpPageClient from "./sign-up-client"
 import { Suspense } from "react"
 
 export const metadata: Metadata = createMetadata({
-  title: "Sign Up - Create Your Free Account",
+  title: "Registracija — Ustvari brezplačen račun",
   description:
-    "Create a free AI Kids Learning account to start your child's AI education journey. Get access to interactive games, progress tracking, and more.",
+    "Ustvari brezplačen račun Kids Learning AI in začni otrokovo pot učenja o umetni inteligenci. Dostop do interaktivnih iger, sledenja napredku in več.",
   path: "/auth/sign-up",
   noIndex: true, // Don't index auth pages
 })

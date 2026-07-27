@@ -5,7 +5,7 @@ import { AdDemo } from "../../../components/ad-demo"
 import { BytePreview } from "../../../components/byte-preview"
 
 export const metadata = {
-  title: "AI učenje za otroke | Kids Learning AI — Začni brezplačno",
+  title: { absolute: "AI učenje za otroke | Kids Learning AI — Začni brezplačno" },
   description: "Interaktivne AI igre za otroke, stare 5–12 let. 7 dni brezplačno preskusno obdobje. Starševska nadzorna plošča. Samo €7,90/mesec.",
 }
 

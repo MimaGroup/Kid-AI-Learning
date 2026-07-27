@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 export const metadata = {
-  title: "Pogoji uporabe — Kids Learning AI",
+  title: { absolute: "Pogoji uporabe — Kids Learning AI" },
 }
 
 const SECTIONS = [

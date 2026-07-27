@@ -3,97 +3,97 @@ import { notFound } from "next/navigation"
 
 const worksheets: Record<string, { title: string; difficulty: string; content: string }> = {
   "pattern-recognition-puzzle": {
-    title: "Pattern Recognition Puzzle",
-    difficulty: "Medium",
-    content: `Instructions: Look at the patterns below and fill in the missing items!
+    title: "Uganka prepoznavanja vzorcev",
+    difficulty: "Srednje",
+    content: `Navodila: Poglej vzorce spodaj in dopolni manjkajoče elemente!
 
-Pattern 1: 🔴 🔵 🔴 🔵 🔴 ___
-Answer: 🔵
+Vzorec 1: 🔴 🔵 🔴 🔵 🔴 ___
+Odgovor: 🔵
 
-Pattern 2: 🐱 😺 🐱 😺 ___ 😺
-Answer: 🐱
+Vzorec 2: 🐱 😺 🐱 😺 ___ 😺
+Odgovor: 🐱
 
-Pattern 3: 1, 2, 4, 8, 16, ___
-Answer: 32
+Vzorec 3: 1, 2, 4, 8, 16, ___
+Odgovor: 32
 
-Pattern 4: A, B, C, D, ___
-Answer: E
+Vzorec 4: A, B, C, D, ___
+Odgovor: E
 
-Challenge: Create your own pattern!
+Izziv: Ustvari svoj lasten vzorec!
 ___ ___ ___ ___ ___
 
-Great job! Patterns help AI learn and make predictions!`,
+Odlično opravljeno! Vzorci pomagajo AI, da se uči in napoveduje!`,
   },
   "build-your-own-algorithm": {
-    title: "Build Your Own Algorithm",
-    difficulty: "Easy",
-    content: `Instructions: An algorithm is a set of steps to solve a problem!
+    title: "Ustvari svoj algoritem",
+    difficulty: "Lahko",
+    content: `Navodila: Algoritem je zaporedje korakov za rešitev problema!
 
-Example: Making a Sandwich
-Step 1: Get two slices of bread
-Step 2: Add peanut butter to one slice
-Step 3: Add jelly to the other slice
-Step 4: Put the slices together
-Step 5: Enjoy your sandwich! 🥪
+Primer: Priprava sendviča
+Korak 1: Vzemi dve rezini kruha
+Korak 2: Namaži arašidovo maslo na eno rezino
+Korak 3: Namaži marmelado na drugo rezino
+Korak 4: Sestavi rezini skupaj
+Korak 5: Uživaj v sendviču! 🥪
 
-Your Turn: Write an algorithm for brushing your teeth!
-Step 1: _______________
-Step 2: _______________
-Step 3: _______________
-Step 4: _______________
+Zdaj ti: Napiši algoritem za umivanje zob!
+Korak 1: _______________
+Korak 2: _______________
+Korak 3: _______________
+Korak 4: _______________
 
-Remember: AI uses algorithms to make decisions!`,
+Zapomni si: AI uporablja algoritme za sprejemanje odločitev!`,
   },
   "ai-word-search": {
-    title: "AI Word Search",
-    difficulty: "Easy",
-    content: `Instructions: Find these AI-related words in the grid!
+    title: "Iskanje besed o AI",
+    difficulty: "Lahko",
+    content: `Navodila: Poišči te besede, povezane z umetno inteligenco, v mreži!
 
-Words to find:
+Besede za iskanje:
 - ROBOT
-- DATA
-- LEARN
-- SMART
-- CODE
+- PODATKI
+- UČENJE
+- PAMETEN
+- KODA
 
-A L G O R I T H M
+A L G O R I T E M
 R O B O T X Y Z Q
-D A T A W E R T Y
-L E A R N M N O P
-S M A R T C O D E
+P O D A T K I R T
+U Č E N J E N O P
+P A M E T E N O D
 
-Challenge: Can you think of 3 more AI words?
+Izziv: Se ti lahko domisliš še 3 besed, povezanih z AI?
 1. _______________
 2. _______________
 3. _______________`,
   },
   "robot-design-challenge": {
-    title: "Robot Design Challenge",
-    difficulty: "Hard",
-    content: `Instructions: Design your own helpful robot!
+    title: "Izziv oblikovanja robota",
+    difficulty: "Težko",
+    content: `Navodila: Zasnuj svojega lastnega koristnega robota!
 
-What will your robot do?
+Kaj bo tvoj robot počel?
 _______________________________________________
 
-Draw your robot here:
-[Space for drawing]
+Nariši svojega robota tukaj:
+[Prostor za risanje]
 
-Robot Features:
-□ Can talk
-□ Can move
-□ Can see
-□ Can learn
-□ Can help people
+Lastnosti robota:
+□ Zna govoriti
+□ Se zna premikati
+□ Vidi
+□ Se zna učiti
+□ Pomaga ljudem
 
-Special Abilities:
+Posebne sposobnosti:
 1. _______________
 2. _______________
 3. _______________
 
-Why is your robot helpful?
+Zakaj je tvoj robot koristen?
 _______________________________________________
 
-Remember: Real AI robots are designed to help people!`,
+Zapomni si: Pravi AI roboti so zasnovani, da pomagajo ljudem!`,
   },
 }
 

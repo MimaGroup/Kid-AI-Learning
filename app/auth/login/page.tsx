@@ -3,9 +3,9 @@ import { createMetadata } from "@/lib/metadata"
 import { LoginPageClient } from "./client"
 
 export const metadata: Metadata = createMetadata({
-  title: "Login - Sign In to Your Account",
+  title: "Prijava — Kids Learning AI",
   description:
-    "Sign in to your AI Kids Learning account to access the parent dashboard and track your child's progress.",
+    "Prijavite se v svoj račun Kids Learning AI za dostop do starševske nadzorne plošče in spremljanje otrokovega napredka.",
   path: "/auth/login",
   noIndex: true, // Don't index auth pages
 })

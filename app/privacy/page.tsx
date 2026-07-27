@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 export const metadata = {
-  title: "Politika zasebnosti — Kids Learning AI",
+  title: { absolute: "Politika zasebnosti — Kids Learning AI" },
   description: "Kako zbiramo, uporabljamo in varujemo vaše osebne podatke na platformi Kids Learning AI.",
 }
 

@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 export const metadata = {
-  title: "Varstvo otrok — Kids Learning AI",
+  title: { absolute: "Varstvo otrok — Kids Learning AI" },
   description: "Kako varujemo otroke na platformi Kids Learning AI. Naša zaveza k varni izobraževalni izkušnji.",
 }
 
