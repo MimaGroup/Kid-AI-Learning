@@ -131,7 +131,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      console.log("[v0] Calling Groq API with retry logic...")
+      console.log("[v0] Calling Anthropic API with retry logic...")
 
       const basePrompt = `Generate ${count} multiple choice quiz questions about ${sanitizedTopic} for kids aged 5-12 at ${difficulty} level.
 
@@ -159,7 +159,7 @@ Return ONLY the JSON array, no additional text.`
 
       const text = await generateWithRetry(safePrompt)
 
-      console.log("[v0] Groq API response received, length:", text.length)
+      console.log("[v0] Anthropic API response received, length:", text.length)
 
       const cleanedText = text
         .trim()
