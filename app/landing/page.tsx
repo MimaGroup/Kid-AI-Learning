@@ -59,8 +59,49 @@ export default function AdLandingPage() {
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed text-[#64748B] max-w-xl">
-                {"Kids Learning AI je prva slovenska AI platforma za otroke 5–12 let. Robotika, umetna inteligenca in kreativnost — skozi igro, brez dolgočasnih predavanj. Vaš otrok začne danes."}
+                {"Kids Learning AI je vodilna slovenska AI učna platforma za otroke, stare 5–12 let. Skozi igre, izzive in osebnega AI tutorja Byte-a se otrok nauči prepoznavati vzorce, kritično presojati AI vsebine in razumeti osnove programiranja — vse v varnem, nadzorovanem okolju brez oglasov, klepetalnic ali stikov s tujci."}
               </p>
+
+              <p className="text-sm text-[#64748B]/80 max-w-xl -mt-2">
+                {"Začetniki (5–7 let) odkrivajo AI skozi zgodbe in igre. Raziskovalci (8–12 let) programirajo, rešujejo AI izzive in gradijo lastne projekte."}
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4 pt-2 max-w-xl">
+                <div className="bg-white/70 border border-[#E2E8F0] rounded-2xl p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#7C3AED] mb-2">Kaj se otrok nauči</p>
+                  <ul className="space-y-1.5 text-sm text-[#475569]">
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-[#7C3AED] mt-0.5 flex-shrink-0" />
+                      <span>Prepoznavanje vzorcev in "razmišljanje kot AI"</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-[#7C3AED] mt-0.5 flex-shrink-0" />
+                      <span>Kritična presoja AI vsebin — kaj je res in kaj ne</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-[#7C3AED] mt-0.5 flex-shrink-0" />
+                      <span>Osnove programiranja skozi igro</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="bg-white/70 border border-[#E2E8F0] rounded-2xl p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#0EA5E9] mb-2">Kako poskrbimo za varnost</p>
+                  <ul className="space-y-1.5 text-sm text-[#475569]">
+                    <li className="flex items-start gap-2">
+                      <Shield className="w-4 h-4 text-[#0EA5E9] mt-0.5 flex-shrink-0" />
+                      <span>Brez oglasov, klepetalnic ali stikov s tujci</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Shield className="w-4 h-4 text-[#0EA5E9] mt-0.5 flex-shrink-0" />
+                      <span>Starš vidi ves napredek v realnem času</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Shield className="w-4 h-4 text-[#0EA5E9] mt-0.5 flex-shrink-0" />
+                      <span>Skladno z GDPR in slovenskim ZVOP-2</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link href="/auth/sign-up" onClick={() => trackLead()}>
