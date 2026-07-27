@@ -6,18 +6,27 @@ declare global {
 
 export const FB_PIXEL_ID = '26081756688144186'
 
+// The pixel script only loads after marketing-cookie consent (see components/facebook-pixel.tsx)
+// and is hard-disabled on /kids/* routes, so window.fbq may legitimately not exist — these
+// tracking calls must no-op safely instead of throwing.
+function safeFbq(...args: unknown[]) {
+  if (typeof window !== "undefined" && typeof window.fbq === "function") {
+    window.fbq(...args)
+  }
+}
+
 export const pageview = () => {
-  window.fbq('track', 'PageView')
+  safeFbq('track', 'PageView')
 }
 
 export const trackLead = () => {
-  window.fbq('track', 'Lead')
+  safeFbq('track', 'Lead')
 }
 
 export const trackCompleteRegistration = () => {
-  window.fbq('track', 'CompleteRegistration')
+  safeFbq('track', 'CompleteRegistration')
 }
 
 export const trackStartTrial = () => {
-  window.fbq('track', 'StartTrial')
+  safeFbq('track', 'StartTrial')
 }

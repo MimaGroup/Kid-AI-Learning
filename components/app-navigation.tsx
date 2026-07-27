@@ -111,7 +111,7 @@ export function AppNavigation() {
               >
                 <DropdownMenuLabel className="pb-3 bg-white">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-semibold text-gray-900">Moj racun</p>
+                    <p className="text-sm font-semibold text-gray-900">Moj račun</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>

@@ -17,9 +17,9 @@ const adCreatives = [
     format: "1200x628",
     bestFor: ["Facebook Feed", "Facebook Marketplace"],
     suggestedCopy: {
-      headline: "Vas otrok se uci AI - skozi igro!",
-      body: "Kids Learning AI - 8 interaktivnih AI iger za otroke od 6 do 12 let. Kvizi, uganke, vzorci in vec. Brezplacno za zacetek!",
-      cta: "Preizkusi brezplacno"
+      headline: "Vaš otrok se uči AI — skozi igro!",
+      body: "Kids Learning AI — 8 interaktivnih AI iger za otroke, stare 5–12 let. Kvizi, uganke, vzorci in več. Brezplačno za začetek!",
+      cta: "Preizkusi brezplačno"
     }
   },
   {
@@ -30,35 +30,35 @@ const adCreatives = [
     format: "1200x628",
     bestFor: ["Facebook Feed", "Audience Network"],
     suggestedCopy: {
-      headline: "AI ucenje, ki je zabavno!",
-      body: "Otroci se ucijo o umetni inteligenci skozi igro. Kvizi, spomin, besede, vzorci - vse prilagojeno njihovi starosti.",
-      cta: "Zacni brezplacno"
+      headline: "AI učenje, ki je zabavno!",
+      body: "Otroci se učijo o umetni inteligenci skozi igro. Kvizi, spomin, besede, vzorci — vse prilagojeno njihovi starosti.",
+      cta: "Začni brezplačno"
     }
   },
   {
     id: "badges-rewards",
-    title: "Dosezki in nagrade",
-    description: "Prikaz sistema nagrad in napredka. Motivira starse z gamifikacijo.",
+    title: "Dosežki in nagrade",
+    description: "Prikaz sistema nagrad in napredka. Motivira starše z gamifikacijo.",
     src: "/marketing/ad-badges-rewards.jpg",
     format: "1200x628",
     bestFor: ["Facebook Feed", "Instagram Feed"],
     suggestedCopy: {
-      headline: "Nagrade za vsak korak ucenja",
-      body: "Vas otrok osvaja znacke, napreduje po nivojih in se zabava med ucenjem o AI. Pridruzi se Kids Learning AI!",
-      cta: "Preizkusi brezplacno"
+      headline: "Nagrade za vsak korak učenja",
+      body: "Vaš otrok osvaja značke, napreduje po nivojih in se zabava med učenjem o AI. Pridruži se Kids Learning AI!",
+      cta: "Preizkusi brezplačno"
     }
   },
   {
     id: "square-family",
-    title: "Druzina z tablico",
-    description: "Starsi in otrok skupaj raziskujeta aplikacijo. Topel, druzinski obcutek.",
+    title: "Družina s tablico",
+    description: "Starši in otrok skupaj raziskujeta aplikacijo. Topel, družinski občutek.",
     src: "/marketing/ad-square-family.jpg",
     format: "1080x1080",
     bestFor: ["Instagram Feed", "Instagram Stories", "Facebook Stories"],
     suggestedCopy: {
       headline: "Skupaj odkrivajta svet AI",
-      body: "Kids Learning AI - platforma, kjer se otroci ucijo o umetni inteligenci skozi igro. Starsi spremljajo napredek.",
-      cta: "Zacni brezplacno"
+      body: "Kids Learning AI — platforma, kjer se otroci učijo o umetni inteligenci skozi igro. Starši spremljajo napredek.",
+      cta: "Začni brezplačno"
     }
   }
 ]
@@ -98,10 +98,10 @@ export default function MarketingAssetsPage() {
           <CardContent className="pt-6">
             <h3 className="mb-2 font-semibold text-foreground">Nasveti za Facebook oglase</h3>
             <ul className="space-y-1 text-sm text-muted-foreground">
-              <li>{"- Objavljaj ob torkih ali sredah za najboljso vidnost"}</li>
-              <li>{"- Ciljaj starse otrok 6-12 let v Sloveniji"}</li>
-              <li>{"- Interesi: izobrazevanje, tehnologija, programiranje za otroke"}</li>
-              <li>{"- Ustavi prvi oglas (0.25/rezultat) in preusmeri budget na drugega (0.07/rezultat)"}</li>
+              <li>{"- Objavljaj ob torkih ali sredah za najboljšo vidnost"}</li>
+              <li>{"- Ciljaj starše otrok, starih 5–12 let, v Sloveniji"}</li>
+              <li>{"- Interesi: izobraževanje, tehnologija, programiranje za otroke"}</li>
+              <li>{"- Ustavi prvi oglas (0,25 €/rezultat) in preusmeri proračun na drugega (0,07 €/rezultat)"}</li>
               <li>{"- Dodaj Pixel za sledenje konverzij od klika do registracije"}</li>
             </ul>
           </CardContent>
@@ -186,7 +186,7 @@ export default function MarketingAssetsPage() {
           <CardContent className="pt-6">
             <h3 className="mb-2 font-semibold text-foreground">Povezava za oglase</h3>
             <p className="mb-3 text-sm text-muted-foreground">
-              Uporabi to povezavo kot destinacijo oglasa. Vodi na pristajalno stran z brezplacno demo igro.
+              Uporabi to povezavo kot destinacijo oglasa. Vodi na pristajalno stran z brezplačno demo igro.
             </p>
             <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
               <code className="flex-1 text-sm text-foreground">

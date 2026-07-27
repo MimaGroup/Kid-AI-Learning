@@ -28,7 +28,7 @@ const SECTIONS = [
   },
   {
     title: "6. Piškotki in sledilne tehnologije",
-    body: `Platforma uporablja izključno funkcionalne piškotke, ki so nujni za delovanje storitve (seja prijave). Ne uporabljamo sledilnih piškotkov, oglasnih piškotkov ali analitičnih orodij tretjih oseb (npr. Google Analytics). Ker so ti piškotki nujni za delovanje, za njihovo uporabo soglasje ni zahtevano.`,
+    body: `Platforma privzeto uporablja izključno nujne in funkcionalne piškotke za delovanje storitve (seja prijave, nastavitve). Za ta soglasje ni zahtevano. Trženjski piškotek Facebook Pixel (meritev oglasnih kampanj) naložimo izključno, če to izrecno potrdite prek pasice s piškotki ob prvem obisku — in nikoli na straneh znotraj otroškega dela aplikacije (/kids), ne glede na vašo izbiro. Podrobnosti so v naši Politiki piškotkov.`,
   },
   {
     title: "7. Hramba podatkov",
@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     title: "8. Vaše pravice (GDPR)",
-    body: `Kot posameznik s pravico do varstva osebnih podatkov imate naslednje pravice:\n\n• Pravica do dostopa: zahtevate lahko kopijo vseh podatkov, ki jih hranimo o vas.\n• Pravica do popravka: zahtevate lahko popravek nepravilnih ali nepopolnih podatkov.\n• Pravica do izbrisa (»pravica do pozabe«): zahtevate lahko izbris vseh vaših podatkov.\n• Pravica do omejitve obdelave: zahtevate lahko, da omejimo obdelavo vaših podatkov.\n• Pravica do prenosljivosti: zahtevate lahko podatke v strojno berljivi obliki.\n• Pravica do ugovora: ugovarjate lahko obdelavi na podlagi zakonitega interesa.\n\nZahtevo za uveljavljanje pravic pošljite na support@kids-learning-ai.com. Odgovorili bomo v roku 30 dni.`,
+    body: `Kot posameznik s pravico do varstva osebnih podatkov imate naslednje pravice:\n\n• Pravica do dostopa: zahtevate lahko kopijo vseh podatkov, ki jih hranimo o vas.\n• Pravica do popravka: zahtevate lahko popravek nepravilnih ali nepopolnih podatkov.\n• Pravica do izbrisa (»pravica do pozabe«): zahtevate lahko izbris vseh vaših podatkov.\n• Pravica do omejitve obdelave: zahtevate lahko, da omejimo obdelavo vaših podatkov.\n• Pravica do prenosljivosti: podatke v strojno berljivi obliki (JSON) lahko kadar koli sami prenesete v nastavitvah računa, brez čakanja na naš odgovor.\n• Pravica do ugovora: ugovarjate lahko obdelavi na podlagi zakonitega interesa.\n\nDostop do izvoza podatkov in izbris računa sta na voljo neposredno v nastavitvah računa (Nastavitve → Zasebnost in varnost). Za vse ostale zahteve ali vprašanja pišite na support@kids-learning-ai.com — odgovorimo v roku 30 dni.`,
   },
   {
     title: "9. Varnost podatkov",
@@ -123,6 +123,7 @@ export default function PrivacyPage() {
           <Link href="/" className="hover:text-gray-700">← Nazaj na domačo stran</Link>
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-gray-700">Pogoji uporabe</Link>
+            <Link href="/cookie-policy" className="hover:text-gray-700">Politika piškotkov</Link>
             <Link href="/faq" className="hover:text-gray-700">Pogosta vprašanja</Link>
           </div>
           <Link href="/auth/login" className="hover:text-gray-700">Prijava</Link>

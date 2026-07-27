@@ -80,7 +80,7 @@ export default async function SuccessPage({ searchParams }: Props) {
         </h1>
         <p className="text-white/60 mb-2 text-sm leading-relaxed">
           {isTrial
-            ? "Vaš 14-dnevni brezplačni preskus se je začel. Po preskusu vas bo Stripe samodejno zaračunal."
+            ? "Vaš 7-dnevni brezplačni preskus se je začel. Po preskusu vas bo Stripe samodejno zaračunal."
             : "Vaša naročnina je aktivna. Dostop do vseh vsebin je zagotovljen."}
         </p>
         <p className="text-white/40 text-xs mb-10">Potrditev ste prejeli na vaš e-poštni naslov.</p>

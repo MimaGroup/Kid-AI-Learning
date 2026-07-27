@@ -111,7 +111,7 @@ export async function GET(request: Request) {
     const resend = getResend()
     
     // Get all emails that should be sent now (score <= now)
-    const jobs = await redis.zrangebyscore(EMAIL_QUEUE_KEY, 0, now) as string[]
+    const jobs = await redis.zrange(EMAIL_QUEUE_KEY, 0, now, { byScore: true }) as string[]
 
     if (jobs.length === 0) {
       return NextResponse.json({ message: "No emails to send", processed: 0 })

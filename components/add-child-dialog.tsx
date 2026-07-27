@@ -24,11 +24,11 @@ interface AddChildDialogProps {
 
 const AVATAR_COLORS = [
   { value: "#4F46E5", label: "Indigo" },
-  { value: "#EC4899", label: "Pink" },
-  { value: "#10B981", label: "Green" },
-  { value: "#F59E0B", label: "Orange" },
-  { value: "#8B5CF6", label: "Purple" },
-  { value: "#06B6D4", label: "Cyan" },
+  { value: "#EC4899", label: "Roza" },
+  { value: "#10B981", label: "Zelena" },
+  { value: "#F59E0B", label: "Oranžna" },
+  { value: "#8B5CF6", label: "Vijolična" },
+  { value: "#06B6D4", label: "Cian" },
 ]
 
 export function AddChildDialog({ onAdd }: AddChildDialogProps) {
@@ -86,7 +86,8 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
           <DialogHeader>
             <DialogTitle>Dodaj profil otroka</DialogTitle>
             <DialogDescription>
-              Create a new learning profile for your child. You'll manage their account from your parent dashboard.
+              Ustvarite nov učni profil za vašega otroka. Njegov račun boste upravljali prek starševske nadzorne
+              plošče.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -109,12 +110,12 @@ export function AddChildDialog({ onAdd }: AddChildDialogProps) {
                 max="12"
                 value={formData.age}
                 onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                placeholder="Enter age (5-12)"
+                placeholder="Vnesite starost (5–12)"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="avatar_color">Avatar Color</Label>
+              <Label htmlFor="avatar_color">Barva avatarja</Label>
               <Select
                 value={formData.avatar_color}
                 onValueChange={(value) => setFormData({ ...formData, avatar_color: value })}

@@ -19,7 +19,7 @@ const SECTIONS = [
   },
   {
     title: "4. Brezplačno preskusno obdobje",
-    body: `Novi računi prejmejo 14-dnevno brezplačno preskusno obdobje s polnim dostopom do vseh funkcij. Za začetek preskusa plačilni podatki niso potrebni. Po izteku preskusnega obdobja je za nadaljnji dostop potrebna aktivna plačana naročnina.`,
+    body: `Novi računi prejmejo 7 dni brezplačno preskusno obdobje s polnim dostopom do vseh funkcij. Za začetek preskusa plačilni podatki niso potrebni. Po izteku preskusnega obdobja je za nadaljnji dostop potrebna aktivna plačana naročnina.`,
   },
   {
     title: "5. Naročnina in zaračunavanje",
@@ -94,7 +94,7 @@ export default function TermsPage() {
           <table className="w-full text-sm">
             <tbody className="divide-y divide-purple-100">
               {[
-                ["Brezplačno preskusno obdobje", "14 dni, plačilo ni potrebno"],
+                ["Brezplačno preskusno obdobje", "7 dni, plačilo ni potrebno"],
                 ["Mesečna naročnina", "€7,90 / mesec"],
                 ["Valuta", "Evro (EUR)"],
                 ["DDV", "Vključen, kjer zahteva zakonodaja EU"],

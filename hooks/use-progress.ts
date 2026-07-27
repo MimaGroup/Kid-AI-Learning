@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getActiveChildId } from "@/hooks/use-active-child"
 
 interface Achievement {
   id: string
@@ -35,6 +36,7 @@ export function useProgress() {
           total_questions: totalQuestions,
           time_spent: timeSpent,
           metadata,
+          child_profile_id: getActiveChildId(),
         }),
       })
 

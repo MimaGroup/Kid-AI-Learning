@@ -5,6 +5,7 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useStats } from "../../../hooks/use-progress"
 import { useAuth } from "../../../hooks/use-auth"
+import { useActiveChild } from "../../../hooks/use-active-child"
 import { AdventureMap } from "../../../components/adventure-map"
 import { KidsBottomNav } from "../../../components/kids-bottom-nav"
 import { ByteTutor } from "../../../components/byte-tutor"
@@ -33,6 +34,7 @@ const SIDEBAR_STARS = [
 export default function KidsHome() {
   const { stats, isLoading: statsLoading } = useStats()
   const { logout } = useAuth()
+  const { activeChildName, clearActiveChild } = useActiveChild()
   const pathname = usePathname()
   const router = useRouter()
   const [earnedBadges, setEarnedBadges] = useState<{ id: string; icon: string }[]>([])
@@ -63,6 +65,7 @@ export default function KidsHome() {
   }, [])
 
   const handleLogout = async () => {
+    clearActiveChild()
     await logout()
     router.push("/auth/login")
   }
@@ -159,6 +162,14 @@ export default function KidsHome() {
             <span className="text-base">🛸</span>
             <span>Starševska plošča</span>
           </Link>
+          <Link
+            href="/kids/select-profile"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold transition-all hover:bg-white/5"
+            style={{ color: "rgba(255,255,255,0.4)" }}
+          >
+            <span className="text-base">🔄</span>
+            <span>{activeChildName ? `Zamenjaj profil (${activeChildName})` : "Zamenjaj profil"}</span>
+          </Link>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all hover:bg-red-500/10 active:scale-95"
@@ -178,7 +189,9 @@ export default function KidsHome() {
           style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
         >
           <div>
-            <p className="text-white/40 text-xs font-medium mb-0.5">Dobrodošel nazaj, mladi AI raziskovalec! 👋</p>
+            <p className="text-white/40 text-xs font-medium mb-0.5">
+              {activeChildName ? `Dobrodošel nazaj, ${activeChildName}! 👋` : "Dobrodošel nazaj, mladi AI raziskovalec! 👋"}
+            </p>
             <h1 className="text-xl font-heading font-bold text-white">Byteov vesoljski zemljevid</h1>
           </div>
           <div className="text-3xl animate-bounce">🚀</div>

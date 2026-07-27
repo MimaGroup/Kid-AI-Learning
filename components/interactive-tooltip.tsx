@@ -137,10 +137,10 @@ export function InteractiveTooltip({ steps, onComplete, storageKey }: Interactiv
 
             <div className="flex gap-2">
               <Button variant="ghost" size="sm" onClick={handleSkip}>
-                Skip
+                Preskoči
               </Button>
               <Button size="sm" onClick={handleNext}>
-                {currentStep < steps.length - 1 ? "Next" : "Got it!"}
+                {currentStep < steps.length - 1 ? "Naprej" : "Razumem!"}
               </Button>
             </div>
           </div>

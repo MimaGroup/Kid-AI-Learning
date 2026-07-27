@@ -261,11 +261,16 @@ export default function CanvasClient() {
   const [panning, setPanning] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [showAddForm, setShowAddForm] = useState(false)
-  const [newNode, setNewNode] = useState({
+  const [newNode, setNewNode] = useState<{
+    title: string
+    icon: string
+    color: string
+    rows: StatusRow[]
+  }>({
     title: "",
     icon: "📌",
     color: NODE_COLORS[0].value,
-    rows: [{ text: "", status: "green" as const }],
+    rows: [{ text: "", status: "green" }],
   })
   const canvasRef = useRef<HTMLDivElement>(null)
 

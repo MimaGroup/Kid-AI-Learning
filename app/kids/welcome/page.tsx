@@ -10,7 +10,7 @@ import { Sparkles, Gamepad2, Trophy, ArrowRight, Brain, Rocket } from "lucide-re
 const STEPS = [
   {
     id: "welcome",
-    badge: "Dobrodosli!",
+    badge: "Dobrodošli!",
     title: "Zdravo, jaz sem Byte!",
     description:
       "Tvoj novi AI prijatelj. Skupaj bova raziskovala svet umetne inteligence skozi zabavne igre in izzive.",
@@ -21,9 +21,9 @@ const STEPS = [
   {
     id: "games",
     badge: "Igre",
-    title: "Ucenje skozi igro",
+    title: "Učenje skozi igro",
     description:
-      "Resuj uganke, igraj kvize in odkrivaj kako deluje AI. Vsaka igra te nauci nekaj novega -- in prinese tocke!",
+      "Reši uganke, igraj kvize in odkrivaj, kako deluje AI. Vsaka igra te nauči nekaj novega — in prinese točke!",
     image: "excited",
     icon: Gamepad2,
     color: "from-[hsl(170,48%,53%)] to-[hsl(170,48%,40%)]",
@@ -31,9 +31,9 @@ const STEPS = [
   {
     id: "rewards",
     badge: "Nagrade",
-    title: "Zasluzi si znacke",
+    title: "Zasluži si značke",
     description:
-      "Za vsako dokoncano igro dobis tocke in napredovanje. Zberi vse znacke in postani AI prvak!",
+      "Za vsako dokončano igro dobiš točke in napreduješ. Zberi vse značke in postani AI prvak!",
     image: "celebrating",
     icon: Trophy,
     color: "from-[hsl(14,100%,65%)] to-[hsl(14,100%,55%)]",
@@ -77,7 +77,7 @@ export default function WelcomePage() {
         onClick={handleSkip}
         className="absolute top-6 right-6 text-sm text-[hsl(268,8%,50%)] hover:text-[hsl(252,20%,20%)] transition-colors z-10"
       >
-        Preskoci
+        Preskoči
       </button>
 
       {/* Main card */}
@@ -158,7 +158,7 @@ export default function WelcomePage() {
                   onClick={handleSkip}
                   className="text-sm text-[hsl(268,8%,50%)] hover:text-[hsl(252,20%,20%)] transition-colors"
                 >
-                  Preskok na nadzorno plosco
+                  Preskok na nadzorno ploščo
                 </button>
               )}
             </div>
@@ -168,9 +168,9 @@ export default function WelcomePage() {
         {/* Bottom encouragement */}
         <p className="text-center text-sm text-[hsl(268,8%,50%)] mt-6 flex items-center justify-center gap-1.5">
           <Brain className="w-4 h-4" />
-          {currentStep === 0 && "Pripravljeni na pustolovscino?"}
-          {currentStep === 1 && "8 razlicnih iger te caka!"}
-          {currentStep === 2 && "Zberi vse znacke in postani prvak!"}
+          {currentStep === 0 && "Pripravljeni na pustolovščino?"}
+          {currentStep === 1 && "8 različnih iger te čaka!"}
+          {currentStep === 2 && "Zberi vse značke in postani prvak!"}
         </p>
       </div>
     </div>

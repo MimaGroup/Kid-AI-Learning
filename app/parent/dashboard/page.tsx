@@ -10,16 +10,19 @@ import { ChildProgressCard } from "../../../components/child-progress-card"
 import { useState } from "react"
 import type { Child } from "../../../types/child"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs"
+import { useActiveChild } from "../../../hooks/use-active-child"
 
 const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #0f0f23 0%, #070710 100%)" }
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
   const { children, loading: childrenLoading, createChild, deleteChild } = useChildren()
+  const { activeChildId, clearActiveChild } = useActiveChild()
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
 
   const handleSignOut = async () => {
+    clearActiveChild()
     await logout()
     router.push("/auth/login")
   }
@@ -30,6 +33,7 @@ export default function ParentDashboard() {
 
   const handleDeleteChild = async (id: string) => {
     await deleteChild(id)
+    if (id === activeChildId) clearActiveChild()
   }
 
   const handleEditChild = (child: Child) => {

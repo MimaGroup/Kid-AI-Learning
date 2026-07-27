@@ -254,7 +254,7 @@ export const emailTemplates = {
       : "Pozdravljeni,"
     
     return {
-      subject: `Potrebujete pomoc? Byte vas caka!`,
+      subject: `Potrebujete pomoč? Byte vas čaka!`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -272,34 +272,34 @@ export const emailTemplates = {
           <body>
             <div class="container">
               <div class="header">
-                <h1>Potrebujete pomoc?</h1>
-                <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Opazili smo, da se niste zaceli z ucenjem</p>
+                <h1>Potrebujete pomoč?</h1>
+                <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">Opazili smo, da se niste začeli z učenjem</p>
               </div>
               <div class="content">
                 <div style="text-align: center; margin-bottom: 20px;">
                   <img src="${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/images/byte-waving.jpg" alt="Byte the Robot" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #E9D5FF;" />
                 </div>
                 <p>${greeting}</p>
-                <p>Veseli smo, da ste se pridruzili KidsLearnAI. Opazili smo, da vas otrok se ni preizkusil nobene aktivnosti — in razumemo, da je zacetek vcasih najtezji korak.</p>
-                
-                <p>Byte je pripravljen in caka. Tukaj je, kako zaceti v 2 minutah:</p>
-                
+                <p>Veseli smo, da ste se pridružili KidsLearnAI. Opazili smo, da vaš otrok še ni preizkusil nobene aktivnosti — in razumemo, da je začetek včasih najtežji korak.</p>
+
+                <p>Byte je pripravljen in čaka. Tukaj je, kako začeti v 2 minutah:</p>
+
                 <ol>
                   <li>Prijavite se na <a href="https://www.kids-learning-ai.com" style="color: #534AB7;">kids-learning-ai.com</a></li>
-                  <li>Odprite AI umetniski studio</li>
-                  <li>Zacnite s prvo lekcijo — traja samo 15 minut</li>
+                  <li>Odprite AI umetniški studio</li>
+                  <li>Začnite s prvo lekcijo — traja samo 15 minut</li>
                 </ol>
-                
+
                 <p style="text-align: center;">
-                  <a href="https://www.kids-learning-ai.com/courses" class="button">Zacni z Byte-om zdaj</a>
+                  <a href="https://www.kids-learning-ai.com/courses" class="button">Začni z Byte-om zdaj</a>
                 </p>
-                
-                <p>Imate vprasanja? Nam pisite na <a href="mailto:hello@kids-learning-ai.com" style="color: #534AB7;">hello@kids-learning-ai.com</a></p>
-                
+
+                <p>Imate vprašanja? Nam pišite na <a href="mailto:hello@kids-learning-ai.com" style="color: #534AB7;">hello@kids-learning-ai.com</a></p>
+
                 <p>Lep pozdrav,<br>Byte in ekipa KidsLearnAI</p>
               </div>
               <div class="footer">
-                <p>KidsLearnAI | Ucenje z AI za otroke</p>
+                <p>KidsLearnAI | Učenje z AI za otroke</p>
               </div>
             </div>
           </body>

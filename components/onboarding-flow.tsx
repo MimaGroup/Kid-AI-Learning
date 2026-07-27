@@ -23,41 +23,41 @@ interface OnboardingStep {
 
 const PARENT_ONBOARDING_STEPS: OnboardingStep[] = [
   {
-    title: "Dobrodosli v AI Kids Learning!",
+    title: "Dobrodošli v AI Kids Learning!",
     description:
-      "Veseli smo, da ste tu! Byte, nas prijazen robotek, bo vasega otroka vodil skozi zabavno ucenje o umetni inteligenci.",
+      "Veseli smo, da ste tu! Byte, naš prijazen robotek, bo vašega otroka vodil skozi zabavno učenje o umetni inteligenci.",
     byteImage: BYTE_CHARACTER.images.waving,
-    byteSays: "Zdravo! Jaz sem Byte in komaj cakam, da zaenemo!",
+    byteSays: "Zdravo! Jaz sem Byte in komaj čakam, da začnemo!",
   },
   {
     title: "Ustvarite profil otroka",
-    description: "Dodajte profil vasega otroka, da lahko prilagodimo ucno izkusnjo njegovi starosti in znanju.",
+    description: "Dodajte profil vašega otroka, da lahko prilagodimo učno izkušnjo njegovi starosti in znanju.",
     byteImage: BYTE_CHARACTER.images.teaching,
-    byteSays: "Ko bom vedel vec o tvojem otroku, mu bom lahko se bolje pomagal!",
+    byteSays: "Ko bom vedel več o tvojem otroku, mu bom lahko še bolje pomagal!",
     action: {
       label: "Dodaj profil otroka",
       href: "/parent/dashboard",
     },
   },
   {
-    title: "Razisite aktivnosti",
+    title: "Razišite dejavnosti",
     description:
-      "Ponujamo kvize, igre, zgodbe in se vec! Vsaka aktivnost je zasnovana tako, da je ucenje zabavno in ucinkovito.",
+      "Ponujamo kvize, igre, zgodbe in še več! Vsaka dejavnost je zasnovana tako, da je učenje zabavno in učinkovito.",
     byteImage: BYTE_CHARACTER.images.hero,
-    byteSays: "Imam toliko iger za pokazat! Katero bova najprej poskusila?",
+    byteSays: "Imam toliko iger za pokazati! Katero bova poskusila najprej?",
   },
   {
     title: "Spremljajte napredek",
-    description: "Spremljajte ucno pot vasega otroka s podrobnimi porocili, dosezki in vpogledi.",
+    description: "Spremljajte učno pot vašega otroka s podrobnimi poročili, dosežki in vpogledi.",
     byteImage: BYTE_CHARACTER.images.celebrating,
     byteSays: "Skupaj bomo praznovali vsak uspeh!",
   },
   {
-    title: "Odklenite vse moznosti",
+    title: "Odklenite vse možnosti",
     description:
-      "S Premium nacrtom dobite neomejen dostop do vseh aktivnosti, naprednih funkcij in prilagojenih ucnih poti.",
+      "S Premium naročnino dobite neomejen dostop do vseh dejavnosti, naprednih funkcij in prilagojenih učnih poti.",
     byteImage: BYTE_CHARACTER.images.thinking,
-    byteSays: "S Premium paketom ti lahko pokazem se vec neverjetnih stvari!",
+    byteSays: "S Premium paketom ti lahko pokažem še več neverjetnih stvari!",
     action: {
       label: "Poglej pakete",
       href: "/pricing",
@@ -171,7 +171,7 @@ export function OnboardingFlow({
         <Card className="max-w-2xl w-full animate-in zoom-in-95 bg-white">
           <CardHeader>
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-2xl">Getting Started</CardTitle>
+              <CardTitle className="text-2xl">Prvi koraki</CardTitle>
               <Button variant="ghost" size="icon" onClick={handleSkip}>
                 <X className="h-5 w-5" />
               </Button>
@@ -191,7 +191,7 @@ export function OnboardingFlow({
               {step.byteSays && (
                 <div className="inline-block bg-purple-50 border border-purple-200 rounded-2xl px-5 py-3 mb-4 max-w-sm">
                   <p className="text-sm text-purple-800 italic">{`"${step.byteSays}"`}</p>
-                  <p className="text-xs text-purple-500 font-semibold mt-1">- Byte</p>
+                  <p className="text-xs text-purple-500 font-semibold mt-1">— Byte</p>
                 </div>
               )}
               <h3 className="text-2xl font-bold mb-3 text-foreground">{step.title}</h3>
@@ -213,24 +213,24 @@ export function OnboardingFlow({
 
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="text-sm text-gray-500">
-                Step {currentStep + 1} of {steps.length}
+                Korak {currentStep + 1} od {steps.length}
               </div>
               <div className="flex gap-2">
                 {currentStep > 0 && (
                   <Button variant="outline" onClick={handlePrevious}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Previous
+                    Nazaj
                   </Button>
                 )}
                 <Button onClick={handleNext} className="bg-purple-600 hover:bg-purple-700">
                   {currentStep < steps.length - 1 ? (
                     <>
-                      Next
+                      Naprej
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   ) : (
                     <>
-                      Get Started
+                      Začnimo
                       <Check className="ml-2 h-4 w-4" />
                     </>
                   )}

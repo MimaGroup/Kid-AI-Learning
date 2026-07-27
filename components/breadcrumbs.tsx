@@ -16,20 +16,20 @@ export function Breadcrumbs() {
   if (segments.length <= 2) return null
 
   const breadcrumbMap: Record<string, string> = {
-    kids: "Kids Learning",
-    parent: "Parent",
-    dashboard: "Dashboard",
-    games: "Games",
-    activities: "Activities",
-    library: "Library",
-    settings: "Settings",
-    "ai-detective": "AI Detective",
-    "pattern-training": "Pattern Training",
-    "ai-quiz": "AI Quiz",
-    "math-adventure": "Math Adventure",
-    "word-builder": "Word Builder",
-    "memory-match": "Memory Match",
-    "ai-friend": "AI Friend",
+    kids: "Učenje",
+    parent: "Starš",
+    dashboard: "Nadzorna plošča",
+    games: "Igre",
+    activities: "Dejavnosti",
+    library: "Knjižnica",
+    settings: "Nastavitve",
+    "ai-detective": "AI Detektiv",
+    "pattern-training": "Usposabljanje vzorcev",
+    "ai-quiz": "AI Kviz",
+    "math-adventure": "Matematična pustolovščina",
+    "word-builder": "Graditelj besed",
+    "memory-match": "Spomin",
+    "ai-friend": "AI Prijatelj",
   }
 
   const getBreadcrumbLabel = (segment: string) => {

@@ -49,7 +49,7 @@ const FAQS = [
   },
   {
     q: "Kako omejim dostop do določenih vsebin?",
-    a: "Vsa vsebina na platformi je predhodno pregledana in primerna za starost 8–14 let. Ob ustvarjanju profila starš nastavi stopnjo znanja, ki prilagodi prikazane tečaje.",
+    a: "Vsa vsebina na platformi je predhodno pregledana in primerna za starost 5–12 let. Ob ustvarjanju profila starš nastavi stopnjo znanja, ki prilagodi prikazane tečaje.",
   },
   {
     q: "Ali se Byteovi pogovori shranjujejo?",
@@ -74,7 +74,7 @@ export default function ChildSafetyPage() {
           </div>
           <h1 className="text-4xl font-extrabold text-white mb-4">Varstvo otrok</h1>
           <p className="text-white/55 text-lg leading-relaxed max-w-xl mx-auto">
-            Varnost otrok je naša absolutna prednostna naloga. Tukaj pojasnjujemo, kako jo zagotavljamo v praksi.
+            Platforma zasnovana z varnostjo otrok v ospredju. Tukaj pojasnjujemo, kako to zagotavljamo v praksi.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function ChildSafetyPage() {
         <div className="rounded-2xl px-6 py-5 mb-12 text-center"
           style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)" }}>
           <p className="text-green-400 font-bold text-sm">
-            ✓ Kids Learning AI je zasnovan po načelu "privacy by design" za otroke — varnost ni dodatna funkcija, je temelj platforme.
+            ✓ Kids Learning AI je zasnovan po načelu "privacy by design" za otroke — varnost otrok ni dodatna funkcija, temveč temelj, na katerem je zgrajena celotna platforma.
           </p>
         </div>
 

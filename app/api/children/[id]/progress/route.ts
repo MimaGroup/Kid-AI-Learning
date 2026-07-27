@@ -17,10 +17,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Verify the child belongs to this parent
+    // Verify the child profile belongs to this parent
     const { data: child } = await supabase
       .from("children")
-      .select("child_id")
+      .select("id")
       .eq("id", id)
       .eq("parent_id", user.id)
       .single()
@@ -29,11 +29,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Child not found" }, { status: 404 })
     }
 
-    // Get progress data for this child
+    // Activity is tagged with child_profile_id (the "children" row id) — children
+    // don't have their own auth identity, so this is not user_id.
     const { data: progress, error: progressError } = await supabase
       .from("user_progress")
       .select("*")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
+      .eq("child_profile_id", child.id)
       .order("completed_at", { ascending: false })
       .limit(50)
 
@@ -42,11 +44,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: progressError.message }, { status: 500 })
     }
 
-    // Get achievements for this child
     const { data: achievements, error: achievementsError } = await supabase
       .from("achievements")
       .select("*")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
+      .eq("child_profile_id", child.id)
       .order("earned_at", { ascending: false })
 
     if (achievementsError) {
@@ -54,16 +56,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: achievementsError.message }, { status: 500 })
     }
 
+    // Points/level/streak/badges are tracked on the shared family (parent) profile,
+    // not per child — there is only one such record per account.
     const { data: profile } = await supabase
       .from("profiles")
       .select("points, level, experience, streak_days, last_activity_date")
-      .eq("id", child.child_id)
+      .eq("id", user.id)
       .maybeSingle()
 
     const { data: earnedBadges } = await supabase
       .from("user_badges")
       .select("*, badges(*)")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
       .order("earned_at", { ascending: false })
 
     const levelThresholds = [0, 100, 250, 500, 1000, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 24000, 31000, 40000]

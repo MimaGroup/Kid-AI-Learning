@@ -9,7 +9,7 @@ const outcomes = [
     description: "Kaj je AI, kako deluje in kje ga srečamo v vsakdanjem življenju.",
     color: "#7C3AED",
     bg: "#F3E8FF",
-    age: "5-12 let",
+    age: "5–12 let",
   },
   {
     icon: Lightbulb,
@@ -17,7 +17,7 @@ const outcomes = [
     description: "Otrok se nauči postavljati vprašanja, analizirati in reševati probleme.",
     color: "#F59E0B",
     bg: "#FEF3C7",
-    age: "6-12 let",
+    age: "5–12 let",
   },
   {
     icon: Puzzle,
@@ -25,7 +25,7 @@ const outcomes = [
     description: "Razumevanje vzorcev je temelj programiranja in strojnega učenja.",
     color: "#6CD4C3",
     bg: "#E0F2FE",
-    age: "5-10 let",
+    age: "5–12 let",
   },
   {
     icon: Code2,
@@ -33,7 +33,7 @@ const outcomes = [
     description: "Skozi igre otrok spozna logiko, ki stoji za vsako aplikacijo.",
     color: "#10B981",
     bg: "#ECFDF5",
-    age: "7-12 let",
+    age: "5–12 let",
   },
   {
     icon: Eye,
@@ -41,7 +41,7 @@ const outcomes = [
     description: "Razumevanje kako varno in odgovorno uporabljati tehnologijo.",
     color: "#0EA5E9",
     bg: "#E0F2FE",
-    age: "5-12 let",
+    age: "5–12 let",
   },
   {
     icon: Users,
@@ -49,7 +49,7 @@ const outcomes = [
     description: "AI izzivi spodbujajo ustvarjalno razmišljanje in timsko delo.",
     color: "#EF4444",
     bg: "#FEF2F2",
-    age: "6-12 let",
+    age: "5–12 let",
   },
 ]
 

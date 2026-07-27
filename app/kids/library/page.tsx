@@ -18,115 +18,115 @@ export default function ContentLibrary() {
   const videos = [
     {
       id: 1,
-      title: "What is Artificial Intelligence?",
-      description: "Learn the basics of AI in this fun animated video!",
+      title: "Kaj je umetna inteligenca?",
+      description: "Spoznaj osnove AI v tem zabavnem animiranem videu!",
       thumbnail: "/ai-robot-learning.jpg",
       duration: "5:30",
       category: "ai-basics",
       url: "https://www.youtube.com/embed/kWmX3pd1f10",
-      ageRange: "6-10",
+      ageRange: "5–12",
     },
     {
       id: 2,
-      title: "How Do Computers Think?",
-      description: "Discover how computers process information",
+      title: "Kako razmišljajo računalniki?",
+      description: "Odkrij, kako računalniki obdelujejo informacije",
       thumbnail: "/computer-brain-thinking.jpg",
       duration: "4:15",
       category: "ai-basics",
       url: "https://www.youtube.com/embed/AkFi90lZmXA",
-      ageRange: "8-12",
+      ageRange: "5–12",
     },
     {
       id: 3,
-      title: "Machine Learning for Kids",
-      description: "Understanding how machines learn from examples",
+      title: "Strojno učenje za otroke",
+      description: "Razumevanje, kako se stroji učijo iz primerov",
       thumbnail: "/machine-learning-kids.jpg",
       duration: "6:45",
       category: "coding",
       url: "https://www.youtube.com/embed/f_uwKZIAeM0",
-      ageRange: "9-12",
+      ageRange: "5–12",
     },
     {
       id: 4,
-      title: "Robots and AI",
-      description: "How robots use AI to help people",
+      title: "Roboti in umetna inteligenca",
+      description: "Kako roboti z AI pomagajo ljudem",
       thumbnail: "/friendly-robot-helping.jpg",
       duration: "5:00",
       category: "robotics",
       url: "https://www.youtube.com/embed/7Pq-S557XQU",
-      ageRange: "6-10",
+      ageRange: "5–12",
     },
   ]
 
   const stories = [
     {
       id: 1,
-      title: "The Friendly AI Robot",
-      description: "A story about a robot who learns to be a good friend",
+      title: "Prijazni AI robot",
+      description: "Zgodba o robotu, ki se uči biti dober prijatelj",
       icon: "🤖",
       readTime: "8 min",
       category: "friendship",
-      content: `Once upon a time, in a bright and colorful town, there lived a small robot named Chip. Chip was different from other robots - he wanted to learn how to be a good friend...`,
+      content: `Nekoč, v svetlem in barvitem mestecu, je živel majhen robot po imenu Čip. Čip je bil drugačen od drugih robotov — želel se je naučiti, kako biti dober prijatelj ...`,
     },
     {
       id: 2,
-      title: "The Smart Home Helper",
-      description: "How AI helps make our homes better",
+      title: "Pomočnik pametnega doma",
+      description: "Kako AI pomaga izboljšati naše domove",
       icon: "🏠",
       readTime: "6 min",
       category: "technology",
-      content: `In the Johnson family's house, there was a special helper named Alexa. She wasn't a person, but she could talk and help with many things...`,
+      content: `V hiši družine Novak je živel poseben pomočnik po imenu Nia. Ni bila oseba, a je znala govoriti in pomagati pri marsičem ...`,
     },
     {
       id: 3,
-      title: "The Pattern Detective",
-      description: "A mystery solved by recognizing patterns",
+      title: "Detektiv vzorcev",
+      description: "Skrivnost, razrešena s prepoznavanjem vzorcev",
       icon: "🔍",
       readTime: "10 min",
       category: "problem-solving",
-      content: `Detective Maya had a special skill - she could spot patterns that others missed. One day, she got a mysterious case...`,
+      content: `Detektivka Maja je imela posebno spretnost — opazila je vzorce, ki jih drugi niso videli. Nekega dne je dobila skrivnosten primer ...`,
     },
   ]
 
   const resources = [
     {
       id: 1,
-      title: "AI Glossary for Kids",
-      description: "Simple explanations of AI terms",
+      title: "AI slovarček za otroke",
+      description: "Preprosta razlaga izrazov o umetni inteligenci",
       icon: "📚",
       type: "glossary",
       items: [
-        { term: "Algorithm", definition: "A set of steps to solve a problem, like a recipe" },
-        { term: "Machine Learning", definition: "When computers learn from examples" },
-        { term: "Neural Network", definition: "A computer system inspired by the human brain" },
-        { term: "Data", definition: "Information that computers use to learn" },
+        { term: "Algoritem", definition: "Zaporedje korakov za rešitev problema, kot recept" },
+        { term: "Strojno učenje", definition: "Ko se računalniki učijo iz primerov" },
+        { term: "Nevronska mreža", definition: "Računalniški sistem, navdihnjen po človeških možganih" },
+        { term: "Podatki", definition: "Informacije, iz katerih se učijo računalniki" },
       ],
     },
     {
       id: 2,
-      title: "Fun AI Facts",
-      description: "Amazing facts about artificial intelligence",
+      title: "Zabavna dejstva o AI",
+      description: "Osupljiva dejstva o umetni inteligenci",
       icon: "💡",
       type: "facts",
       items: [
-        "AI can recognize faces in photos faster than humans!",
-        "The first AI program was created in 1956",
-        "AI helps doctors find diseases earlier",
-        "Self-driving cars use AI to stay safe on roads",
-        "AI can create art, music, and stories!",
+        "AI lahko prepozna obraze na fotografijah hitreje kot ljudje!",
+        "Prvi AI program je nastal leta 1956",
+        "AI zdravnikom pomaga odkriti bolezni prej",
+        "Samovozeči avtomobili uporabljajo AI za varnost na cesti",
+        "AI lahko ustvarja umetnost, glasbo in zgodbe!",
       ],
     },
     {
       id: 3,
-      title: "Activity Worksheets",
-      description: "Printable activities for offline learning",
+      title: "Delovni listi za dejavnosti",
+      description: "Tiskljive dejavnosti za učenje brez zaslona",
       icon: "📝",
       type: "worksheets",
       items: [
-        { name: "Pattern Recognition Puzzle", difficulty: "Easy" },
-        { name: "Build Your Own Algorithm", difficulty: "Medium" },
-        { name: "AI Word Search", difficulty: "Easy" },
-        { name: "Robot Design Challenge", difficulty: "Hard" },
+        { name: "Uganka prepoznavanja vzorcev", difficulty: "Lahko" },
+        { name: "Sestavi svoj algoritem", difficulty: "Srednje" },
+        { name: "Iskanje AI besed", difficulty: "Lahko" },
+        { name: "Izziv oblikovanja robota", difficulty: "Težko" },
       ],
     },
   ]
@@ -144,6 +144,12 @@ export default function ContentLibrary() {
   const handleViewWorksheet = (name: string) => {
     const worksheetKey = name.toLowerCase().replace(/ /g, "-")
     window.location.href = `/worksheets/${worksheetKey}`
+  }
+
+  const difficultyLabels: Record<string, string> = {
+    Lahko: "bg-green-100 text-green-800",
+    Srednje: "bg-yellow-100 text-yellow-800",
+    Težko: "bg-red-100 text-red-800",
   }
 
   return (
@@ -164,8 +170,8 @@ export default function ContentLibrary() {
           <div className="flex items-center space-x-4">
             <div className="text-5xl">📚</div>
             <div>
-              <h2 className="text-3xl font-bold mb-2">Content Library</h2>
-              <p className="text-indigo-100 text-lg">Videos, stories, and resources to help you learn about AI!</p>
+              <h2 className="text-3xl font-bold mb-2">Knjižnica vsebin</h2>
+              <p className="text-indigo-100 text-lg">Videi, zgodbe in gradiva, ki ti pomagajo spoznati AI!</p>
             </div>
           </div>
         </div>
@@ -173,13 +179,13 @@ export default function ContentLibrary() {
         <Tabs defaultValue="videos" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 max-w-2xl mx-auto">
             <TabsTrigger value="videos" className="text-lg">
-              🎥 Videos
+              🎥 Videi
             </TabsTrigger>
             <TabsTrigger value="stories" className="text-lg">
-              📖 Stories
+              📖 Zgodbe
             </TabsTrigger>
             <TabsTrigger value="resources" className="text-lg">
-              📚 Resources
+              📚 Gradiva
             </TabsTrigger>
           </TabsList>
 
@@ -189,25 +195,25 @@ export default function ContentLibrary() {
                 variant={selectedCategory === "all" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("all")}
               >
-                All Videos
+                Vsi videi
               </Button>
               <Button
                 variant={selectedCategory === "ai-basics" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("ai-basics")}
               >
-                AI Basics
+                Osnove AI
               </Button>
               <Button
                 variant={selectedCategory === "coding" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("coding")}
               >
-                Coding
+                Programiranje
               </Button>
               <Button
                 variant={selectedCategory === "robotics" ? "default" : "outline"}
                 onClick={() => setSelectedCategory("robotics")}
               >
-                Robotics
+                Robotika
               </Button>
             </div>
 
@@ -236,10 +242,10 @@ export default function ContentLibrary() {
                       <p className="text-gray-600 text-sm mb-3">{video.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                          Ages {video.ageRange}
+                          Starost {video.ageRange}
                         </span>
                         <Button size="sm" onClick={() => handleWatchVideo(video)}>
-                          Watch Now
+                          Poglej zdaj
                         </Button>
                       </div>
                     </div>
@@ -258,7 +264,7 @@ export default function ContentLibrary() {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">📖 {story.readTime}</span>
                     <Link href={`/kids/library/story/${story.id}`}>
-                      <Button size="sm">Read Story</Button>
+                      <Button size="sm">Preberi zgodbo</Button>
                     </Link>
                   </div>
                 </Card>
@@ -316,17 +322,13 @@ export default function ContentLibrary() {
                             <div className="flex items-center space-x-2">
                               <span
                                 className={`text-xs px-2 py-1 rounded ${
-                                  worksheetItem.difficulty === "Easy"
-                                    ? "bg-green-100 text-green-800"
-                                    : worksheetItem.difficulty === "Medium"
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-red-100 text-red-800"
+                                  difficultyLabels[worksheetItem.difficulty] ?? "bg-gray-100 text-gray-800"
                                 }`}
                               >
                                 {worksheetItem.difficulty}
                               </span>
                               <Button size="sm" onClick={() => handleViewWorksheet(worksheetItem.name)}>
-                                View
+                                Poglej
                               </Button>
                             </div>
                           </div>
@@ -358,7 +360,7 @@ export default function ContentLibrary() {
             )}
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleCloseVideo}>Close</Button>
+            <Button onClick={handleCloseVideo}>Zapri</Button>
           </div>
         </DialogContent>
       </Dialog>

@@ -206,7 +206,7 @@ export default function MathAdventurePage() {
           <div key={i} className="absolute rounded-full bg-white pointer-events-none"
             style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.1 + (i % 4) * 0.07 }} />
         ))}
-        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
+        <AchievementPopup badges={newAchievements.map((a: any) => a.achievement_type ?? a.id)} onClose={() => setNewAchievements([])} />
         <div className="relative z-10 max-w-md w-full text-center rounded-3xl p-10"
           style={{ background: "rgba(8,8,30,0.9)", border: "1px solid rgba(34,197,94,0.35)", boxShadow: "0 0 40px rgba(34,197,94,0.1)" }}>
           <div className="text-6xl mb-4">

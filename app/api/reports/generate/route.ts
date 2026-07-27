@@ -24,10 +24,10 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Verify the child belongs to this parent
+    // Verify the child profile belongs to this parent
     const { data: child } = await supabase
       .from("children")
-      .select("child_id, name")
+      .select("id, name")
       .eq("id", childId)
       .eq("parent_id", user.id)
       .single()
@@ -36,29 +36,32 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Child not found" }, { status: 404 })
     }
 
-    // Get all progress data
+    // Activity is tagged with child_profile_id — children don't have their own auth identity.
     const { data: progress } = await supabase
       .from("user_progress")
       .select("*")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
+      .eq("child_profile_id", child.id)
       .order("completed_at", { ascending: false })
 
     const { data: achievements } = await supabase
       .from("achievements")
       .select("*")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
+      .eq("child_profile_id", child.id)
       .order("earned_at", { ascending: false })
 
+    // Points/level/streak/badges are on the shared family (parent) profile.
     const { data: profile } = await supabase
       .from("profiles")
       .select("points, level, experience, streak_days")
-      .eq("id", child.child_id)
+      .eq("id", user.id)
       .maybeSingle()
 
     const { data: earnedBadges } = await supabase
       .from("user_badges")
       .select("*, badges(*)")
-      .eq("user_id", child.child_id)
+      .eq("user_id", user.id)
 
     const stats = {
       totalActivities: progress?.length || 0,

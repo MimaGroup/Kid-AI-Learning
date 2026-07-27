@@ -6,7 +6,7 @@ import { BytePreview } from "../../../components/byte-preview"
 
 export const metadata = {
   title: "AI učenje za otroke | Kids Learning AI — Začni brezplačno",
-  description: "Interaktivne AI igre za otroke med 5 in 12 letom. 14-dnevno brezplačno preskusno obdobje. Starševska nadzorna plošča. Samo €7,90/mesec.",
+  description: "Interaktivne AI igre za otroke, stare 5–12 let. 7 dni brezplačno preskusno obdobje. Starševska nadzorna plošča. Samo €7,90/mesec.",
 }
 
 const WHAT_CHILD_DOES = [
@@ -20,7 +20,7 @@ const WHAT_CHILD_DOES = [
   {
     icon: "🧠",
     activity: "Usposabljanje vzorcev",
-    age: "7–12 let",
+    age: "5–12 let",
     desc: "Otrok nauči računalnik prepoznati zaporedje — tako kot pravi podatkovni znanstvenik. Izbira odgovore, model pa se uči.",
     learns: "Osnove strojnega učenja skozi igro",
   },
@@ -52,7 +52,7 @@ const ACTIVITIES = [
 const FAQ = [
   {
     q: "Ali moram vnesti podatke o plačilu za preskus?",
-    a: "Ne. 14-dnevno preskusno obdobje je popolnoma brezplačno — kreditna kartica ni potrebna.",
+    a: "Ne. 7 dni brezplačno preskusno obdobje ne zahteva kreditne kartice.",
   },
   {
     q: "Kako vem, kaj otrok počne na platformi?",
@@ -64,7 +64,7 @@ const FAQ = [
   },
   {
     q: "Za katero starost je platforma primerna?",
-    a: "Za otroke med 5 in 12 letom. Težavnost se samodejno prilagodi glede na starost in stopnjo znanja.",
+    a: "Za otroke, stare 5–12 let. Težavnost se samodejno prilagodi glede na starost in stopnjo znanja.",
   },
   {
     q: "Koliko stane po preskusu?",
@@ -100,7 +100,7 @@ export default async function AdLandingPage() {
       <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-block bg-green-100 text-green-700 text-sm font-semibold px-4 py-1 rounded-full mb-6">
-            14 dni brezplačno · Kreditna kartica ni potrebna
+            7 dni brezplačno · Kreditna kartica ni potrebna
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
@@ -144,7 +144,7 @@ export default async function AdLandingPage() {
       <section className="bg-gray-950 border-b border-white/5 py-8 px-6">
         <div className="max-w-4xl mx-auto">
           <p className="text-center text-white/30 text-xs font-semibold uppercase tracking-widest mb-6">
-            Pilotna faza · Slovenija 2025
+            Pilotna faza · Slovenija
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div>
@@ -315,7 +315,7 @@ export default async function AdLandingPage() {
             <p className="text-purple-300 text-sm mb-8">Vse cene v EUR · DDV po potrebi</p>
             <ul className="text-left space-y-3 mb-8 text-sm">
               {[
-                "14 dni brezplačno — brez kartice",
+                "7 dni brezplačno — brez kartice",
                 "Neomejene dejavnosti",
                 "Starševska nadzorna plošča",
                 "Nova vsebina vsak mesec",
@@ -356,7 +356,7 @@ export default async function AdLandingPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-purple-600 to-purple-800 text-center">
         <div className="max-w-xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-4">Pripravljeni začeti?</h2>
-          <p className="text-purple-200 mb-8">Pridružite se in začnite 14-dnevno brezplačno preskusno obdobje danes.</p>
+          <p className="text-purple-200 mb-8">Pridružite se in začnite 7 dni brezplačno preskusno obdobje danes.</p>
           <Link
             href="/auth/sign-up"
             className="inline-block bg-white text-purple-700 px-10 py-5 rounded-2xl text-xl font-bold hover:bg-purple-50 transition-colors shadow-xl"

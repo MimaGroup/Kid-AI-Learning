@@ -41,7 +41,7 @@ export default function SubscriptionManagementPage() {
   const handleCancelSubscription = async () => {
     if (
       !confirm(
-        "Are you sure you want to cancel your subscription? You'll have access until the end of your billing period.",
+        "Ali ste prepričani, da želite preklicati naročnino? Dostop boste imeli do konca trenutnega obračunskega obdobja.",
       )
     ) {
       return
@@ -56,14 +56,14 @@ export default function SubscriptionManagementPage() {
       const data = await response.json()
 
       if (data.success) {
-        alert("Subscription canceled successfully. You'll have access until the end of your billing period.")
+        alert("Naročnina je bila uspešno preklicana. Dostop boste imeli do konca trenutnega obračunskega obdobja.")
         fetchSubscription()
       } else {
-        alert(data.error || "Failed to cancel subscription")
+        alert(data.error || "Preklic naročnine ni uspel")
       }
     } catch (error) {
       console.error("Cancellation error:", error)
-      alert("Failed to cancel subscription")
+      alert("Preklic naročnine ni uspel")
     } finally {
       setCanceling(false)
     }
@@ -73,7 +73,7 @@ export default function SubscriptionManagementPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center">Loading subscription details...</div>
+          <div className="text-center">Nalaganje podrobnosti naročnine ...</div>
         </div>
       </div>
     )
@@ -87,28 +87,28 @@ export default function SubscriptionManagementPage() {
           <UserHeader />
         </div>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">Subscription Management</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">Upravljanje naročnine</h1>
 
         <Card className="p-8 mb-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Current Plan</h2>
-              <p className="text-gray-600">Manage your subscription and billing</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Trenutni paket</h2>
+              <p className="text-gray-600">Upravljajte svojo naročnino in zaračunavanje</p>
             </div>
             <Badge className={subscription?.status === "active" ? "bg-green-500" : "bg-gray-500"}>
-              {subscription?.status || "Unknown"}
+              {subscription?.status || "Neznano"}
             </Badge>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-between items-center py-3 border-b">
-              <span className="text-gray-700 font-medium">Plan Type:</span>
-              <span className="text-gray-900 font-semibold capitalize">{subscription?.plan_type || "Free"}</span>
+              <span className="text-gray-700 font-medium">Vrsta paketa:</span>
+              <span className="text-gray-900 font-semibold capitalize">{subscription?.plan_type || "Brezplačen"}</span>
             </div>
 
             {subscription?.current_period_end && (
               <div className="flex justify-between items-center py-3 border-b">
-                <span className="text-gray-700 font-medium">Next Billing Date:</span>
+                <span className="text-gray-700 font-medium">Naslednji datum zaračunavanja:</span>
                 <span className="text-gray-900">{new Date(subscription.current_period_end).toLocaleDateString()}</span>
               </div>
             )}
@@ -116,7 +116,7 @@ export default function SubscriptionManagementPage() {
             {subscription?.cancel_at_period_end && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-800 font-medium">
-                  Your subscription will be canceled at the end of the current billing period.
+                  Vaša naročnina bo preklicana ob koncu trenutnega obračunskega obdobja.
                 </p>
               </div>
             )}
@@ -125,7 +125,7 @@ export default function SubscriptionManagementPage() {
           <div className="mt-8 flex gap-4">
             {subscription?.plan_type === "free" ? (
               <Button onClick={() => router.push("/pricing")} className="bg-purple-600 hover:bg-purple-700">
-                Upgrade to Premium
+                Nadgradi na Premium
               </Button>
             ) : (
               <>
@@ -136,11 +136,11 @@ export default function SubscriptionManagementPage() {
                     variant="outline"
                     className="border-red-500 text-red-500 hover:bg-red-50 bg-transparent"
                   >
-                    {canceling ? "Canceling..." : "Cancel Subscription"}
+                    {canceling ? "Preklicevanje ..." : "Prekliči naročnino"}
                   </Button>
                 )}
                 <Button onClick={() => router.push("/pricing")} variant="outline">
-                  Change Plan
+                  Spremeni paket
                 </Button>
               </>
             )}
@@ -148,9 +148,9 @@ export default function SubscriptionManagementPage() {
         </Card>
 
         <Card className="p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Need Help?</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Potrebujete pomoč?</h3>
           <p className="text-gray-600 mb-4">
-            If you have any questions about your subscription or billing, please contact our support team.
+            Če imate vprašanja o svoji naročnini ali zaračunavanju, kontaktirajte našo ekipo za podporo.
           </p>
           <ContactSupportDialog />
         </Card>

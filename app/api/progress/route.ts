@@ -30,11 +30,24 @@ export async function POST(request: Request) {
   const body = await request.json()
   console.log("[v0] Progress API: Request body:", body)
 
-  const { activity_type, score, total_questions, time_spent, metadata } = body
+  const { activity_type, score, total_questions, time_spent, metadata, child_profile_id } = body
 
   if (!activity_type) {
     console.log("[v0] Progress API: Missing activity_type")
     return NextResponse.json({ error: "Missing activity_type" }, { status: 400 })
+  }
+
+  // If a child_profile_id was supplied, verify it actually belongs to this parent
+  // before trusting it — otherwise silently drop it rather than fail the request.
+  let verifiedChildProfileId: string | null = null
+  if (child_profile_id) {
+    const { data: childRow } = await supabase
+      .from("children")
+      .select("id")
+      .eq("id", child_profile_id)
+      .eq("parent_id", user.id)
+      .maybeSingle()
+    verifiedChildProfileId = childRow?.id ?? null
   }
 
   // Save progress
@@ -47,6 +60,7 @@ export async function POST(request: Request) {
       total_questions: total_questions || 0,
       time_spent: time_spent || 0,
       metadata: metadata || {},
+      child_profile_id: verifiedChildProfileId,
     })
     .select()
     .single()
@@ -63,7 +77,14 @@ export async function POST(request: Request) {
 
   await checkDailyChallenges(supabase, user.id, activity_type, score, total_questions, time_spent)
 
-  const achievements = await checkAchievements(supabase, user.id, activity_type, score, total_questions)
+  const achievements = await checkAchievements(
+    supabase,
+    user.id,
+    activity_type,
+    score,
+    total_questions,
+    verifiedChildProfileId,
+  )
   console.log("[v0] Progress API: Achievements earned:", achievements)
 
   return NextResponse.json({
@@ -105,6 +126,7 @@ async function checkAchievements(
   activityType: string,
   score: number,
   totalQuestions: number,
+  childProfileId: string | null = null,
 ) {
   const newAchievements = []
 
@@ -132,6 +154,7 @@ async function checkAchievements(
           user_id: userId,
           achievement_type: "perfect_score",
           achievement_name: "Perfect Score!",
+          child_profile_id: childProfileId,
           metadata: {
             activity_type: activityType,
             description: `Got a perfect score in ${activityType}`,
@@ -162,6 +185,7 @@ async function checkAchievements(
             user_id: userId,
             achievement_type: `completed_${milestone}`,
             achievement_name: `${milestone} Completions!`,
+            child_profile_id: childProfileId,
             metadata: {
               activity_type: activityType,
               description: `Completed ${activityType} ${milestone} times`,

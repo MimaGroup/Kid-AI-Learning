@@ -318,7 +318,7 @@ export function CourseCertificate({ slug }: CourseCertificateProps) {
             <span className="font-heading font-bold text-lg">{"Certifikat o zaključku"}</span>
           </div>
           <div className="flex items-center gap-2">
-            {typeof navigator !== "undefined" && navigator.share && (
+            {typeof navigator !== "undefined" && "share" in navigator && (
               <Button
                 onClick={handleShare}
                 variant="outline"

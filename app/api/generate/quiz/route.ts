@@ -13,49 +13,49 @@ const groq = createGroq({
 
 const FALLBACK_QUESTIONS = [
   {
-    question: "What does AI stand for?",
-    options: ["Artificial Intelligence", "Automatic Information", "Advanced Internet", "Amazing Ideas"],
+    question: "Za kaj stoji kratica AI?",
+    options: ["Umetna inteligenca", "Samodejne informacije", "Napredni internet", "Neverjetne ideje"],
     correct: 0,
     explanation:
-      "AI stands for Artificial Intelligence - computer systems that can perform tasks that typically require human intelligence!",
+      "AI pomeni umetna inteligenca — računalniški sistemi, ki opravljajo naloge, za katere je običajno potrebna človeška inteligenca!",
   },
   {
-    question: "Which of these is an example of AI in everyday life?",
-    options: ["A regular calculator", "Voice assistants like Siri or Alexa", "A paper book", "A bicycle"],
+    question: "Kaj je primer AI v vsakdanjem življenju?",
+    options: ["Navaden kalkulator", "Glasovni pomočniki, kot je Siri", "Papirnata knjiga", "Kolo"],
     correct: 1,
     explanation:
-      "Voice assistants use AI to understand your speech and respond to your questions. They learn from interactions to get better over time!",
+      "Glasovni pomočniki uporabljajo AI, da razumejo tvoj govor in odgovorijo na vprašanja. Z vsako interakcijo se učijo in postajajo boljši!",
   },
   {
-    question: "What can AI help us do?",
-    options: ["Only play games", "Recognize faces in photos", "Make food taste better", "Change the weather"],
+    question: "Pri čem nam lahko pomaga AI?",
+    options: ["Samo pri igranju iger", "Prepoznavanju obrazov na fotografijah", "Boljšem okusu hrane", "Spreminjanju vremena"],
     correct: 1,
     explanation:
-      "AI is great at recognizing patterns, like identifying faces in photos. This technology is used in cameras and social media apps!",
+      "AI je odličen pri prepoznavanju vzorcev, na primer obrazov na fotografijah. To tehnologijo uporabljajo kamere in aplikacije za družbena omrežja!",
   },
   {
-    question: "How does AI learn?",
+    question: "Kako se AI uči?",
     options: [
-      "By reading books like humans",
-      "By analyzing lots of examples and data",
-      "By watching TV",
-      "It doesn't learn, it knows everything",
+      "Z branjem knjig, kot ljudje",
+      "Z analizo množice primerov in podatkov",
+      "Z gledanjem televizije",
+      "Ne uči se, vse že ve",
     ],
     correct: 1,
     explanation:
-      "AI learns by looking at many examples and finding patterns in data. The more examples it sees, the better it gets at its task!",
+      "AI se uči tako, da si ogleda veliko primerov in v podatkih poišče vzorce. Več primerov kot vidi, boljša postane pri svoji nalogi!",
   },
   {
-    question: "Which job might AI help with in the future?",
+    question: "Pri katerem poklicu bi AI lahko pomagala v prihodnosti?",
     options: [
-      "Helping doctors diagnose diseases",
-      "Eating lunch for you",
-      "Doing your homework (cheating!)",
-      "Making friends for you",
+      "Zdravnikom pri diagnosticiranju bolezni",
+      "Jedla bi tvojo malico namesto tebe",
+      "Delala bi tvojo domačo nalogo (goljufija!)",
+      "Sklepala bi prijateljstva namesto tebe",
     ],
     correct: 0,
     explanation:
-      "AI can help doctors by analyzing medical images and data to spot diseases early. But remember, AI is a tool to help humans, not replace them!",
+      "AI lahko pomaga zdravnikom z analizo medicinskih slik in podatkov, da bolezni odkrijejo zgodaj. A ne pozabi — AI je orodje, ki pomaga ljudem, ne pa njihova zamenjava!",
   },
 ]
 
@@ -136,14 +136,14 @@ export async function POST(request: Request) {
       return NextResponse.json({
         questions: selectedQuestions,
         fallback: true,
-        message: `Too many requests! Please wait ${rateLimitResult.resetIn} seconds before generating new AI questions. Enjoy these pre-made questions in the meantime!`,
+        message: `Preveč zahtev! Počakaj ${rateLimitResult.resetIn} sekund, preden ustvariš nova AI vprašanja. Medtem uživaj v teh vnaprej pripravljenih vprašanjih!`,
       })
     }
 
     try {
       console.log("[v0] Calling Groq API with retry logic...")
 
-      const basePrompt = `Generate ${count} multiple choice quiz questions about ${sanitizedTopic} for kids aged 8-12 at ${difficulty} level.
+      const basePrompt = `Generate ${count} multiple choice quiz questions about ${sanitizedTopic} for kids aged 5-12 at ${difficulty} level.
 
 Format the response as a JSON array with this exact structure:
 [
@@ -156,6 +156,7 @@ Format the response as a JSON array with this exact structure:
 ]
 
 Requirements:
+- Write ALL text (questions, options, explanations) in Slovenian language — this is mandatory
 - Questions should be age-appropriate and engaging
 - Use simple, clear language
 - Include fun facts in explanations
@@ -192,7 +193,7 @@ Return ONLY the JSON array, no additional text.`
           return NextResponse.json({
             questions: selectedQuestions,
             fallback: true,
-            message: "Using pre-made questions to ensure age-appropriate content!",
+            message: "Uporabljamo vnaprej pripravljena vprašanja, da zagotovimo starosti primerno vsebino!",
           })
         }
       }
@@ -207,7 +208,7 @@ Return ONLY the JSON array, no additional text.`
       return NextResponse.json({
         questions: selectedQuestions,
         fallback: true,
-        message: "Using pre-made questions due to high demand. Try again in a minute for AI-generated questions!",
+        message: "Zaradi velikega povpraševanja uporabljamo vnaprej pripravljena vprašanja. Poskusi znova čez minuto za vprašanja, ustvarjena z AI!",
       })
     }
   } catch (error) {

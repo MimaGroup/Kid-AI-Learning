@@ -59,16 +59,6 @@ export async function POST(request: Request) {
       .eq("invitee_email", newUserEmail?.toLowerCase())
       .eq("status", "pending")
 
-    // Create rewards for both users
-    // Reward for new user: Extended trial (14 days instead of 7)
-    await supabase.from("referral_rewards").insert({
-      user_id: newUserId,
-      reward_type: "extended_trial",
-      reward_value: "14_days",
-      source: "referral_received",
-      status: "pending",
-    })
-
     // Reward for referrer: Free month when new user subscribes
     await supabase.from("referral_rewards").insert({
       user_id: referrer.id,
@@ -80,7 +70,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Referral code applied! You get an extended 14-day trial.",
+      message: "Referral code applied!",
     })
   } catch (error) {
     console.error("Referral validation error:", error)

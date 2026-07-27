@@ -25,38 +25,38 @@ const STARS = [
 
 const FALLBACK_MYSTERIES: Case[] = [
   {
-    title: "The Missing Robot",
-    description: "A classroom robot has gone missing! Can you find out what happened?",
+    title: "Izginuli robot",
+    description: "Razredni robot je izginil! Ali lahko ugotoviš, kaj se je zgodilo?",
     clues: [
-      "The robot was last seen near the art room",
-      "There are paint footprints leading to the storage closet",
-      "The art teacher mentioned needing help with a project",
+      "Robota so nazadnje videli blizu likovne učilnice",
+      "Sledi barvnih odtisov vodijo do shrambe",
+      "Likovna učiteljica je omenila, da potrebuje pomoč pri projektu",
     ],
-    solution: "The art teacher borrowed the robot to help demonstrate movement for an art project!",
+    solution: "Likovna učiteljica si je izposodila robota, da bi z njim prikazala gibanje pri likovnem projektu!",
   },
   {
-    title: "The Case of the Missing Lunch",
+    title: "Primer izginule malice",
     description:
-      "Someone's lunch has disappeared from the cafeteria! The sandwich was there at noon, but by 12:30 it was gone.",
+      "Nekomu je iz jedilnice izginila malica! Sendvič je bil na mizi ob poldnevu, do 12.30 pa je izginil.",
     clues: [
-      "There are crumbs leading from the lunch table to the playground door",
-      "A student saw a squirrel near the open window around 12:15",
-      "The lunch bag was found outside, empty but not torn",
+      "Od mize za malico do vrat na igrišče vodijo drobtine",
+      "Učenec je okoli 12.15 videl veverico blizu odprtega okna",
+      "Vrečka za malico je bila najdena zunaj, prazna, a ne raztrgana",
     ],
     solution:
-      "A clever squirrel came through the open window and took the sandwich! The crumbs show its path, and it carefully removed the sandwich without damaging the bag.",
+      "Prebrisana veverica je prišla skozi odprto okno in odnesla sendvič! Drobtine kažejo njeno pot, vrečko pa je previdno odprla, ne da bi jo poškodovala.",
   },
   {
-    title: "The Mystery of the Switched Backpacks",
+    title: "Skrivnost zamenjanih nahrbtnikov",
     description:
-      "Two students accidentally took each other's identical backpacks home. How can we figure out whose is whose?",
+      "Dva učenca sta pomotoma domov odnesla identična nahrbtnika drug drugega. Kako lahko ugotovimo, kateri nahrbtnik je čigav?",
     clues: [
-      "One backpack has a math book with 'Room 204' written inside",
-      "The other backpack contains a permission slip signed by 'Mrs. Johnson'",
-      "The school directory shows Mrs. Johnson teaches in Room 204",
+      "V enem nahrbtniku je učbenik za matematiko z napisom 'Učilnica 204'",
+      "V drugem nahrbtniku je dovolilnica, ki jo je podpisala 'ga. Kovač'",
+      "Šolski imenik pokaže, da ga. Kovač poučuje v učilnici 204",
     ],
     solution:
-      "Both backpacks belong to students in Room 204! By checking the class roster and matching the names, we can return each backpack to its owner.",
+      "Oba nahrbtnika pripadata učencema iz učilnice 204! S primerjavo imen lahko vsak nahrbtnik vrnemo pravemu lastniku.",
   },
 ]
 
@@ -187,7 +187,7 @@ export default function AIDetectivePage() {
         const data = await response.json()
         if (data.mystery) {
           setCaseData(data.mystery)
-          toast.success("New case loaded!")
+          toast.success("Nov primer naložen!")
         } else {
           throw new Error("No mystery in response")
         }
@@ -198,7 +198,7 @@ export default function AIDetectivePage() {
       console.error("[v0] Error generating mystery:", error)
       const randomMystery = FALLBACK_MYSTERIES[Math.floor(Math.random() * FALLBACK_MYSTERIES.length)]
       setCaseData(randomMystery)
-      toast.info("Using a pre-made mystery!")
+      toast.info("Uporabljamo vnaprej pripravljeno skrivnost!")
     } finally {
       setLoadingCase(false)
       isGeneratingRef.current = false

@@ -117,7 +117,7 @@ function SignUpPageClient() {
             <div className="rounded-2xl p-3 mb-6 flex items-center justify-center gap-2 text-sm"
               style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", color: "#4ade80" }}>
               <Gift className="w-4 h-4 flex-shrink-0" />
-              Priporočilni bonus aktiviran! Dobili boste 14-dnevni brezplačni preizkus.
+              Priporočilna koda je aktivirana! Vaš prijatelj bo nagrajen ob vaši naročnini.
             </div>
           )}
           <Link
@@ -167,7 +167,7 @@ function SignUpPageClient() {
                 alt={BYTE_CHARACTER.fullName}
                 fill
                 className="object-cover rounded-full shadow-lg"
-                style={{ ring: "none", boxShadow: "0 0 0 3px rgba(168,85,247,0.4)" }}
+                style={{ boxShadow: "0 0 0 3px rgba(168,85,247,0.4)" }}
               />
               <span className="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 rounded-full animate-pulse"
                 style={{ borderColor: "#0a0a1a" }} />
@@ -182,9 +182,9 @@ function SignUpPageClient() {
               style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.3)" }}>
               <div className="flex items-center justify-center gap-2">
                 <Gift className="w-4 h-4 text-purple-400" />
-                <span className="text-sm font-medium text-purple-300">Priporočilni bonus aktiviran!</span>
+                <span className="text-sm font-medium text-purple-300">Priporočilna koda je veljavna!</span>
               </div>
-              <p className="text-xs text-purple-400 mt-1">14-dnevni brezplačni preizkus namesto 7 dni</p>
+              <p className="text-xs text-purple-400 mt-1">7 dni brezplačno preskusno obdobje</p>
             </div>
           )}
         </div>
@@ -230,7 +230,7 @@ function SignUpPageClient() {
             </div>
             {referralCode && (
               <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
-                <Gift className="w-3 h-3" /> Dobili boste 14-dnevni brezplačni preizkus!
+                <Gift className="w-3 h-3" /> Vaša priporočilna koda bo uporabljena ob registraciji
               </p>
             )}
           </div>

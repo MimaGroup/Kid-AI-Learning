@@ -75,26 +75,26 @@ export function CoppaConsentBanner() {
             <Shield className="h-8 w-8 text-blue-600" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2 text-gray-900">Parental Consent Required</h3>
+            <h3 className="text-lg font-semibold mb-2 text-gray-900">Zahtevana je starševska privolitev</h3>
             <p className="text-sm text-gray-700 mb-4">
-              AI Kids Learning Platform is designed for children and complies with COPPA (Children's Online Privacy
-              Protection Act). By using this platform, you confirm that you are a parent or legal guardian and consent
-              to the collection and use of your child's information as described in our{" "}
-              <Link href="/privacy-policy" className="text-blue-600 hover:underline font-medium">
-                Privacy Policy
+              Kids Learning AI je zasnovana za otroke in je skladna z GDPR ter slovenskim ZVOP-2. Z uporabo te
+              platforme potrjujete, da ste starš ali zakoniti skrbnik ter soglašate z zbiranjem in uporabo podatkov
+              vašega otroka, kot je opisano v naši{" "}
+              <Link href="/privacy" className="text-blue-600 hover:underline font-medium">
+                Politiki zasebnosti
               </Link>
-              . We collect only necessary information for educational purposes and never share children's data with
-              third parties for marketing.
+              . Zbiramo le podatke, ki so nujno potrebni za izobraževalne namene, in jih nikoli ne delimo s tretjimi
+              osebami v trženjske namene.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button onClick={handleAccept} className="bg-blue-600 hover:bg-blue-700">
-                I Consent (Parent/Guardian)
+                Soglašam (starš/skrbnik)
               </Button>
               <Button onClick={handleDecline} variant="outline">
-                Decline
+                Zavrni
               </Button>
-              <Link href="/privacy-policy" className="inline-flex items-center text-sm text-blue-600 hover:underline">
-                Learn More About Our Privacy Practices
+              <Link href="/privacy" className="inline-flex items-center text-sm text-blue-600 hover:underline">
+                Preberi več o naši politiki zasebnosti
               </Link>
             </div>
           </div>

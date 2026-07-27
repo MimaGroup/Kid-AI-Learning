@@ -119,15 +119,15 @@ export function TutorialTour({ tourId, steps, onComplete }: TutorialTourProps) {
 
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Step {currentStep + 1} of {steps.length}
+            Korak {currentStep + 1} od {steps.length}
           </div>
           <div className="flex gap-2">
             {currentStep > 0 && (
               <Button variant="outline" onClick={handlePrevious}>
-                Previous
+                Nazaj
               </Button>
             )}
-            <Button onClick={handleNext}>{currentStep < steps.length - 1 ? "Next" : "Finish"}</Button>
+            <Button onClick={handleNext}>{currentStep < steps.length - 1 ? "Naprej" : "Zaključi"}</Button>
           </div>
         </div>
       </div>

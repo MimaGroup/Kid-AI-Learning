@@ -12,7 +12,7 @@ interface BackToHomeButtonProps {
 
 export function BackToHomeButton({ variant = "home", href, label }: BackToHomeButtonProps) {
   const defaultHref = variant === "home" ? "/parent/dashboard" : href || "/parent/dashboard"
-  const defaultLabel = variant === "home" ? "Back to Home" : label || "Back"
+  const defaultLabel = variant === "home" ? "Nazaj na nadzorno ploščo" : label || "Nazaj"
   const Icon = variant === "home" ? Home : ArrowLeft
 
   return (

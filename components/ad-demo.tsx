@@ -378,7 +378,7 @@ export function AdDemo() {
         >
           Preizkusi res — Začni brezplačno →
         </Link>
-        <p className="text-center text-gray-600 text-xs mt-2">14 dni brezplačno · Kreditna kartica ni potrebna</p>
+        <p className="text-center text-gray-600 text-xs mt-2">7 dni brezplačno · Kreditna kartica ni potrebna</p>
       </div>
     </div>
   )

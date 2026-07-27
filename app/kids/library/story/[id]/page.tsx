@@ -15,55 +15,55 @@ export default function StoryPage() {
 
   const stories = {
     "1": {
-      title: "The Friendly AI Robot",
+      title: "Prijazni AI robot",
       icon: "🤖",
       content: [
-        "Once upon a time, in a bright and colorful town, there lived a small robot named Chip. Chip was different from other robots - he wanted to learn how to be a good friend.",
-        "Every day, Chip would watch the children playing in the park. He noticed how they shared their toys, helped each other, and laughed together. Chip wanted to do these things too!",
-        "One day, a little girl named Emma dropped her ice cream. She started to cry. Chip rolled over and said, 'Don't be sad! I can help you.' He used his special sensors to find the ice cream shop and bought Emma a new cone.",
-        "Emma smiled and said, 'Thank you, Chip! You're a great friend!' From that day on, Chip learned that being a good friend means helping others when they need it.",
-        "Chip continued to learn more about friendship. He learned to listen when friends talked, to share his battery charger (like sharing toys!), and to always be kind.",
-        "The children in the town loved Chip. He showed everyone that even robots can be wonderful friends when they learn and care about others.",
+        "Nekoč, v svetlem in barvitem mestecu, je živel majhen robot po imenu Čip. Čip je bil drugačen od drugih robotov — želel se je naučiti, kako biti dober prijatelj.",
+        "Vsak dan je Čip opazoval otroke, ki so se igrali v parku. Opazil je, kako si delijo igrače, si pomagajo in se skupaj smejijo. Tudi Čip je hotel to početi!",
+        "Nekega dne je deklica po imenu Ema izgubila svoj sladoled in začela jokati. Čip se je pripeljal do nje in rekel: »Ne bodi žalostna! Lahko ti pomagam.« S svojimi posebnimi senzorji je poiskal slaščičarno in Emi kupil nov sladoled.",
+        "Ema se je nasmehnila in rekla: »Hvala, Čip! Res si dober prijatelj!« Od takrat naprej se je Čip naučil, da biti dober prijatelj pomeni pomagati drugim, ko to potrebujejo.",
+        "Čip se je še naprej učil o prijateljstvu. Naučil se je poslušati, ko prijatelji govorijo, deliti svoj polnilnik za baterijo (podobno kot deljenje igrač!) in biti vedno prijazen.",
+        "Otroci v mestecu so imeli Čipa zelo radi. Vsem je pokazal, da so lahko tudi roboti čudoviti prijatelji, če se učijo in skrbijo za druge.",
       ],
       questions: [
-        { q: "What was special about Chip?", a: "He wanted to learn how to be a good friend" },
-        { q: "How did Chip help Emma?", a: "He bought her a new ice cream cone" },
-        { q: "What did Chip learn about friendship?", a: "Being a good friend means helping others" },
+        { q: "Kaj je bilo posebnega pri Čipu?", a: "Želel se je naučiti, kako biti dober prijatelj" },
+        { q: "Kako je Čip pomagal Emi?", a: "Kupil ji je nov sladoled" },
+        { q: "Kaj se je Čip naučil o prijateljstvu?", a: "Biti dober prijatelj pomeni pomagati drugim" },
       ],
     },
     "2": {
-      title: "The Smart Home Helper",
+      title: "Pomočnik pametnega doma",
       icon: "🏠",
       content: [
-        "In the Johnson family's house, there was a special helper named Alexa. She wasn't a person, but she could talk and help with many things.",
-        "Every morning, Alexa would wake up the family with their favorite music. 'Good morning, Johnson family!' she would say cheerfully.",
-        "Little Tommy asked, 'Alexa, how do you know so much?' Alexa explained, 'I use artificial intelligence! That means I can learn from information and help answer questions.'",
-        "Alexa helped the family in many ways. She could tell them the weather, play their favorite songs, set timers for cooking, and even tell jokes!",
-        "One day, Tommy's mom asked, 'Alexa, what's AI?' Alexa replied, 'AI is like a very smart helper that learns from information to do tasks and answer questions. I use AI to understand what you say and help you!'",
-        "The Johnson family was grateful for their smart home helper. They learned that AI can make life easier and more fun when used in helpful ways.",
+        "V hiši družine Novak je živel poseben pomočnik po imenu Nia. Ni bila oseba, a je znala govoriti in pomagati pri marsičem.",
+        "Vsako jutro je Nia družino zbudila z njihovo najljubšo glasbo. »Dobro jutro, družina Novak!« je vedno vedro rekla.",
+        "Majhen Jan je vprašal: »Nia, od kod veš toliko stvari?« Nia je razložila: »Uporabljam umetno inteligenco! To pomeni, da se lahko učim iz informacij in pomagam odgovarjati na vprašanja.«",
+        "Nia je družini pomagala na veliko načinov. Povedala jim je vreme, predvajala njihove najljubše pesmi, nastavljala odštevalnike za kuhanje in celo pripovedovala šale!",
+        "Nekega dne je Janova mama vprašala: »Nia, kaj je AI?« Nia je odgovorila: »AI je kot zelo pameten pomočnik, ki se uči iz informacij, da opravlja naloge in odgovarja na vprašanja. Z AI razumem, kaj govoriš, in ti lahko pomagam!«",
+        "Družina Novak je bila hvaležna za svojega pametnega pomočnika. Naučili so se, da lahko AI, kadar jo uporabljamo v dobre namene, naredi življenje lažje in bolj zabavno.",
       ],
       questions: [
-        { q: "What was the helper's name?", a: "Alexa" },
-        { q: "What is AI according to Alexa?", a: "A smart helper that learns from information" },
-        { q: "How did Alexa help the family?", a: "Weather, music, timers, and jokes" },
+        { q: "Kako je bil pomočnik imenovan?", a: "Nia" },
+        { q: "Kaj je AI po Niinih besedah?", a: "Pameten pomočnik, ki se uči iz informacij" },
+        { q: "Kako je Nia pomagala družini?", a: "Z vremenom, glasbo, odštevalniki in šalami" },
       ],
     },
     "3": {
-      title: "The Pattern Detective",
+      title: "Detektiv vzorcev",
       icon: "🔍",
       content: [
-        "Detective Maya had a special skill - she could spot patterns that others missed. One day, she got a mysterious case.",
-        "Someone had been leaving colorful drawings all around the city. The drawings appeared every Tuesday and Thursday, always near schools.",
-        "Maya looked at all the clues. 'I see a pattern!' she exclaimed. 'The drawings appear on school days, and they're always near playgrounds.'",
-        "She used her pattern-finding skills, just like how AI uses patterns to solve problems. Maya predicted where the next drawing would appear.",
-        "On Thursday morning, Maya waited near Lincoln Elementary's playground. Sure enough, a young artist named Sam arrived with colorful chalk.",
-        "Sam wasn't doing anything wrong - he just loved making art for kids to enjoy! Maya smiled and said, 'Your art makes people happy. That's wonderful! Just like AI finds patterns to help people, you found a pattern of making others smile.'",
-        "Maya taught everyone that finding patterns, whether you're a detective or a computer, can help solve mysteries and make the world better.",
+        "Detektivka Maja je imela posebno spretnost — opazila je vzorce, ki jih drugi niso videli. Nekega dne je dobila skrivnosten primer.",
+        "Nekdo je po vsem mestu puščal pisane risbe. Risbe so se pojavljale vsak torek in četrtek, vedno blizu šol.",
+        "Maja si je ogledala vse namige. »Vidim vzorec!« je vzkliknila. »Risbe se pojavijo ob šolskih dneh in vedno blizu igrišč.«",
+        "Uporabila je svoje spretnosti prepoznavanja vzorcev, podobno kot AI uporablja vzorce za reševanje problemov. Maja je napovedala, kje se bo pojavila naslednja risba.",
+        "V četrtek zjutraj je Maja čakala blizu igrišča osnovne šole. In res — prispel je mladi umetnik po imenu Sam s pisano kredo.",
+        "Sam ni počel nič narobe — le rad je ustvarjal umetnost, ki so je bili otroci veseli! Maja se je nasmehnila in rekla: »Tvoja umetnost razveseljuje ljudi. To je čudovito! Tako kot AI najde vzorce, da pomaga ljudem, si tudi ti našel vzorec razveseljevanja drugih.«",
+        "Maja je vse naučila, da lahko iskanje vzorcev — pa naj bo to detektiv ali računalnik — pomaga rešiti skrivnosti in narediti svet boljši.",
       ],
       questions: [
-        { q: "What was Maya's special skill?", a: "Spotting patterns" },
-        { q: "What pattern did Maya find?", a: "Drawings on Tuesdays and Thursdays near schools" },
-        { q: "Who was making the drawings?", a: "A young artist named Sam" },
+        { q: "Kakšna je bila Majina posebna spretnost?", a: "Opažanje vzorcev" },
+        { q: "Kakšen vzorec je odkrila Maja?", a: "Risbe ob torkih in četrtkih blizu šol" },
+        { q: "Kdo je risal risbe?", a: "Mladi umetnik po imenu Sam" },
       ],
     },
   }
@@ -74,8 +74,8 @@ export default function StoryPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Story not found</h2>
-          <Button onClick={() => router.push("/kids/library")}>Back to Library</Button>
+          <h2 className="text-2xl font-bold mb-4">Zgodba ni najdena</h2>
+          <Button onClick={() => router.push("/kids/library")}>Nazaj na knjižnico</Button>
         </div>
       </div>
     )
@@ -86,7 +86,7 @@ export default function StoryPage() {
       <header className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <BackToHomeButton variant="back" href="/kids/library" label="Back to Library" />
+            <BackToHomeButton variant="back" href="/kids/library" label="Nazaj na knjižnico" />
             <UserHeader />
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function StoryPage() {
             </h1>
             <div className="mt-4 flex items-center justify-center space-x-2 text-purple-600">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">A Fun AI Story</span>
+              <span className="text-sm font-medium">Zabavna zgodba o AI</span>
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function StoryPage() {
         <Card className="p-6 bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 border-4 border-yellow-300 shadow-xl">
           <h3 className="text-2xl font-bold mb-6 flex items-center space-x-3 text-orange-800">
             <span className="text-3xl">🤔</span>
-            <span>Comprehension Questions</span>
+            <span>Vprašanja za razumevanje</span>
           </h3>
           <div className="space-y-4">
             {story.questions.map((item, idx) => (
@@ -140,7 +140,7 @@ export default function StoryPage() {
                 <details className="text-gray-700">
                   <summary className="cursor-pointer text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-2">
                     <ArrowRight className="w-4 h-4" />
-                    <span>Show Answer</span>
+                    <span>Pokaži odgovor</span>
                   </summary>
                   <div className="mt-3 pl-6 py-3 border-l-4 border-blue-400 bg-blue-50 rounded-r-lg">
                     <span className="text-gray-800 font-medium">{item.a}</span>
@@ -156,10 +156,10 @@ export default function StoryPage() {
             href={`/kids/library/story/${Number.parseInt(storyId) >= 3 ? 1 : Number.parseInt(storyId) + 1}`}
             className="inline-flex items-center bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
-            <span>Read Another Story</span>
+            <span>Preberi še eno zgodbo</span>
             <ArrowRight className="w-5 h-5 ml-2" />
           </Link>
-          <p className="mt-4 text-gray-600 text-sm">Click to read the next exciting story!</p>
+          <p className="mt-4 text-gray-600 text-sm">Klikni za naslednjo razburljivo zgodbo!</p>
         </div>
       </div>
     </div>

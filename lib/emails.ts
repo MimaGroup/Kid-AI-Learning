@@ -65,14 +65,14 @@ function btn(text: string, href: string) {
 export async function sendWelcomeEmail(to: string, planType: "monthly" | "yearly", isTrial: boolean) {
   const planLabel = planType === "yearly" ? "letni (€79,00/leto)" : "mesečni (€7,90/mes)"
   const subject = isTrial
-    ? "Dobrodošli! Vaš 14-dnevni brezplačni preskus se je začel 🎉"
+    ? "Dobrodošli! Vaš 7-dnevni brezplačni preskus se je začel 🎉"
     : "Dobrodošli v Kids Learning AI! 🚀"
 
   const html = base(`
     <h2 style="margin:0 0 16px;color:#ffffff;font-size:20px;font-weight:700">Dobrodošli v Kids Learning AI! 🎉</h2>
     <p style="color:rgba(255,255,255,0.75);font-size:15px;line-height:1.7;margin:0 0 16px">
       ${isTrial
-        ? `Vaš <strong style="color:#c084fc">14-dnevni brezplačni preskus</strong> se je začel. Imate popoln dostop do vseh tečajev in dejavnosti brez obveznosti.`
+        ? `Vaš <strong style="color:#c084fc">7-dnevni brezplačni preskus</strong> se je začel. Imate popoln dostop do vseh tečajev in dejavnosti brez obveznosti.`
         : `Vaša naročnina (<strong style="color:#c084fc">${planLabel}</strong>) je aktivna. Dobrodošli!`
       }
     </p>

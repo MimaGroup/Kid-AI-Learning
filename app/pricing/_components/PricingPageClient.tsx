@@ -47,20 +47,20 @@ export default function PricingPageClient() {
   }, [])
 
   const handleCTAClick = (planType: string) => {
-    trackEvent("pricing_cta_clicked", { plan: planType })
+    trackEvent("upgrade_button_clicked", { plan: planType })
     router.push("/auth/sign-up")
   }
 
   const handleCheckout = async (priceId: string, planType: "monthly" | "yearly") => {
     // If user is not logged in, redirect to sign-up first
     if (!user) {
-      trackEvent("pricing_cta_clicked", { plan: planType, action: "redirect_to_signup" })
+      trackEvent("upgrade_button_clicked", { plan: planType, action: "redirect_to_signup" })
       router.push("/auth/sign-up")
       return
     }
 
     setCheckoutLoading(planType)
-    trackEvent("pricing_cta_clicked", { plan: planType, action: "checkout" })
+    trackEvent("upgrade_button_clicked", { plan: planType, action: "checkout" })
 
     try {
       const res = await fetch("/api/stripe/create-checkout", {

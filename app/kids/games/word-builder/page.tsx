@@ -20,39 +20,39 @@ interface WordChallenge {
 const WORD_LISTS = {
   easy: [
     { word: "robot", definition: "Stroj, ki samodejno opravlja naloge", hint: "Začne se z R" },
-    { word: "computer", definition: "Elektronska naprava za obdelavo podatkov", hint: "Morda ga právkar uporabljaš" },
-    { word: "game", definition: "Dejavnost, ki jo igraš za zabavo", hint: "4 črke" },
-    { word: "learn", definition: "Pridobivati znanje ali veščine", hint: "Kar počneš v šoli" },
-    { word: "smart", definition: "Imeti inteligenco", hint: "Nasprotje od neumno" },
-    { word: "think", definition: "Uporabljati misli", hint: "Kar počnejo možgani" },
-    { word: "code", definition: "Navodila za računalnike", hint: "Programerji pišejo to" },
-    { word: "data", definition: "Informacije shranjene v računalnikih", hint: "4 črke, začne se z D" },
-    { word: "brain", definition: "Organ, ki ti pomaga razmišljati", hint: "V tvoji glavi" },
-    { word: "friend", definition: "Nekdo, ki ga imaš rad in mu zaupaš", hint: "Prijatelj" },
+    { word: "ekran", definition: "Del računalnika, na katerega gledaš", hint: "Nanj gledaš, ko uporabljaš napravo" },
+    { word: "igra", definition: "Dejavnost, ki jo igraš za zabavo", hint: "4 črke" },
+    { word: "učenje", definition: "Pridobivanje znanja ali veščin", hint: "Kar počneš v šoli" },
+    { word: "pameten", definition: "Imeti veliko znanja in razumevanja", hint: "Nasprotje od neumen" },
+    { word: "misel", definition: "Kar nastane v možganih, ko razmišljaš", hint: "Kar počnejo možgani" },
+    { word: "koda", definition: "Navodila za računalnike", hint: "Programerji pišejo to" },
+    { word: "podatki", definition: "Informacije, shranjene v računalnikih", hint: "Začne se s P" },
+    { word: "možgani", definition: "Organ, ki ti pomaga razmišljati", hint: "V tvoji glavi" },
+    { word: "prijatelj", definition: "Nekdo, ki ga imaš rad in mu zaupaš", hint: "Nekdo blizu tebe" },
   ],
   medium: [
-    { word: "algorithm", definition: "Niz korakov za reševanje problema", hint: "Uporablja se v programiranju" },
-    { word: "artificial", definition: "Ustvarjen s strani človeka, ni naraven", hint: "AI pomeni to + Intelligence" },
-    { word: "technology", definition: "Orodja in stroji, ki nam pomagajo", hint: "Računalniki in telefoni so to" },
-    { word: "intelligence", definition: "Sposobnost učenja in razumevanja", hint: "Kar te dela pametnega" },
-    { word: "pattern", definition: "Ponavljajoč se dizajn ali zaporedje", hint: "AI išče te" },
-    { word: "machine", definition: "Naprava, ki opravlja delo", hint: "Roboti so vrsta tega" },
-    { word: "digital", definition: "Računalniška tehnologija", hint: "Nasprotje od analogno" },
-    { word: "network", definition: "Povezani računalniki, ki si delijo informacije", hint: "Internet je eden" },
+    { word: "algoritem", definition: "Niz korakov za reševanje problema", hint: "Uporablja se v programiranju" },
+    { word: "umeten", definition: "Ustvarjen s strani človeka, ni naraven", hint: "___ inteligenca" },
+    { word: "tehnologija", definition: "Orodja in stroji, ki nam pomagajo", hint: "Računalniki in telefoni so to" },
+    { word: "inteligenca", definition: "Sposobnost učenja in razumevanja", hint: "Kar te dela pametnega" },
+    { word: "vzorec", definition: "Ponavljajoče se zaporedje ali oblika", hint: "AI išče te" },
+    { word: "stroj", definition: "Naprava, ki opravlja delo", hint: "Roboti so vrsta tega" },
+    { word: "digitalen", definition: "Povezano z računalniško tehnologijo", hint: "Nasprotje od analogen" },
+    { word: "omrežje", definition: "Povezani računalniki, ki si delijo informacije", hint: "Internet je eno" },
     { word: "program", definition: "Navodila, ki povejo računalniku, kaj naj naredi", hint: "Programska oprema" },
-    { word: "creative", definition: "Uporaba domišljije za ustvarjanje novih stvari", hint: "Umetniki so to" },
+    { word: "ustvarjalen", definition: "Uporaba domišljije za ustvarjanje novih stvari", hint: "Umetniki so to" },
   ],
   hard: [
-    { word: "neural", definition: "Povezano z živci ali možgani", hint: "AI mreže so poimenovane po tem" },
-    { word: "recognition", definition: "Prepoznavanje nečesa, kar si že videl", hint: "Prepoznavanje obraza" },
-    { word: "automation", definition: "Samodejno opravljanje nalog", hint: "Roboti to počnejo" },
-    { word: "prediction", definition: "Ugibanje, kaj se bo zgodilo v prihodnosti", hint: "Vremenska napoved je ___" },
-    { word: "processing", definition: "Obdelava in organiziranje informacij", hint: "Kar računalniki počnejo s podatki" },
-    { word: "interface", definition: "Način interakcije z računalnikom", hint: "Uporabniški ___" },
-    { word: "virtual", definition: "Obstaja v računalnikih, ne fizično", hint: "___ resničnost" },
-    { word: "simulation", definition: "Posnemanje resnične situacije", hint: "Pilotski ___ simulator" },
-    { word: "optimization", definition: "Narediti nekaj, da deluje čim bolje", hint: "Iskanje najboljše rešitve" },
-    { word: "classification", definition: "Razvrščanje stvari v kategorije", hint: "Organiziranje po vrstah" },
+    { word: "nevronski", definition: "Povezano z živci ali možgani", hint: "AI mreže so poimenovane po tem" },
+    { word: "prepoznavanje", definition: "Prepoznavanje nečesa, kar si že videl", hint: "___ obraza" },
+    { word: "avtomatizacija", definition: "Samodejno opravljanje nalog", hint: "Roboti to počnejo" },
+    { word: "napoved", definition: "Ugibanje, kaj se bo zgodilo v prihodnosti", hint: "Vremenska ___" },
+    { word: "obdelava", definition: "Urejanje in analiziranje informacij", hint: "Kar računalniki počnejo s podatki" },
+    { word: "vmesnik", definition: "Način interakcije z računalnikom", hint: "Uporabniški ___" },
+    { word: "navidezen", definition: "Obstaja v računalniku, ne fizično", hint: "___ resničnost" },
+    { word: "simulacija", definition: "Posnemanje resnične situacije", hint: "Simulator poleta je ___" },
+    { word: "optimizacija", definition: "Izboljšanje nečesa, da deluje čim bolje", hint: "Iskanje najboljše rešitve" },
+    { word: "razvrščanje", definition: "Urejanje stvari v kategorije", hint: "Organiziranje po vrstah" },
   ],
 }
 
@@ -261,7 +261,7 @@ export default function WordBuilderPage() {
           <div key={i} className="absolute rounded-full bg-white pointer-events-none"
             style={{ left: `${s.x}%`, top: `${s.y}%`, width: 2, height: 2, opacity: 0.1 + (i % 4) * 0.07 }} />
         ))}
-        <AchievementPopup achievements={newAchievements} onClose={() => setNewAchievements([])} />
+        <AchievementPopup badges={newAchievements.map((a: any) => a.achievement_type ?? a.id)} onClose={() => setNewAchievements([])} />
         <div className="relative z-10 max-w-md w-full text-center rounded-3xl p-10"
           style={{ background: "rgba(8,8,30,0.9)", border: "1px solid rgba(251,191,36,0.3)", boxShadow: "0 0 40px rgba(251,191,36,0.08)" }}>
           <div className="text-6xl mb-4">

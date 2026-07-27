@@ -1,19 +1,34 @@
 import { createServiceRoleClient } from "@/lib/supabase/server"
 
 // Inappropriate content patterns for children's platform
+// Platform is Slovenian-first, so patterns must cover Slovenian words, not just English —
+// a filter that only matches English never triggers on Slovenian input.
 const INAPPROPRIATE_PATTERNS = [
   // Violence and weapons
-  /\b(kill|murder|weapon|gun|knife|blood|violence|attack|fight|hurt|harm)\b/gi,
+  /\b(kill|murder|weapon|gun|knife|blood|violence|attack|fight|hurt|harm|war)\b/gi,
+  // Note: deliberately not matching "bori(ti)" (fight/struggle) or "poškodba" (injury) roots —
+  // both appear in common, wholesome phrases ("boriti se za znanje", safety-education content).
+  /\b(ubi[jt]i?|umor[a-zž]*|orož[a-zž]*|pi[sš]tol[a-zž]*|nož[a-zž]*|kri|nasilj[a-zž]*|napad[a-zž]*|vojn[a-zž]*|streljanj[a-zž]*)\b/gi,
   // Adult content
+  // Note: deliberately not matching "gol"/"nag" roots — "gol" is also the Slovenian word
+  // for a football goal, and false-positives there would block completely innocent chat.
   /\b(sex|sexual|porn|nude|naked|adult)\b/gi,
+  /\b(seksual[a-zž]*|porno[a-zž]*)\b/gi,
   // Drugs and alcohol
   /\b(drug|alcohol|beer|wine|cigarette|smoke|vape|marijuana|weed)\b/gi,
+  /\b(drog[a-zž]*|alkohol[a-zž]*|pivo|vino|cigaret[a-zž]*|kajenj[a-zž]*|marihuan[a-zž]*)\b/gi,
   // Profanity (basic list - expand as needed)
   /\b(damn|hell|crap|stupid|idiot|dumb|hate)\b/gi,
-  // Personal information requests
+  /\b(neumn[a-zž]*|bedak[a-zž]*|tepec|traparij[a-zž]*|sovraž[a-zž]*|prekleto)\b/gi,
+  // Personal information disclosure/requests — phrased narrowly to avoid false positives
+  // on innocent words like "naslov" (also means "title" of a lesson/book) or "priimek" in grammar lessons.
   /\b(address|phone number|credit card|password|social security)\b/gi,
+  /\b(moj[a]?\s+(domači\s+)?naslov|stanujem\s+(na|v)|živim\s+na\s+(naslovu|ulici)|moja?\s+telefonsk[a-zž]*\s*(številk[a-zž]*)?|moja?\s+(hišna\s+)?številk[a-zž]*\s+je|moj\s+priimek\s+je|kreditn[a-zž]*\s*kartic[a-zž]*|moje\s+geslo|EMŠO)\b/gi,
+  // Digit sequences resembling a phone number or house/postal address in a message
+  /\b\d{2,3}[\s.-]?\d{3}[\s.-]?\d{3,4}\b/g,
   // Bullying and negative content
   /\b(bully|loser|ugly|fat|stupid|worthless)\b/gi,
+  /\b(gr[dž][a-zž]*|debel[a-zž]*|zguba|ničvredn[a-zž]*|neumn[ea]ž[a-zž]*)\b/gi,
 ]
 
 // Age-appropriate replacement suggestions
@@ -28,6 +43,9 @@ const CONTENT_REPLACEMENTS: Record<string, string> = {
   dumb: "confused",
   hate: "dislike",
   loser: "learner",
+  ubiti: "ustaviti",
+  neumen: "smešen",
+  neumna: "smešna",
 }
 
 export interface ModerationResult {

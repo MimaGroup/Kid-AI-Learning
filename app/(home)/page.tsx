@@ -295,7 +295,7 @@ export default function HomePage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5" />
-                    6-12 let
+                    5–12 let
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
@@ -339,7 +339,7 @@ export default function HomePage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5" />
-                    5-10 let
+                    5–12 let
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
@@ -383,7 +383,7 @@ export default function HomePage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5" />
-                    6-12 let
+                    5–12 let
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
@@ -427,7 +427,7 @@ export default function HomePage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5" />
-                    8-14 let
+                    5–12 let
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[#7C3AED] font-medium mb-4">
@@ -654,7 +654,7 @@ export default function HomePage() {
             <Card className="p-10 border-[#E2E8F0] hover:shadow-xl transition-all rounded-3xl">
               <div className="text-6xl text-[#7C3AED] font-serif leading-none mb-4">"</div>
               <p className="text-[#2D2A3D] leading-relaxed mb-6 text-lg">
-                {"Končno platforma, ki je resnično varna za otroke in hkrati moderna. Byte je postal Zarin najljubši učitelj."}
+                {"Končno platforma, ki varnost otrok postavlja v ospredje in je hkrati moderna. Byte je postal Zarin najljubši učitelj."}
               </p>
               <div className="border-t border-[#E2E8F0] pt-4">
                 <p className="font-semibold text-[#2D2A3D]">Andrej P.</p>
@@ -750,12 +750,12 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Pravno</h4>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
                     Politika zasebnosti
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
                     Pogoji uporabe
                   </Link>
                 </li>

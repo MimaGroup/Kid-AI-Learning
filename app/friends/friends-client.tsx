@@ -53,10 +53,10 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
       const result = await addFriendBySecretKey(friendKey.trim().toUpperCase())
 
       if (!result.success) {
-        throw new Error(result.error || "Failed to add friend")
+        throw new Error(result.error || "Dodajanje prijatelja ni uspelo")
       }
 
-      setSuccess(`Friend ${result.friendName} added successfully!`)
+      setSuccess(`Prijatelj ${result.friendName} je bil uspešno dodan!`)
       setFriendKey("")
       router.refresh()
     } catch (err: any) {
@@ -68,7 +68,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
 
   const handleInviteFriend = async () => {
     if (!inviteName.trim() || !inviteEmail.trim()) {
-      setError("Please enter both name and email")
+      setError("Vnesite ime in e-pošto")
       return
     }
 
@@ -89,10 +89,10 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to send invitation")
+        throw new Error(data.error || "Pošiljanje povabila ni uspelo")
       }
 
-      setSuccess("Invitation sent successfully!")
+      setSuccess("Povabilo je bilo uspešno poslano!")
       setInviteName("")
       setInviteEmail("")
     } catch (err: any) {
@@ -103,13 +103,13 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
   }
 
   const handleRemoveFriend = async (friendshipId: string) => {
-    if (!confirm("Are you sure you want to remove this friend?")) return
+    if (!confirm("Ali ste prepričani, da želite odstraniti tega prijatelja?")) return
 
     try {
       const result = await removeFriend(friendshipId)
 
       if (!result.success) {
-        throw new Error(result.error || "Failed to remove friend")
+        throw new Error(result.error || "Odstranitev prijatelja ni uspela")
       }
 
       router.refresh()
@@ -157,15 +157,15 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
               className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              Back to Home
+              Nazaj na domačo stran
             </Link>
             <div className="flex items-center space-x-4">
               <div className="text-5xl">
                 <Users className="w-16 h-16" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">MY FRIENDS</h1>
-                <p className="text-pink-100 text-lg">Connect and learn together!</p>
+                <h1 className="text-4xl font-bold">MOJI PRIJATELJI</h1>
+                <p className="text-pink-100 text-lg">Povežite se in učite skupaj!</p>
               </div>
             </div>
           </div>
@@ -186,7 +186,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
           <div className="bg-gradient-to-br from-orange-400 to-orange-600 text-white p-6 rounded-3xl shadow-xl hover:scale-105 transition-transform">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <span className="text-2xl">🔑</span>
-              Your secret key
+              Tvoj skrivni ključ
             </h2>
             <div className="bg-white rounded-2xl p-4 mb-4 shadow-lg">
               <p className="text-2xl font-bold text-gray-900 text-center tracking-wider">{secretKey}</p>
@@ -198,12 +198,12 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
               {copied ? (
                 <>
                   <Check className="w-4 h-4 mr-2" />
-                  Copied!
+                  Kopirano!
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 mr-2" />
-                  Share
+                  Deli
                 </>
               )}
             </Button>
@@ -213,10 +213,10 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
           <div className="bg-gradient-to-br from-blue-400 to-blue-600 text-white p-6 rounded-3xl shadow-xl hover:scale-105 transition-transform">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <span className="text-2xl">➕</span>
-              Add a friend
+              Dodaj prijatelja
             </h2>
             <Input
-              placeholder="Enter your friend's secret key"
+              placeholder="Vnesi prijateljev skrivni ključ"
               value={friendKey}
               onChange={(e) => setFriendKey(e.target.value.toUpperCase())}
               className="mb-4 bg-white text-gray-900 placeholder:text-gray-500 border-0 rounded-xl shadow-lg"
@@ -227,7 +227,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
               disabled={loading || !friendKey.trim()}
               className="w-full bg-white hover:bg-gray-100 text-blue-600 font-semibold shadow-lg rounded-xl disabled:opacity-50"
             >
-              ADD
+              DODAJ
             </Button>
           </div>
         </div>
@@ -237,7 +237,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="text-3xl">👥</span>
-              Your Friends
+              Tvoji prijatelji
             </h2>
             <div className="grid gap-4">
               {friends.map((friendship) => (
@@ -253,7 +253,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
                       <p className="font-semibold text-lg text-gray-900">
                         {friendship.friend.display_name || friendship.friend.email}
                       </p>
-                      <p className="text-sm text-gray-600">Key: {friendship.friend.secret_key}</p>
+                      <p className="text-sm text-gray-600">Ključ: {friendship.friend.secret_key}</p>
                     </div>
                   </div>
                   <Button
@@ -274,24 +274,24 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
         <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 shadow-xl border-2 border-purple-200">
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">✉️</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Invite Friends</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Povabi prijatelje</h3>
             <p className="text-gray-700 leading-relaxed">
               {friends.length === 0
-                ? "Looks like you don't have any friends on Kids Learning AI yet. Want to invite some? Send them an invitation to join the fun and start exploring AI together."
-                : "Invite more friends to join the fun and start exploring AI together!"}
+                ? "Videti je, da na Kids Learning AI še nimaš prijateljev. Jih želiš povabiti? Pošlji jim povabilo, da se pridružijo zabavi in skupaj raziskujeta AI."
+                : "Povabi še več prijateljev, da se pridružijo zabavi in skupaj raziskujete AI!"}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <Input
-              placeholder="Add your Friend's name"
+              placeholder="Vnesi prijateljevo ime"
               value={inviteName}
               onChange={(e) => setInviteName(e.target.value)}
               className="bg-white border-2 border-purple-200 text-gray-900 placeholder:text-gray-500 rounded-xl shadow-md focus:border-purple-400"
             />
             <Input
               type="email"
-              placeholder="Add your Friend's Email"
+              placeholder="Vnesi prijateljevo e-pošto"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               className="bg-white border-2 border-purple-200 text-gray-900 placeholder:text-gray-500 rounded-xl shadow-md focus:border-purple-400"
@@ -304,7 +304,7 @@ export function FriendsPageClient({ secretKey, userName, friends }: FriendsPageC
             className="w-full md:w-auto mx-auto flex bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-6 px-8 rounded-xl text-lg shadow-xl disabled:opacity-50 items-center justify-center gap-3"
           >
             <UserPlus className="w-5 h-5" />
-            <span>Invite my friend</span>
+            <span>Povabi prijatelja</span>
           </Button>
         </div>
       </div>

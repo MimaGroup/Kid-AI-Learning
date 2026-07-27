@@ -17,18 +17,18 @@ export function TrustBadges({ variant = "default", className = "" }: TrustBadges
     },
     {
       icon: Lock,
-      title: "Varno placevanje",
-      description: "256-bitno SSL sifriranje",
+      title: "Varno plačevanje",
+      description: "256-bitno SSL šifriranje",
     },
     {
       icon: Award,
-      title: "Garancija vracila",
-      description: "30-dnevno polno vracilo",
+      title: "Garancija vračila",
+      description: "14-dnevno polno vračilo",
     },
     {
       icon: CheckCircle2,
       title: "Brez obveznosti",
-      description: "Prekliците kadarkoli",
+      description: "Prekličite kadarkoli",
     },
   ]
 

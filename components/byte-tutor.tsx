@@ -145,14 +145,16 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 {m.role === "assistant" && (
-                  <Image
-                    src={BYTE_CHARACTER.images.avatar}
-                    alt="Byte"
-                    width={24}
-                    height={24}
-                    className="rounded-full object-cover flex-shrink-0 mr-2 mt-0.5"
-                    style={{ border: "1px solid rgba(168,85,247,0.4)" }}
-                  />
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 mr-2 mt-0.5"
+                    style={{ minWidth: 24, minHeight: 24, border: "1px solid rgba(168,85,247,0.4)" }}>
+                    <Image
+                      src={BYTE_CHARACTER.images.avatar}
+                      alt="Byte"
+                      width={24}
+                      height={24}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 )}
                 <div
                   className="max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed"
@@ -168,14 +170,16 @@ export function ByteTutor({ lessonTitle, lessonContent }: ByteTutorProps) {
 
             {loading && (
               <div className="flex justify-start items-end gap-2">
-                <Image
-                  src={BYTE_CHARACTER.images.avatar}
-                  alt="Byte"
-                  width={24}
-                  height={24}
-                  className="rounded-full object-cover flex-shrink-0"
-                  style={{ border: "1px solid rgba(168,85,247,0.4)" }}
-                />
+                <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
+                  style={{ minWidth: 24, minHeight: 24, border: "1px solid rgba(168,85,247,0.4)" }}>
+                  <Image
+                    src={BYTE_CHARACTER.images.avatar}
+                    alt="Byte"
+                    width={24}
+                    height={24}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
                 <div className="px-4 py-2.5 rounded-2xl" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <div className="flex gap-1 items-center">
                     {[0,1,2].map(i => (

@@ -13,40 +13,40 @@ const groq = createGroq({
 
 const FALLBACK_MYSTERIES = [
   {
-    title: "The Case of the Missing Lunch",
+    title: "Primer izginule malice",
     description:
-      "Someone's lunch has disappeared from the cafeteria! The sandwich was there at noon, but by 12:30 it was gone. Can you figure out what happened?",
+      "Nekomu je iz jedilnice izginila malica! Sendvič je bil na mizi ob poldnevu, do 12.30 pa je izginil. Ali lahko ugotoviš, kaj se je zgodilo?",
     clues: [
-      "There are crumbs leading from the lunch table to the playground door",
-      "A student saw a squirrel near the open window around 12:15",
-      "The lunch bag was found outside, empty but not torn",
+      "Od mize za malico do vrat na igrišče vodijo drobtine",
+      "Učenec je okoli 12.15 videl veverico blizu odprtega okna",
+      "Vrečka za malico je bila najdena zunaj, prazna, a ne raztrgana",
     ],
     solution:
-      "A clever squirrel came through the open window and took the sandwich! The crumbs show its path, and it carefully removed the sandwich without damaging the bag.",
+      "Prebrisana veverica je prišla skozi odprto okno in odnesla sendvič! Drobtine kažejo njeno pot, vrečko pa je previdno odprla, ne da bi jo poškodovala.",
   },
   {
-    title: "The Mystery of the Switched Backpacks",
+    title: "Skrivnost zamenjanih nahrbtnikov",
     description:
-      "Two students accidentally took each other's identical backpacks home. How can we figure out whose backpack is whose?",
+      "Dva učenca sta pomotoma domov odnesla identična nahrbtnika drug drugega. Kako lahko ugotovimo, kateri nahrbtnik je čigav?",
     clues: [
-      "One backpack has a math book with 'Room 204' written inside",
-      "The other backpack contains a permission slip signed by 'Mrs. Johnson'",
-      "The school directory shows Mrs. Johnson teaches in Room 204",
+      "V enem nahrbtniku je učbenik za matematiko z napisom 'Učilnica 204'",
+      "V drugem nahrbtniku je dovolilnica, ki jo je podpisala 'ga. Kovač'",
+      "Šolski imenik pokaže, da ga. Kovač poučuje v učilnici 204",
     ],
     solution:
-      "Both backpacks belong to students in Room 204! By checking the class roster and matching the names on the permission slip and math book, we can return each backpack to its owner.",
+      "Oba nahrbtnika pripadata učencema iz učilnice 204! S primerjavo razrednega seznama in imen na dovolilnici ter učbeniku lahko vsak nahrbtnik vrnemo pravemu lastniku.",
   },
   {
-    title: "The Puzzle of the Rearranged Library",
+    title: "Uganka premečene knjižnice",
     description:
-      "The school librarian arrived to find all the books mysteriously rearranged overnight. Who could have done this and why?",
+      "Šolska knjižničarka je prišla in ugotovila, da so vse knjige čez noč skrivnostno premečene. Kdo bi lahko to naredil in zakaj?",
     clues: [
-      "The books are now organized by color instead of by subject",
-      "A thank-you note was left on the desk signed 'The Art Club'",
-      "The art teacher mentioned wanting to photograph colorful book displays",
+      "Knjige so zdaj razvrščene po barvi namesto po predmetu",
+      "Na mizi je bilo zahvalno voščilo, podpisano z 'Likovni krožek'",
+      "Likovna učiteljica je omenila, da bi rada fotografirala pisane razstave knjig",
     ],
     solution:
-      "The Art Club rearranged the books by color to create a beautiful rainbow display for their photography project! They left a note to explain and planned to help put everything back.",
+      "Likovni krožek je knjige razvrstil po barvi, da bi za svoj fotografski projekt ustvaril čudovito mavrično razstavo! Pustili so voščilo z razlago in nameravali vse pospraviti nazaj.",
   },
 ]
 
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         mystery: randomMystery,
         fallback: true,
-        message: `Too many requests! Please wait ${rateLimitResult.resetIn} seconds before generating new mysteries. Enjoy this pre-made mystery in the meantime!`,
+        message: `Preveč zahtev! Počakaj ${rateLimitResult.resetIn} sekund, preden ustvariš nove skrivnosti. Medtem uživaj v tej vnaprej pripravljeni skrivnosti!`,
       })
     }
 
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
 
     while (retryCount < maxRetries) {
       try {
-        const basePrompt = `Create a fun detective mystery case for kids aged 8-12 with a ${sanitizedTheme} theme at ${difficulty} difficulty.
+        const basePrompt = `Create a fun detective mystery case for kids aged 5-12 with a ${sanitizedTheme} theme at ${difficulty} difficulty.
 
 Format the response as JSON with this exact structure:
 {
@@ -103,6 +103,7 @@ Format the response as JSON with this exact structure:
 }
 
 Requirements:
+- Write ALL text (title, description, clues, solution) in Slovenian language — this is mandatory
 - Mystery should be age-appropriate and non-scary
 - Clues should progressively reveal the solution
 - Solution should be logical and satisfying
@@ -136,7 +137,7 @@ Return ONLY the JSON object, no additional text.`
           return NextResponse.json({
             mystery: randomMystery,
             fallback: true,
-            message: "Using a pre-made mystery to ensure age-appropriate content!",
+            message: "Uporabljamo vnaprej pripravljeno skrivnost, da zagotovimo starosti primerno vsebino!",
           })
         }
 

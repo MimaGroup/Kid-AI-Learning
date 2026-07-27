@@ -47,14 +47,14 @@ function ParentLoginContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dobrodosli nazaj</h1>
-          <p className="text-gray-600">Prijavite se v svoj Kids Learning AI racun</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dobrodošli nazaj</h1>
+          <p className="text-gray-600">Prijavite se v svoj Kids Learning AI račun</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              E-posta
+              E-pošta
             </label>
             <input
               id="email"
@@ -62,7 +62,7 @@ function ParentLoginContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Vnesite svojo e-posto"
+              placeholder="Vnesite svojo e-pošto"
               required
             />
           </div>
@@ -97,7 +97,7 @@ function ParentLoginContent() {
 
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
-            {"Nimate racuna? "}
+            {"Nimate računa? "}
             <Link href="/auth/sign-up" className="text-blue-600 hover:underline font-medium">
               Registrirajte se
             </Link>

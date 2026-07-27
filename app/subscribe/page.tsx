@@ -11,7 +11,7 @@ const PLANS = [
     price: "€7,90",
     period: "/ mesec",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY!,
-    features: ["14-dnevni brezplačni preskus", "Preklic kadarkoli", "Vse dejavnosti vključene"],
+    features: ["7 dni brezplačno", "Preklic kadarkoli", "Vse dejavnosti vključene"],
     highlight: false,
   },
   {
@@ -20,7 +20,7 @@ const PLANS = [
     price: "€79,00",
     period: "/ leto",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY!,
-    features: ["14-dnevni brezplačni preskus", "Prihraniš ~2 meseca", "Vse dejavnosti vključene"],
+    features: ["7 dni brezplačno", "Prihraniš ~2 meseca", "Vse dejavnosti vključene"],
     highlight: true,
     badge: "Prihrani 17%",
   },
@@ -74,7 +74,7 @@ export default function SubscribePage() {
             <span>🚀</span> Kids Learning AI
           </Link>
           <h1 className="text-4xl font-extrabold text-white mb-3">Izberi plan</h1>
-          <p className="text-white/50 text-sm">14-dnevni preskus. Preklic kadarkoli. Vse cene v EUR.</p>
+          <p className="text-white/50 text-sm">7 dni brezplačno. Preklic kadarkoli. Vse cene v EUR.</p>
         </div>
 
         {/* Plans */}
@@ -123,7 +123,7 @@ export default function SubscribePage() {
                   border: plan.highlight ? "none" : "1px solid rgba(255,255,255,0.15)",
                 }}
               >
-                {loading === plan.id ? "Preusmerjanje..." : "Začni 14-dnevni preskus"}
+                {loading === plan.id ? "Preusmerjanje..." : "Začni 7 dni brezplačno"}
               </button>
             </div>
           ))}

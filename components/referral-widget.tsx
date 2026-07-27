@@ -34,19 +34,19 @@ export function ReferralWidget() {
     try {
       await navigator.clipboard.writeText(referralCode)
       setCopied(true)
-      success("Referral code copied to clipboard!")
+      success("Priporočilna koda kopirana!")
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      error("Failed to copy code")
+      error("Kopiranje kode ni uspelo")
     }
   }
 
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(getReferralLink())
-      success("Referral link copied to clipboard!")
+      success("Priporočilna povezava kopirana!")
     } catch (err) {
-      error("Failed to copy link")
+      error("Kopiranje povezave ni uspelo")
     }
   }
 
@@ -57,12 +57,12 @@ export function ReferralWidget() {
     setSending(true)
     try {
       await sendInvitation(inviteEmail, inviteName)
-      success("Invitation sent successfully!")
+      success("Povabilo je bilo uspešno poslano!")
       setInviteEmail("")
       setInviteName("")
       setDialogOpen(false)
     } catch (err) {
-      error(err instanceof Error ? err.message : "Failed to send invitation")
+      error(err instanceof Error ? err.message : "Pošiljanje povabila ni uspelo")
     } finally {
       setSending(false)
     }
@@ -92,8 +92,8 @@ export function ReferralWidget() {
             <Gift className="w-5 h-5" />
           </div>
           <div>
-            <CardTitle className="text-xl">Invite Friends & Earn</CardTitle>
-            <CardDescription className="text-white/80">Get 1 free month for each friend who subscribes</CardDescription>
+            <CardTitle className="text-xl">Povabi prijatelje in prejmi nagrado</CardTitle>
+            <CardDescription className="text-white/80">Za vsakega prijatelja, ki se naroči, dobite 1 brezplačen mesec</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -103,17 +103,17 @@ export function ReferralWidget() {
         <div className="flex gap-4">
           <div className="flex-1 bg-white/20 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold">{referralCount}</div>
-            <div className="text-xs text-white/80">Friends Referred</div>
+            <div className="text-xs text-white/80">Povabljenih prijateljev</div>
           </div>
           <div className="flex-1 bg-white/20 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold">{pendingRewards.length}</div>
-            <div className="text-xs text-white/80">Rewards Pending</div>
+            <div className="text-xs text-white/80">Nagrad v obravnavi</div>
           </div>
         </div>
 
         {/* Referral Code */}
         <div className="bg-white/20 rounded-xl p-4">
-          <div className="text-xs text-white/80 mb-1">Your Referral Code</div>
+          <div className="text-xs text-white/80 mb-1">Vaša priporočilna koda</div>
           <div className="flex items-center gap-2">
             <div className="flex-1 font-mono text-2xl font-bold tracking-wider">{referralCode}</div>
             <Button
@@ -135,40 +135,40 @@ export function ReferralWidget() {
             className="flex-1 bg-white text-purple-600 hover:bg-white/90"
           >
             <Copy className="w-4 h-4 mr-2" />
-            Copy Link
+            Kopiraj povezavo
           </Button>
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button className="flex-1 bg-white/20 hover:bg-white/30 text-white border-0">
                 <Mail className="w-4 h-4 mr-2" />
-                Send Invite
+                Pošlji povabilo
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Invite a Friend</DialogTitle>
+                <DialogTitle>Povabi prijatelja</DialogTitle>
                 <DialogDescription>
-                  Send a referral invitation. They'll get a 14-day free trial, and you'll get a free month when they
-                  subscribe!
+                  Pošljite priporočilno povabilo. Prijatelj dobi 7 dni brezplačno preskusno obdobje, vi pa brezplačen
+                  mesec, ko se naroči!
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSendInvite} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="inviteName">Friend's Name (optional)</Label>
+                  <Label htmlFor="inviteName">Ime prijatelja (neobvezno)</Label>
                   <Input
                     id="inviteName"
-                    placeholder="John"
+                    placeholder="Jan"
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="inviteEmail">Friend's Email</Label>
+                  <Label htmlFor="inviteEmail">E-pošta prijatelja</Label>
                   <Input
                     id="inviteEmail"
                     type="email"
-                    placeholder="friend@example.com"
+                    placeholder="prijatelj@primer.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     required
@@ -176,11 +176,11 @@ export function ReferralWidget() {
                 </div>
                 <Button type="submit" disabled={sending || !inviteEmail} className="w-full">
                   {sending ? (
-                    "Sending..."
+                    "Pošiljanje ..."
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Send Invitation
+                      Pošlji povabilo
                     </>
                   )}
                 </Button>
@@ -192,7 +192,7 @@ export function ReferralWidget() {
         {/* Recent Invitations */}
         {invitations.length > 0 && (
           <div className="space-y-2">
-            <div className="text-xs text-white/80 font-medium">Recent Invitations</div>
+            <div className="text-xs text-white/80 font-medium">Nedavna povabila</div>
             <div className="space-y-1">
               {invitations.slice(0, 3).map((inv) => (
                 <div
@@ -209,12 +209,12 @@ export function ReferralWidget() {
                     {inv.status === "accepted" ? (
                       <>
                         <Check className="w-3 h-3 mr-1" />
-                        Joined
+                        Pridružen
                       </>
                     ) : (
                       <>
                         <Clock className="w-3 h-3 mr-1" />
-                        Pending
+                        V obravnavi
                       </>
                     )}
                   </Badge>
@@ -226,7 +226,7 @@ export function ReferralWidget() {
 
         {/* Incentive Reminder */}
         <div className="text-center text-xs text-white/70 pt-2 border-t border-white/20">
-          🎁 Your friend gets 14-day trial • You get 1 free month per subscription
+          🎁 Vaš prijatelj dobi 7 dni brezplačno · Vi dobite 1 brezplačen mesec ob vsaki naročnini
         </div>
       </CardContent>
     </Card>

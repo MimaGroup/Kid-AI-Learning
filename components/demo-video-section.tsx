@@ -87,7 +87,7 @@ function GamePlayMockup() {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-inner border border-[#E2E8F0] h-full">
       <div className="flex items-center justify-between mb-3">
-        <Badge className="bg-[#F3E8FF] text-[#7C3AED] border-0 text-xs">Vprasanje 3/10</Badge>
+        <Badge className="bg-[#F3E8FF] text-[#7C3AED] border-0 text-xs">Vprašanje 3/10</Badge>
         <div className="flex items-center gap-1">
           {[1, 2, 3].map((i) => (
             <Star key={i} className="w-3.5 h-3.5 text-[#F59E0B] fill-[#F59E0B]" />
@@ -128,7 +128,7 @@ function GamePlayMockup() {
       </div>
       {selectedAnswer === 0 && (
         <div className="mt-3 text-center">
-          <p className="text-xs font-bold text-[#10B981]">Pravilno! +10 tock</p>
+          <p className="text-xs font-bold text-[#10B981]">Pravilno! +10 točk</p>
         </div>
       )}
     </div>
@@ -140,7 +140,7 @@ function BadgesMockup() {
     { name: "AI Raziskovalec", icon: <Brain className="w-5 h-5 text-white" />, bg: "bg-[#7C3AED]", earned: true },
     { name: "Kviz Zvezda", icon: <Star className="w-5 h-5 text-white" />, bg: "bg-[#F59E0B]", earned: true },
     { name: "Kod Genij", icon: <Sparkles className="w-5 h-5 text-white" />, bg: "bg-[#0EA5E9]", earned: true },
-    { name: "Super Ucenec", icon: <Trophy className="w-5 h-5 text-white" />, bg: "bg-[#10B981]", earned: false },
+    { name: "Super učenec", icon: <Trophy className="w-5 h-5 text-white" />, bg: "bg-[#10B981]", earned: false },
   ]
 
   return (
@@ -148,12 +148,12 @@ function BadgesMockup() {
       <div className="text-center mb-4">
         <div className="inline-flex items-center gap-2 bg-[#FEF3C7] px-3 py-1.5 rounded-full mb-3">
           <Trophy className="w-4 h-4 text-[#F59E0B]" />
-          <span className="text-xs font-bold text-[#92400E]">3 od 4 znack</span>
+          <span className="text-xs font-bold text-[#92400E]">3 od 4 značk</span>
         </div>
         <div className="w-full h-2.5 rounded-full bg-[#F1F5F9] mb-1">
           <div className="h-full rounded-full bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] w-[75%] transition-all" />
         </div>
-        <p className="text-[10px] text-[#64748B]">Se 1 znacka do naslednjega nivoja!</p>
+        <p className="text-[10px] text-[#64748B]">Še 1 značka do naslednjega nivoja!</p>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {badges.map((badge) => (
@@ -196,15 +196,15 @@ function ParentDashboardMockup() {
     <div className="bg-white rounded-2xl p-5 shadow-inner border border-[#E2E8F0] h-full">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-sm font-bold text-[#2D2A3D]">Starsevski pregled</p>
-          <p className="text-xs text-[#64748B]">Tedensko porocilo</p>
+          <p className="text-sm font-bold text-[#2D2A3D]">Starševski pregled</p>
+          <p className="text-xs text-[#64748B]">Tedensko poročilo</p>
         </div>
         <Shield className="w-5 h-5 text-[#10B981]" />
       </div>
       <div className="grid grid-cols-3 gap-2 mb-4">
         <div className="bg-[#F3E8FF] rounded-xl p-2.5 text-center">
           <p className="text-lg font-bold text-[#7C3AED]">4.5h</p>
-          <p className="text-[10px] text-[#64748B]">Cas ucenja</p>
+          <p className="text-[10px] text-[#64748B]">Čas učenja</p>
         </div>
         <div className="bg-[#ECFDF5] rounded-xl p-2.5 text-center">
           <p className="text-lg font-bold text-[#10B981]">12</p>
@@ -212,7 +212,7 @@ function ParentDashboardMockup() {
         </div>
         <div className="bg-[#FEF3C7] rounded-xl p-2.5 text-center">
           <p className="text-lg font-bold text-[#F59E0B]">85%</p>
-          <p className="text-[10px] text-[#64748B]">Tocnost</p>
+          <p className="text-[10px] text-[#64748B]">Točnost</p>
         </div>
       </div>
       <p className="text-xs font-semibold text-[#64748B] mb-2">Tedenska aktivnost</p>
@@ -236,10 +236,10 @@ function ParentDashboardMockup() {
 const DEMO_STEPS: DemoStep[] = [
   {
     id: 1,
-    title: "Otroska nadzorna plosca",
-    byteSpeech: "Tukaj izberes svojo igro! Vsaka te nauci nekaj novega o AI.",
+    title: "Otroška nadzorna plošča",
+    byteSpeech: "Tukaj izbereš svojo igro! Vsaka te nauči nekaj novega o AI.",
     byteImage: BYTE_CHARACTER.images.waving,
-    description: "Otrok dobi svoj profil z igrami, izzivi in napakom prilagojenim ucenjem.",
+    description: "Otrok dobi svoj profil z igrami, izzivi in njemu prilagojenim učenjem.",
     icon: <Layout className="w-5 h-5" />,
     color: "#7C3AED",
     bgGradient: "from-[#F5F3FF] to-[#EDE9FE]",
@@ -248,9 +248,9 @@ const DEMO_STEPS: DemoStep[] = [
   {
     id: 2,
     title: "Igranje AI iger",
-    byteSpeech: "Skupaj se uciva! Odgovori na vprasanje in zasluzis tocke!",
+    byteSpeech: "Skupaj se učiva! Odgovori na vprašanje in zaslužiš točke!",
     byteImage: BYTE_CHARACTER.images.teaching,
-    description: "Interaktivne igre, ki otroke ucijo osnov umetne inteligence na zabaven nacin.",
+    description: "Interaktivne igre, ki otroke učijo osnov umetne inteligence na zabaven način.",
     icon: <Gamepad2 className="w-5 h-5" />,
     color: "#0EA5E9",
     bgGradient: "from-[#F0F9FF] to-[#E0F2FE]",
@@ -258,10 +258,10 @@ const DEMO_STEPS: DemoStep[] = [
   },
   {
     id: 3,
-    title: "Zasluzene znacke",
-    byteSpeech: "Bravo! Zasluzil si novo znacko! Se naprej tako!",
+    title: "Zaslužene značke",
+    byteSpeech: "Bravo! Zaslužil si novo značko! Le tako naprej!",
     byteImage: BYTE_CHARACTER.images.celebrating,
-    description: "Otroci zbirajo znacke, trofeje in tocke, ki jih motivirajo za nadaljnje ucenje.",
+    description: "Otroci zbirajo značke, trofeje in točke, ki jih motivirajo za nadaljnje učenje.",
     icon: <Trophy className="w-5 h-5" />,
     color: "#F59E0B",
     bgGradient: "from-[#FFFBEB] to-[#FEF3C7]",
@@ -269,10 +269,10 @@ const DEMO_STEPS: DemoStep[] = [
   },
   {
     id: 4,
-    title: "Starsevski nadzor",
-    byteSpeech: "Starsi vidijo tvoj napredek! Lahko so ponosni nate.",
+    title: "Starševski nadzor",
+    byteSpeech: "Starši vidijo tvoj napredek! Lahko so ponosni nate.",
     byteImage: BYTE_CHARACTER.images.thinking,
-    description: "Starsi spremljajo napredek, cas ucenja in dosezke svojega otroka.",
+    description: "Starši spremljajo napredek, čas učenja in dosežke svojega otroka.",
     icon: <BarChart3 className="w-5 h-5" />,
     color: "#10B981",
     bgGradient: "from-[#ECFDF5] to-[#D1FAE5]",
@@ -333,7 +333,7 @@ export function DemoVideoSection() {
             Kako deluje Kids Learning AI
           </h2>
           <p className="text-xl text-[#64748B] max-w-3xl mx-auto">
-            Kliknite skozi korake in odkrijte, kako Byte vodi vase otroke skozi zabavno ucenje AI
+            Kliknite skozi korake in odkrijte, kako Byte vodi vaše otroke skozi zabavno učenje AI
           </p>
         </div>
 
@@ -425,7 +425,7 @@ export function DemoVideoSection() {
                   size="sm"
                   onClick={prevStep}
                   className="rounded-full border-[#E2E8F0] hover:bg-white text-[#64748B] bg-transparent"
-                  aria-label="Prejsnji korak"
+                  aria-label="Prejšnji korak"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" />
                   Nazaj

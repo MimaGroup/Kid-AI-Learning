@@ -9,16 +9,16 @@ export function PricingComparison() {
   const [mobileView, setMobileView] = useState<"free" | "monthly" | "yearly">("monthly")
 
   const features = [
-    { name: "Stevilo iger", free: "4 osnovne igre", monthly: "Vseh 7 iger", yearly: "Vseh 7 iger" },
-    { name: "AI Ustvarjalec Prijateljev", free: false, monthly: true, yearly: true },
-    { name: "Trening Vzorcev", free: false, monthly: true, yearly: true },
-    { name: "Knjiznica vsebin", free: "Omejena", monthly: "Poln dostop", yearly: "Poln dostop" },
+    { name: "Število iger", free: "4 osnovne igre", monthly: "Vseh 7 iger", yearly: "Vseh 7 iger" },
+    { name: "AI Ustvarjalec prijateljev", free: false, monthly: true, yearly: true },
+    { name: "Trening vzorcev", free: false, monthly: true, yearly: true },
+    { name: "Knjižnica vsebin", free: "Omejena", monthly: "Poln dostop", yearly: "Poln dostop" },
     { name: "Analitika napredka", free: "Osnovna", monthly: "Napredna", yearly: "Napredna" },
     { name: "Podpora", free: "Skupnost", monthly: "Prednostna", yearly: "Prednostna" },
-    { name: "Nove aktivnosti", free: false, monthly: "Mesecno", yearly: "Mesecno + Zgodnji dostop" },
-    { name: "Nacin brez povezave", free: false, monthly: true, yearly: true },
-    { name: "Druzinska delitev", free: "1 otrok", monthly: "1 otrok", yearly: "Do 3 otroci" },
-    { name: "Ekskluzivne znacke", free: false, monthly: false, yearly: true },
+    { name: "Nove aktivnosti", free: false, monthly: "Mesečno", yearly: "Mesečno + zgodnji dostop" },
+    { name: "Način brez povezave", free: false, monthly: true, yearly: true },
+    { name: "Družinska delitev", free: "1 otrok", monthly: "1 otrok", yearly: "Do 3 otroci" },
+    { name: "Ekskluzivne značke", free: false, monthly: false, yearly: true },
   ]
 
   return (
@@ -31,7 +31,7 @@ export function PricingComparison() {
             onClick={() => setMobileView("free")}
             className="text-xs"
           >
-            Brezplacno
+            Brezplačno
           </Button>
           <Button
             variant={mobileView === "monthly" ? "default" : "outline"}
