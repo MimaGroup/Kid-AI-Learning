@@ -145,7 +145,7 @@ export async function POST(request: Request) {
 
     // Send referral email
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ""}/api/send-referral-email`, {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/api/send-referral-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

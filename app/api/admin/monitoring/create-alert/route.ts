@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // If critical alert, send email notification
     if (body.severity === "critical" || body.severity === "error") {
-      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/admin/monitoring/send-alert`, {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "https://kids-learning-ai.com"}/api/admin/monitoring/send-alert`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
