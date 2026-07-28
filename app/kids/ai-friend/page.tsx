@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { ToastContainer } from "@/components/toast-notification"
+import Link from "next/link"
 
 interface AIFriend {
   id: string
@@ -274,9 +275,14 @@ export default function AIFriendBuilder() {
                     </button>
                   </div>
                   <h4 className="text-base font-bold text-white mb-0.5">{friend.name}</h4>
-                  <p className="text-white/40 text-xs">
+                  <p className="text-white/40 text-xs mb-3">
                     {friend.personality === "Friendly" ? "Prijazno" : friend.personality === "Curious" ? "Radovedno" : friend.personality === "Helpful" ? "Koristno" : friend.personality === "Playful" ? "Igrivo" : friend.personality}
                   </p>
+                  <Link href={`/kids/ai-friend/chat/${friend.id}`}
+                    className="block w-full text-center py-2 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
+                    style={{ background: "linear-gradient(135deg, #7C3AED, #a855f7)" }}>
+                    Pogovori se 💬
+                  </Link>
                 </div>
               ))}
             </div>
