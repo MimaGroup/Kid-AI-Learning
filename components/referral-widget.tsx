@@ -203,13 +203,22 @@ export function ReferralWidget() {
                   <Badge
                     variant="outline"
                     className={`text-xs border-white/30 ${
-                      inv.status === "accepted" ? "bg-green-500/30 text-white" : "bg-white/20 text-white"
+                      inv.status === "accepted"
+                        ? "bg-green-500/30 text-white"
+                        : inv.status === "expired"
+                          ? "bg-white/10 text-white/50"
+                          : "bg-white/20 text-white"
                     }`}
                   >
                     {inv.status === "accepted" ? (
                       <>
                         <Check className="w-3 h-3 mr-1" />
                         Pridružen
+                      </>
+                    ) : inv.status === "expired" ? (
+                      <>
+                        <Clock className="w-3 h-3 mr-1" />
+                        Poteklo
                       </>
                     ) : (
                       <>
