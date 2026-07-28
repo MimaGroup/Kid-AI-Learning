@@ -117,6 +117,8 @@ Requirements:
   - Always use correct verb forms: "zdijo" (not "zdelajo"), "igralec" (not "igranec").
   - Always use proper diacritics: č, š, ž, where needed. For example: "računalnik" (not "racunalnik"), "učenje" (not "ucenje"), "različen" (not "razlicen").
   - Use correct prepositions and cases: "s pomočjo" (instrumental), "brez" + genitive, etc.
+  - Always place a comma before subordinate clauses introduced by conjunctions like "ker", "da", "ki", "ko", "čeprav" — e.g. "veš, da je to res" not "veš da je to res".
+  - Prefer casual, everyday Slovenian a child would actually use over formal/literary word choices, even when the formal word is technically correct.
   - Do not invent words. Use only real Slovenian words.
 - Questions should be appropriate for children aged ${ageRange}.
 - Test understanding of the key concepts from this specific lesson.
