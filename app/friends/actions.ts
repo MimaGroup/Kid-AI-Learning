@@ -92,7 +92,7 @@ export async function addFriendBySecretKey(secretKey: string) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      return { success: false, error: 'Not authenticated' }
+      return { success: false, error: 'Niste prijavljeni' }
     }
 
     const { data: friendProfile, error: friendError } = await supabase
@@ -102,11 +102,11 @@ export async function addFriendBySecretKey(secretKey: string) {
       .maybeSingle()
 
     if (friendError || !friendProfile) {
-      return { success: false, error: 'Invalid secret key' }
+      return { success: false, error: 'Neveljaven skrivni ključ' }
     }
 
     if (friendProfile.id === user.id) {
-      return { success: false, error: 'You cannot add yourself as a friend' }
+      return { success: false, error: 'Ne moreš dodati samega sebe kot prijatelja' }
     }
 
     const { data: existingFriendship } = await supabase
@@ -117,7 +117,7 @@ export async function addFriendBySecretKey(secretKey: string) {
       .maybeSingle()
 
     if (existingFriendship) {
-      return { success: false, error: 'Already friends with this user' }
+      return { success: false, error: 'S tem uporabnikom si že prijatelj' }
     }
 
     const { error: insertError } = await supabase.from('friendships').insert({
@@ -128,7 +128,7 @@ export async function addFriendBySecretKey(secretKey: string) {
 
     if (insertError) {
       console.error('[v0] addFriendBySecretKey: Error creating friendship', insertError)
-      return { success: false, error: 'Failed to add friend' }
+      return { success: false, error: 'Dodajanje prijatelja ni uspelo' }
     }
 
     // Reciprocal friendship so both sides see each other in their list.
@@ -152,7 +152,7 @@ export async function removeFriend(friendshipId: string) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      return { success: false, error: 'Not authenticated' }
+      return { success: false, error: 'Niste prijavljeni' }
     }
 
     const { data: friendship } = await supabase
@@ -163,7 +163,7 @@ export async function removeFriend(friendshipId: string) {
       .maybeSingle()
 
     if (!friendship) {
-      return { success: false, error: 'Friendship not found' }
+      return { success: false, error: 'Prijateljstvo ni bilo najdeno' }
     }
 
     const { error: deleteError } = await supabase
@@ -174,7 +174,7 @@ export async function removeFriend(friendshipId: string) {
 
     if (deleteError) {
       console.error('[v0] removeFriend: Error deleting friendship', deleteError)
-      return { success: false, error: 'Failed to remove friend' }
+      return { success: false, error: 'Odstranjevanje prijatelja ni uspelo' }
     }
 
     // Delete the reciprocal friendship too.
