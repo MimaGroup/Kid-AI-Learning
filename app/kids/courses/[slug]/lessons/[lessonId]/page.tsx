@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter, useParams } from "next/navigation"
 import { KidsBottomNav } from "@/components/kids-bottom-nav"
 import { ByteTutor } from "@/components/byte-tutor"
+import ReactMarkdown from "react-markdown"
 
 interface Lesson {
   id: string
@@ -272,11 +273,55 @@ export default function LessonPage() {
         <div className="rounded-2xl p-6 mb-6"
           style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="prose prose-invert max-w-none">
-            {lesson.content.split("\n").map((para, i) =>
-              para.trim() ? (
-                <p key={i} className="text-white/75 text-sm leading-relaxed mb-3">{para}</p>
-              ) : <div key={i} className="h-2" />
-            )}
+            <ReactMarkdown
+              components={{
+                h1: ({ children }) => (
+                  <h1 className="text-white font-bold text-lg mb-4 mt-2">{children}</h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="text-white font-bold text-base mb-3 mt-6 pb-2 border-b border-white/10">{children}</h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="font-bold text-sm mb-2 mt-4" style={{ color: "#c084fc" }}>{children}</h3>
+                ),
+                p: ({ children }) => (
+                  <p className="text-white/75 text-sm leading-relaxed mb-3">{children}</p>
+                ),
+                strong: ({ children }) => (
+                  <strong className="text-white font-semibold">{children}</strong>
+                ),
+                ul: ({ children }) => (
+                  <ul className="space-y-1.5 mb-3 pl-1">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="space-y-1.5 mb-3 pl-5 list-decimal">{children}</ol>
+                ),
+                li: ({ children }) => (
+                  <li className="text-white/75 text-sm leading-relaxed flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: "#c084fc" }} />
+                    <span>{children}</span>
+                  </li>
+                ),
+                hr: () => <hr className="my-5 border-white/10" />,
+                a: ({ children, href }) => (
+                  <a href={href} className="underline underline-offset-2" style={{ color: "#c084fc" }} target="_blank" rel="noreferrer">
+                    {children}
+                  </a>
+                ),
+                code: ({ children }) => (
+                  <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: "rgba(168,85,247,0.15)", color: "#c084fc" }}>
+                    {children}
+                  </code>
+                ),
+                blockquote: ({ children }) => (
+                  <div className="my-4 p-4 rounded-xl border-l-4" style={{ background: "rgba(168,85,247,0.08)", borderColor: "#c084fc" }}>
+                    {children}
+                  </div>
+                ),
+              }}
+            >
+              {lesson.content}
+            </ReactMarkdown>
           </div>
         </div>
 
