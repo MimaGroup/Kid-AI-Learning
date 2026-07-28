@@ -181,6 +181,85 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   } catch (error) {
     console.error("[v0] Error sending subscription confirmation email:", error)
   }
+
+  try {
+    await creditReferrerForSubscription(userId)
+  } catch (error) {
+    console.error("[v0] Error crediting referrer reward:", error)
+  }
+}
+
+// When a referred user completes their first subscription checkout, the referrer earns a
+// "free_month" reward (created as 'pending' at signup time in /api/referrals/validate).
+// Claim it here and, if the referrer currently has an active/trialing subscription, apply it
+// immediately by pushing their Stripe trial_end out 30 days. If they don't have one right now,
+// leave it 'claimed' (earned) so it can be granted manually later.
+async function creditReferrerForSubscription(newUserId: string) {
+  const supabase = getSupabaseAdmin()
+
+  const { data: newUserProfile } = await supabase
+    .from("profiles")
+    .select("referred_by")
+    .eq("id", newUserId)
+    .maybeSingle()
+
+  const referrerId = newUserProfile?.referred_by
+  if (!referrerId) return
+
+  const { data: pendingReward } = await supabase
+    .from("referral_rewards")
+    .select("id")
+    .eq("user_id", referrerId)
+    .eq("reward_type", "free_month")
+    .eq("status", "pending")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
+  if (!pendingReward) return
+
+  // Idempotency guard: only proceed if this call is the one that flips pending -> claimed
+  // (protects against duplicate/retried webhook deliveries double-crediting the reward).
+  const { data: claimedRows } = await supabase
+    .from("referral_rewards")
+    .update({ status: "claimed", claimed_at: new Date().toISOString() })
+    .eq("id", pendingReward.id)
+    .eq("status", "pending")
+    .select("id")
+
+  if (!claimedRows || claimedRows.length === 0) return
+
+  console.log(`[v0] Referral reward ${pendingReward.id} claimed for referrer ${referrerId}`)
+
+  const { data: referrerSub } = await supabase
+    .from("subscriptions")
+    .select("stripe_subscription_id, current_period_end, status")
+    .eq("user_id", referrerId)
+    .maybeSingle()
+
+  if (!referrerSub?.stripe_subscription_id || !["active", "trialing"].includes(referrerSub.status)) {
+    console.log(`[v0] Referrer ${referrerId} has no active subscription to extend - reward left as 'claimed'`)
+    return
+  }
+
+  try {
+    const stripe = getStripe()
+    const newTrialEnd = Math.floor(new Date(referrerSub.current_period_end).getTime() / 1000) + 30 * 24 * 60 * 60
+
+    await stripe.subscriptions.update(referrerSub.stripe_subscription_id, {
+      trial_end: newTrialEnd,
+      proration_behavior: "none",
+    })
+
+    await supabase
+      .from("referral_rewards")
+      .update({ status: "applied" })
+      .eq("id", pendingReward.id)
+
+    console.log(`[v0] Extended referrer ${referrerId} subscription by 30 days (trial_end=${newTrialEnd})`)
+  } catch (error) {
+    console.error(`[v0] Failed to extend referrer ${referrerId} subscription in Stripe:`, error)
+  }
 }
 
 async function handleCoursePurchase(session: Stripe.Checkout.Session) {
