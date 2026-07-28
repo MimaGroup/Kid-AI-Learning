@@ -123,10 +123,10 @@ export default function ContentLibrary() {
       icon: "📝",
       type: "worksheets",
       items: [
-        { name: "Uganka prepoznavanja vzorcev", difficulty: "Lahko" },
-        { name: "Sestavi svoj algoritem", difficulty: "Srednje" },
-        { name: "Iskanje AI besed", difficulty: "Lahko" },
-        { name: "Izziv oblikovanja robota", difficulty: "Težko" },
+        { name: "Uganka prepoznavanja vzorcev", key: "pattern-recognition-puzzle", difficulty: "Lahko" },
+        { name: "Sestavi svoj algoritem", key: "build-your-own-algorithm", difficulty: "Srednje" },
+        { name: "Iskanje AI besed", key: "ai-word-search", difficulty: "Lahko" },
+        { name: "Izziv oblikovanja robota", key: "robot-design-challenge", difficulty: "Težko" },
       ],
     },
   ]
@@ -141,9 +141,8 @@ export default function ContentLibrary() {
     setSelectedVideo(null)
   }
 
-  const handleViewWorksheet = (name: string) => {
-    const worksheetKey = name.toLowerCase().replace(/ /g, "-")
-    window.location.href = `/worksheets/${worksheetKey}`
+  const handleViewWorksheet = (key: string) => {
+    window.location.href = `/worksheets/${key}`
   }
 
   const difficultyLabels: Record<string, string> = {
@@ -312,7 +311,7 @@ export default function ContentLibrary() {
                   {resource.type === "worksheets" && (
                     <div className="space-y-2">
                       {resource.items.map((worksheet, idx) => {
-                        const worksheetItem = worksheet as { name: string; difficulty: string }
+                        const worksheetItem = worksheet as { name: string; key: string; difficulty: string }
                         return (
                           <div
                             key={idx}
@@ -327,7 +326,7 @@ export default function ContentLibrary() {
                               >
                                 {worksheetItem.difficulty}
                               </span>
-                              <Button size="sm" onClick={() => handleViewWorksheet(worksheetItem.name)}>
+                              <Button size="sm" onClick={() => handleViewWorksheet(worksheetItem.key)}>
                                 Poglej
                               </Button>
                             </div>
