@@ -34,7 +34,7 @@ export async function hasCourseAccess(
   if (purchaseResult.data) return true
 
   const hasPaidSubscription =
-    subResult.data?.status === "active" &&
+    ["active", "trialing"].includes(subResult.data?.status ?? "") &&
     (subResult.data?.plan_type === "monthly" || subResult.data?.plan_type === "yearly")
 
   if (hasPaidSubscription) return true

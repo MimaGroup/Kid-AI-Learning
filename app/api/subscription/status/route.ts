@@ -32,7 +32,7 @@ export async function GET() {
     }
 
     const hasPremium =
-      subscription.status === "active" &&
+      ["active", "trialing"].includes(subscription.status) &&
       (subscription.plan_type === "monthly" || subscription.plan_type === "yearly") &&
       new Date(subscription.current_period_end) > new Date()
 

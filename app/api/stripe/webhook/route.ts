@@ -366,7 +366,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   if (sub.items.data.length > 0) {
     const priceId = sub.items.data[0].price.id
     // Check if it's the yearly price
-    if (priceId === process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID) {
+    if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY) {
       planType = "yearly"
     }
   }

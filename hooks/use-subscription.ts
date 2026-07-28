@@ -75,7 +75,8 @@ export function useSubscription() {
       }
 
       const hasPaidSubscription =
-        subData?.status === "active" && (subData?.plan_type === "monthly" || subData?.plan_type === "yearly")
+        ["active", "trialing"].includes(subData?.status ?? "") &&
+        (subData?.plan_type === "monthly" || subData?.plan_type === "yearly")
 
       setHasPremium(hasPaidSubscription || isInTrial)
       setLoading(false)
