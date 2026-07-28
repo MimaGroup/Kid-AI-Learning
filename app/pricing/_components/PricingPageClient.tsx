@@ -66,7 +66,10 @@ export default function PricingPageClient() {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId, planType }),
+        // Explicitly set the trial to 7 days so it matches the "7 dni brezplačno"
+        // messaging everywhere, regardless of whatever default trial (if any) is
+        // configured on the Stripe Price itself.
+        body: JSON.stringify({ priceId, planType, trialDays: 7 }),
       })
 
       const data = await res.json()

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       customer_email: session.user.email,
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
-        trial_period_days: 14,
+        trial_period_days: 7,
         metadata: { user_id: session.user.id },
       },
       metadata: { user_id: session.user.id },
