@@ -4,7 +4,10 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle2, Copy, AlertCircle } from "lucide-react"
+import { CheckCircle2, Copy, AlertCircle, ArrowLeft } from "lucide-react"
+import Link from "next/link"
+
+const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #0f0f23 0%, #070710 100%)" }
 
 interface StripePrice {
   id: string
@@ -80,18 +83,21 @@ export default function StripePricesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-10">
-        <div className="flex items-center justify-center">
-          <div className="text-lg">Loading Stripe prices...</div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center" style={spaceStyle}>
+        <div className="text-lg text-white/60">Loading Stripe prices...</div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto py-10 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-2">Stripe Price IDs</h1>
-      <p className="text-muted-foreground mb-6">
+    <div className="min-h-screen p-4 md:p-8" style={spaceStyle}>
+    <div className="container mx-auto max-w-4xl">
+      <Link href="/admin" className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm mb-6 transition-colors">
+        <ArrowLeft className="h-4 w-4" />
+        Nazaj v admin
+      </Link>
+      <h1 className="text-3xl font-bold mb-2 text-white">Stripe Price IDs</h1>
+      <p className="text-white/50 mb-6">
         Copy the correct Price IDs from your Stripe account and update your environment variables
       </p>
 
@@ -157,7 +163,7 @@ export default function StripePricesPage() {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="font-semibold">Monthly Price Found</span>
                   </div>
-                  <p className="font-mono text-xs text-muted-foreground">NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID</p>
+                  <p className="font-mono text-xs text-muted-foreground">NEXT_PUBLIC_STRIPE_PRICE_MONTHLY</p>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 bg-background p-2 rounded border font-mono text-sm">{monthlyPrice.id}</code>
                     <Button size="sm" variant="outline" onClick={() => copyToClipboard(monthlyPrice.id)}>
@@ -189,7 +195,7 @@ export default function StripePricesPage() {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="font-semibold">Yearly Price Found</span>
                   </div>
-                  <p className="font-mono text-xs text-muted-foreground">NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID</p>
+                  <p className="font-mono text-xs text-muted-foreground">NEXT_PUBLIC_STRIPE_PRICE_YEARLY</p>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 bg-background p-2 rounded border font-mono text-sm">{yearlyPrice.id}</code>
                     <Button size="sm" variant="outline" onClick={() => copyToClipboard(yearlyPrice.id)}>
@@ -265,6 +271,7 @@ export default function StripePricesPage() {
           </Card>
         </div>
       )}
+    </div>
     </div>
   )
 }
