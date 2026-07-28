@@ -8,6 +8,7 @@ import { AddChildDialog } from "../../../components/add-child-dialog"
 import { EditChildDialog } from "../../../components/edit-child-dialog"
 import { ChildCard } from "../../../components/child-card"
 import { ChildProgressCard } from "../../../components/child-progress-card"
+import { ReferralWidget } from "../../../components/referral-widget"
 import { useState } from "react"
 import type { Child } from "../../../types/child"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs"
@@ -173,6 +174,11 @@ export default function ParentDashboard() {
               Upravljaj →
             </Link>
           </div>
+        </div>
+
+        {/* Referral program */}
+        <div className="mt-8 max-w-2xl">
+          <ReferralWidget />
         </div>
 
       </div>
