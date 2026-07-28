@@ -50,20 +50,21 @@ function SignUpPageClient() {
     }
 
     try {
-      await register(email, password)
+      const { userId } = await register(email, password)
       trackEvent("user_signup", {
         email_domain: email.split("@")[1],
         timestamp: Date.now(),
         has_referral: !!referralCode,
       })
 
-      if (referralCode) {
+      if (referralCode && userId) {
         try {
           await fetch("/api/referrals/validate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               referralCode,
+              newUserId: userId,
               newUserEmail: email,
             }),
           })

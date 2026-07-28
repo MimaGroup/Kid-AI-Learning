@@ -10,7 +10,7 @@ interface AuthContextType {
   loading: boolean
   error: string | null
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string) => Promise<void>
+  register: (email: string, password: string) => Promise<{ userId: string | null }>
   logout: () => Promise<void>
   clearError: () => void
 }
@@ -126,6 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Welcome email sequence is triggered from sign-up-client.tsx via /api/email/welcome
+      return { userId: data.user?.id ?? null }
     } catch (error: any) {
       const errorMessage = error?.message || "Failed to connect to authentication service"
       setError(errorMessage)
