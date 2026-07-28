@@ -5,6 +5,7 @@ import { useChildren } from "../../../hooks/use-children"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { AddChildDialog } from "../../../components/add-child-dialog"
+import { EditChildDialog } from "../../../components/edit-child-dialog"
 import { ChildCard } from "../../../components/child-card"
 import { ChildProgressCard } from "../../../components/child-progress-card"
 import { useState } from "react"
@@ -16,7 +17,7 @@ const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #0f0f23 0%
 
 export default function ParentDashboard() {
   const { user, logout, loading: authLoading } = useAuth()
-  const { children, loading: childrenLoading, createChild, deleteChild } = useChildren()
+  const { children, loading: childrenLoading, createChild, updateChild, deleteChild } = useChildren()
   const { activeChildId, clearActiveChild } = useActiveChild()
   const router = useRouter()
   const [selectedChild, setSelectedChild] = useState<Child | null>(null)
@@ -38,6 +39,10 @@ export default function ParentDashboard() {
 
   const handleEditChild = (child: Child) => {
     setSelectedChild(child)
+  }
+
+  const handleSaveChild = async (id: string, input: Parameters<typeof updateChild>[1]) => {
+    await updateChild(id, input)
   }
 
   if (authLoading) {
@@ -171,6 +176,8 @@ export default function ParentDashboard() {
         </div>
 
       </div>
+
+      <EditChildDialog child={selectedChild} onClose={() => setSelectedChild(null)} onSave={handleSaveChild} />
     </div>
   )
 }
