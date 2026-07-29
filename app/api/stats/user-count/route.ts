@@ -1,9 +1,12 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
 export async function GET() {
   try {
-    const supabase = await createServerClient()
+    // A public-facing aggregate count needs to see every row, not just the
+    // caller's own -- profiles RLS only allows auth.uid() = id, which would
+    // make this always return 0 or 1.
+    const supabase = await createServiceRoleClient()
 
     const { count, error } = await supabase.from("profiles").select("*", { count: "exact", head: true })
 
