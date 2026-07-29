@@ -28,11 +28,12 @@ export async function GET(request: NextRequest) {
     // under the "auth.uid() = id" profiles policy. Needs the service role.
     const supabase = await createServiceRoleClient()
 
-    // Fetch all users (parents) who have no activity
+    // Fetch all users (parents) who have no activity. Regular accounts are
+    // stored with role "user", not "parent" -- match both plus null.
     const { data: allUsers, error: usersError } = await supabase
       .from("profiles")
       .select("id, email, display_name, created_at, last_activity_date")
-      .or("role.eq.parent,role.is.null")
+      .or("role.eq.parent,role.eq.user,role.is.null")
       .is("last_activity_date", null)
 
     if (usersError) {

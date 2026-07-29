@@ -9,11 +9,14 @@ async function runWeeklySummary() {
   // this must run with the service-role admin client.
   const supabase = createAdminClient()
 
-  // Only email parents who haven't opted out of weekly reports.
+  // Only email parents who haven't opted out of weekly reports. Regular
+  // accounts are stored with role "user" (the "parent" default in the
+  // signup trigger predates a later migration that changed the column
+  // default) -- match both so this doesn't silently email nobody.
   const { data: parents, error: parentsError } = await supabase
     .from("profiles")
     .select("id, email, display_name")
-    .eq("role", "parent")
+    .in("role", ["user", "parent"])
     .eq("weekly_reports_enabled", true)
 
   if (parentsError) {
