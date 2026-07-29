@@ -14,6 +14,8 @@ import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
 import { User, Bell, Shield, CreditCard, Trash2, Download } from 'lucide-react'
 
+const spaceStyle = { background: "radial-gradient(ellipse at 40% 30%, #0f0f23 0%, #070710 100%)" }
+
 export default function ParentSettingsPage() {
   const router = useRouter()
   const { user, logout } = useAuth()
@@ -110,16 +112,7 @@ export default function ParentSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 relative overflow-hidden">
-      {/* Floating decorative elements */}
-      <div className="absolute top-20 left-10 text-6xl opacity-20 animate-float">⚙️</div>
-      <div className="absolute top-40 right-20 text-5xl opacity-15 animate-float" style={{ animationDelay: '1s' }}>🔒</div>
-      <div className="absolute bottom-32 left-1/4 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>👨‍👩‍👧‍👦</div>
-
-      {/* Gradient blobs */}
-      <div className="absolute top-10 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" />
-      <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
-
+    <div className="min-h-screen" style={spaceStyle}>
       <AppNavigation />
 
       <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
@@ -127,8 +120,8 @@ export default function ParentSettingsPage() {
 
         <div className="mt-6 space-y-6">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Nastavitve računa</h1>
-            <p className="text-muted-foreground mt-2">Upravljajte nastavitve in preference svojega računa</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">Nastavitve računa</h1>
+            <p className="text-white/50 mt-2">Upravljajte nastavitve in preference svojega računa</p>
           </div>
 
           {/* Account Information */}
