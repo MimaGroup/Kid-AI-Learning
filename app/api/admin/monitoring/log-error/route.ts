@@ -1,11 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    // Called by every visitor's browser (no session), and error_logs has no
+    // INSERT policy at all (only admin-scoped SELECT) -- the RLS-bound
+    // client can never write here, only the service role can.
+    const supabase = await createServiceRoleClient()
     const body = await request.json()
 
     const { data, error } = await supabase.from("error_logs").insert([body]).select().single()

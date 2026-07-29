@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 import { checkAdminAuth } from "@/lib/admin-auth"
 
 export const dynamic = "force-dynamic"
@@ -11,7 +11,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = await createClient()
+    // system_alerts has no INSERT policy at all (only admin-scoped SELECT/
+    // UPDATE) -- even as an authenticated admin, the RLS-bound client can't
+    // write here.
+    const supabase = await createServiceRoleClient()
     const body = await request.json()
 
     const { data, error } = await supabase.from("system_alerts").insert([body]).select().single()
