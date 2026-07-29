@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server"
 import { createServiceRoleClient } from "@/lib/supabase/server"
+import { checkAdminAuth } from "@/lib/admin-auth"
 import { sendEmail } from "@/lib/email"
 
 export async function POST(request: Request) {
+  const { isAdmin, error: authError } = await checkAdminAuth()
+  if (!isAdmin) {
+    return NextResponse.json({ error: authError || "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const supabase = await createServiceRoleClient()
 

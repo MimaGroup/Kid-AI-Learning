@@ -84,7 +84,20 @@ export async function middleware(request: NextRequest) {
   response.headers.set("X-XSS-Protection", "1; mode=block")
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()")
 
-  if (pathname.startsWith("/admin")) {
+  // These report telemetry from every visitor's browser (see app/layout.tsx's
+  // global error handler and lib/api-monitor.ts), so they must stay reachable
+  // without an admin session even though they live under /api/admin.
+  const publicMonitoringPaths = [
+    "/api/admin/monitoring/log-error",
+    "/api/admin/monitoring/log-performance",
+    "/api/admin/monitoring/send-alert",
+  ]
+  const isAdminPath =
+    (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) &&
+    !publicMonitoringPaths.some((p) => pathname.startsWith(p))
+
+  if (isAdminPath) {
+    const isApiPath = pathname.startsWith("/api/")
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -107,8 +120,10 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    // Redirect to login if not authenticated, with return URL
     if (!user) {
+      if (isApiPath) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      }
       const loginUrl = new URL("/parent/login", request.url)
       loginUrl.searchParams.set("redirect", pathname)
       return NextResponse.redirect(loginUrl)
@@ -117,8 +132,10 @@ export async function middleware(request: NextRequest) {
     // Check admin role
     const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
 
-    // Redirect non-admins to parent dashboard
     if (!profile || profile.role !== "admin") {
+      if (isApiPath) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
       return NextResponse.redirect(new URL("/parent/dashboard", request.url))
     }
   }

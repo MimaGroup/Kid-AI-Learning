@@ -1,10 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { checkAdminAuth } from "@/lib/admin-auth"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
+  const { isAdmin, error: authError } = await checkAdminAuth()
+  if (!isAdmin) {
+    return NextResponse.json({ error: authError || "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const supabase = await createClient()
     const { searchParams } = new URL(request.url)

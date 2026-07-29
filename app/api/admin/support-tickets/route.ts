@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server"
 import { createServiceRoleClient } from "@/lib/supabase/server"
+import { checkAdminAuth } from "@/lib/admin-auth"
 
 export async function GET() {
+  const { isAdmin, error: authError } = await checkAdminAuth()
+  if (!isAdmin) {
+    return NextResponse.json({ error: authError || "Unauthorized" }, { status: 401 })
+  }
+
   try {
     console.log("[v0] Fetching support tickets")
 
@@ -29,6 +35,11 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const { isAdmin, error: authError } = await checkAdminAuth()
+  if (!isAdmin) {
+    return NextResponse.json({ error: authError || "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const { ticketId, status, priority, assigned_to } = await request.json()
 

@@ -78,8 +78,11 @@ export function UsersManagement() {
 
       if (!matchesSearch) return false
 
-      // Role filter
-      if (roleFilter !== "all" && user.role !== roleFilter) return false
+      // Role filter. Regular accounts are stored as role "user" (the
+      // profiles.role column default changed after the "parent" role was
+      // introduced), so the "Starš" filter needs to match both.
+      if (roleFilter === "parent" && user.role !== "parent" && user.role !== "user") return false
+      if (roleFilter !== "all" && roleFilter !== "parent" && user.role !== roleFilter) return false
 
       // Status filter
       if (statusFilter === "premium" && user.subscription_status !== "active") return false
