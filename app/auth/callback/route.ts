@@ -4,7 +4,12 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get("code")
-  const next = searchParams.get("next") ?? "/kids/welcome"
+  // A freshly confirmed parent has no child profile yet, and /kids/* pages
+  // require one (ActiveChildGuard bounces to /kids/select-profile, which
+  // dead-ends into "no profiles yet, go to the dashboard" if there's none).
+  // Send them to create their first child; the dashboard redirects to the
+  // /kids/welcome intro carousel once that's done.
+  const next = searchParams.get("next") ?? "/parent/dashboard"
 
   if (code) {
     const supabase = await createClient()

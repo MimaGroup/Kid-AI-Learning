@@ -30,7 +30,14 @@ export default function ParentDashboard() {
   }
 
   const handleAddChild = async (input: any) => {
+    const isFirstChild = children.length === 0
     await createChild(input)
+    // Send brand-new parents through the Byte welcome carousel once they
+    // actually have a profile for it to apply to, instead of dead-ending
+    // there before any child exists.
+    if (isFirstChild) {
+      router.push("/kids/welcome")
+    }
   }
 
   const handleDeleteChild = async (id: string) => {
