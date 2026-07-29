@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server"
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
-    
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -19,8 +19,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Secret key is required" }, { status: 400 })
     }
 
+    // Looking up another user's profile by secret key requires bypassing RLS
+    // (the standard client can only ever see the caller's own profile row).
+    const adminSupabase = await createServiceRoleClient()
+
     // Find friend by secret key
-    const { data: friendProfile, error: friendError } = await supabase
+    const { data: friendProfile, error: friendError } = await adminSupabase
       .from("profiles")
       .select("id, secret_key")
       .eq("secret_key", friendSecretKey.toUpperCase())
@@ -58,12 +62,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to add friend" }, { status: 500 })
     }
 
-    // Create reciprocal friendship
-    await supabase.from("friendships").insert({
+    // Reciprocal row's user_id is the friend, not the caller, so RLS on the
+    // regular client would reject this insert -- needs the admin client too.
+    const { error: reciprocalError } = await adminSupabase.from("friendships").insert({
       user_id: friendProfile.id,
       friend_id: user.id,
       status: "accepted",
     })
+
+    if (reciprocalError) {
+      console.error("[v0] Error creating reciprocal friendship:", reciprocalError)
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

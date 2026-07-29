@@ -1,10 +1,12 @@
-import { createServerClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
 // POST - Validate and apply a referral code during registration
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerClient()
+    // Needs to read/update the referrer's profile, which isn't the caller's
+    // own row -- the standard RLS-bound client can never see it.
+    const supabase = await createServiceRoleClient()
     const { referralCode, newUserId, newUserEmail } = await request.json()
 
     if (!referralCode || !newUserId) {
