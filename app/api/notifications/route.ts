@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
 
@@ -62,7 +62,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { type, title, message, metadata } = body
 
-    const { data: notification, error } = await supabase
+    // notifications has RLS with only SELECT/UPDATE policies -- no INSERT
+    // policy exists for any role, so this needs the service role to write.
+    const adminSupabase = await createServiceRoleClient()
+    const { data: notification, error } = await adminSupabase
       .from("notifications")
       .insert({
         user_id: user.id,
