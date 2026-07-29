@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient, createServiceRoleClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 function generateSecretKey(): string {
@@ -65,7 +65,10 @@ export async function getUserFriends() {
       return []
     }
 
-    const { data: friendProfiles } = await supabase
+    // Friend rows belong to other users -- RLS only lets the caller read
+    // their own profile, so this needs the service-role client.
+    const adminSupabase = await createServiceRoleClient()
+    const { data: friendProfiles } = await adminSupabase
       .from('profiles')
       .select('id, display_name, email, secret_key')
       .in('id', friendships.map((f) => f.friend_id))
@@ -95,7 +98,12 @@ export async function addFriendBySecretKey(secretKey: string) {
       return { success: false, error: 'Niste prijavljeni' }
     }
 
-    const { data: friendProfile, error: friendError } = await supabase
+    // Looking up another user's profile by secret key, and later writing the
+    // reciprocal friendship row (user_id = friend, not the caller), both
+    // need to bypass RLS -- the standard client can only see/write its own.
+    const adminSupabase = await createServiceRoleClient()
+
+    const { data: friendProfile, error: friendError } = await adminSupabase
       .from('profiles')
       .select('id, display_name, email')
       .eq('secret_key', secretKey.toUpperCase())
@@ -132,11 +140,15 @@ export async function addFriendBySecretKey(secretKey: string) {
     }
 
     // Reciprocal friendship so both sides see each other in their list.
-    await supabase.from('friendships').insert({
+    const { error: reciprocalError } = await adminSupabase.from('friendships').insert({
       user_id: friendProfile.id,
       friend_id: user.id,
       status: 'accepted',
     })
+
+    if (reciprocalError) {
+      console.error('[v0] addFriendBySecretKey: Error creating reciprocal friendship', reciprocalError)
+    }
 
     revalidatePath('/friends')
     return { success: true, error: null, friendName: friendProfile.display_name || friendProfile.email }
@@ -177,8 +189,10 @@ export async function removeFriend(friendshipId: string) {
       return { success: false, error: 'Odstranjevanje prijatelja ni uspelo' }
     }
 
-    // Delete the reciprocal friendship too.
-    await supabase
+    // Reciprocal row's user_id is the friend, not the caller -- RLS would
+    // reject this delete on the standard client.
+    const adminSupabase = await createServiceRoleClient()
+    await adminSupabase
       .from('friendships')
       .delete()
       .eq('user_id', friendship.friend_id)
