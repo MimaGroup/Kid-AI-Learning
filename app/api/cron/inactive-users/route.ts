@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/server"
 import { sendEmail, emailTemplates } from "@/lib/email"
 
 export const dynamic = "force-dynamic"
@@ -23,7 +23,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const supabase = await createClient()
+    // This runs unauthenticated (Vercel Cron, verified by CRON_SECRET above),
+    // so there's no auth.uid() -- the RLS-bound client would see zero rows
+    // under the "auth.uid() = id" profiles policy. Needs the service role.
+    const supabase = await createServiceRoleClient()
 
     // Fetch all users (parents) who have no activity
     const { data: allUsers, error: usersError } = await supabase
